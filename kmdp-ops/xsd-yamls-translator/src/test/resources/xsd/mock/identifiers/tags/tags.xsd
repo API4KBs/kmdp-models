@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<xs:schema xmlns="http://www.test.org/mock/1.0/identifiers/versions"
+  xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  targetNamespace="http://www.test.org/mock/1.0/identifiers/versions">
+  <xs:complexType xmi:id="_sqQnsBG3EeiXW_CUTPoj2g" name="VersionTag" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType xmi:id="_Hlx9gBG5EeiXW_CUTPoj2g" name="SemVerTag">
+    <xs:complexContent>
+      <xs:extension xmlns:tns="http://www.test.org/mock/1.0/identifiers/versions"
+        base="tns:VersionTag">
+        <xs:sequence/>
+        <xs:attribute name="major" use="required" type="xs:string"/>
+        <xs:attribute name="minor" use="required" type="xs:string"/>
+        <xs:attribute name="patch" use="required" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType xmi:id="_KWdVYBG5EeiXW_CUTPoj2g" name="TimestampTag">
+    <xs:complexContent>
+      <xs:extension xmlns:tns="http://www.test.org/mock/1.0/identifiers/versions"
+        base="tns:VersionTag">
+        <xs:sequence/>
+        <xs:attribute name="timestamp" use="required" type="xs:int"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType xmi:id="_LvXCABG5EeiXW_CUTPoj2g" name="SequentialTag">
+    <xs:complexContent>
+      <xs:extension xmlns:tns="http://www.test.org/mock/1.0/identifiers/versions"
+        base="tns:VersionTag">
+        <xs:sequence/>
+        <xs:attribute name="seqIndex" use="required" type="xs:int"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType xmi:id="_NKsXkBG5EeiXW_CUTPoj2g" name="GenericTag">
+    <xs:complexContent>
+      <xs:extension xmlns:tns="http://www.test.org/mock/1.0/identifiers/versions"
+        base="tns:VersionTag">
+        <xs:sequence/>
+        <xs:attribute name="tag" use="required" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

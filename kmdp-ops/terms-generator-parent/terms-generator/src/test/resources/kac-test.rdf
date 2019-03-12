@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://test.org/KAO#"
+     xml:base="http://test.org/KAO"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:terms="http://purl.org/dc/terms/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:kao="http://test.org/KAO#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <owl:Ontology rdf:about="http://test.org/KAO">
+        <owl:versionIRI rdf:resource="http://test.org/KAO/1.0"/>
+        <owl:imports rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+        <terms:creator>Davide Sottara (sottara.davide@mayo.edu)</terms:creator>
+        <dc:title>Knowledge Asset Test Ontology</dc:title>
+        <dc:description>An ontology categories and types of (Clinical) &apos;Knowledge Assets&apos;</dc:description>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://test.org/KAO#BusinessRuleAsset -->
+
+    <owl:Class rdf:about="http://test.org/KAO#BusinessRuleAsset">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#ClinicalKnowledgeAsset"/>
+        <skos:prefLabel>Business Rules, Policies and Guidelines</skos:prefLabel>
+        <terms:identifier>1234567890000</terms:identifier>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#CareProcessModel -->
+
+    <owl:Class rdf:about="http://test.org/KAO#CareProcessModel">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#ProcessAsset"/>
+        <skos:prefLabel xml:lang="en">Care Process Model</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#ClinicalKnowledgeAsset -->
+
+    <owl:Class rdf:about="http://test.org/KAO#ClinicalKnowledgeAsset">
+        <rdfs:label xml:lang="en">Knowledge Asset</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#ClinicalRule -->
+
+    <owl:Class rdf:about="http://test.org/KAO#ClinicalRule">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#BusinessRuleAsset"/>
+        <rdfs:label xml:lang="en">Clinical Rule</rdfs:label>
+        <skos:prefLabel xml:lang="en">Clinical Rule</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#CohortDefinition -->
+
+    <owl:Class rdf:about="http://test.org/KAO#CohortDefinition">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#SemanticAsset"/>
+        <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">Cohort Definition</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#Guideline -->
+
+    <owl:Class rdf:about="http://test.org/KAO#Guideline">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#BusinessRuleAsset"/>
+        <rdfs:label xml:lang="en">Guideline</rdfs:label>
+        <skos:prefLabel xml:lang="en">Clinical Guideline</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#InferentialAsset -->
+
+    <owl:Class rdf:about="http://test.org/KAO#InferentialAsset">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#ClinicalKnowledgeAsset"/>
+        <rdfs:label xml:lang="en">Assessment</rdfs:label>
+        <skos:prefLabel xml:lang="en">Assessment, Predictive and Inferential Models</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#InformationAsset -->
+
+    <owl:Class rdf:about="http://test.org/KAO#InformationAsset">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#ClinicalKnowledgeAsset"/>
+        <skos:prefLabel>Structured Information and Data Models</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#MetricAsset -->
+
+    <owl:Class rdf:about="http://test.org/KAO#MetricAsset">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#ClinicalKnowledgeAsset"/>
+        <skos:prefLabel>KPIs, Measurements and Metrics</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#OrderSet -->
+
+    <owl:Class rdf:about="http://test.org/KAO#OrderSet">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#ProcessAsset"/>
+        <rdfs:label xml:lang="en">Order Set</rdfs:label>
+        <skos:prefLabel xml:lang="en">Order Set</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#ProcessAsset -->
+
+    <owl:Class rdf:about="http://test.org/KAO#ProcessAsset">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#ClinicalKnowledgeAsset"/>
+        <skos:prefLabel>Plans, Processes, Pathways and Protocol Definitions</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#QualityMeasure -->
+
+    <owl:Class rdf:about="http://test.org/KAO#QualityMeasure">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#MetricAsset"/>
+        <skos:prefLabel>Clinical Quality Measure</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#Questionnaire -->
+
+    <owl:Class rdf:about="http://test.org/KAO#Questionnaire">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#InformationAsset"/>
+        <rdfs:label xml:lang="en">Questionnaire</rdfs:label>
+        <skos:prefLabel xml:lang="en">Questionnaire</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#SemanticAsset -->
+
+    <owl:Class rdf:about="http://test.org/KAO#SemanticAsset">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#ClinicalKnowledgeAsset"/>
+        <rdfs:label>Semantic Asset</rdfs:label>
+        <skos:prefLabel>Terminology, Ontology and Assertional KBs</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/KAO#ValueSet -->
+
+    <owl:Class rdf:about="http://test.org/KAO#ValueSet">
+        <rdfs:subClassOf rdf:resource="http://test.org/KAO#SemanticAsset"/>
+        <rdfs:label xml:lang="en">Value Set</rdfs:label>
+        <skos:prefLabel xml:lang="en">Value Set</skos:prefLabel>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+

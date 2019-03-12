@@ -1,0 +1,74 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX olex: <http://www.w3.org/ns/lemon/ontolex#>
+PREFIX afn: <http://jena.apache.org/ARQ/function#>
+PREFIX dct: <http://purl.org/dc/terms/>
+
+
+CONSTRUCT {
+  ?Cid
+
+    a owl:NamedIndividual;
+    rdf:type olex:LexicalConcept;
+    olex:isConceptOf ?X;
+
+    olex:isEvokedBy [
+        a olex:LexicalEntry;
+        olex:denotes ?X;
+
+        olex:canonicalForm [
+            a olex:Form;
+            olex:writtenRep ?LocalizedPrefLabel;
+        ];
+        olex:otherForm [
+            a olex:Form;
+            olex:writtenRep ?LocalizedLabel;
+        ];
+    ].
+
+  ?X
+    a owl:NamedIndividual.
+
+}
+WHERE {
+
+    VALUES ?entity { owl:Class owl:ObjectProperty owl:DatatypeProperty owl:NamedIndividual }
+
+    ?X a ?entity.
+        FILTER isUri( ?X ).
+        OPTIONAL { ?X skos:notation ?N1. }
+        OPTIONAL { ?X dct:identifier ?Id. }
+
+        # Create a URI for the related concept
+        BIND ( URI( CONCAT( STR( tgt: ),
+                            COALESCE( ?Id, ?N1, afn:localname(?X) ) ) ) as ?Cid ).
+
+        #For each proper ontology entity
+
+        # Manage Labels asserted natively
+        BIND( afn:localname( ?X ) as ?localName )
+
+#
+#        OPTIONAL { ?X skos:notation ?N1. }
+#        BIND ( COALESCE( ?N1, ?localName ) as ?Notation ).
+
+        OPTIONAL { ?X rdfs:label ?lab. }
+        OPTIONAL { ?X skos:prefLabel ?pLab. }
+
+        OPTIONAL { ?X skos:definition ?Def. }
+
+        BIND ( COALESCE( ?lab, ?pLab, ?localName ) as ?Label ).
+        BIND ( COALESCE( ?pLab, ?lab, ?localName ) as ?PrefLabel ).
+
+
+        BIND ( IF( datatype(?Label) = rdf:langString, ?Label, STRLANG( ?Label, "en" ) ) as ?LocalizedLabel ).
+        BIND ( IF( datatype(?PrefLabel) = rdf:langString, ?PrefLabel, STRLANG( ?PrefLabel, "en" ) ) as ?LocalizedPrefLabel ).
+}
+
+
+
+
+

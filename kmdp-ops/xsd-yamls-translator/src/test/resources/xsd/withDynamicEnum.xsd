@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<xs:schema xmlns="http://kmdp.mock.edu/metadata/surrogate"
+  xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+  xmlns:ns1="http://www.test.org/mock/1.0/identifiers"
+  xmlns:ns2="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetCategory/1.0"
+  xmlns:ns3="http://kmdp.mock.edu/metadata/iso11179"
+  xmlns:ns4="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType/1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  targetNamespace="http://kmdp.mock.edu/metadata/surrogate">
+
+  <xs:import namespace="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType/1.0"/>
+
+  <xs:complexType xmi:id="_nCY6ACYgEeihz8vRKufsoA" name="WorkOfKnowledgeInfo">
+    <xs:sequence>
+      <xs:element xmlns:tns="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetCategory/1.0"
+        name="category"
+        minOccurs="0"
+        maxOccurs="unbounded"
+        type="tns:KnowledgeAssetCategory"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

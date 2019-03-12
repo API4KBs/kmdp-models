@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<xs:schema xmlns="http://kmdp.mock.edu/ccg/model"
+  xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  targetNamespace="http://kmdp.mock.edu/ccg/model">
+  <xs:element name="glossary" type="Glossary"/>
+  <xs:complexType xmi:id="_kxwUpdRREeesZOluH2h1gg" name="Glossary">
+    <xs:sequence/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="knowledgeResource" type="KnowledgeResource"/>
+  <xs:complexType xmi:id="_kxwUvNRREeesZOluH2h1gg" name="KnowledgeResource">
+    <xs:sequence/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="glossaryEntry" type="GlossaryEntry"/>
+  <xs:complexType xmi:id="_kxwUxtRREeesZOluH2h1gg" name="GlossaryEntry">
+    <xs:sequence>
+      <xs:element name="relatedEntries"
+        minOccurs="0"
+        maxOccurs="unbounded"
+        type="GlossaryEntry"/>
+      <xs:element name="def" type="ConceptDefinition" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="relatedTo"
+        type="RelatedEntry"
+        minOccurs="0"
+        maxOccurs="unbounded"/>
+      <xs:element name="surrogate"
+        type="GlossaryEntryMetadata"
+        minOccurs="1"
+        maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="name" use="required" type="xs:string"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="operationalDefinition" type="OperationalDefinition"/>
+  <xs:complexType xmi:id="_kxwU5NRREeesZOluH2h1gg" name="OperationalDefinition">
+    <xs:complexContent>
+      <xs:extension base="Definition">
+        <xs:sequence>
+          <xs:element name="inputs"
+            type="InputDefinition"
+            minOccurs="0"
+            maxOccurs="unbounded"/>
+          <xs:element name="computableSpec"
+            type="KnowledgeResource"
+            minOccurs="0"
+            maxOccurs="1"/>
+          <xs:element name="aaS" type="KnowledgeResource" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="includes"
+            type="OperationalDefinition"
+            minOccurs="0"
+            maxOccurs="unbounded"/>
+          <xs:element name="background"
+            type="KnowledgeResource"
+            minOccurs="0"
+            maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="default" use="required" type="xs:boolean"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="inputDefinition" type="InputDefinition"/>
+  <xs:complexType xmi:id="_kxwU-tRREeesZOluH2h1gg" name="InputDefinition">
+    <xs:complexContent>
+      <xs:extension base="Definition">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="definition" type="Definition"/>
+  <xs:complexType xmi:id="_kxwVBtRREeesZOluH2h1gg" name="Definition" abstract="true">
+    <xs:sequence>
+      <xs:element name="schema"
+        type="KnowledgeResource"
+        minOccurs="0"
+        maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="name" use="required" type="xs:string"/>
+    <xs:attribute name="description" type="xs:string"/>
+    <xs:attribute name="_id" use="required" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="conceptDefinition" type="ConceptDefinition"/>
+  <xs:complexType xmi:id="_7VQEEBM5Eeivvuvg2FXwvw" name="ConceptDefinition">
+    <xs:complexContent>
+      <xs:extension base="Definition">
+        <xs:sequence>
+          <xs:element name="opDefs"
+            type="OperationalDefinition"
+            minOccurs="1"
+            maxOccurs="unbounded"/>
+          <xs:element name="semanticDef"
+            type="KnowledgeResource"
+            minOccurs="1"
+            maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="glossaryEntryMetadata" type="GlossaryEntryMetadata"/>
+  <xs:complexType xmi:id="_TUmHMBWtEeiQ34wSFejXzQ" name="GlossaryEntryMetadata">
+    <xs:complexContent/>
+  </xs:complexType>
+  <xs:element name="relatedEntry" type="RelatedEntry"/>
+  <xs:complexType xmi:id="_So6mMCQBEeihz8vRKufsoA" name="RelatedEntry">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>

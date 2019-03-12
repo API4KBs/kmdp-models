@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<xs:schema xmlns="http://www.test.org/mock/1.0/identifiers"
+  xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+  xmlns:ns1="http://www.test.org/mock/1.0/identifiers/versions"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  targetNamespace="http://www.test.org/mock/1.0/identifiers">
+  <xs:import namespace="http://www.test.org/mock/1.0/identifiers/versions"
+    schemaLocation="tags/tags.xsd"/>
+  <xs:element name="uRIIdentifier" type="URIIdentifier"/>
+  <xs:complexType xmi:id="_YM5EQBG6EeiXW_CUTPoj2g" name="URIIdentifier">
+    <xs:sequence/>
+    <xs:attribute name="uri" use="required" type="xs:anyURI"/>
+    <xs:attribute name="versionUri" type="xs:anyURI"/>
+  </xs:complexType>
+  <xs:element name="simpleIdentifier" type="SimpleIdentifier"/>
+  <xs:complexType xmi:id="_OzuYoBG-EeiXW_CUTPoj2g" name="SimpleIdentifier">
+    <xs:sequence/>
+    <xs:attribute name="id" use="required" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="term" type="Term"/>
+  <xs:complexType xmi:id="__arAIBMfEeiRJaO3heXNig" name="Term" abstract="true">
+    <xs:complexContent>
+      <xs:extension xmlns:tns="http://www.test.org/mock/1.0/identifiers"
+        base="tns:URIIdentifier">
+        <xs:sequence>
+          <xs:element name="namespace"
+            type="tns:URIIdentifier"
+            minOccurs="0"
+            maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="label" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="mimeType" type="MimeType"/>
+  <xs:complexType xmi:id="_E-8x4BZeEeiQ34wSFejXzQ" name="MimeType">
+    <xs:sequence>
+      <xs:element xmlns:tns="http://www.test.org/mock/1.0/identifiers"
+        name="mediaType"
+        minOccurs="1"
+        maxOccurs="1"
+        type="tns:MediaType"/>
+    </xs:sequence>
+    <xs:attribute name="id" use="required" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="qualifiedIdentifier" type="QualifiedIdentifier"/>
+  <xs:complexType xmi:id="_c9yS0CQCEeihz8vRKufsoA" name="QualifiedIdentifier">
+    <xs:sequence/>
+    <xs:attribute name="qName" use="required" type="xs:QName"/>
+  </xs:complexType>
+  <xs:element name="codedTerm" type="CodedTerm"/>
+  <xs:complexType xmi:id="__l8eQCXyEeihz8vRKufsoA" name="CodedTerm">
+    <xs:complexContent>
+      <xs:extension xmlns:tns="http://www.test.org/mock/1.0/identifiers" base="tns:Term">
+        <xs:sequence/>
+        <xs:attribute name="code" use="required" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="versionIdentifier" type="VersionIdentifier"/>
+  <xs:complexType xmi:id="_OmqWoCb_EeiGrqvyHUds2Q" name="VersionIdentifier">
+    <xs:complexContent>
+      <xs:extension xmlns:tns="http://www.test.org/mock/1.0/identifiers"
+        base="tns:SimpleIdentifier">
+        <xs:sequence>
+          <xs:element xmlns:tns="http://www.test.org/mock/1.0/identifiers/versions"
+            name="version"
+            minOccurs="1"
+            maxOccurs="1"
+            type="tns:VersionTag"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="MediaType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="application"/>
+      <xs:enumeration value="audio"/>
+      <xs:enumeration value="font"/>
+      <xs:enumeration value="example"/>
+      <xs:enumeration value="image"/>
+      <xs:enumeration value="message"/>
+      <xs:enumeration value="model"/>
+      <xs:enumeration value="multipart"/>
+      <xs:enumeration value="text"/>
+      <xs:enumeration value="video"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

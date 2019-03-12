@@ -1,0 +1,935 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb" if-exists="true" version="2.1">
+  <bindings xmlns:tns="urn:hl7-org:elm:r1"
+    if-exists="true"
+    scd="x-schema::tns">
+    <schemaBindings map="false">
+      <package name="org.hl7.elm.r1"/>
+    </schemaBindings>
+
+    <bindings if-exists="true" scd="~tns:Or">
+      <class ref="org.hl7.elm.r1.Or"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Query">
+      <class ref="org.hl7.elm.r1.Query"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Ceiling">
+      <class ref="org.hl7.elm.r1.Ceiling"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Product">
+      <class ref="org.hl7.elm.r1.Product"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Median">
+      <class ref="org.hl7.elm.r1.Median"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToDecimal">
+      <class ref="org.hl7.elm.r1.ToDecimal"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Repeat">
+      <class ref="org.hl7.elm.r1.Repeat"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Distinct">
+      <class ref="org.hl7.elm.r1.Distinct"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:IsFalse">
+      <class ref="org.hl7.elm.r1.IsFalse"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ProperIn">
+      <class ref="org.hl7.elm.r1.ProperIn"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:CodeRef">
+      <class ref="org.hl7.elm.r1.CodeRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:FunctionRef">
+      <class ref="org.hl7.elm.r1.FunctionRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:SameOrAfter">
+      <class ref="org.hl7.elm.r1.SameOrAfter"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:PositionOf">
+      <class ref="org.hl7.elm.r1.PositionOf"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:NotEqual">
+      <class ref="org.hl7.elm.r1.NotEqual"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:OperandDef">
+      <class ref="org.hl7.elm.r1.OperandDef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConvertsToString">
+      <class ref="org.hl7.elm.r1.ConvertsToString"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConvertsToDecimal">
+      <class ref="org.hl7.elm.r1.ConvertsToDecimal"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Sum">
+      <class ref="org.hl7.elm.r1.Sum"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Code">
+      <class ref="org.hl7.elm.r1.Code"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ValueSetRef">
+      <class ref="org.hl7.elm.r1.ValueSetRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ProperIncludes">
+      <class ref="org.hl7.elm.r1.ProperIncludes"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Min">
+      <class ref="org.hl7.elm.r1.Min"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:TimeFrom">
+      <class ref="org.hl7.elm.r1.TimeFrom"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:OverlapsBefore">
+      <class ref="org.hl7.elm.r1.OverlapsBefore"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Expand">
+      <class ref="org.hl7.elm.r1.Expand"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:DateFrom">
+      <class ref="org.hl7.elm.r1.DateFrom"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Contains">
+      <class ref="org.hl7.elm.r1.Contains"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Subtract">
+      <class ref="org.hl7.elm.r1.Subtract"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Xor">
+      <class ref="org.hl7.elm.r1.Xor"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:QueryLetRef">
+      <class ref="org.hl7.elm.r1.QueryLetRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:CanConvert">
+      <class ref="org.hl7.elm.r1.CanConvert"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Split">
+      <class ref="org.hl7.elm.r1.Split"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:EndsWith">
+      <class ref="org.hl7.elm.r1.EndsWith"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConvertsToDate">
+      <class ref="org.hl7.elm.r1.ConvertsToDate"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:LessOrEqual">
+      <class ref="org.hl7.elm.r1.LessOrEqual"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:TernaryExpression">
+      <class ref="org.hl7.elm.r1.TernaryExpression"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Predecessor">
+      <class ref="org.hl7.elm.r1.Predecessor"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Overlaps">
+      <class ref="org.hl7.elm.r1.Overlaps"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConceptRef">
+      <class ref="org.hl7.elm.r1.ConceptRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Starts">
+      <class ref="org.hl7.elm.r1.Starts"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:SortClause">
+      <class ref="org.hl7.elm.r1.SortClause"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Matches">
+      <class ref="org.hl7.elm.r1.Matches"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:AliasRef">
+      <class ref="org.hl7.elm.r1.AliasRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Instance">
+      <class ref="org.hl7.elm.r1.Instance"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Union">
+      <class ref="org.hl7.elm.r1.Union"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToList">
+      <class ref="org.hl7.elm.r1.ToList"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:As">
+      <class ref="org.hl7.elm.r1.As"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Abs">
+      <class ref="org.hl7.elm.r1.Abs"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:InstanceElement">
+      <class ref="org.hl7.elm.r1.InstanceElement"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Upper">
+      <class ref="org.hl7.elm.r1.Upper"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Convert">
+      <class ref="org.hl7.elm.r1.Convert"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ParameterRef">
+      <class ref="org.hl7.elm.r1.ParameterRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:SameAs">
+      <class ref="org.hl7.elm.r1.SameAs"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Length">
+      <class ref="org.hl7.elm.r1.Length"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:AllTrue">
+      <class ref="org.hl7.elm.r1.AllTrue"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:After">
+      <class ref="org.hl7.elm.r1.After"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Aggregate">
+      <class ref="org.hl7.elm.r1.Aggregate"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ChoiceTypeSpecifier">
+      <class ref="org.hl7.elm.r1.ChoiceTypeSpecifier"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Power">
+      <class ref="org.hl7.elm.r1.Power"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:DurationBetween">
+      <class ref="org.hl7.elm.r1.DurationBetween"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Meets">
+      <class ref="org.hl7.elm.r1.Meets"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Add">
+      <class ref="org.hl7.elm.r1.Add"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Lower">
+      <class ref="org.hl7.elm.r1.Lower"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Start">
+      <class ref="org.hl7.elm.r1.Start"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:PopulationVariance">
+      <class ref="org.hl7.elm.r1.PopulationVariance"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:NamedTypeSpecifier">
+      <class ref="org.hl7.elm.r1.NamedTypeSpecifier"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:SubsumedBy">
+      <class ref="org.hl7.elm.r1.SubsumedBy"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ForEach">
+      <class ref="org.hl7.elm.r1.ForEach"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Divide">
+      <class ref="org.hl7.elm.r1.Divide"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Last">
+      <class ref="org.hl7.elm.r1.Last"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Implies">
+      <class ref="org.hl7.elm.r1.Implies"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:CodeSystemDef">
+      <class ref="org.hl7.elm.r1.CodeSystemDef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Literal">
+      <class ref="org.hl7.elm.r1.Literal"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Multiply">
+      <class ref="org.hl7.elm.r1.Multiply"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ProperContains">
+      <class ref="org.hl7.elm.r1.ProperContains"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:List">
+      <class ref="org.hl7.elm.r1.List"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:First">
+      <class ref="org.hl7.elm.r1.First"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:IdentifierRef">
+      <class ref="org.hl7.elm.r1.IdentifierRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConvertsToDateTime">
+      <class ref="org.hl7.elm.r1.ConvertsToDateTime"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:CalculateAgeAt">
+      <class ref="org.hl7.elm.r1.CalculateAgeAt"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Coalesce">
+      <class ref="org.hl7.elm.r1.Coalesce"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:RelationshipClause">
+      <class ref="org.hl7.elm.r1.RelationshipClause"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Not">
+      <class ref="org.hl7.elm.r1.Not"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Avg">
+      <class ref="org.hl7.elm.r1.Avg"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:AccessModifier">
+      <class ref="org.hl7.elm.r1.AccessModifier"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Descendents">
+      <class ref="org.hl7.elm.r1.Descendents"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Concatenate">
+      <class ref="org.hl7.elm.r1.Concatenate"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Now">
+      <class ref="org.hl7.elm.r1.Now"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:IncludeDef">
+      <class ref="org.hl7.elm.r1.IncludeDef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:End">
+      <class ref="org.hl7.elm.r1.End"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Combine">
+      <class ref="org.hl7.elm.r1.Combine"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Element">
+      <class ref="org.hl7.elm.r1.Element"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Time">
+      <class ref="org.hl7.elm.r1.Time"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:UnaryExpression">
+      <class ref="org.hl7.elm.r1.UnaryExpression"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Iteration">
+      <class ref="org.hl7.elm.r1.Iteration"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:StartsWith">
+      <class ref="org.hl7.elm.r1.StartsWith"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:DateTimeComponentFrom">
+      <class ref="org.hl7.elm.r1.DateTimeComponentFrom"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:With">
+      <class ref="org.hl7.elm.r1.With"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Successor">
+      <class ref="org.hl7.elm.r1.Successor"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:SortDirection">
+      <class ref="org.hl7.elm.r1.SortDirection"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToChars">
+      <class ref="org.hl7.elm.r1.ToChars"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Children">
+      <class ref="org.hl7.elm.r1.Children"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:SortByItem">
+      <class ref="org.hl7.elm.r1.SortByItem"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:TypeSpecifier">
+      <class ref="org.hl7.elm.r1.TypeSpecifier"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:DateTimePrecision">
+      <class ref="org.hl7.elm.r1.DateTimePrecision"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Filter">
+      <class ref="org.hl7.elm.r1.Filter"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:IsTrue">
+      <class ref="org.hl7.elm.r1.IsTrue"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Exists">
+      <class ref="org.hl7.elm.r1.Exists"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:IsNull">
+      <class ref="org.hl7.elm.r1.IsNull"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:TupleElementDefinition">
+      <class ref="org.hl7.elm.r1.TupleElementDefinition"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:SingletonFrom">
+      <class ref="org.hl7.elm.r1.SingletonFrom"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConvertsToBoolean">
+      <class ref="org.hl7.elm.r1.ConvertsToBoolean"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:SplitOnMatches">
+      <class ref="org.hl7.elm.r1.SplitOnMatches"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Retrieve">
+      <class ref="org.hl7.elm.r1.Retrieve"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:CodeSystemRef">
+      <class ref="org.hl7.elm.r1.CodeSystemRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ProperIncludedIn">
+      <class ref="org.hl7.elm.r1.ProperIncludedIn"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Count">
+      <class ref="org.hl7.elm.r1.Count"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:TupleTypeSpecifier">
+      <class ref="org.hl7.elm.r1.TupleTypeSpecifier"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:DateTime">
+      <class ref="org.hl7.elm.r1.DateTime"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:SameOrBefore">
+      <class ref="org.hl7.elm.r1.SameOrBefore"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:MeetsAfter">
+      <class ref="org.hl7.elm.r1.MeetsAfter"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:BinaryExpression">
+      <class ref="org.hl7.elm.r1.BinaryExpression"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Equal">
+      <class ref="org.hl7.elm.r1.Equal"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Subsumes">
+      <class ref="org.hl7.elm.r1.Subsumes"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:DifferenceBetween">
+      <class ref="org.hl7.elm.r1.DifferenceBetween"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:MeetsBefore">
+      <class ref="org.hl7.elm.r1.MeetsBefore"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Substring">
+      <class ref="org.hl7.elm.r1.Substring"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:StdDev">
+      <class ref="org.hl7.elm.r1.StdDev"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:IndexOf">
+      <class ref="org.hl7.elm.r1.IndexOf"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Log">
+      <class ref="org.hl7.elm.r1.Log"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Modulo">
+      <class ref="org.hl7.elm.r1.Modulo"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToInteger">
+      <class ref="org.hl7.elm.r1.ToInteger"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToBoolean">
+      <class ref="org.hl7.elm.r1.ToBoolean"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Flatten">
+      <class ref="org.hl7.elm.r1.Flatten"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:MaxValue">
+      <class ref="org.hl7.elm.r1.MaxValue"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToDateTime">
+      <class ref="org.hl7.elm.r1.ToDateTime"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ByColumn">
+      <class ref="org.hl7.elm.r1.ByColumn"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:LastPositionOf">
+      <class ref="org.hl7.elm.r1.LastPositionOf"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Ends">
+      <class ref="org.hl7.elm.r1.Ends"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ListTypeSpecifier">
+      <class ref="org.hl7.elm.r1.ListTypeSpecifier"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:OverlapsAfter">
+      <class ref="org.hl7.elm.r1.OverlapsAfter"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Current">
+      <class ref="org.hl7.elm.r1.Current"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:If">
+      <class ref="org.hl7.elm.r1.If"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Interval">
+      <class ref="org.hl7.elm.r1.Interval"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConvertsToQuantity">
+      <class ref="org.hl7.elm.r1.ConvertsToQuantity"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConvertsToInteger">
+      <class ref="org.hl7.elm.r1.ConvertsToInteger"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Max">
+      <class ref="org.hl7.elm.r1.Max"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:In">
+      <class ref="org.hl7.elm.r1.In"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ExpressionDef">
+      <class ref="org.hl7.elm.r1.ExpressionDef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Is">
+      <class ref="org.hl7.elm.r1.Is"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToQuantity">
+      <class ref="org.hl7.elm.r1.ToQuantity"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Case">
+      <class ref="org.hl7.elm.r1.Case"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:IntervalTypeSpecifier">
+      <class ref="org.hl7.elm.r1.IntervalTypeSpecifier"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:VersionedIdentifier">
+      <class ref="org.hl7.elm.r1.VersionedIdentifier"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Without">
+      <class ref="org.hl7.elm.r1.Without"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConvertsToTime">
+      <class ref="org.hl7.elm.r1.ConvertsToTime"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ValueSetDef">
+      <class ref="org.hl7.elm.r1.ValueSetDef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Ratio">
+      <class ref="org.hl7.elm.r1.Ratio"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Width">
+      <class ref="org.hl7.elm.r1.Width"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Property">
+      <class ref="org.hl7.elm.r1.Property"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:AnyInCodeSystem">
+      <class ref="org.hl7.elm.r1.AnyInCodeSystem"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:CalculateAge">
+      <class ref="org.hl7.elm.r1.CalculateAge"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:GreaterOrEqual">
+      <class ref="org.hl7.elm.r1.GreaterOrEqual"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConvertsToRatio">
+      <class ref="org.hl7.elm.r1.ConvertsToRatio"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Expression">
+      <class ref="org.hl7.elm.r1.Expression"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ByDirection">
+      <class ref="org.hl7.elm.r1.ByDirection"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToDate">
+      <class ref="org.hl7.elm.r1.ToDate"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToString">
+      <class ref="org.hl7.elm.r1.ToString"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Tuple">
+      <class ref="org.hl7.elm.r1.Tuple"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:AnyTrue">
+      <class ref="org.hl7.elm.r1.AnyTrue"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Null">
+      <class ref="org.hl7.elm.r1.Null"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ParameterDef">
+      <class ref="org.hl7.elm.r1.ParameterDef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:TimezoneFrom">
+      <class ref="org.hl7.elm.r1.TimezoneFrom"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ReturnClause">
+      <class ref="org.hl7.elm.r1.ReturnClause"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:FunctionDef">
+      <class ref="org.hl7.elm.r1.FunctionDef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:OperandRef">
+      <class ref="org.hl7.elm.r1.OperandRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Intersect">
+      <class ref="org.hl7.elm.r1.Intersect"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToTime">
+      <class ref="org.hl7.elm.r1.ToTime"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:PointFrom">
+      <class ref="org.hl7.elm.r1.PointFrom"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToRatio">
+      <class ref="org.hl7.elm.r1.ToRatio"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ReplaceMatches">
+      <class ref="org.hl7.elm.r1.ReplaceMatches"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:MinValue">
+      <class ref="org.hl7.elm.r1.MinValue"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Sort">
+      <class ref="org.hl7.elm.r1.Sort"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:CaseItem">
+      <class ref="org.hl7.elm.r1.CaseItem"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:UsingDef">
+      <class ref="org.hl7.elm.r1.UsingDef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Less">
+      <class ref="org.hl7.elm.r1.Less"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Concept">
+      <class ref="org.hl7.elm.r1.Concept"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Ln">
+      <class ref="org.hl7.elm.r1.Ln"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:LetClause">
+      <class ref="org.hl7.elm.r1.LetClause"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:NaryExpression">
+      <class ref="org.hl7.elm.r1.NaryExpression"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:GeometricMean">
+      <class ref="org.hl7.elm.r1.GeometricMean"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:AggregateExpression">
+      <class ref="org.hl7.elm.r1.AggregateExpression"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ToConcept">
+      <class ref="org.hl7.elm.r1.ToConcept"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:InValueSet">
+      <class ref="org.hl7.elm.r1.InValueSet"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:AnyInValueSet">
+      <class ref="org.hl7.elm.r1.AnyInValueSet"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Slice">
+      <class ref="org.hl7.elm.r1.Slice"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:And">
+      <class ref="org.hl7.elm.r1.And"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Equivalent">
+      <class ref="org.hl7.elm.r1.Equivalent"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:TruncatedDivide">
+      <class ref="org.hl7.elm.r1.TruncatedDivide"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Library">
+      <class ref="org.hl7.elm.r1.Library"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:InCodeSystem">
+      <class ref="org.hl7.elm.r1.InCodeSystem"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Except">
+      <class ref="org.hl7.elm.r1.Except"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Before">
+      <class ref="org.hl7.elm.r1.Before"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:IncludedIn">
+      <class ref="org.hl7.elm.r1.IncludedIn"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Message">
+      <class ref="org.hl7.elm.r1.Message"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Truncate">
+      <class ref="org.hl7.elm.r1.Truncate"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Variance">
+      <class ref="org.hl7.elm.r1.Variance"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Includes">
+      <class ref="org.hl7.elm.r1.Includes"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Indexer">
+      <class ref="org.hl7.elm.r1.Indexer"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ExpressionRef">
+      <class ref="org.hl7.elm.r1.ExpressionRef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:OperatorExpression">
+      <class ref="org.hl7.elm.r1.OperatorExpression"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Round">
+      <class ref="org.hl7.elm.r1.Round"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ByExpression">
+      <class ref="org.hl7.elm.r1.ByExpression"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Collapse">
+      <class ref="org.hl7.elm.r1.Collapse"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Floor">
+      <class ref="org.hl7.elm.r1.Floor"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:TimeOfDay">
+      <class ref="org.hl7.elm.r1.TimeOfDay"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:CodeDef">
+      <class ref="org.hl7.elm.r1.CodeDef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Mode">
+      <class ref="org.hl7.elm.r1.Mode"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:PopulationStdDev">
+      <class ref="org.hl7.elm.r1.PopulationStdDev"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:AliasedQuerySource">
+      <class ref="org.hl7.elm.r1.AliasedQuerySource"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Quantity">
+      <class ref="org.hl7.elm.r1.Quantity"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Date">
+      <class ref="org.hl7.elm.r1.Date"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Today">
+      <class ref="org.hl7.elm.r1.Today"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:ConceptDef">
+      <class ref="org.hl7.elm.r1.ConceptDef"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:TupleElement">
+      <class ref="org.hl7.elm.r1.TupleElement"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Total">
+      <class ref="org.hl7.elm.r1.Total"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Times">
+      <class ref="org.hl7.elm.r1.Times"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Greater">
+      <class ref="org.hl7.elm.r1.Greater"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Negate">
+      <class ref="org.hl7.elm.r1.Negate"/>
+    </bindings>
+
+    <bindings if-exists="true" scd="~tns:Exp">
+      <class ref="org.hl7.elm.r1.Exp"/>
+    </bindings>
+
+  </bindings>
+</bindings>

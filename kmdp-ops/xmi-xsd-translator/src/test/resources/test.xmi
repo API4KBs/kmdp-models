@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+  xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_0PW6gCFSEeiocrQi9rKkoQ" name="Foo">
+  <packagedElement xmi:type="uml:Package" xmi:id="_AifqoCFUEeiocrQi9rKkoQ" name="root">
+    <packagedElement xmi:type="uml:Class" xmi:id="_74fPECFSEeiocrQi9rKkoQ" name="Klass"
+      visibility="public">
+      <ownedAttribute xmi:id="_84DOoCFSEeiocrQi9rKkoQ" name="attr" visibility="public">
+        <type xmi:type="uml:PrimitiveType"
+          href="pathmap://UML_LIBRARIES/XMLPrimitiveTypes.library.uml#String"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_84D1sCFSEeiocrQi9rKkoQ"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_84D1sSFSEeiocrQi9rKkoQ"
+          value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_-XMGICFSEeiocrQi9rKkoQ" name="Child"
+      visibility="public"/>
+    <packagedElement xmi:type="uml:Association" xmi:id="_ALRS4CFTEeiocrQi9rKkoQ" name="rel"
+      memberEnd="_ALRS4SFTEeiocrQi9rKkoQ _ALRS5CFTEeiocrQi9rKkoQ"
+      navigableOwnedEnd="_ALRS5CFTEeiocrQi9rKkoQ">
+      <ownedEnd xmi:id="_ALRS4SFTEeiocrQi9rKkoQ" name="klasss" type="_74fPECFSEeiocrQi9rKkoQ"
+        association="_ALRS4CFTEeiocrQi9rKkoQ">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ALRS4iFTEeiocrQi9rKkoQ" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ALRS4yFTEeiocrQi9rKkoQ"
+          value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_ALRS5CFTEeiocrQi9rKkoQ" name="child" type="_-XMGICFSEeiocrQi9rKkoQ"
+        association="_ALRS4CFTEeiocrQi9rKkoQ">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ALRS5SFTEeiocrQi9rKkoQ" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ALRS5iFTEeiocrQi9rKkoQ"
+          value="1"/>
+      </ownedEnd>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>

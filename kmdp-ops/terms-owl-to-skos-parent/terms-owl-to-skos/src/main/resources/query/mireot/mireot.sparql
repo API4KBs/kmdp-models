@@ -1,0 +1,55 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX olex: <http://www.w3.org/ns/lemon/ontolex#>
+PREFIX afn: <http://jena.apache.org/ARQ/function#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX lcc-lr: <http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/>
+
+
+CONSTRUCT {
+  ?X a ?Y;
+
+    rdfs:label ?lab;
+    rdfs:comment ?comm;
+
+    skos:notation ?notation;
+    skos:prefLabel ?pLab;
+    skos:definition ?def;
+    skos:note ?note;
+
+    rdfs:subClassOf ?parentType;
+    rdfs:subPropertyOf ?parentProp;
+
+    rdfs:isDefinedBy ?baseUri;
+
+    dct:identifier ?id.
+}
+WHERE {
+    ?X a ?Y
+
+        OPTIONAL { ?X rdfs:subClassOf ?parentType.
+             FILTER isUri( ?parentType ).
+        }
+
+        OPTIONAL { ?X rdfs:subPropertyOf ?parentProp.
+             FILTER isUri( ?parentProp ).
+        }
+
+        OPTIONAL { ?X rdfs:label ?lab. }
+        OPTIONAL { ?X rdfs:comment ?comm. }
+
+        OPTIONAL { ?X skos:prefLabel ?pLab. }
+        OPTIONAL { ?X skos:definition ?def. }
+        OPTIONAL { ?X skos:note ?note. }
+
+        OPTIONAL { ?X dct:identifier ?id. }
+
+        OPTIONAL { ?X skos:notation ?N. }
+        OPTIONAL { ?Code lcc-lr:identifies ?X.
+                         ?Code lcc-lr:hasTag ?Tag. }
+
+        BIND ( COALESCE( ?Tag, ?N ) as ?notation ).
+}

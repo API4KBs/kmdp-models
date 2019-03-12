@@ -1,0 +1,19 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?X (count(?mid) as ?depth)
+WHERE {
+
+    OPTIONAL {
+
+        ?X a owl:ObjectProperty.
+            FILTER isUri( ?X ).
+
+        ?X rdfs:subPropertyOf* ?mid.
+        ?mid rdfs:subPropertyOf* ?focus.
+    }
+
+}
+GROUP BY ?X
+HAVING ( (?depth >= ?n) && (?depth <= ?m) )

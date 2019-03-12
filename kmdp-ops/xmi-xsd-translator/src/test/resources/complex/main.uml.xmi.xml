@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+  xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_kxwUoNRREeesZOluH2h1gg" name="Root"
+  URI="http://kmdp.mayo.edu/test">
+  <packagedElement xmi:type="uml:Package" xmi:id="_kxwUpNRREeesZOluH2h1gg" name="core">
+    <packageImport xmi:id="_p7a7EBv4Eeii5o5-6jY32A">
+      <importedPackage href="datatype.uml.xmi.xml#_T0DiIBHCEeiXW_CUTPoj2g"/>
+    </packageImport>
+    <packagedElement xmi:type="uml:Class" xmi:id="_kxwUpdRREeesZOluH2h1gg" name="RootTop">
+      <ownedAttribute xmi:id="_pnNB4BMhEeiRJaO3heXNig" name="mainId" visibility="public">
+        <type xmi:type="uml:DataType" href="datatype.uml.xmi.xml#_YM5EQBG6EeiXW_CUTPoj2g"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_pnNB4RMhEeiRJaO3heXNig" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_pnNo8BMhEeiRJaO3heXNig"
+          value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_aaaUpNRREeesZOluH2h1gg" name="sub">
+      <packageImport xmi:id="_sMi4MBWtEeiQ34wSFejXzQ">
+        <importedPackage href="parent.uml.xmi.xml#_YPU70BWtEeiQ34wSFejXzQ"/>
+      </packageImport>
+      <packagedElement xmi:type="uml:Class" xmi:id="_TUmHMBWtEeiQ34wSFejXzQ" name="SomeExtendedType"
+        visibility="public">
+        <generalization xmi:id="_EeKpABWuEeiQ34wSFejXzQ">
+          <general xmi:type="uml:Class" href="parent.uml.xmi.xml#_OtG-sBWtEeiQ34wSFejXzQ"/>
+        </generalization>
+      </packagedElement>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>

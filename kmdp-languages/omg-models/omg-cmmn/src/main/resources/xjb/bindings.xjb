@@ -1,0 +1,11 @@
+<jxb:bindings
+  xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+  xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+  version="2.0">
+
+  <jxb:bindings schemaLocation="../xsd/org/omg/spec/cmmn/CMMN11.xsd">
+    <xjc:simple/>
+  </jxb:bindings>
+
+
+</jxb:bindings>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+  xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_QfT7wBCBEeiFZscxSswqUg" name="Data"
+  URI="http://www.foo.bar/spec">
+  <packagedElement xmi:type="uml:Package" xmi:id="_T0DiIBHCEeiXW_CUTPoj2g" name="identifiers">
+    <packagedElement xmi:type="uml:DataType" xmi:id="_YM5EQBG6EeiXW_CUTPoj2g" name="URIIdentifier"
+      visibility="public">
+      <ownedAttribute xmi:id="_j7h1oBG6EeiXW_CUTPoj2g" name="uri" visibility="public">
+        <type xmi:type="uml:PrimitiveType"
+          href="pathmap://UML_LIBRARIES/XMLPrimitiveTypes.library.uml#AnyURI"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_j7icsBG6EeiXW_CUTPoj2g" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_j7icsRG6EeiXW_CUTPoj2g"
+          value="1"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_FseAkBG7EeiXW_CUTPoj2g" name="versionUri" visibility="public">
+        <type xmi:type="uml:PrimitiveType"
+          href="pathmap://UML_LIBRARIES/XMLPrimitiveTypes.library.uml#AnyURI"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_FsenoBG7EeiXW_CUTPoj2g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_FsenoRG7EeiXW_CUTPoj2g"
+          value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>

@@ -1,0 +1,25 @@
+<jxb:bindings version="2.1"
+  xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+  xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+  xmlns:dtt="http://www.omg.org/spec/API4KP/1.0/datatypes"
+  xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+  xmlns:ci="http://jaxb.dev.java.net/plugin/code-injector"
+  xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  jxb:extensionBindingPrefixes="ci">
+
+
+  <jxb:bindings schemaLocation="datatypes.xsd">
+    <xjc:simple/>
+    <namespace:prefix name="dtt"/>
+
+    <jxb:bindings node="//xsd:complexType[@name='Map']">
+      <inheritance:extends>edu.mayo.kmdp.id.adapter.CopyableHashMap</inheritance:extends>
+      <ci:code>
+        public Map( Map m ) { super( m ); }
+        public Map() { super(); }
+      </ci:code>
+    </jxb:bindings>
+  </jxb:bindings>
+
+</jxb:bindings>
