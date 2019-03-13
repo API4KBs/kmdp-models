@@ -28,7 +28,7 @@
 
   <name>KMDP :: Lang :: API4KP :: Knowledge Resource Surrogate Model</name>
 
-  <artifactId>kmdp-model-metadata</artifactId>
+  <artifactId>kmdp-asset-metadata</artifactId>
 
   <properties>
     <uml-model>metadata.uml</uml-model>

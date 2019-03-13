@@ -31,11 +31,11 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>datatype</module>
+    <module>kmdp-datatype</module>
     <module>kmdp-service-descr</module>
     <module>kmdp-terminology-model</module>
     <module>kmdp-terminology-content</module>
-    <module>metadata</module>
+    <module>kmdp-asset-metadata</module>
   </modules>
 
   <name>KMDP :: Lang :: UML-driven Logical Data Models</name>
