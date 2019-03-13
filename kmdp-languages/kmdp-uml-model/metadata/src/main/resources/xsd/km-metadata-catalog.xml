@@ -31,20 +31,6 @@
   <uri name="http://kmdp.mayo.edu/metadata/annotations"
     uri="metadata/annotations/annotations.xsd"/>
 
-  <public publicId="http://kmdp.mayo.edu/metadata/prov"
-    uri="metadata/prov/prov.xsd"/>
-  <system systemId="http://kmdp.mayo.edu/metadata/prov"
-    uri="metadata/prov/prov.xsd"/>
-  <uri name="http://kmdp.mayo.edu/metadata/prov"
-    uri="metadata/prov/prov.xsd"/>
-
-  <public publicId="http://kmdp.mayo.edu/metadata/context"
-    uri="metadata/context/context.xsd"/>
-  <system systemId="http://kmdp.mayo.edu/metadata/context"
-    uri="metadata/context/context.xsd"/>
-  <uri name="http://kmdp.mayo.edu/metadata/context"
-    uri="metadata/context/context.xsd"/>
-
   <public publicId="http://kmdp.mayo.edu/metadata/iso11179"
     uri="metadata/iso11179/iso11179.xsd"/>
   <system systemId="http://kmdp.mayo.edu/metadata/iso11179"

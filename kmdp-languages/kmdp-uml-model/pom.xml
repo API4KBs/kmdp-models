@@ -34,6 +34,7 @@
     <module>datatype</module>
     <module>kmdp-service-descr</module>
     <module>kmdp-terminology-model</module>
+    <module>kmdp-terminology-content</module>
     <module>metadata</module>
   </modules>
 

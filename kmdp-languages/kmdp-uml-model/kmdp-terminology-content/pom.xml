@@ -21,7 +21,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <artifactId>kmdp-terms</artifactId>
+    <artifactId>kmdp-uml-model</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
@@ -101,64 +101,6 @@
     </resources>
 
     <plugins>
-
-      <!--<plugin>-->
-      <!--<groupId>edu.mayo.kmdp</groupId>-->
-      <!--<artifactId>lexic-generator-plugin</artifactId>-->
-      <!--<version>1.0-SNAPSHOT</version>-->
-      <!--<executions>-->
-      <!--<execution>-->
-      <!--<id>pco-labels</id>-->
-      <!--<phase>generate-sources</phase>-->
-      <!--<goals>-->
-      <!--<goal>xls-to-olex</goal>-->
-      <!--</goals>-->
-      <!--<configuration>-->
-      <!--<outputDirectory>${ontologyDir}${s}PCO</outputDirectory>-->
-      <!--<outputFile>pco-olex.ttl</outputFile>-->
-      <!--<source>file:///${pom.basedir}/src/main/resources/GlossaryContentTracking.xlsx</source>-->
-      <!--<sheet>1</sheet>-->
-      <!--<defaults>-->
-      <!--<ctx>http://ckm.ontology.mayo.edu/ontology/KMO/versions/2018#MayoClinicClinicalKnowledge</ctx>-->
-      <!--</defaults>-->
-      <!--<ontologyURI>http://ontology.mayo.edu/PCO</ontologyURI>-->
-      <!--<conceptSchemeURI>http://terms.mayo.edu/PCO</conceptSchemeURI>-->
-      <!--</configuration>-->
-      <!--</execution>-->
-      <!--<execution>-->
-      <!--<id>pco-concepts</id>-->
-      <!--<phase>generate-sources</phase>-->
-      <!--<goals>-->
-      <!--<goal>xls-to-skos</goal>-->
-      <!--</goals>-->
-      <!--<configuration>-->
-      <!--<outputDirectory>${skosDir}</outputDirectory>-->
-      <!--<outputFile>pco-skos.rdf</outputFile>-->
-      <!--<source>file:///${pom.basedir}/src/main/resources/GlossaryContentTracking.xlsx</source>-->
-      <!--<sheet>1</sheet>-->
-      <!--<ontologyURI>http://ontology.mayo.edu/PCO</ontologyURI>-->
-      <!--<conceptSchemeURI>http://terms.mayo.edu/PCO</conceptSchemeURI>-->
-      <!--<schemeName>PCO_Scheme</schemeName>-->
-      <!--</configuration>-->
-      <!--</execution>-->
-      <!--<execution>-->
-      <!--<id>tco-concepts</id>-->
-      <!--<phase>generate-sources</phase>-->
-      <!--<goals>-->
-      <!--<goal>xls-to-skos</goal>-->
-      <!--</goals>-->
-      <!--<configuration>-->
-      <!--<outputDirectory>${skosDir}</outputDirectory>-->
-      <!--<outputFile>tco-skos.rdf</outputFile>-->
-      <!--<source>file:///${pom.basedir}/src/main/resources/ActivityContentTracking.xlsx</source>-->
-      <!--<sheet>0</sheet>-->
-      <!--<ontologyURI>http://ontology.mayo.edu/TCO</ontologyURI>-->
-      <!--<conceptSchemeURI>http://terms.mayo.edu/TCO</conceptSchemeURI>-->
-      <!--<schemeName>TCO_Scheme</schemeName>-->
-      <!--</configuration>-->
-      <!--</execution>-->
-      <!--</executions>-->
-      <!--</plugin>-->
 
       <plugin>
         <groupId>edu.mayo.kmdp</groupId>
@@ -494,32 +436,6 @@
       </plugin>
 
 
-      <!---plugin>
-        <groupId>ontology.mayo.edu</groupId>
-        <artifactId>lode-mvn-plugin</artifactId>
-        <version>1.0</version>
-        <configuration>
-          <useOWLAPI>true</useOWLAPI>
-          <considerImportedClosure>false</considerImportedClosure>
-          <deepImport>false</deepImport>
-          <targetDirectory>${project.build.directory}/lode</targetDirectory>
-          <xsltLocation>lode.xsl</xsltLocation>
-        </configuration>
-        <executions>
-          <execution>
-            <id>kao-lode</id>
-            <phase>package</phase>
-            <goals><goal>lode-gen</goal></goals>
-            <configuration>
-              <ontologyURLs>
-                <ontologyURL>edu/mayo/kmdp/vocabs/kac.skos.rdf</ontologyURL>
-              </ontologyURLs>
-              <xsltLocation>${project.build.outputDirectory}/lode.xsl</xsltLocation>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin-->
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -533,6 +449,16 @@
             </goals>
             <configuration>
               <artifactItems>
+                <artifactItem>
+
+                  <groupId>edu.mayo.kmdp</groupId>
+                  <artifactId>xmi-xsd-xslt</artifactId>
+                  <version>1.0-SNAPSHOT</version>
+
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                </artifactItem>
                 <artifactItem>
 
                   <groupId>edu.mayo.kmdp</groupId>

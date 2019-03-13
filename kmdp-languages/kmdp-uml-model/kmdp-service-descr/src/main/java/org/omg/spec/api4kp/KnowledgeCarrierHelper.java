@@ -28,7 +28,7 @@ import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.w3c.dom.Document;
 
-public class CarrierHelper {
+public class KnowledgeCarrierHelper {
 
 
   public static KnowledgeCarrier of(byte[] encoded) {

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="/root"
+           xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           targetNamespace="/root">
+   <xs:element name="klass" type="Klass"/>
+   <xs:complexType xmi:id="_74fPECFSEeiocrQi9rKkoQ" name="Klass">
+      <xs:group ref="Klass.content"/>
+      <xs:attributeGroup ref="Klass.attrs"/>
+   </xs:complexType>
+   <xs:group name="Klass.content">
+      <xs:sequence>
+         <xs:element name="child" type="Child" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+   </xs:group>
+   <xs:attributeGroup name="Klass.attrs"

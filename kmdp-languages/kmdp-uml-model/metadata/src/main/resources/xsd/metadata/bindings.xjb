@@ -21,14 +21,5 @@
     <namespace:prefix name="ann"/>
   </jxb:bindings>
 
-  <jxb:bindings schemaLocation="prov/prov.xsd">
-    <xjc:simple/>
-    <namespace:prefix name="prov"/>
-  </jxb:bindings>
-
-  <jxb:bindings schemaLocation="context/context.xsd">
-    <xjc:simple/>
-    <namespace:prefix name="ctx"/>
-  </jxb:bindings>
 
 </jxb:bindings>

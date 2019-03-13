@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://kmdp.mayo.edu/test/core/sub"
+           xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+           xmlns:ns1="http://foo.bar/todo/test/surrogate"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           targetNamespace="http://kmdp.mayo.edu/test/core/sub">
+   <xs:import namespace="http://foo.bar/todo/test/surrogate"
+              schemaLocation="../../../Parent/surrogate/surrogate.xsd"/>
+   <xs:element name="someExtendedType" type="SomeExtendedType"/>
+   <xs:complexType xmi:id="_TUmHMBWtEeiQ34wSFejXzQ" name="SomeExtendedType">
+      <xs:complexContent>
+         <xs:extension xmlns:tns="http://foo.bar/todo/test/surrogate" base="tns:Surrogate">
+            <xs:group ref="SomeExtendedType.content"/>
+            <xs:attributeGroup ref="SomeExtendedType.attrs"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:group name="SomeExtendedType.content">
+      <xs:sequence/>
+   </xs:group>
+   <xs:attributeGroup name="SomeExtendedType.attrs"/>
+</xs:schema>

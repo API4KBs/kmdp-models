@@ -15,35 +15,15 @@
  */
 package edu.mayo.kmdp.util;
 
+import static edu.mayo.kmdp.util.URIUtil.parseQName;
+import static edu.mayo.kmdp.util.Util.isEmpty;
+import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
+import static javax.xml.XMLConstants.XML_NS_URI;
+
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.schemas.CatalogResourceResolver;
 import edu.mayo.kmdp.xslt.XSLTConfig;
 import edu.mayo.kmdp.xslt.XSLTOptions;
-import org.apache.xerces.util.XMLCatalogResolver;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -62,11 +42,30 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static edu.mayo.kmdp.util.URIUtil.parseQName;
-import static edu.mayo.kmdp.util.Util.isEmpty;
-import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
-import static javax.xml.XMLConstants.XML_NS_URI;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import org.apache.xerces.util.XMLCatalogResolver;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class XMLUtil {
 
@@ -383,7 +382,7 @@ public class XMLUtil {
           .newDocument();
       DOMResult outputResult = new DOMResult(out);
 
-      if (p.get(XSLTOptions.OUTPUT_RESOLVER) != null) {
+      if (p.get(XSLTOptions.OUTPUT_RESOLVER).isPresent()) {
         XSLTSplitter splitter = new XSLTSplitter(outputResult);
         factory.setAttribute(XSLTOptions.OUTPUT_RESOLVER.getName(), splitter);
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://foo.test.com/ids"
+           xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           targetNamespace="http://foo.test.com/ids">
+   <xs:element name="pointer" type="Pointer"/>
+   <xs:complexType xmi:id="ptr_inner_id" name="Pointer">
+      <xs:group ref="Pointer.content"/>
+      <xs:attributeGroup ref="Pointer.attrs"/>
+   </xs:complexType>
+   <xs:group name="Pointer.content">
+      <xs:sequence/>
+   </xs:group>
+   <xs:attributeGroup name="Pointer.attrs">
+      <xs:attribute name="name" use="required" type="xs:string"/>
+   </xs:attributeGroup>
+   <xs:element name="pointer2" type="Pointer2"/>
+   <xs:complexType xmi:id="ptr2" name="Pointer2">
+      <xs:group ref="Pointer2.content"/>
+      <xs:attributeGroup ref="Pointer2.attrs"/>
+   </xs:complexType>
+   <xs:group name="Pointer2.content">
+      <xs:sequence/>
+   </xs:group>
+   <xs:attributeGroup name="Pointer2.attrs">
+      <xs:attribute name="name" use="required" type="xs:string"/>
+   </xs:attributeGroup>
+</xs:schema>

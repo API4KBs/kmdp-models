@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://kmdp.mayo.edu/test/core"
+           xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
+           xmlns:ns1="http://www.foo.bar/spec/identifiers"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           targetNamespace="http://kmdp.mayo.edu/test/core">
+   <xs:import namespace="http://www.foo.bar/spec/identifiers"
+              schemaLocation="../../Data/identifiers/identifiers.xsd"/>
+   <xs:element name="rootTop" type="RootTop"/>
+   <xs:complexType xmi:id="_kxwUpdRREeesZOluH2h1gg" name="RootTop">
+      <xs:group ref="RootTop.content"/>
+      <xs:attributeGroup ref="RootTop.attrs"/>
+   </xs:complexType>
+   <xs:group name="RootTop.content">
+      <xs:sequence>
+         <xs:element xmlns:tns="http://www.foo.bar/spec/identifiers"
+                     name="mainId"
+                     minOccurs="1"
+                     maxOccurs="1"
+                     type="tns:URIIdentifier"/>
+      </xs:sequence>
+   </xs:group>
+   <xs:attributeGroup name="RootTop.attrs"/>
+</xs:schema>

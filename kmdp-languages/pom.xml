@@ -34,7 +34,6 @@
   <modules>
     <module>hl7-models</module>
     <module>omg-models</module>
-    <module>kmdp-terms</module>
     <module>kmdp-uml-model</module>
   </modules>
 

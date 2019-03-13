@@ -153,10 +153,8 @@
             <configuration>
               <catalog>${project.build.outputDirectory}${s}xsd${s}terms-catalog.xml</catalog>
 
-              <bindingDirectory>${project.build.outputDirectory}/xsd/API4KP/api4kp/services
-              </bindingDirectory>
-              <bindingDirectory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms
-              </bindingDirectory>
+              <bindingDirectory>${project.build.outputDirectory}/xsd/API4KP/api4kp/services</bindingDirectory>
+              <bindingDirectory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms</bindingDirectory>
 
               <schemas>
                 <schema>
@@ -169,8 +167,7 @@
                 </schema>
                 <schema>
                   <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/API4KP/api4kp/services
-                    </directory>
+                    <directory>${project.build.outputDirectory}/xsd/API4KP/api4kp/services</directory>
                     <includes>
                       <include>**/*.xsd</include>
                     </includes>
@@ -191,11 +188,10 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <bindingDirectory>
-                ${project.build.outputDirectory}${s}xsd${s}API4KP${s}api4kp${s}services
-              </bindingDirectory>
-              <bindingDirectory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms
-              </bindingDirectory>
+
+              <bindingDirectory>${project.build.outputDirectory}${s}xsd${s}API4KP${s}api4kp${s}services</bindingDirectory>
+              <bindingDirectory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms</bindingDirectory>
+
               <schemas>
                 <schema>
                   <fileset>
@@ -214,9 +210,7 @@
                       <include>services.openapi.xsd</include>
                       <include>repository${s}repository.openapi.xsd</include>
                       <include>inference${s}inference.openapi.xsd</include>
-                      <include>
-                        transrepresentation${s}transrepresentation.openapi.xsd
-                      </include>
+                      <include>transrepresentation${s}transrepresentation.openapi.xsd</include>
                     </includes>
                   </fileset>
                 </schema>

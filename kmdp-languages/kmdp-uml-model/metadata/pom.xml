@@ -33,6 +33,7 @@
   <properties>
     <uml-model>metadata.uml</uml-model>
     <xsd-name>metadata/surrogate/surrogate.xsd</xsd-name>
+    <s>${file.separator}</s>
   </properties>
 
   <dependencies>
@@ -119,7 +120,7 @@
             <configuration>
               <catalogs>
                 <catalog>
-                  ${project.build.outputDirectory}${file.separator}xsd${file.separator}terms-catalog.xml
+                  ${project.build.outputDirectory}${s}xsd${s}terms-catalog.xml
                 </catalog>
               </catalogs>
             </configuration>
@@ -135,16 +136,31 @@
           <execution>
             <id>gen-uml</id>
             <configuration>
-              <catalog>
-                ${project.build.outputDirectory}${file.separator}xsd${file.separator}terms-catalog.xml
-              </catalog>
+              <catalog>${project.build.outputDirectory}${s}xsd${s}terms-catalog.xml</catalog>
+
+              <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
+              <bindingIncludes>
+                <include>edu/mayo/kmdp/terms/**/*.xjb</include>
+                <include>metadata/**/*.xjb</include>
+                <include>**/*.episode</include>
+              </bindingIncludes>
 
               <schemas>
                 <schema>
                   <fileset>
-                    <directory>${project.build.outputDirectory}/xsd</directory>
+                    <directory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms</directory>
                     <includes>
                       <include>**/*.xsd</include>
+                    </includes>
+                  </fileset>
+                </schema>
+
+                <schema>
+                  <fileset>
+                    <directory>${project.build.outputDirectory}/xsd/metadata</directory>
+                    <includes>
+                      <include>surrogate${s}surrogate.xsd</include>
+                      <include>annotations${s}annotations.xsd</include>
                     </includes>
                     <excludes>
                       <exclude>**/*.openapi.xsd</exclude>
@@ -164,20 +180,31 @@
             </goals>
 
             <configuration>
-              <catalog>
-                ${project.build.outputDirectory}${file.separator}xsd${file.separator}terms-catalog.xml
-              </catalog>
+
+              <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
+              <bindingIncludes>
+                <include>edu/mayo/kmdp/terms/**/*.xjb</include>
+                <include>metadata/**/*.xjb</include>
+                <include>**/*.episode</include>
+              </bindingIncludes>
+
 
               <schemas>
                 <schema>
                   <fileset>
-                    <directory>${project.build.outputDirectory}${file.separator}xsd</directory>
+                    <directory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms</directory>
                     <includes>
                       <include>**/*.xsd</include>
                     </includes>
-                    <excludes>
-                      <exclude>**/identifiers.openapi.xsd</exclude>
-                    </excludes>
+                  </fileset>
+                </schema>
+                <schema>
+                  <fileset>
+                    <directory>${project.build.outputDirectory}${s}xsd/metadata</directory>
+                    <includes>
+                      <include>surrogate${s}surrogate.openapi.xsd</include>
+                      <include>annotations${s}annotations.openapi.xsd</include>
+                    </includes>
                   </fileset>
                 </schema>
               </schemas>
@@ -187,6 +214,11 @@
 
         </executions>
         <dependencies>
+          <dependency>
+            <groupId>edu.mayo.kmdp</groupId>
+            <artifactId>kmdp-datatype</artifactId>
+            <version>1.0-SNAPSHOT</version>
+          </dependency>
           <dependency>
             <groupId>edu.mayo.kmdp</groupId>
             <artifactId>kmdp-terminology-content</artifactId>
