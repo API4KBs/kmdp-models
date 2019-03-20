@@ -15,31 +15,12 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import edu.mayo.kmdp.terms.generator.plugin.TermsGeneratorPlugin;
-import edu.mayo.kmdp.terms.mireot.MireotExtractor;
-import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
-import edu.mayo.kmdp.util.FileUtil;
-import example.MockTermsDirectory;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.junit.Rule;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
-import org.junit.rules.TemporaryFolder;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collections;
-
 import static edu.mayo.kmdp.util.CodeGenTestBase.applyJaxb;
 import static edu.mayo.kmdp.util.CodeGenTestBase.deploy;
 import static edu.mayo.kmdp.util.CodeGenTestBase.deployResource;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
+import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.printSourceFile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,12 +28,29 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import edu.mayo.kmdp.terms.generator.plugin.TermsGeneratorPlugin;
+import edu.mayo.kmdp.terms.mireot.MireotExtractor;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
+import edu.mayo.kmdp.util.FileUtil;
+import example.MockTermsDirectory;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
 
-@EnableRuleMigrationSupport
 public class TerminologyGeneratorPluginTest {
 
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir
+  Path tmp;
 
   private static final String tns = "http://org.test.terms/cito";
 
@@ -64,27 +62,17 @@ public class TerminologyGeneratorPluginTest {
 
   @BeforeEach
   public void initFolders() {
-    try {
-      resources = folder.newFolder("resources");
-      genSource = folder.newFolder("generated-sources");
-      target = folder.newFolder("target");
+    File folder = tmp.toFile();
+    resources = initFolder(folder,"resources");
+    genSource = initFolder(folder,"generated-sources");
+    target = initFolder(folder,"target");
 
-      owl = deploySkosOntology();
-    } catch (IOException e) {
-      e.printStackTrace();
-      fail(e.getMessage());
-    }
-  }
-
-  @AfterEach
-  public void cleanUp() {
-    if (folder != null) {
-      folder.delete();
-    }
+    owl = deploySkosOntology();
   }
 
   @Test
   public void testPlugin() {
+    File folder = tmp.toFile();
 
     TermsGeneratorPlugin plugin = initPlugin(new File(genSource.getAbsolutePath() + "/xsd"));
     try {
@@ -131,7 +119,7 @@ public class TerminologyGeneratorPluginTest {
     deploy(TerminologyGeneratorPluginTest.class.getResourceAsStream("/schema.xsd"), genSource,
         "/xsd/schema.xsd");
 
-    showDirContent(folder);
+    showDirContent(tmp.toFile());
 
     applyJaxb(Arrays.asList(new File(genSource.getPath() + "/xsd/schema.xsd"),
         new File(genSource.getPath() + "/xsd/terms")),

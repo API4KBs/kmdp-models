@@ -15,26 +15,15 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
-import edu.mayo.kmdp.util.JaxbUtil;
-import edu.mayo.kmdp.util.XMLUtil;
-import org.junit.Rule;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
-import org.junit.rules.TemporaryFolder;
-import org.omg.spec.api4kp._1_0.identifiers.GAVIdentifier;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._1_0.services.language.Transrepresentation;
-import org.omg.spec.api4kp._1_0.services.language.Transrepresentator;
-
-import javax.xml.validation.Schema;
-import java.io.File;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
-
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static edu.mayo.kmdp.util.CodeGenTestBase.*;
+import static edu.mayo.kmdp.util.CodeGenTestBase.applyJaxb;
+import static edu.mayo.kmdp.util.CodeGenTestBase.deploy;
+import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
+import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
+import static edu.mayo.kmdp.util.CodeGenTestBase.initGenSourceFolder;
+import static edu.mayo.kmdp.util.CodeGenTestBase.initSourceFolder;
+import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
+import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,11 +32,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-@EnableRuleMigrationSupport
+import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
+import edu.mayo.kmdp.util.JaxbUtil;
+import edu.mayo.kmdp.util.XMLUtil;
+import java.io.File;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.UUID;
+import javax.xml.validation.Schema;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.omg.spec.api4kp._1_0.identifiers.GAVIdentifier;
+import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._1_0.services.language.Transrepresentation;
+import org.omg.spec.api4kp._1_0.services.language.Transrepresentator;
+
 public class ServiceDescrCompilationTest {
 
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir
+  public Path tmp;
 
 
   @Test
@@ -100,8 +104,8 @@ public class ServiceDescrCompilationTest {
 
 
   private File compile() {
-    folder.getRoot().mkdirs();
-    assertTrue(folder.getRoot().exists());
+    File folder = tmp.toFile();
+    assertTrue(folder.exists());
 
     File src = initSourceFolder(folder);
     File gen = initGenSourceFolder(folder);

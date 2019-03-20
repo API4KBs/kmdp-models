@@ -15,53 +15,54 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.terms.example.MockTermsDirectory;
-import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
-import edu.mayo.kmdp.terms.generator.config.EnumGenerationParams;
-import edu.mayo.kmdp.util.NameUtils;
-import org.apache.jena.rdf.model.Model;
-import org.junit.Rule;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
-import org.junit.rules.TemporaryFolder;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLOntology;
-import ru.avicomp.ontapi.OntManagers;
-import ru.avicomp.ontapi.OntologyManager;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.util.Optional;
-
 import static edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.SKOS_NAMESPACE;
 import static edu.mayo.kmdp.terms.mireot.MireotExtractor.extract;
 import static edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter.convert;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
+import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.example.MockTermsDirectory;
+import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
+import edu.mayo.kmdp.terms.generator.config.EnumGenerationParams;
+import edu.mayo.kmdp.util.NameUtils;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.URI;
+import java.nio.file.Path;
+import java.util.Optional;
+import org.apache.jena.rdf.model.Model;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLOntology;
+import ru.avicomp.ontapi.OntManagers;
+import ru.avicomp.ontapi.OntologyManager;
+
 
 @EnableRuleMigrationSupport
 public class Owl2Skos2TermsTest {
 
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir
+  public Path tmp;
 
   @Test
   public void testOWLtoTerms() throws IOException {
+    File folder = tmp.toFile();
 
     String owlPath = "/cito.rdf";
     String entityURI = "http://purl.org/spar/cito/cites";
     String targetNS = "http://test.skos.foo/Cito";
 
-    File src = folder.newFolder("src");
-    File tgt = folder.newFolder("tgt");
+    File src = initFolder(folder,"src");
+    File tgt = initFolder(folder,"tgt");
 
     OntologyManager manager = OntManagers.createONT();
 

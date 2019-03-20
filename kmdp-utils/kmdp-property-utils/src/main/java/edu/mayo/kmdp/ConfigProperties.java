@@ -17,9 +17,11 @@ package edu.mayo.kmdp;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     O extends Option<?>> extends Properties {
@@ -107,5 +109,11 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
   public P from(Properties p) {
     this.putAll(p);
     return (P) this;
+  }
+
+  public Map<String,Object> toMap() {
+    return Arrays.stream(properties())
+        .collect(Collectors.toMap(Object::toString,
+            (prop)-> getTyped(prop,String.class)));
   }
 }

@@ -15,40 +15,54 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import static edu.mayo.kmdp.util.CodeGenTestBase.applyJaxb;
+import static edu.mayo.kmdp.util.CodeGenTestBase.deploy;
+import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
+import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
+import static edu.mayo.kmdp.util.CodeGenTestBase.initGenSourceFolder;
+import static edu.mayo.kmdp.util.CodeGenTestBase.initSourceFolder;
+import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
+import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
+import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationParams;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import java.io.File;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import javax.xml.validation.Schema;
 import org.apache.tools.ant.filters.StringInputStream;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
-import org.junit.rules.TemporaryFolder;
 import org.omg.spec.api4kp._1_0.identifiers.ObjectFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import javax.xml.validation.Schema;
-import java.io.File;
-import java.lang.reflect.*;
-import java.net.MalformedURLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static edu.mayo.kmdp.util.CodeGenTestBase.*;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
-import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.*;
-
 @EnableRuleMigrationSupport
 public class JaxbGenerationTest {
 
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir
+  public Path tmp;
 
 
   private String parentXSD = "" +
@@ -139,6 +153,8 @@ public class JaxbGenerationTest {
 
 
   private File compile() {
+    File folder = tmp.toFile();
+
     File src = initSourceFolder(folder);
     File gen = initGenSourceFolder(folder);
     File tgt = initTargetFolder(folder);

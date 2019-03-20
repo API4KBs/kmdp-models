@@ -15,10 +15,12 @@
  */
 package edu.mayo.kmdp.terms.skos.plugin;
 
+import java.nio.file.Path;
 import org.apache.jena.vocabulary.SKOS;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
 import org.junit.rules.TemporaryFolder;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -37,23 +39,18 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-@EnableRuleMigrationSupport
 public class SkosGeneratorPluginTest {
 
   private String localName;
   private File temp;
 
 
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir
+  Path tmpFolder;
 
   private SkosGeneratorPlugin init() {
-    try {
-      this.localName = "skosTest.rdf";
-      this.temp = folder.newFolder("temp");
-    } catch (IOException e) {
-      fail(e.getMessage());
-    }
+    this.localName = "skosTest.rdf";
+    this.temp = new File(tmpFolder.toFile(),"temp");
 
     SkosGeneratorPlugin mojo = new SkosGeneratorPlugin();
 

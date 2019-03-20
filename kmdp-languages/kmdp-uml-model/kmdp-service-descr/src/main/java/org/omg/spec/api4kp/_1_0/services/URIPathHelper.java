@@ -15,6 +15,9 @@
  */
 package org.omg.spec.api4kp._1_0.services;
 
+import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+
 public class URIPathHelper {
 
   public static String knowledgeArtifactPath(String repositoryId, String artifactId,

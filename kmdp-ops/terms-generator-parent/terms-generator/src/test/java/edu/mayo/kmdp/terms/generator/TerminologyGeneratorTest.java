@@ -15,41 +15,39 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.terms.ConceptScheme;
-import edu.mayo.kmdp.terms.example.MockTermsDirectory;
-import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
-import edu.mayo.kmdp.terms.generator.config.EnumGenerationParams;
-import edu.mayo.kmdp.terms.impl.model.InternalTerm;
-import org.junit.Rule;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
-import org.junit.rules.TemporaryFolder;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
+import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-@EnableRuleMigrationSupport
+import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.terms.example.MockTermsDirectory;
+import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
+import edu.mayo.kmdp.terms.generator.config.EnumGenerationParams;
+import edu.mayo.kmdp.terms.impl.model.InternalTerm;
+import java.io.File;
+import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.util.Optional;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+
 public class TerminologyGeneratorTest {
 
   private static SkosTerminologyAbstractor.ConceptGraph graph;
 
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir
+  public Path tmp;
 
   @BeforeAll
   public static void init() {
@@ -114,9 +112,10 @@ public class TerminologyGeneratorTest {
   @Test
   public void testClassCompilation() {
     try {
+      File folder = tmp.toFile();
 
-      File src = folder.newFolder("src");
-      File target = folder.newFolder("output");
+      File src = initFolder(folder,"src");
+      File target = initFolder(folder,"output");
 
       new JavaEnumTermsGenerator().generate(graph,
           new EnumGenerationConfig()
@@ -148,9 +147,10 @@ public class TerminologyGeneratorTest {
   @Test
   public void testClassCompilationWithVersionedPackage() {
     try {
+      File folder = tmp.toFile();
 
-      File src = folder.newFolder("src");
-      File target = folder.newFolder("output");
+      File src = initFolder(folder,"src");
+      File target = initFolder(folder,"output");
 
       new JavaEnumTermsGenerator().generate(graph,
           new EnumGenerationConfig()

@@ -15,20 +15,11 @@
  */
 package edu.mayo.kmdp.util;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.Options;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.SystemStreamLog;
-import org.junit.rules.TemporaryFolder;
-import org.jvnet.mjiip.v_2_2.XJC22Mojo;
-
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,9 +33,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
+import javax.validation.constraints.NotNull;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.SystemStreamLog;
+import org.jvnet.mjiip.v_2_2.XJC22Mojo;
 
 public abstract class CodeGenTestBase {
 
@@ -83,8 +81,8 @@ public abstract class CodeGenTestBase {
   }
 
 
-  public static void showDirContent(TemporaryFolder folder) {
-    showDirContent(folder.getRoot(), 0);
+  public static void showDirContent(File folder) {
+    showDirContent(folder, 0);
   }
 
   public static void showDirContent(File file, int i) {
@@ -294,32 +292,28 @@ public abstract class CodeGenTestBase {
     assertTrue(FileUtil.copyTo(def, FileUtil.relativePathToFile(root.getAbsolutePath(), path)));
   }
 
-  public static File initSourceFolder(TemporaryFolder folder) {
-    try {
-      return folder.newFolder("test");
-    } catch (IOException e) {
-      fail(e.getMessage());
-    }
-    return null;
+  public static File initSourceFolder(File folder) {
+    return initFolder(folder,"test");
+  }
+  public static File initTargetFolder(File folder) {
+    return initFolder(folder,"out");
   }
 
-  public static File initTargetFolder(TemporaryFolder folder) {
-    try {
-      return folder.newFolder("out");
-    } catch (IOException e) {
-      fail(e.getMessage());
-    }
-    return null;
+  public static File initGenSourceFolder(File folder) {
+    return initFolder(folder,"gen");
   }
 
-  public static File initGenSourceFolder(TemporaryFolder folder) {
-    try {
-      return folder.newFolder("gen");
-    } catch (IOException e) {
-      fail(e.getMessage());
+  public static File initFolder(File folder, String subFolder) {
+    if ( ! folder.exists()) {
+      return null;
     }
-    return null;
+    File f = new File(folder,subFolder);
+    if (!f.exists()) {
+      if (!f.mkdirs()) {
+        return null;
+      }
+    }
+    return f;
   }
-
 
 }
