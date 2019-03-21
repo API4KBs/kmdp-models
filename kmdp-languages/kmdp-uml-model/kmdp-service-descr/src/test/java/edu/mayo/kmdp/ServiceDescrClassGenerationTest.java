@@ -131,7 +131,7 @@ public class ServiceDescrClassGenerationTest {
   public void testJobResource() {
     Job job = new edu.mayo.kmdp.common.model.Job().withId(UUID.randomUUID().toString())
         .withStatus(JobStatus.STARTED)
-        .withRedirectUrl("http://te.st");
+        .withRedirectUrl(URI.create("http://te.st"));
 
     assertEquals(JobStatus.STARTED, job.getStatus());
   }

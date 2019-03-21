@@ -153,8 +153,12 @@
             <configuration>
               <catalog>${project.build.outputDirectory}${s}xsd${s}terms-catalog.xml</catalog>
 
-              <bindingDirectory>${project.build.outputDirectory}/xsd/API4KP/api4kp/services</bindingDirectory>
-              <bindingDirectory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms</bindingDirectory>
+              <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
+              <bindingIncludes>
+                <include>edu/mayo/kmdp/terms/**/*.xjb</include>
+                <include>API4KP/api4kp/services/**/*.xjb</include>
+                <include>**/*.episode</include>
+              </bindingIncludes>
 
               <schemas>
                 <schema>
@@ -189,8 +193,12 @@
             </goals>
             <configuration>
 
-              <bindingDirectory>${project.build.outputDirectory}${s}xsd${s}API4KP${s}api4kp${s}services</bindingDirectory>
-              <bindingDirectory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms</bindingDirectory>
+              <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
+              <bindingIncludes>
+                <include>edu/mayo/kmdp/terms/**/*.xjb</include>
+                <include>API4KP/api4kp/services/**/*.xjb</include>
+                <include>**/*.episode</include>
+              </bindingIncludes>
 
               <schemas>
                 <schema>
