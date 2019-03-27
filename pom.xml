@@ -23,13 +23,25 @@
   <parent>
     <groupId>edu.mayo.kmdp</groupId>
     <artifactId>kmdp-bom</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
   </parent>
 
   <artifactId>kmdp-impl</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
 
   <packaging>pom</packaging>
+
+  <name>KMDP :: Models, Languages and Tools Core Implementation</name>
+
+  <properties>
+    <github.global.server>github</github.global.server>
+  </properties>
+
+  <scm>
+    <developerConnection>scm:git:ssh://github.com/API4KBs/kmdp-models.git</developerConnection>
+    <url>https://github.com/API4KBs/kmdp-models</url>
+  </scm>
+
 
   <modules>
     <module>kmdp-environment</module>
@@ -38,6 +50,23 @@
     <module>kmdp-ops</module>
   </modules>
 
-  <name>KMDP :: Models, Languages and Tools Core Implementation</name>
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.commonjava.maven.plugins</groupId>
+        <artifactId>directory-maven-plugin</artifactId>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <distributionManagement>
+    <repository>
+      <id>bintray-api4kbs-API4KP-Mvn-Repo</id>
+      <name>api4kbs-API4KP-Mvn-Repo</name>
+      <url>https://api.bintray.com/maven/api4kbs/API4KP-Mvn-Repo/kmdp-models/;override=1</url>
+    </repository>
+  </distributionManagement>
 
 </project>
