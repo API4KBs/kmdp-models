@@ -157,7 +157,7 @@
               <configuration>
                 <packageLevelAnnotations>false</packageLevelAnnotations>
                 <episode>true</episode>
-                <addIfExistsToEpisodeSchemaBindings>false</addIfExistsToEpisodeSchemaBindings>
+                <addIfExistsToEpisodeSchemaBindings>true</addIfExistsToEpisodeSchemaBindings>
                 <episodeFile>
                   ${project.build.directory}/generated-sources/xjc/META-INF/sun-jaxb-ext.episode
                 </episodeFile>
