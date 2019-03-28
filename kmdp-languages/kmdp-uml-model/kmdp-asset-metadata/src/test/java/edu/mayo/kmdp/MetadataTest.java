@@ -121,7 +121,7 @@ public class MetadataTest {
     assertTrue(str.isPresent());
     assertTrue(str.get().contains("xmlns:surr=\"http://kmdp.mayo.edu/metadata/surrogate\""));
 
-    System.out.println(str.get());
+    //System.out.println(str.get());
 
     Optional<Schema> schema = SurrogateHelper.getSchema();
     assertTrue(schema.isPresent());

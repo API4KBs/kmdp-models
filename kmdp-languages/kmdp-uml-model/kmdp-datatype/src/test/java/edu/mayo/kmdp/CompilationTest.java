@@ -71,7 +71,7 @@ public class CompilationTest {
       String xml = JaxbUtil.marshallToString(Collections.singleton(Pointer.class),
           ptr1,
           JaxbUtil.defaultProperties());
-      System.out.println(xml);
+      //System.out.println(xml);
 
       Optional<Schema> schema = getSchemas(
           DatatypeTest.class.getResource("/xsd/API4KP/api4kp/identifiers/identifiers.openapi.xsd"),
@@ -123,8 +123,8 @@ public class CompilationTest {
 
     applyJaxb(Collections.singletonList(src), Collections.emptyList(), gen, true);
 
-    printSourceFile(new File(gen.getAbsolutePath() + "/edu/mayo/kmdp/common/model/Pointer.java"),
-        System.out);
+   // printSourceFile(new File(gen.getAbsolutePath() + "/edu/mayo/kmdp/common/model/Pointer.java"),
+     //   System.out);
 
     ensureSuccessCompile(src, gen, tgt);
 

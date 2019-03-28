@@ -314,7 +314,7 @@ public class Owl2SkosTest extends TestBase {
         .flatMap((m) -> cv.run(m, false, false)).get();
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
-    System.out.println(answers);
+    //System.out.println(answers);
 
     assertTrue(answers.stream()
         .filter((m) -> "Italian".equals(m.get("L")))
@@ -344,7 +344,7 @@ public class Owl2SkosTest extends TestBase {
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
-    System.out.println(answers);
+    //System.out.println(answers);
 
     Set<String> uris = answers.stream().map((m) -> m.get("C")).collect(Collectors.toSet());
     assertEquals(10, uris.size());

@@ -54,7 +54,7 @@ public class ValidationTest extends TestBase {
 
     Model m = result.get();
 
-    JenaUtil.iterateAndStreamModel(m, System.out, PrintUtil::print);
+    //JenaUtil.iterateAndStreamModel(m, System.out, PrintUtil::print);
 
     Resource klass = m.getResource(NS + "#Klass");
     assertNotNull(klass);

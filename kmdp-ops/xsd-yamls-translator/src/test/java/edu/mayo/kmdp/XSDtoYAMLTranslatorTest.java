@@ -58,7 +58,7 @@ public class XSDtoYAMLTranslatorTest {
         xslt,
         new XSLTConfig()
             .with(XSLTOptions.CATALOGS, catalog.toString())));
-    System.out.println(out);
+    //System.out.println(out);
 
     Swagger model = parseValidate(out);
 
@@ -79,7 +79,7 @@ public class XSDtoYAMLTranslatorTest {
         xslt,
         new XSLTConfig()
             .with(XSLTOptions.CATALOGS, catalog.toString())));
-    System.out.println(out);
+    //System.out.println(out);
 
     Swagger model = parseValidate(out);
     assertNotNull(model.getDefinitions());
@@ -95,7 +95,7 @@ public class XSDtoYAMLTranslatorTest {
     String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl,
         xslt,
         new XSLTConfig()));
-    System.out.println(out);
+    //System.out.println(out);
 
     Swagger model = parseValidate(out);
     assertNotNull(model.getDefinitions());
@@ -109,7 +109,7 @@ public class XSDtoYAMLTranslatorTest {
     URL sourceUrl = XSDtoYAMLTranslatorTest.class.getResource(source);
 
     String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl, xslt, new XSLTConfig()));
-    System.out.println(out);
+    //System.out.println(out);
 
     Swagger model = parseValidate(out);
     assertNotNull(model.getDefinitions());
@@ -159,7 +159,7 @@ public class XSDtoYAMLTranslatorTest {
 
     String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl, xslt, new XSLTConfig()));
 
-    System.out.println(out);
+    //System.out.println(out);
     Swagger model = parseValidate(out);
 
     Model tag = model.getDefinitions().get("SemVerTag");
@@ -214,7 +214,7 @@ public class XSDtoYAMLTranslatorTest {
     String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl,
         xslt,
         new XSLTConfig()));
-    System.out.println(out);
+    //System.out.println(out);
 
     Swagger model = parseValidate(out);
     assertNotNull(model.getDefinitions());

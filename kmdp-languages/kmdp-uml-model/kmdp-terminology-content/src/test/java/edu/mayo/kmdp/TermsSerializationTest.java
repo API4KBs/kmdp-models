@@ -37,7 +37,7 @@ public class TermsSerializationTest {
     String xml = JaxbUtil.marshallToString(Collections.singleton(Foo.class),
         new Foo(KnowledgeAssetType.Cognitive_Process_Model, KRLanguage.OWL_2),
         JaxbUtil.defaultProperties());
-    System.out.println(xml);
+    //System.out.println(xml);
     assertTrue(xml.contains(KnowledgeAssetType.Cognitive_Process_Model.getTag()));
     assertTrue(xml.contains(KnowledgeAssetType.Cognitive_Process_Model.getLabel()));
     assertTrue(xml.contains(KnowledgeAssetType.Cognitive_Process_Model.getRef().toString()));
@@ -60,7 +60,7 @@ public class TermsSerializationTest {
         .writeJson(new Foo(KnowledgeAssetType.Cognitive_Process_Model, KRLanguage.OWL_2))
         .flatMap(Util::asString).get();
 
-    System.out.println(json);
+//    System.out.println(json);
 
     assertTrue(json.contains(KnowledgeAssetType.Cognitive_Process_Model.getTag()));
     assertTrue(json.contains(KnowledgeAssetType.Cognitive_Process_Model.getLabel()));

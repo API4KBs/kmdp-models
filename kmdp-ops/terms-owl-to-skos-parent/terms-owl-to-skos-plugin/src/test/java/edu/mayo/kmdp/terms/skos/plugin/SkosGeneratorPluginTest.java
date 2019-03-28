@@ -83,8 +83,8 @@ public class SkosGeneratorPluginTest {
         .getIndividuals(odf.getOWLClass(SKOS.Concept.getURI()), onto)
         .collect(Collectors.toSet());
 
-    inds.stream()
-        .forEach((i) -> System.out.println(i.asOWLNamedIndividual().getIRI().getShortForm()));
+//    inds.stream()
+//        .forEach((i) -> System.out.println(i.asOWLNamedIndividual().getIRI().getShortForm()));
 
     assertEquals(46, inds.size());
   }

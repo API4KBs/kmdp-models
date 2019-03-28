@@ -48,12 +48,12 @@ public class MetadataJSonTest {
         .withResourceId(uri("http://foo.bar", "234"));
 
     String jsonTree = toJson(ks);
-    System.out.println(jsonTree);
+    //System.out.println(jsonTree);
 
     Model triples = toTriples(jsonTree);
     int n = JenaUtil.sizeOf(triples);
 
-    JenaUtil.toSystemOut(triples);
+//    JenaUtil.toSystemOut(triples);
 
   }
 
@@ -85,7 +85,7 @@ public class MetadataJSonTest {
         .withType("http://my/onto/type/this_or_that_operation"));
 
     String jsonTree = toJsonLD(ks);
-    System.out.println(jsonTree);
+    //System.out.println(jsonTree);
 
 //		JenaUtil.toSystemOut( toTriples( jsonTree ) );
 

@@ -81,7 +81,7 @@ public class ServiceDescrClassGenerationTest {
         of::createTransrepresentator,
         JaxbUtil.defaultProperties());
 
-    System.out.println(xml);
+    //System.out.println(xml);
 
     Optional<Schema> schema = getSchemas(ServiceDescrClassGenerationTest.class
             .getResource("/xsd/API4KP/api4kp/services/transrepresentation/transrepresentation.xsd"),
@@ -95,7 +95,7 @@ public class ServiceDescrClassGenerationTest {
   @Test
   public void testCodegeneration() {
     URL url = ServiceDescrClassGenerationTest.class.getResource("/");
-    System.out.println(url);
+    //System.out.println(url);
     try {
       File f = new File(url.toURI());
       assertTrue(f.exists());
@@ -115,7 +115,7 @@ public class ServiceDescrClassGenerationTest {
           .map((s) -> s.replace(".java", ""))
           .collect(Collectors.toList());
 
-      files.forEach(System.out::println);
+//      files.forEach(System.out::println);
 
       assertTrue(
           files.contains(edu.mayo.kmdp.common.model.KnowledgeArtifactRepository.class.getName()));

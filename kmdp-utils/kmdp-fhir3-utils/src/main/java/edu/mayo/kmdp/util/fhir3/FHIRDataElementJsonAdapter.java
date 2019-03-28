@@ -47,7 +47,7 @@ public class FHIRDataElementJsonAdapter {
     public DataElement deserialize(JsonParser jp, DeserializationContext ctxt)
         throws IOException, JsonProcessingException {
       JsonNode node = jp.getCodec().readTree(jp);
-      System.out.println(node.toString());
+//      System.out.println(node.toString());
       return jsonParser.parseResource(DataElement.class, node.toString());
     }
   }

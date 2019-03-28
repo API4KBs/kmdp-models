@@ -79,7 +79,7 @@ public class RootElementTest {
         .map(ByteArrayOutputStream::toByteArray)
         .map(String::new);
 
-    System.out.println(str.get());
+    //System.out.println(str.get());
 
     Optional<Schema> schema = SurrogateHelper.getSchema();
     assertTrue(schema.isPresent());

@@ -51,7 +51,7 @@ public class DatatypeJSONTest {
     ptr2.setType(foo);
     ptr2.setEntityRef(uri("uri:urn:fbb"));
 
-    JSonUtil.printOutJson(Arrays.asList(ptr, ptr2));
+//    JSonUtil.printOutJson(Arrays.asList(ptr, ptr2));
 
     XmlMapper mapper = new XmlMapper();
     JaxbAnnotationModule module = new JaxbAnnotationModule();
@@ -63,7 +63,7 @@ public class DatatypeJSONTest {
       mapper.writerWithDefaultPrettyPrinter().writeValue(baos, ptr);
       String str = new String(baos.toByteArray());
 
-      System.out.println(str);
+      //System.out.println(str);
       assertTrue(str.contains("name=\"Name\""));
       assertTrue(str.contains("uri=\"uri:urn:faa\""));
     } catch (IOException e) {
@@ -82,7 +82,7 @@ public class DatatypeJSONTest {
     NamespaceIdentifier nsId = new NamespaceIdentifier().withId(URI.create("http://foo.bar"))
         .withLabel("NS")
         .withTag("foo");
-    JSonUtil.printOutJson(nsId);
+//    JSonUtil.printOutJson(nsId);
   }
 
 

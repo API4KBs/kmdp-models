@@ -50,7 +50,7 @@ public class JsonSerializationTest {
     Optional<String> pat = JSonUtil.writeJson(res, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(pat.isPresent());
-    System.out.println(pat.get());
+//    System.out.println(pat.get());
 
     Optional<Patient> p = JSonUtil.parseJson(pat.get(), module, Patient.class);
     assertTrue(p.isPresent());
@@ -66,7 +66,7 @@ public class JsonSerializationTest {
     Optional<String> pat = JSonUtil.writeJson(res, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(pat.isPresent());
-    System.out.println(pat.get());
+//    System.out.println(pat.get());
 
     Optional<?> p = JSonUtil.parseJson(pat.get(), module, BaseResource.class);
     assertTrue(p.isPresent());
@@ -83,7 +83,7 @@ public class JsonSerializationTest {
     Optional<String> foo = JSonUtil.writeJson(nonRes, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(foo.isPresent());
-    System.out.println(foo.get());
+//    System.out.println(foo.get());
 
     Optional<Foo> p = JSonUtil.parseJson(foo.get(), module, Foo.class);
     assertTrue(p.isPresent());
@@ -99,7 +99,7 @@ public class JsonSerializationTest {
     Optional<String> foo = JSonUtil.writeJson(map, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(foo.isPresent());
-    System.out.println(foo.get());
+//    System.out.println(foo.get());
 
     Optional<Map<String, String>> p = JSonUtil
         .parseJson(foo.get(), module, asMapOf(String.class, String.class));
@@ -118,7 +118,7 @@ public class JsonSerializationTest {
     Optional<String> booStr = JSonUtil.writeJson(boo, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(booStr.isPresent());
-    System.out.println(booStr.get());
+//    System.out.println(booStr.get());
 
     Optional<Boo> p = JSonUtil.parseJson(booStr.get(), module, Boo.class);
     assertTrue(p.isPresent());
@@ -136,7 +136,7 @@ public class JsonSerializationTest {
     Optional<String> zooStr = JSonUtil.writeJson(zoo, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(zooStr.isPresent());
-    System.out.println(zooStr.get());
+//    System.out.println(zooStr.get());
 
     Optional<Zoo> p = JSonUtil.parseJson(zooStr.get(), Zoo.class);
     assertTrue(p.isPresent());
@@ -153,7 +153,7 @@ public class JsonSerializationTest {
     Optional<String> qStr = JSonUtil.writeJson(q, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(qStr.isPresent());
-    System.out.println(qStr.get());
+//    System.out.println(qStr.get());
 
     Optional<Quantity> p = JSonUtil.parseJson(qStr.get(), module, Quantity.class);
     assertTrue(p.isPresent());
@@ -170,7 +170,7 @@ public class JsonSerializationTest {
     Optional<String> mapStr = JSonUtil.writeJson(map, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(mapStr.isPresent());
-    System.out.println(mapStr.get());
+//    System.out.println(mapStr.get());
 
     Optional<Map<String, Base>> p = JSonUtil
         .parseJson(mapStr.get(), module, asMapOf(String.class, Base.class));
@@ -191,7 +191,7 @@ public class JsonSerializationTest {
     Optional<String> nooStr = JSonUtil.writeJson(noo, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(nooStr.isPresent());
-    System.out.println(nooStr.get());
+//    System.out.println(nooStr.get());
 
     Optional<Noo> p = JSonUtil.parseJson(nooStr.get(), module, Noo.class);
     assertTrue(p.isPresent());

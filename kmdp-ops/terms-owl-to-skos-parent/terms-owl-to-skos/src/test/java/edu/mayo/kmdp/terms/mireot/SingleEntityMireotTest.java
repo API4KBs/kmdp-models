@@ -46,7 +46,7 @@ public class SingleEntityMireotTest extends BaseMireotTest {
 
     assertTrue(chunk.isPresent());
 
-    JenaUtil.toSystemOut(chunk.get());
+//    JenaUtil.toSystemOut(chunk.get());
 
     assertEquals(count, JenaUtil.sizeOf(chunk.get()));
   }

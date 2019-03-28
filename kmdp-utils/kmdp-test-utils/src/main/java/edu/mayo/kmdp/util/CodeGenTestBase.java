@@ -72,7 +72,7 @@ public abstract class CodeGenTestBase {
 
     boolean success = true;
     for (Diagnostic diag : diagnostics) {
-      System.out.println(diag.getKind() + " : " + diag);
+//      System.out.println(diag.getKind() + " : " + diag);
       if (diag.getKind() == Diagnostic.Kind.ERROR) {
         success = false;
       }
@@ -86,7 +86,7 @@ public abstract class CodeGenTestBase {
   }
 
   public static void showDirContent(File file, int i) {
-    System.out.println(tab(i) + " " + file.getName());
+//    System.out.println(tab(i) + " " + file.getName());
     if (file.isDirectory()) {
       for (File sub : file.listFiles()) {
         showDirContent(sub, i + 1);

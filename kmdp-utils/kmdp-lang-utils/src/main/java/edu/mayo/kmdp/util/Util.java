@@ -59,7 +59,7 @@ public class Util {
 
   public static Optional<ByteArrayOutputStream> printOut(ByteArrayOutputStream os) {
     try {
-      System.out.println(asString(os));
+//      System.out.println(asString(os));
       return Optional.of(os);
     } catch (Exception e) {
       e.printStackTrace();
@@ -69,7 +69,7 @@ public class Util {
 
   public static Optional<String> printOut(String s) {
     try {
-      System.out.println(s);
+//      System.out.println(s);
       return Optional.of(s);
     } catch (Exception e) {
       e.printStackTrace();

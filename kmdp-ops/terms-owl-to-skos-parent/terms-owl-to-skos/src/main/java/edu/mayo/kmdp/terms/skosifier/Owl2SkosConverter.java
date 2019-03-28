@@ -167,7 +167,7 @@ public class Owl2SkosConverter extends ConverterInitBase {
   private void debug(InfModel inf, ValidityReport report) {
     report.getReports().forEachRemaining((rep) -> {
       if (rep.isError()) {
-        System.out.println(rep.toString());
+        //System.out.println(rep.toString());
       }
     });
   }

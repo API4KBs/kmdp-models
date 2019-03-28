@@ -46,7 +46,7 @@ public class MapDatatypeTest {
   @Test
   public void testMapSerializationJson() {
 
-    JSonUtil.printOutJson(custoMap);
+//    JSonUtil.printOutJson(custoMap);
     Optional<String> str = JSonUtil.printJson(custoMap);
     assertTrue(str.isPresent());
 

@@ -127,7 +127,7 @@ public class DatatypeTest {
         .map(String::new)
         .orElse("");
 
-    System.out.println(xml);
+    //System.out.println(xml);
     Optional<Schema> schema = getSchemas(
         DatatypeTest.class.getResource("/xsd/API4KP/api4kp/identifiers/identifiers.xsd"),
         catalogResolver("/xsd/api4kp-catalog.xml"));

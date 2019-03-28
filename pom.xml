@@ -60,16 +60,6 @@
     <module>kmdp-ops</module>
   </modules>
 
-  <build>
-    <plugins>
-
-      <plugin>
-        <groupId>org.commonjava.maven.plugins</groupId>
-        <artifactId>directory-maven-plugin</artifactId>
-      </plugin>
-
-    </plugins>
-  </build>
 
   <distributionManagement>
     <repository>

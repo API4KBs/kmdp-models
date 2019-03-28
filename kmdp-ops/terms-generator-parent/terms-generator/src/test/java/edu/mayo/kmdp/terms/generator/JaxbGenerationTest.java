@@ -136,7 +136,7 @@ public class JaxbGenerationTest {
       String x = JaxbUtil.marshallToString(Collections.singleton(ObjectFactory.class),
           i,
           JaxbUtil.defaultProperties());
-      System.out.println(x);
+      //System.out.println(x);
 
       Optional<Schema> schema = XMLUtil
           .getSchemas(new File(tgt.getParent() + "/test/parent.xsd").toURI().toURL(),

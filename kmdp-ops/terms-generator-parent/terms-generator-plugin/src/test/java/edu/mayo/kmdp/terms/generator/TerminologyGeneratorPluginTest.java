@@ -87,8 +87,8 @@ public class TerminologyGeneratorPluginTest {
 
     ensureSuccessCompile(genSource, genSource, target);
 
-    printSourceFile(new File(genSource.getAbsolutePath() + "/xsd/terms/test/org/cito/Cito.xsd"),
-        System.out);
+//    printSourceFile(new File(genSource.getAbsolutePath() + "/xsd/terms/test/org/cito/Cito.xsd"),
+//        System.out);
 
     try {
       Class<?> info = getNamedClass("org.tempuri.test.Info", target);

@@ -45,7 +45,7 @@ public class IntegrityTest {
     Pointer ptr = new Pointer();
     assertTrue(ptr instanceof org.omg.spec.api4kp._1_0.identifiers.Pointer);
 
-    System.out.println(Pointer.class.getPackage().getName());
+    //System.out.println(Pointer.class.getPackage().getName());
     Reflections reflections = new Reflections(Pointer.class.getPackage().getName(),
         new SubTypesScanner(false),
         new TypeAnnotationsScanner());

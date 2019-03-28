@@ -59,7 +59,7 @@ public class JsonLDTest {
         .map(String::new);
 
     assertTrue(json.isPresent());
-    System.out.println(json.get());
+//    System.out.println(json.get());
     assertEquals(Util.clearLineSeparators(jsonBean), Util.clearLineSeparators(json.get()));
   }
 
@@ -77,7 +77,7 @@ public class JsonLDTest {
         .map(ByteArrayOutputStream::toByteArray)
         .map(String::new);
 
-    System.out.println(json.get());
+//    System.out.println(json.get());
   }
 
 }

@@ -317,7 +317,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
       onto.getOWLOntologyManager().applyChange(new SetOntologyID(onto, originalId));
       onto.saveOntology(fmt, baos);
 
-      onto.saveOntology(System.out);
+      //onto.saveOntology(System.out);
       return new ByteArrayInputStream(baos.toByteArray());
 
     } catch (Exception e) {

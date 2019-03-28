@@ -71,7 +71,7 @@ public class ServiceDescrCompilationTest {
 
       String xml = JaxbUtil
           .marshallToString(Collections.singleton(txc), tp, JaxbUtil.defaultProperties());
-      System.out.println(xml);
+      //System.out.println(xml);
 
       Optional<Schema> schema = getSchemas(ServiceDescrCompilationTest.class.getResource(
           "/xsd/API4KP/api4kp/services/transrepresentation/transrepresentation.openapi.xsd"),

@@ -43,14 +43,14 @@ public class IntegrityTest {
   public void testIntegrity() {
     KnowledgeAsset kas = new KnowledgeAsset();
 
-    System.out.println(kas.getClass().getPackage().getName());
+    //System.out.println(kas.getClass().getPackage().getName());
     Reflections reflections = new Reflections(Pointer.class.getPackage().getName(),
         new SubTypesScanner(false),
         new TypeAnnotationsScanner());
 
     Set<Class<?>> allClasses = reflections.getTypesAnnotatedWith(XmlRootElement.class);
 
-    System.out.println(allClasses);
+    //System.out.println(allClasses);
 
     assertEquals(11,
         allClasses.size(),
@@ -61,7 +61,7 @@ public class IntegrityTest {
   @Test
   public void testCodegeneration() {
     URL url = IntegrityTest.class.getResource("/");
-    System.out.println(url);
+    //System.out.println(url);
     try {
       File f = new File(url.toURI());
       assertTrue(f.exists());
@@ -71,7 +71,7 @@ public class IntegrityTest {
           .replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
       assertTrue(f.exists());
       assertTrue(f.isDirectory());
-      Arrays.stream(f.listFiles()).forEach(System.out::println);
+//      Arrays.stream(f.listFiles()).forEach(System.out::println);
       Set<String> fileNames = Arrays.stream(f.listFiles()).map(File::getName)
           .collect(Collectors.toSet());
       assertTrue(fileNames.contains(KnowledgeAsset.class.getSimpleName() + ".java"));

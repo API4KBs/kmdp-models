@@ -48,7 +48,7 @@ public class XSLTTest {
     assertEquals(1, xsd.size());
     //assertTrue( xsd.containsKey( "Foo/root/root.xsd" ) );
 
-    xsd.forEach((k, v) -> XMLUtil.streamXMLDocument(v, System.out));
+    //xsd.forEach((k, v) -> XMLUtil.streamXMLDocument(v, System.out));
   }
 
   @Test
@@ -61,10 +61,10 @@ public class XSLTTest {
                 .with(XSLTOptions.OUTPUT_RESOLVER, XSLTSplitter.class.getName()));
 
     assertFalse(xsd.isEmpty());
-    xsd.forEach((k, v) -> {
-      System.out.println(k);
-      XMLUtil.streamXMLDocument(v, System.out);
-    });
+//    xsd.forEach((k, v) -> {
+//      System.out.println(k);
+//      XMLUtil.streamXMLDocument(v, System.out);
+//    });
 
     assertEquals(2, xsd.size());
 
@@ -95,10 +95,10 @@ public class XSLTTest {
                 .with(XSLTOptions.OUTPUT_RESOLVER, XSLTSplitter.class.getName()));
 
     assertFalse(xsd.isEmpty());
-    xsd.forEach((k, v) -> {
-      System.out.println(k);
-      XMLUtil.streamXMLDocument(v, System.out);
-    });
+//    xsd.forEach((k, v) -> {
+//      System.out.println(k);
+//      XMLUtil.streamXMLDocument(v, System.out);
+//    });
 
     assertEquals(1, xsd.size());
 
@@ -112,10 +112,10 @@ public class XSLTTest {
             new XSLTConfig().with(XSLTOptions.OUTPUT_RESOLVER, XSLTSplitter.class.getName()));
 
     assertFalse(xsd2.isEmpty());
-    xsd2.forEach((k, v) -> {
-      System.out.println(k);
-      XMLUtil.streamXMLDocument(v, System.out);
-    });
+//    xsd2.forEach((k, v) -> {
+//      System.out.println(k);
+//      XMLUtil.streamXMLDocument(v, System.out);
+//    });
 
     assertEquals(1, xsd2.size());
 

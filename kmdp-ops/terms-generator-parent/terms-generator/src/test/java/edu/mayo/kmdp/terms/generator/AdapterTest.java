@@ -33,20 +33,20 @@ public class AdapterTest {
   public void testAdapter() {
     SomeBean bean = new SomeBean();
     bean.setSchone(SCH1.Sub_Sub_Concept);
-    System.out.println("ORIGINAL : " + bean);
+    //System.out.println("ORIGINAL : " + bean);
 
     ByteArrayOutputStream baos = JaxbUtil.marshall(Collections.singleton(ObjectFactory.class),
         bean,
         JaxbUtil.defaultProperties()).get();
     String xml = baos.toString();
 
-    System.out.println("\nXML-IZED : \n" + xml);
+    //System.out.println("\nXML-IZED : \n" + xml);
 
     assertTrue(xml.contains("ref=\"http://test/generator#sub_sub_concept\""));
 
     SomeBean b2 = JaxbUtil
         .unmarshall(SomeBean.class, SomeBean.class, xml, JaxbUtil.defaultProperties()).get();
-    System.out.println("REHYDRAT : " + b2);
+    //System.out.println("REHYDRAT : " + b2);
 
     assertEquals(bean.getSchone(), b2.getSchone());
   }

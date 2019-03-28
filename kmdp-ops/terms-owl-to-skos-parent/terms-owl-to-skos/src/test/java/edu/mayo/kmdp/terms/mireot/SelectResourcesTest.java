@@ -110,7 +110,7 @@ public class SelectResourcesTest extends BaseMireotTest {
         .extract("http://www.omg.org/spec/API4KP/core#ConstructedLanguage",
             EntityTypes.INST);
 
-    props.forEach((r) -> System.out.println(r.getURI()));
+    //props.forEach((r) -> System.out.println(r.getURI()));
     assertEquals(10, props.size());
 
 
