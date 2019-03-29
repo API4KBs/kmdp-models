@@ -131,40 +131,7 @@
           <groupId>org.jvnet.jaxb2.maven2</groupId>
           <artifactId>maven-jaxb2-plugin</artifactId>
           <version>0.13.1</version>
-          <executions>
-            <execution>
-              <phase>process-resources</phase>
-              <id>gen-uml</id>
-              <goals>
-                <goal>generate</goal>
-              </goals>
-              <configuration>
-                <packageLevelAnnotations>true</packageLevelAnnotations>
-                <episode>true</episode>
-                <addIfExistsToEpisodeSchemaBindings>true</addIfExistsToEpisodeSchemaBindings>
-                <episodeFile>
-                  ${project.build.directory}/generated-sources/xjc/META-INF/sun-jaxb.episode
-                </episodeFile>
-              </configuration>
-            </execution>
 
-            <execution>
-              <phase>process-resources</phase>
-              <id>gen-ext</id>
-              <goals>
-                <goal>generate</goal>
-              </goals>
-              <configuration>
-                <packageLevelAnnotations>false</packageLevelAnnotations>
-                <episode>true</episode>
-                <addIfExistsToEpisodeSchemaBindings>true</addIfExistsToEpisodeSchemaBindings>
-                <episodeFile>
-                  ${project.build.directory}/generated-sources/xjc/META-INF/sun-jaxb-ext.episode
-                </episodeFile>
-              </configuration>
-            </execution>
-
-          </executions>
           <configuration>
             <bindingDirectory>${project.build.outputDirectory}</bindingDirectory>
             <bindingIncludes>
@@ -178,6 +145,11 @@
             <enableIntrospection>false</enableIntrospection>
             <forceRegenerate>true</forceRegenerate>
             <strict>false</strict>
+            <episode>true</episode>
+            <addIfExistsToEpisodeSchemaBindings>true</addIfExistsToEpisodeSchemaBindings>
+            <episodeFile>
+              ${project.build.directory}/generated-sources/xjc/META-INF/sun-jaxb-ext.episode
+            </episodeFile>
 
             <args>
               <arg>-Xfluent-api</arg>

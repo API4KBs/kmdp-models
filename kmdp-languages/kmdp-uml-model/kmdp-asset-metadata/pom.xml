@@ -134,8 +134,9 @@
         <artifactId>maven-jaxb2-plugin</artifactId>
         <executions>
           <execution>
-            <id>gen-uml</id>
+            <id>gen-meta-uml</id>
             <configuration>
+              <packageLevelAnnotations>true</packageLevelAnnotations>
               <catalog>${project.build.outputDirectory}${s}xsd${s}terms-catalog.xml</catalog>
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
@@ -159,12 +160,9 @@
                   <fileset>
                     <directory>${project.build.outputDirectory}/xsd/metadata</directory>
                     <includes>
-                      <include>surrogate${s}surrogate.xsd</include>
-                      <include>annotations${s}annotations.xsd</include>
+                      <include>surrogate/surrogate.xsd</include>
+                      <include>annotations/annotations.xsd</include>
                     </includes>
-                    <excludes>
-                      <exclude>**/*.openapi.xsd</exclude>
-                    </excludes>
                   </fileset>
                 </schema>
               </schemas>
@@ -173,13 +171,15 @@
           </execution>
 
           <execution>
-            <id>gen-ext</id>
+            <id>gen-meta-ext</id>
             <phase>process-resources</phase>
             <goals>
               <goal>generate</goal>
             </goals>
 
             <configuration>
+              <packageLevelAnnotations>false</packageLevelAnnotations>
+              <catalog>${project.build.outputDirectory}${s}xsd${s}terms-catalog.xml</catalog>
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
               <bindingIncludes>
@@ -200,10 +200,10 @@
                 </schema>
                 <schema>
                   <fileset>
-                    <directory>${project.build.outputDirectory}${s}xsd/metadata</directory>
+                    <directory>${project.build.outputDirectory}/xsd/metadata</directory>
                     <includes>
-                      <include>surrogate${s}surrogate.openapi.xsd</include>
-                      <include>annotations${s}annotations.openapi.xsd</include>
+                      <include>surrogate/surrogate.openapi.xsd</include>
+                      <include>annotations/annotations.openapi.xsd</include>
                     </includes>
                   </fileset>
                 </schema>

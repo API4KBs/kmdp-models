@@ -143,9 +143,10 @@
 
         <executions>
           <execution>
-            <id>gen-uml</id>
+            <id>gen-sd-uml</id>
             <configuration>
               <catalog>${project.build.outputDirectory}${s}xsd${s}terms-catalog.xml</catalog>
+              <packageLevelAnnotations>true</packageLevelAnnotations>
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
               <bindingIncludes>
@@ -180,12 +181,13 @@
           </execution>
 
           <execution>
-            <id>gen-ext</id>
+            <id>gen-sd-ext</id>
             <phase>process-resources</phase>
             <goals>
               <goal>generate</goal>
             </goals>
             <configuration>
+              <packageLevelAnnotations>false</packageLevelAnnotations>
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
               <bindingIncludes>

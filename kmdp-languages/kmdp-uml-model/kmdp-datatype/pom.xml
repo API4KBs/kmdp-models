@@ -96,8 +96,9 @@
         <artifactId>maven-jaxb2-plugin</artifactId>
         <executions>
           <execution>
-            <id>gen-uml</id>
+            <id>gen-dt-uml</id>
             <configuration>
+              <packageLevelAnnotations>true</packageLevelAnnotations>
 
               <bindingDirectory>${project.build.outputDirectory}</bindingDirectory>
               <bindingIncludes>
@@ -123,12 +124,13 @@
           </execution>
 
           <execution>
-            <id>gen-ext</id>
+            <id>gen-dt-ext</id>
             <phase>process-resources</phase>
             <goals>
               <goal>generate</goal>
             </goals>
             <configuration>
+              <packageLevelAnnotations>false</packageLevelAnnotations>
 
               <bindingDirectory>${project.build.outputDirectory}</bindingDirectory>
               <bindingIncludes>
