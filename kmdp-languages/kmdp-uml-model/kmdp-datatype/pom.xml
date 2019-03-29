@@ -98,30 +98,22 @@
           <execution>
             <id>gen-uml</id>
             <configuration>
+
+              <bindingDirectory>${project.build.outputDirectory}</bindingDirectory>
+              <bindingIncludes>
+                <include>**/*.xjb</include>
+                <include>**/*.episode</include>
+              </bindingIncludes>
+
               <schemas>
                 <schema>
                   <fileset>
                     <directory>${project.build.outputDirectory}/xsd/API4KP/api4kp</directory>
                     <includes>
-                      <include>api4kp.xsd</include>
-                    </includes>
-                  </fileset>
-                </schema>
-                <schema>
-                  <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/API4KP/api4kp/identifiers
-                    </directory>
-                    <includes>
-                      <include>identifiers.xsd</include>
-                    </includes>
-                  </fileset>
-                </schema>
-                <schema>
-                  <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/API4KP/api4kp/datatypes
-                    </directory>
-                    <includes>
-                      <include>datatypes.xsd</include>
+                      <include>**/*.xsd</include>
+                      <!--<include>api4kp.xsd</include>-->
+                      <!--<include>identifiers/identifiers.xsd</include>-->
+                      <!--<include>datatypes/datatypes.xsd</include>-->
                     </includes>
                   </fileset>
                 </schema>
@@ -137,30 +129,23 @@
               <goal>generate</goal>
             </goals>
             <configuration>
+
+              <bindingDirectory>${project.build.outputDirectory}</bindingDirectory>
+              <bindingIncludes>
+                <include>**/*.xjb</include>
+                <include>**/*.episode</include>
+              </bindingIncludes>
+
               <schemas>
                 <schema>
                   <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/API4KP/api4kp/identifiers
+                    <directory>${project.build.outputDirectory}/xsd/API4KP/api4kp/
                     </directory>
                     <includes>
-                      <include>identifiers.openapi.xsd</include>
-                    </includes>
-                  </fileset>
-                </schema>
-                <schema>
-                  <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/API4KP/api4kp</directory>
-                    <includes>
-                      <include>api4kp.openapi.xsd</include>
-                    </includes>
-                  </fileset>
-                </schema>
-                <schema>
-                  <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/API4KP/api4kp/datatypes
-                    </directory>
-                    <includes>
-                      <include>datatypes.openapi.xsd</include>
+                      <include>**/*.openapi.xsd</include>-->
+                      <!--<include>api4kp.openapi.xsd</include>-->
+                      <!--<include>identifiers/identifiers.openapi.xsd</include>-->
+                      <!--<include>datatypes/datatypes.openapi.xsd</include>-->
                     </includes>
                   </fileset>
                 </schema>
