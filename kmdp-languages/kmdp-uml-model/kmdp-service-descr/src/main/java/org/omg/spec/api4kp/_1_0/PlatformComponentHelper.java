@@ -31,7 +31,7 @@ public class PlatformComponentHelper {
     if (isEmpty(identifier) || isEmpty(baseNamespace) || baseUrl == null) {
       return Optional.empty();
     }
-    return Optional.of(new edu.mayo.kmdp.common.model.KnowledgeArtifactRepository()
+    return Optional.of(new org.omg.spec.api4kp._1_0.services.repository.resources.KnowledgeArtifactRepository()
         .withInstanceId(uri("uri:uuid:" + UUID.randomUUID()))
         .withId(uri(baseNamespace + "/repos/" + identifier))
         .withAlias(uri("uri:uuid:" + identifier))

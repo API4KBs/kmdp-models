@@ -62,13 +62,13 @@
             <xsl:attribute name="attributeFormDefault">qualified</xsl:attribute>
 
             <!-- Declare Namespaces -->
-            <xsl:namespace name="" select="$targetNamespace"/>
+            <xsl:namespace name="" select="concat(xmi2xsd:namespaceURI(.),'/resources')"/>
             <xsl:namespace name="annox">http://annox.dev.java.net</xsl:namespace>
             <xsl:namespace name="jaxb">http://java.sun.com/xml/ns/jaxb</xsl:namespace>
             <xsl:namespace name="xmi">http://www.omg.org/spec/XMI/20131001</xsl:namespace>
             <xsl:namespace name="{$pns}" select="xmi2xsd:namespaceURI(.)"/>
 
-            <xsl:attribute name="targetNamespace" select="$targetNamespace"/>
+            <xsl:attribute name="targetNamespace" select="concat(xmi2xsd:namespaceURI(.),'/resources')"/>
             <xsl:attribute name="jaxb:extensionBindingPrefixes">annox</xsl:attribute>
             <xsl:attribute name="jaxb:version">2.1</xsl:attribute>
 
@@ -116,7 +116,7 @@
         <xsl:element name="xs:complexType">
           <xsl:element name="xs:annotation">
             <xsl:element name="xs:appinfo">
-              <xsl:element name="annox:annotate">
+              <xsl:element name="annox:annotateClass">
                 <xsl:value-of
                   select="concat('@javax.xml.bind.annotation.XmlRootElement(name=&quot;',$name,'&quot;, namespace=&quot;',xmi2xsd:namespaceURI(..),'&quot;)')"/>
               </xsl:element>

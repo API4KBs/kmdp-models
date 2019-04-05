@@ -134,52 +134,13 @@
         <artifactId>maven-jaxb2-plugin</artifactId>
         <executions>
           <execution>
-            <id>gen-meta-uml</id>
-            <configuration>
-              <packageLevelAnnotations>true</packageLevelAnnotations>
-              <catalog>${project.build.outputDirectory}${s}xsd${s}terms-catalog.xml</catalog>
-
-              <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
-              <bindingIncludes>
-                <include>edu/mayo/kmdp/terms/**/*.xjb</include>
-                <include>metadata/**/*.xjb</include>
-                <include>**/*.episode</include>
-              </bindingIncludes>
-
-              <schemas>
-                <schema>
-                  <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms</directory>
-                    <includes>
-                      <include>**/*.xsd</include>
-                    </includes>
-                  </fileset>
-                </schema>
-
-                <schema>
-                  <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/metadata</directory>
-                    <includes>
-                      <include>surrogate/surrogate.xsd</include>
-                      <include>annotations/annotations.xsd</include>
-                    </includes>
-                  </fileset>
-                </schema>
-              </schemas>
-
-            </configuration>
-          </execution>
-
-          <execution>
-            <id>gen-meta-ext</id>
-            <phase>process-resources</phase>
+            <id>generate-metadata</id>
             <goals>
               <goal>generate</goal>
             </goals>
-
+            <phase>process-resources</phase>
             <configuration>
-              <packageLevelAnnotations>false</packageLevelAnnotations>
-              <catalog>${project.build.outputDirectory}${s}xsd${s}terms-catalog.xml</catalog>
+              <catalog>${project.build.outputDirectory}${s}xsd${s}km-metadata-catalog.xml</catalog>
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
               <bindingIncludes>
@@ -187,7 +148,6 @@
                 <include>metadata/**/*.xjb</include>
                 <include>**/*.episode</include>
               </bindingIncludes>
-
 
               <schemas>
                 <schema>
@@ -202,11 +162,11 @@
                   <fileset>
                     <directory>${project.build.outputDirectory}/xsd/metadata</directory>
                     <includes>
-                      <include>surrogate/surrogate.openapi.xsd</include>
-                      <include>annotations/annotations.openapi.xsd</include>
+                      <include>**/*.xsd</include>
                     </includes>
                   </fileset>
                 </schema>
+
               </schemas>
 
             </configuration>

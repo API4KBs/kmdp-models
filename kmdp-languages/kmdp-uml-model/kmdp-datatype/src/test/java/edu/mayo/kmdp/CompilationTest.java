@@ -55,7 +55,7 @@ public class CompilationTest {
   public void testJaxbGeneration() {
     File tgt = compile();
 
-    Class<?> ptrClass = getNamedClass("edu.mayo.kmdp.common.model.Pointer", tgt);
+    Class<?> ptrClass = getNamedClass("org.omg.spec.api4kp._1_0.identifiers.resources.Pointer", tgt);
     assertNotNull(ptrClass);
     assertTrue(Pointer.class.isAssignableFrom(ptrClass));
 

@@ -16,12 +16,10 @@
 package org.omg.spec.api4kp;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.mayo.kmdp.common.model.ConceptIdentifier;
-import edu.mayo.kmdp.common.model.DocumentCarrier;
-import edu.mayo.kmdp.common.model.ExpressionCarrier;
 import edu.mayo.kmdp.terms.krformat._2018._08.KRFormat;
 import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
 import org.omg.spec.api4kp._1_0.Level;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.services.ASTCarrier;
 import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
@@ -32,19 +30,19 @@ public class KnowledgeCarrierHelper {
 
 
   public static KnowledgeCarrier of(byte[] encoded) {
-    return new edu.mayo.kmdp.common.model.BinaryCarrier().withEncodedExpression(encoded);
+    return new org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier().withEncodedExpression(encoded);
   }
 
   public static KnowledgeCarrier of(String serialized) {
-    return new ExpressionCarrier().withSerializedExpression(serialized);
+    return new org.omg.spec.api4kp._1_0.services.resources.ExpressionCarrier().withSerializedExpression(serialized);
   }
 
   public static KnowledgeCarrier of(Document dox) {
-    return new DocumentCarrier().withStructuredExpression(dox);
+    return new org.omg.spec.api4kp._1_0.services.resources.DocumentCarrier().withStructuredExpression(dox);
   }
 
   public static KnowledgeCarrier of(JsonNode jdox) {
-    return new DocumentCarrier().withStructuredExpression(jdox);
+    return new org.omg.spec.api4kp._1_0.services.resources.DocumentCarrier().withStructuredExpression(jdox);
   }
 
   public static KnowledgeCarrier of(Object ast) {

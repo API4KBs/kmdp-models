@@ -15,29 +15,32 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.common.model.ObjectFactory;
-import edu.mayo.kmdp.metadata.annotations.*;
+import static edu.mayo.kmdp.terms.kao.rel.dependencyreltype._2018._06.DependencyRelType.Depends_On;
+import static edu.mayo.kmdp.terms.kao.rel.dependencyreltype._2018._06.DependencyRelType.Imports;
+import static edu.mayo.kmdp.terms.kao.rel.dependencyreltype._2018._06.DependencyRelType.Includes;
+
+import edu.mayo.kmdp.metadata.annotations.Annotation;
+import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
+import edu.mayo.kmdp.metadata.annotations.ComplexAnnotation;
+import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
+import edu.mayo.kmdp.metadata.annotations.MultiwordAnnotation;
+import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.Association;
 import edu.mayo.kmdp.metadata.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
+import edu.mayo.kmdp.terms.kao.rel.dependencyreltype._2018._06.DependencyRelType;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.w3c.dom.Node;
-
-import javax.xml.validation.Schema;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import edu.mayo.kmdp.terms.kao.rel.dependencyreltype._2018._06.DependencyRelType;
-
-import static edu.mayo.kmdp.terms.kao.rel.dependencyreltype._2018._06.DependencyRelType.*;
+import javax.xml.validation.Schema;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.w3c.dom.Node;
 
 public class SurrogateHelper {
 
@@ -79,14 +82,14 @@ public class SurrogateHelper {
 
   public static Annotation rootToFragment(Annotation anno) {
     Class<? extends Annotation> annoType = anno.getClass();
-    if (annoType.getPackage().equals(ObjectFactory.class.getPackage())) {
-      if (annoType.equals(edu.mayo.kmdp.common.model.SimpleAnnotation.class)) {
+    if (annoType.getPackage().equals(edu.mayo.kmdp.metadata.annotations.resources.ObjectFactory.class.getPackage())) {
+      if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation.class)) {
         return (Annotation) anno.copyTo(new SimpleAnnotation());
-      } else if (annoType.equals(edu.mayo.kmdp.common.model.MultiwordAnnotation.class)) {
+      } else if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.MultiwordAnnotation.class)) {
         return (Annotation) anno.copyTo(new MultiwordAnnotation());
-      } else if (annoType.equals(edu.mayo.kmdp.common.model.ComplexAnnotation.class)) {
+      } else if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.ComplexAnnotation.class)) {
         return (Annotation) anno.copyTo(new ComplexAnnotation());
-      } else if (annoType.equals(edu.mayo.kmdp.common.model.BasicAnnotation.class)) {
+      } else if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.BasicAnnotation.class)) {
         return (Annotation) anno.copyTo(new BasicAnnotation());
       }
     }

@@ -15,6 +15,9 @@
  */
 package edu.mayo.kmdp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
@@ -24,18 +27,14 @@ import edu.mayo.kmdp.terms.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategor
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.properties.jaxb.JaxbOptions;
-import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 
 public class RootElementTest {
 
@@ -43,7 +42,7 @@ public class RootElementTest {
   @Test
   public void testAnnotationRoundtrip() {
     Term br = KnowledgeAssetCategory.Rules_Policies_And_Guidelines;
-    SimpleAnnotation anno = new edu.mayo.kmdp.common.model.SimpleAnnotation().withExpr(
+    SimpleAnnotation anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation().withExpr(
         new ConceptIdentifier()
             .withRef(br.getRef())
             .withTag("BusinessRuleAsset")

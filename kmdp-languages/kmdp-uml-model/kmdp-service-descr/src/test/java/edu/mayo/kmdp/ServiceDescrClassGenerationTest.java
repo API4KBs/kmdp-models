@@ -15,21 +15,17 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
+import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.GAVIdentifier;
-import org.omg.spec.api4kp._1_0.services.Job;
-import org.omg.spec.api4kp._1_0.services.JobStatus;
-import org.omg.spec.api4kp._1_0.services.KnowledgePlatformComponent;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._1_0.services.language.Transrepresentation;
-import org.omg.spec.api4kp._1_0.services.language.TransrepresentationOperator;
-import org.omg.spec.api4kp._1_0.services.language.Transrepresentator;
-import org.omg.spec.api4kp._1_0.services.repository.KnowledgeArtifactRepository;
-
-import javax.xml.validation.Schema;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,13 +37,18 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
-import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import javax.xml.validation.Schema;
+import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.identifiers.GAVIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.services.Job;
+import org.omg.spec.api4kp._1_0.services.JobStatus;
+import org.omg.spec.api4kp._1_0.services.KnowledgePlatformComponent;
+import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._1_0.services.language.Transrepresentation;
+import org.omg.spec.api4kp._1_0.services.language.TransrepresentationOperator;
+import org.omg.spec.api4kp._1_0.services.language.Transrepresentator;
+import org.omg.spec.api4kp._1_0.services.repository.KnowledgeArtifactRepository;
 
 public class ServiceDescrClassGenerationTest {
 
@@ -103,7 +104,7 @@ public class ServiceDescrClassGenerationTest {
       String genPath = f.getParent() +
           ".generated-sources.xjc.".replaceAll("\\.", Matcher.quoteReplacement(File.separator));
       f = new File(genPath
-          + edu.mayo.kmdp.common.model.KnowledgeArtifactRepository.class.getPackage().getName()
+          + org.omg.spec.api4kp._1_0.services.repository.KnowledgeArtifactRepository.class.getPackage().getName()
           .replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
       assertTrue(f.exists());
       assertTrue(f.isDirectory());
@@ -118,8 +119,8 @@ public class ServiceDescrClassGenerationTest {
 //      files.forEach(System.out::println);
 
       assertTrue(
-          files.contains(edu.mayo.kmdp.common.model.KnowledgeArtifactRepository.class.getName()));
-      assertTrue(files.contains(edu.mayo.kmdp.common.model.Transrepresentation.class.getName()));
+          files.contains(org.omg.spec.api4kp._1_0.services.repository.KnowledgeArtifactRepository.class.getName()));
+      assertFalse(files.contains(org.omg.spec.api4kp._1_0.services.language.Transrepresentation.class.getName()));
 
     } catch (URISyntaxException e) {
       e.printStackTrace();
@@ -129,11 +130,17 @@ public class ServiceDescrClassGenerationTest {
 
   @Test
   public void testJobResource() {
-    Job job = new edu.mayo.kmdp.common.model.Job().withId(UUID.randomUUID().toString())
+    Job job = new Job().withId(UUID.randomUUID().toString())
         .withStatus(JobStatus.STARTED)
         .withRedirectUrl(URI.create("http://te.st"));
 
     assertEquals(JobStatus.STARTED, job.getStatus());
+  }
+
+  @Test
+  public void testTag() {
+    URIIdentifier id = new URIIdentifier().withUri(URI.create("http://foo.bar/kinda/123456"));
+    assertEquals("123456",id.getTag());
   }
 
 }

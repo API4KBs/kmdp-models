@@ -144,6 +144,10 @@
         <executions>
           <execution>
             <id>gen-sd-uml</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>process-resources</phase>
             <configuration>
               <catalog>${project.build.outputDirectory}${s}xsd${s}terms-catalog.xml</catalog>
               <packageLevelAnnotations>true</packageLevelAnnotations>
@@ -158,63 +162,10 @@
               <schemas>
                 <schema>
                   <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms</directory>
+                    <directory>${project.build.outputDirectory}/xsd</directory>
                     <includes>
-                      <include>**/*.xsd</include>
-                    </includes>
-                  </fileset>
-                </schema>
-                <schema>
-                  <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/API4KP/api4kp/services</directory>
-                    <includes>
-                      <include>**/*.xsd</include>
-                    </includes>
-                    <excludes>
-                      <exclude>**/*.openapi.xsd</exclude>
-                    </excludes>
-                  </fileset>
-                </schema>
-              </schemas>
-
-            </configuration>
-          </execution>
-
-          <execution>
-            <id>gen-sd-ext</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <packageLevelAnnotations>false</packageLevelAnnotations>
-
-              <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
-              <bindingIncludes>
-                <include>edu/mayo/kmdp/terms/**/*.xjb</include>
-                <include>API4KP/api4kp/services/**/*.xjb</include>
-                <include>**/*.episode</include>
-              </bindingIncludes>
-
-              <schemas>
-                <schema>
-                  <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms</directory>
-                    <includes>
-                      <include>**/*.xsd</include>
-                    </includes>
-                  </fileset>
-                </schema>
-                <schema>
-                  <fileset>
-                    <directory>
-                      ${project.build.outputDirectory}${s}xsd${s}API4KP${s}api4kp${s}services
-                    </directory>
-                    <includes>
-                      <include>services.openapi.xsd</include>
-                      <include>repository${s}repository.openapi.xsd</include>
-                      <include>inference${s}inference.openapi.xsd</include>
-                      <include>transrepresentation${s}transrepresentation.openapi.xsd</include>
+                      <include>edu/mayo/kmdp/terms/**/*.xsd</include>
+                      <include>API4KP/api4kp/services/**/*.xsd</include>
                     </includes>
                   </fileset>
                 </schema>

@@ -15,9 +15,18 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
+import static edu.mayo.kmdp.terms.iso639_1_languagecodes._20170801.ISO639_1_LanguageCodes.English;
+
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.metadata.surrogate.*;
+import edu.mayo.kmdp.metadata.surrogate.Dependency;
+import edu.mayo.kmdp.metadata.surrogate.InlinedRepresentation;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeExpression;
+import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.metadata.surrogate.SubLanguage;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.terms.AssetVocabulary;
 import edu.mayo.kmdp.terms.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
@@ -30,15 +39,11 @@ import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
 import edu.mayo.kmdp.terms.krprofile._2018._08.KRProfile;
 import edu.mayo.kmdp.terms.lexicon._2018._08.Lexicon;
 import edu.mayo.kmdp.util.Util;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
-
 import java.net.URI;
 import java.util.Arrays;
 import java.util.UUID;
-
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static edu.mayo.kmdp.terms.iso639_1_languagecodes._20170801.ISO639_1_LanguageCodes.English;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
 public class SurrogateBuilder {
 
@@ -50,7 +55,7 @@ public class SurrogateBuilder {
   }
 
   protected KnowledgeAsset newInstance(boolean root) {
-    return root ? new edu.mayo.kmdp.common.model.KnowledgeAsset() : new KnowledgeAsset();
+    return root ? new edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset() : new KnowledgeAsset();
   }
 
   public static SurrogateBuilder newSurrogate(URIIdentifier assetId) {

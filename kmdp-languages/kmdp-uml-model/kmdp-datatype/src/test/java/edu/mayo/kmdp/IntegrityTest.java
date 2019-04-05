@@ -15,18 +15,16 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.common.model.Pointer;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Set;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.identifiers.resources.Pointer;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
-
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class IntegrityTest {

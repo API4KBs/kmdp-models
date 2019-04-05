@@ -60,8 +60,8 @@ public class ServiceDescrCompilationTest {
 
     try {
 
-      Class<?> txc = getNamedClass("edu.mayo.kmdp.common.model.Transrepresentator", tgt);
-      Class<?> txr = getNamedClass("edu.mayo.kmdp.common.model.Transrepresentation", tgt);
+      Class<?> txc = getNamedClass("org.omg.spec.api4kp._1_0.services.language.resources.Transrepresentator", tgt);
+      Class<?> txr = getNamedClass("org.omg.spec.api4kp._1_0.services.language.resources.Transrepresentation", tgt);
       assertNotNull(txc);
       assertNotNull(txr);
 
