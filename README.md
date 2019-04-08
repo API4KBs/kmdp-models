@@ -1,5 +1,6 @@
 # kmdp-models
 [![Build Status](https://travis-ci.com/API4KBs/kmdp-models.svg?branch=master)](https://travis-ci.com/API4KBs/kmdp-models)
+[ ![Download](https://api.bintray.com/packages/api4kbs/API4KP-Mvn-Repo/kmdp-models/images/download.svg) ](https://bintray.com/api4kbs/API4KP-Mvn-Repo/kmdp-models/_latestVersion)
 
 API4KP Reference Impl - Java Implementation of the core (meta)models
 

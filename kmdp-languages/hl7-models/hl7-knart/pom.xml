@@ -88,7 +88,7 @@
           <dependency>
             <groupId>info.cqframework</groupId>
             <artifactId>elm</artifactId>
-            <version>${cqf-ver}</version>
+            <version>${cqf.version}</version>
           </dependency>
         </dependencies>
       </plugin>
