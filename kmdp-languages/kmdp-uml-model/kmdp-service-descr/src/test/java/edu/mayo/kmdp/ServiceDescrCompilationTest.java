@@ -118,6 +118,8 @@ public class ServiceDescrCompilationTest {
     deploy(src, "/xsd/edu/mayo/kmdp/terms/krformat/_2018/_08/KRFormat.xsd");
     deploy(src, "/xsd/edu/mayo/kmdp/terms/krlanguage/_2018/_08/KRLanguage.xsd");
     deploy(src, "/xsd/edu/mayo/kmdp/terms/krprofile/_2018/_08/KRProfile.xsd");
+    deploy(src, "/xsd/edu/mayo/kmdp/terms/krserialization/_2018/_08/KRSerialization.xsd");
+    deploy(src, "/xsd/edu/mayo/kmdp/terms/api4kp/parsinglevel/_20190801/ParsingLevel.xsd");
     deploy(src, "/xsd/edu/mayo/kmdp/terms/lexicon/_2018/_08/Lexicon.xsd");
     deploy(src,
         "/xsd/edu/mayo/kmdp/terms/iso639_1_languagecodes/_20170801/ISO639_1_LanguageCodes.xsd");

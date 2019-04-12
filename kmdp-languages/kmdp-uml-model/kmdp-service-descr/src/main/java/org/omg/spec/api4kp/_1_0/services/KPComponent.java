@@ -13,16 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0.services.language.parser.lift;
+package org.omg.spec.api4kp._1_0.services;
 
-import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
-import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
+import edu.mayo.kmdp.terms.api4kp.knowledgeoperations._2018._06.KnowledgeOperations;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.inject.Qualifier;
 
-import java.util.Optional;
+@Qualifier
+@Target({
+    ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface KPComponent {
 
-@FunctionalInterface
-public interface Deserialize {
-
-  Optional<DocumentCarrier> deserialize(ExpressionCarrier carrier);
 
 }

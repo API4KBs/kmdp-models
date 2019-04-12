@@ -26,17 +26,17 @@
     uri="skos.rdf"
     name="http://www.w3.org/2004/02/skos/core"/>
 
-  <uri id="API4KP-Core"
-    uri="/ontologies/API4KP/api4kp-core.owl"
-    name="http://www.omg.org/spec/API4KP/2018/06/core"/>
-
-  <uri id="API4KP-Rel"
-    uri="/ontologies/API4KP/api4kp-rels.ofn"
-    name="http://www.omg.org/spec/API4KP/2018/06/rel"/>
+  <uri id="API4KP"
+    uri="/ontologies/API4KP/api4kp.rdf"
+    name="https://www.omg.org/spec/API4KP/20190801/api4kp/"/>
 
   <uri id="API4KP-KAO"
     uri="/ontologies/API4KP/informative/kao.owl.rdf"
     name="http://ckm.ontology.mayo.edu/ontology/KAO"/>
+
+  <uri id="API4KP-Ops"
+    uri="/ontologies/API4KP/api4kp-ops.owl"
+    name="http://www.omg.org/spec/API4KP/Operations"/>
 
   <uri id="API4KP-Registry"
     uri="/ontologies/API4KP/informative/api4kp-registry.owl"

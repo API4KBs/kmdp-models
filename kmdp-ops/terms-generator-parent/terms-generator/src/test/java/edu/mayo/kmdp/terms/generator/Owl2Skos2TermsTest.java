@@ -47,7 +47,6 @@ import ru.avicomp.ontapi.OntManagers;
 import ru.avicomp.ontapi.OntologyManager;
 
 
-@EnableRuleMigrationSupport
 public class Owl2Skos2TermsTest {
 
   @TempDir

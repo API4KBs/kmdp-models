@@ -33,7 +33,7 @@ import edu.mayo.kmdp.terms.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategor
 import edu.mayo.kmdp.terms.kao.knowledgeassettype._1_0.KnowledgeAssetType;
 import edu.mayo.kmdp.terms.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
 import edu.mayo.kmdp.terms.kao.languagerole._1_0.LanguageRole;
-import edu.mayo.kmdp.terms.kao.rel.dependencyreltype._2018._06.DependencyRelType;
+import edu.mayo.kmdp.terms.kao.rel.dependencyreltype._20190801.DependencyRelType;
 import edu.mayo.kmdp.terms.krformat._2018._08.KRFormat;
 import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
 import edu.mayo.kmdp.terms.krprofile._2018._08.KRProfile;

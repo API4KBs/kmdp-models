@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0.services.language.parser.lower;
+package org.omg.spec.api4kp._1_0.services;
 
-import org.omg.spec.api4kp._1_0.services.ASTCarrier;
-import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
-import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
+import edu.mayo.kmdp.terms.api4kp.knowledgeoperations._2018._06.KnowledgeOperations;
+import java.lang.annotation.Repeatable;
+import javax.inject.Qualifier;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.Optional;
+@Qualifier
+@Target({
+    ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Repeatable(value = KPOperations.class)
+public @interface KPOperation {
 
-@FunctionalInterface
-public interface Externalize {
-
-  Optional<ExpressionCarrier> externalize(ASTCarrier carrier);
-
+  KnowledgeOperations value();
 }

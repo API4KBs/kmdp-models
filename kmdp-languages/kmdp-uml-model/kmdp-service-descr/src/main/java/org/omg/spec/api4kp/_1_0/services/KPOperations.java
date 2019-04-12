@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0.services.language.transform;
+package org.omg.spec.api4kp._1_0.services;
 
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface Translator extends Translate {
+@Target({
+    ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface KPOperations {
 
-  String getId();
-
-  SyntacticRepresentation getFrom();
-
-  SyntacticRepresentation getTo();
-
+  KPOperation[] value();
 }

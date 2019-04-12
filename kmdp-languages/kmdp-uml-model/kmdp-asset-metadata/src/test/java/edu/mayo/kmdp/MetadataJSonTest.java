@@ -15,27 +15,26 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.mayo.kmdp.metadata.surrogate.Citation;
 import edu.mayo.kmdp.metadata.surrogate.Derivative;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeExpression;
 import edu.mayo.kmdp.terms.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import edu.mayo.kmdp.terms.kao.rel.citationreltype._2018_02_16.CitationRelType;
-import edu.mayo.kmdp.terms.kao.rel.derivationreltype._2018._06.DerivationRelType;
+import edu.mayo.kmdp.terms.kao.rel.derivationreltype._20190801.DerivationRelType;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JenaUtil;
+import java.io.ByteArrayOutputStream;
+import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
-
-import java.io.ByteArrayOutputStream;
-import java.util.Optional;
-
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 //import org.springframework.hateoas.Link;
 //import org.springframework.hateoas.Resource;

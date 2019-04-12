@@ -217,9 +217,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://www.omg.org/spec/API4KP/2018/06/rel</owlFile>
-              <targetNamespace>http://www.omg.org/spec/API4KP/rel</targetNamespace>
-              <targetURI>http://www.omg.org/spec/API4KP/rel#derived-from</targetURI>
+              <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/derived-from</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/DerivationRelType</skosNamespace>
               <skosOutputFile>rel-deriv.skos.rdf</skosOutputFile>
             </configuration>
@@ -231,9 +231,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://www.omg.org/spec/API4KP/2018/06/rel</owlFile>
-              <targetNamespace>http://www.omg.org/spec/API4KP/rel</targetNamespace>
-              <targetURI>http://www.omg.org/spec/API4KP/rel#variant-of</targetURI>
+              <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/variant-of</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/VariantRelType</skosNamespace>
               <skosOutputFile>rel-variant.skos.rdf</skosOutputFile>
             </configuration>
@@ -245,9 +245,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://www.omg.org/spec/API4KP/2018/06/rel</owlFile>
-              <targetNamespace>http://www.omg.org/spec/API4KP/rel</targetNamespace>
-              <targetURI>http://www.omg.org/spec/API4KP/rel#compact-representation-of</targetURI>
+              <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/compact-representation-of</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/SummaryRelType</skosNamespace>
               <skosOutputFile>rel-summary.skos.rdf</skosOutputFile>
             </configuration>
@@ -259,9 +259,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://www.omg.org/spec/API4KP/2018/06/rel</owlFile>
-              <targetNamespace>http://www.omg.org/spec/API4KP/rel</targetNamespace>
-              <targetURI>http://www.omg.org/spec/API4KP/rel#compatible-with</targetURI>
+              <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/compatible-with</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/DependencyRelType</skosNamespace>
               <skosOutputFile>rel-deps.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
@@ -274,9 +274,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://www.omg.org/spec/API4KP/2018/06/rel</owlFile>
-              <targetNamespace>http://www.omg.org/spec/API4KP/rel</targetNamespace>
-              <targetURI>http://www.omg.org/spec/API4KP/rel#in-series-with</targetURI>
+              <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/in-series-with</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/RelatedVersionType</skosNamespace>
               <skosOutputFile>rel-series.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
@@ -289,9 +289,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://www.omg.org/spec/API4KP/2018/06/core</owlFile>
-              <targetNamespace>http://www.omg.org/spec/API4KP/core</targetNamespace>
-              <targetURI>http://www.omg.org/spec/API4KP/core#has-part</targetURI>
+              <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/has-part</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/StructuralRelType</skosNamespace>
               <skosOutputFile>rel-part.skos.rdf</skosOutputFile>
             </configuration>
@@ -397,6 +397,38 @@
             </configuration>
           </execution>
 
+          <execution>
+            <id>ops-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlFile>http://www.omg.org/spec/API4KP/Operations</owlFile>
+              <targetNamespace>http://www.omg.org/spec/API4KP/Operations</targetNamespace>
+              <targetURI>http://www.omg.org/spec/API4KP/core#InformationProcessingTask</targetURI>
+              <skosNamespace>http://terms.kmdp.mayo.edu/API4KP/KnowledgeOperations</skosNamespace>
+              <skosOutputFile>ops.skos.rdf</skosOutputFile>
+              <minDepth>2</minDepth>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>vertical-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/KnowledgeExpression</targetURI>
+              <skosNamespace>http://terms.kmdp.mayo.edu/API4KP/ParsingLevel</skosNamespace>
+              <skosOutputFile>level.skos.rdf</skosOutputFile>
+              <minDepth>0</minDepth>
+              <maxDepth>1</maxDepth>
+            </configuration>
+          </execution>
 
         </executions>
         <dependencies>
