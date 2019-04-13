@@ -13,66 +13,33 @@
  */
 package org.omg.spec.api4kp;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.terms.api4kp.parsinglevel._20190801.ParsingLevel;
 import edu.mayo.kmdp.terms.krformat._2018._08.KRFormat;
 import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
-import edu.mayo.kmdp.util.FileUtil;
-import java.io.InputStream;
+import edu.mayo.kmdp.terms.krserialization._2018._08.KRSerialization;
 import org.omg.spec.api4kp._1_0.services.ASTCarrier;
 import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
 import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
 import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.w3c.dom.Document;
 
 public class KnowledgeCarrierHelper {
-
-
-  public static KnowledgeCarrier of(byte[] encoded) {
-    return new org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier()
-        .withEncodedExpression(encoded)
-        .withLevel(ParsingLevel.Encoded_Knowledge_Expression);
-  }
-
-  public static KnowledgeCarrier of(InputStream encoded) {
-    return new org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier()
-        .withEncodedExpression(FileUtil.readBytes(encoded).orElse(new byte[0]))
-        .withLevel(ParsingLevel.Encoded_Knowledge_Expression);
-  }
-
-  public static KnowledgeCarrier of(String serialized) {
-    return new org.omg.spec.api4kp._1_0.services.resources.ExpressionCarrier()
-        .withSerializedExpression(serialized)
-        .withLevel(ParsingLevel.Concrete_Knowledge_Expression);
-  }
-
-  public static KnowledgeCarrier of(Document dox) {
-    return new org.omg.spec.api4kp._1_0.services.resources.DocumentCarrier()
-        .withStructuredExpression(dox)
-        .withLevel(ParsingLevel.Parsed_Knowedge_Expression);
-  }
-
-  public static KnowledgeCarrier of(JsonNode jdox) {
-    return new org.omg.spec.api4kp._1_0.services.resources.DocumentCarrier()
-        .withStructuredExpression(jdox)
-        .withLevel(ParsingLevel.Parsed_Knowedge_Expression);
-  }
-
-  public static KnowledgeCarrier of(Object ast) {
-    return new ASTCarrier().withParsedExpression(ast)
-        .withLevel(ParsingLevel.Abstract_Knowledge_Expression);
-  }
-
 
   public static SyntacticRepresentation rep(KRLanguage language) {
     return rep(language, null, null, null);
   }
 
+  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization serialization) {
+    return rep(language, serialization,null, null, null);
+  }
 
   public static SyntacticRepresentation rep(KRLanguage language, KRFormat format) {
     return rep(language, format, null, null);
+  }
+
+  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization serialization, KRFormat format) {
+    return rep(language, serialization, format, null, null);
   }
 
 
@@ -82,7 +49,13 @@ public class KnowledgeCarrierHelper {
 
   public static SyntacticRepresentation rep(KRLanguage language, KRFormat format, String charset,
       String encoding) {
-    return new SyntacticRepresentation().withLanguage(language)
+    return rep(language,null,format,charset,encoding);
+  }
+  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization serialization, KRFormat format, String charset,
+      String encoding) {
+    return new org.omg.spec.api4kp._1_0.services.resources.SyntacticRepresentation()
+        .withLanguage(language)
+        .withSerialization(serialization)
         .withFormat(format)
         .withCharset(charset)
         .withEncoding(encoding);
