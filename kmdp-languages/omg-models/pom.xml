@@ -34,5 +34,6 @@
   <modules>
     <module>omg-cmmn</module>
     <module>omg-dmn</module>
+    <module>omg-dmn-12</module>
   </modules>
 </project>

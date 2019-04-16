@@ -1,0 +1,50 @@
+<!--
+
+    Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <public publicId="http://www.omg.org/spec/DMN/20180521/MODEL/"
+    uri="org/omg/spec/dmn/DMN12.xsd"/>
+  <system systemId="http://www.omg.org/spec/DMN/20180521/MODEL/"
+    uri="org/omg/spec/dmn/DMN12.xsd"/>
+  <uri name="http://www.omg.org/spec/DMN/20180521/MODEL/"
+    uri="org/omg/spec/dmn/DMN12.xsd"/>
+
+  <public publicId="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+    uri="org/omg/spec/dmn/DMNDI12.xsd"/>
+  <system systemId="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+    uri="org/omg/spec/dmn/DMNDI12.xsd"/>
+  <uri name="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+    uri="org/omg/spec/dmn/DMNDI12.xsd"/>
+
+  <public publicId="http://www.omg.org/spec/DMN/20180521/DC/"
+    uri="org/omg/spec/dmn/DC.xsd"/>
+  <system systemId="http://www.omg.org/spec/DMN/20180521/DC/"
+    uri="org/omg/spec/dmn/DC.xsd"/>
+  <uri name="http://www.omg.org/spec/DMN/20180521/DC/"
+    uri="org/omg/spec/dmn/DC.xsd"/>
+
+  <public publicId="http://www.omg.org/spec/DMN/20180521/DI/"
+    uri="org/omg/spec/dmn/DI.xsd"/>
+  <system systemId="http://www.omg.org/spec/DMN/20180521/DI/"
+    uri="org/omg/spec/dmn/DI.xsd"/>
+  <uri name="http://www.omg.org/spec/DMN/20180521/DI/"
+    uri="org/omg/spec/dmn/DI.xsd"/>
+
+
+
+</catalog>
