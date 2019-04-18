@@ -204,6 +204,8 @@ public class SkosTerminologyAbstractor {
     URI uri = getURI(ind);
     URI version = applyVersion(ind, model).orElse(uri);
     String code = getCodedIdentifier(ind);
+
+    // TODO FIXME: check rdfs:label vs skos:prefLabel, and consider that getFragment does not pick /name vs #name
     String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
 
     return new MutableConceptScheme(uri, version, code, label);

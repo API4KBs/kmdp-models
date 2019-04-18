@@ -15,10 +15,9 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.XSLTSplitter;
 import edu.mayo.kmdp.xslt.XSLTConfig;
-import edu.mayo.kmdp.xslt.XSLTOptions;
+import edu.mayo.kmdp.xslt.XSLTConfig.XSLTOptions;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 

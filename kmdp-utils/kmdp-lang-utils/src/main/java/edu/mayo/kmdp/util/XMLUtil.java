@@ -23,7 +23,7 @@ import static javax.xml.XMLConstants.XML_NS_URI;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.schemas.CatalogResourceResolver;
 import edu.mayo.kmdp.xslt.XSLTConfig;
-import edu.mayo.kmdp.xslt.XSLTOptions;
+import edu.mayo.kmdp.xslt.XSLTConfig.XSLTOptions;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

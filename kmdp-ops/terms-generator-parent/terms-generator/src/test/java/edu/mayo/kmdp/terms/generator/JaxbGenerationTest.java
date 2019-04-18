@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
-import edu.mayo.kmdp.terms.generator.config.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;

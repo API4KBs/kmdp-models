@@ -19,7 +19,7 @@ package edu.mayo.kmdp.terms.generator;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
-import edu.mayo.kmdp.terms.generator.config.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 
 import java.io.File;
 import java.util.Map;

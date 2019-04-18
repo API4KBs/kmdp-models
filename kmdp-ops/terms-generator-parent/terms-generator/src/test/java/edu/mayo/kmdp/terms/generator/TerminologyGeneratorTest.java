@@ -28,7 +28,7 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
-import edu.mayo.kmdp.terms.generator.config.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.impl.model.InternalTerm;
 import java.io.File;
 import java.lang.reflect.Field;

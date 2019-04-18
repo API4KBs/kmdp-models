@@ -16,10 +16,12 @@
 package edu.mayo.kmdp.util.properties.jaxb;
 
 import edu.mayo.kmdp.ConfigProperties;
-
+import edu.mayo.kmdp.Opt;
+import edu.mayo.kmdp.Option;
 import java.util.Properties;
+import javax.xml.bind.Marshaller;
 
-public class JaxbConfig extends ConfigProperties<JaxbConfig, JaxbOptions> {
+public class JaxbConfig extends ConfigProperties<JaxbConfig, JaxbConfig.JaxbOptions> {
 
   private static final Properties defaults = defaulted(JaxbOptions.class);
 
@@ -28,7 +30,40 @@ public class JaxbConfig extends ConfigProperties<JaxbConfig, JaxbOptions> {
   }
 
   @Override
-  protected JaxbOptions[] properties() {
+  public JaxbOptions[] properties() {
     return JaxbOptions.values();
+  }
+
+  public enum JaxbOptions implements Option<JaxbOptions> {
+
+    FORMATTED_OUTPUT(Opt.of(
+        Marshaller.JAXB_FORMATTED_OUTPUT,
+        "true",
+        "Pretty print the output (true) or compacts it (false)",
+        Boolean.class,
+        false)),
+    NAMESPACE_MAPPER(Opt.of(
+        "com.sun.xml.bind.namespacePrefixMapper",
+        null,
+        "A class that implements NamespacePrefixMapper",
+        Class.class,
+        false)),
+    SCHEMA_LOCATION(Opt.of(
+        Marshaller.JAXB_SCHEMA_LOCATION,
+        null,
+        "URL of the XSD schema to validate",
+        String.class,
+        false));
+
+    private Opt<JaxbOptions> opt;
+
+    JaxbOptions(Opt<JaxbOptions> opt) {
+      this.opt = opt;
+    }
+
+    @Override
+    public Opt<JaxbOptions> getOption() {
+      return opt;
+    }
   }
 }

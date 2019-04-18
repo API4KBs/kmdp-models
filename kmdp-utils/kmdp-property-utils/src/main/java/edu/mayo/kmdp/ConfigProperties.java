@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -104,7 +105,7 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     return Arrays.asList(properties());
   }
 
-  protected abstract O[] properties();
+  public abstract O[] properties();
 
   public P from(Properties p) {
     this.putAll(p);

@@ -20,7 +20,7 @@ import edu.mayo.kmdp.terms.generator.JavaEnumTermsGenerator;
 import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor;
 import edu.mayo.kmdp.terms.generator.XSDEnumTermsGenerator;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
-import edu.mayo.kmdp.terms.generator.config.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.util.OntologyLoader;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
 import edu.mayo.kmdp.util.Util;

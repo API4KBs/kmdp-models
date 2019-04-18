@@ -22,25 +22,21 @@
 
   <parent>
     <version>1.0</version>
-    <artifactId>kmdp-impl</artifactId>
+    <artifactId>kmdp-utils</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
   </parent>
 
-  <artifactId>kmdp-utils</artifactId>
+  <artifactId>kmdp-comparator-utils</artifactId>
   <version>1.0</version>
 
-  <packaging>pom</packaging>
+  <name>KMDP :: Base :: Comparator</name>
 
-  <modules>
-    <module>kmdp-lang-utils</module>
-    <module>kmdp-test-utils</module>
-    <module>kmdp-property-utils</module>
-    <module>kmdp-comparator-utils</module>
-    <module>kmdp-fhir2-utils</module>
-    <module>kmdp-fhir3-utils</module>
-  </modules>
-
-  <name>KMDP :: Common Foundations</name>
-
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
 </project>

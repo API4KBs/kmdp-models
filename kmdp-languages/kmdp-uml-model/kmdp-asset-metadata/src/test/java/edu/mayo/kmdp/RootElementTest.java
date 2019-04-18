@@ -26,7 +26,7 @@ import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
 import edu.mayo.kmdp.terms.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.util.properties.jaxb.JaxbOptions;
+import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;

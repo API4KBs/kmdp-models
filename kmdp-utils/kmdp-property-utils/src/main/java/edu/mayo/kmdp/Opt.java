@@ -20,16 +20,24 @@ public class Opt<T> {
 
   private final String name;
   private final String defaultValue;
+  private final String definition;
   private final Class<T> type;
+  private boolean required;
 
-  public static <T> Opt of(String name, String defaultValue, Class<T> type) {
-    return new Opt<>(name, defaultValue, type);
+  public static <T> Opt of(String name, String defaultValue, String definition, Class<T> type, boolean required) {
+    return new Opt<>(name, defaultValue, definition, type, required);
   }
 
-  private Opt(String name, String defaultValue, Class<T> type) {
+  public static <T> Opt of(String name, String defaultValue, Class<T> type, boolean required) {
+    return of(name, defaultValue, "", type, required);
+  }
+
+  private Opt(String name, String defaultValue, String definition, Class<T> type, boolean required) {
     this.name = name;
     this.defaultValue = defaultValue;
+    this.definition = definition;
     this.type = type;
+    this.required = required;
   }
 
   public String getName() {
@@ -42,5 +50,13 @@ public class Opt<T> {
 
   public Class<T> getType() {
     return type;
+  }
+
+  public String getDefinition() {
+    return definition;
+  }
+
+  public boolean isRequired() {
+    return required;
   }
 }

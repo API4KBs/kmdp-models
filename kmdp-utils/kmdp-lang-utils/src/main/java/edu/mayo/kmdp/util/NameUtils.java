@@ -683,5 +683,9 @@ public final class NameUtils {
 
   }
 
+  public static String removeTrailingPart(String uri) {
+    return uri.replace(getTrailingPart(uri),"");
+  }
+
 
 }

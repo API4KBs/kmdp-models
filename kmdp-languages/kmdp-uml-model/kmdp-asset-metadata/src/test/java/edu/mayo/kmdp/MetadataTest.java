@@ -32,7 +32,7 @@ import edu.mayo.kmdp.terms.kao.rel.derivationreltype._20190801.DerivationRelType
 import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.util.properties.jaxb.JaxbOptions;
+import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.transform.stream.StreamSource;

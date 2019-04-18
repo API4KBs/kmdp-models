@@ -15,15 +15,23 @@
  */
 package edu.mayo.kmdp.util;
 
+import static edu.mayo.kmdp.util.PropertiesUtil.pCustom;
+import static edu.mayo.kmdp.util.PropertiesUtil.pEnum;
+import static edu.mayo.kmdp.util.PropertiesUtil.props;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import edu.mayo.kmdp.util.adapters.DateAdapter;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,8 +41,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-
-import static edu.mayo.kmdp.util.PropertiesUtil.*;
 
 public class JSonUtil {
 
@@ -59,14 +65,12 @@ public class JSonUtil {
     }
   }
 
+  public static Optional<JsonNode> readJson(String data) {
+    return readJson(data.getBytes());
+  }
+
   public static Optional<JsonNode> readJson(byte[] data) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    try {
-      return Optional.ofNullable(objectMapper.readTree(data));
-    } catch (IOException e) {
-      e.printStackTrace();
-      return Optional.empty();
-    }
+    return readJson(new ByteArrayInputStream(data));
   }
 
   public static <T> Optional<T> readJson(InputStream data, Class<T> klass) {
@@ -95,6 +99,12 @@ public class JSonUtil {
   public static Optional<String> printJson(Object root) {
     return writeJson(root, null, defaultProperties())
         .flatMap(Util::asString);
+  }
+
+  public static Optional<String> printJson(Object root, Properties p) {
+    return writeJson(root, null, p)
+        .map(ByteArrayOutputStream::toByteArray)
+        .map(String::new);
   }
 
   public static void printOutJson(Object root) {
@@ -175,6 +185,11 @@ public class JSonUtil {
   }
 
 
+  public static Optional<Boolean> jBool(String name, JsonNode parent) {
+    return parent != null && parent.has(name) ? Optional.of(parent.get(name).asBoolean())
+        : Optional.empty();
+  }
+
   public static Optional<String> jString(String name, JsonNode parent) {
     return parent != null && parent.has(name) ? Optional.ofNullable(parent.get(name).asText())
         : Optional.empty();
@@ -212,6 +227,16 @@ public class JSonUtil {
           .of(new ObjectMapper().readValue(JSonUtil.printJson(jsonNode).orElse(""), type));
     } catch (IOException e) {
       e.printStackTrace();
+      return Optional.empty();
+    }
+  }
+
+  public static <T> Optional<T> tryParseJson(JsonNode jsonNode,
+      Class<T> type) {
+    try {
+      return Optional
+          .of(new ObjectMapper().readValue(JSonUtil.printJson(jsonNode).orElse(""), type));
+    } catch (IOException e) {
       return Optional.empty();
     }
   }

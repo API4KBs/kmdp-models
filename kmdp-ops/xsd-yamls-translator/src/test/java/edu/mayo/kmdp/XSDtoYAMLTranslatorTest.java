@@ -18,7 +18,7 @@ package edu.mayo.kmdp;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.xslt.XSLTConfig;
-import edu.mayo.kmdp.xslt.XSLTOptions;
+import edu.mayo.kmdp.xslt.XSLTConfig.XSLTOptions;
 import io.swagger.models.ComposedModel;
 import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;

@@ -17,6 +17,9 @@ package org.omg.spec.api4kp._1_0;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.terms.api4kp.parsinglevel._20190801.ParsingLevel;
+import edu.mayo.kmdp.terms.krformat._2018._08.KRFormat;
+import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
+import edu.mayo.kmdp.terms.krserialization._2018._08.KRSerialization;
 import edu.mayo.kmdp.util.FileUtil;
 import java.io.InputStream;
 import java.util.function.Function;
@@ -93,6 +96,55 @@ public class AbstractCarrier {
     return ofAst(ast)
         .withRepresentation(rep);
   }
+
+
+  public static SyntacticRepresentation rep(KRLanguage language) {
+    return rep(language, null, null, null);
+  }
+
+  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization serialization) {
+    return rep(language, serialization,null, null, null);
+  }
+
+  public static SyntacticRepresentation rep(KRLanguage language, KRFormat format) {
+    return rep(language, format, null, null);
+  }
+
+  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization serialization, KRFormat format) {
+    return rep(language, serialization, format, null, null);
+  }
+
+
+  public static SyntacticRepresentation rep(KRLanguage language, KRFormat format, String charset) {
+    return rep(language, format, charset, null);
+  }
+
+  public static SyntacticRepresentation rep(KRLanguage language, KRFormat format, String charset,
+      String encoding) {
+    return rep(language,null,format,charset,encoding);
+  }
+  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization serialization, KRFormat format, String charset,
+      String encoding) {
+    return new org.omg.spec.api4kp._1_0.services.resources.SyntacticRepresentation()
+        .withLanguage(language)
+        .withSerialization(serialization)
+        .withFormat(format)
+        .withCharset(charset)
+        .withEncoding(encoding);
+  }
+
+  public static SyntacticRepresentation rep(KRFormat format, String charset, String encoding) {
+    return rep(null, format, charset, encoding);
+  }
+
+  public static SyntacticRepresentation rep(String charset, String encoding) {
+    return rep(null, null, charset, encoding);
+  }
+
+  public static SyntacticRepresentation rep(String encoding) {
+    return rep(null, null, null, encoding);
+  }
+
 
 
   //TODO

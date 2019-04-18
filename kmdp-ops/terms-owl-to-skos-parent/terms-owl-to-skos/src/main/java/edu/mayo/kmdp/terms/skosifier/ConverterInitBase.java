@@ -52,7 +52,7 @@ public abstract class ConverterInitBase {
 
   private ParameterizedSparqlString createParamQueryString(String s) {
     ParameterizedSparqlString pqs = new ParameterizedSparqlString(s, baseURI);
-    pqs.setNsPrefix("tgt", baseURI + "#");
+    pqs.setNsPrefix("tgt", baseURI.endsWith("/") ? baseURI : baseURI + "#");
     return pqs;
   }
 

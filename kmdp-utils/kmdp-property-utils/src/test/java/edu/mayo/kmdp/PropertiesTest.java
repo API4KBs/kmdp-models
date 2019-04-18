@@ -24,12 +24,12 @@ public class PropertiesTest {
   @Test
   public void testConfig() {
     FooConfig cfg = new FooConfig()
-        .with(BarOpts.A, "aaa")
-        .with(BarOpts.B, Boolean.TRUE);
+        .with(FooConfig.BarOpts.A, "aaa")
+        .with(FooConfig.BarOpts.B, Boolean.TRUE);
 
-    String a = cfg.get(BarOpts.A).orElse("NOT FOUND");
-    boolean b = cfg.getTyped(BarOpts.B, Boolean.class);
-    int c = cfg.getTyped(BarOpts.C, Integer.class);
+    String a = cfg.get(FooConfig.BarOpts.A).orElse("NOT FOUND");
+    boolean b = cfg.getTyped(FooConfig.BarOpts.B, Boolean.class);
+    int c = cfg.getTyped(FooConfig.BarOpts.C, Integer.class);
 
     assertEquals("aaa", a);
     assertEquals(true, b);

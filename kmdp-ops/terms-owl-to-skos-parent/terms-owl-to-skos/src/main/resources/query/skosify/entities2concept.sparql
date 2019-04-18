@@ -26,10 +26,12 @@ CONSTRUCT {
     a skos:ConceptScheme;
     a owl:NamedIndividual;
     rdfs:label ?SchemeLabel;
+    skos:prefLabel ?SchemeLabel;
     skos:hasTopConcept ?Top.
 
   ?Top a skos:Concept;
-    rdfs:label ?TopLabel.
+    rdfs:label ?TopLabel;
+    skos:prefLabel ?TopLabel.
 
 }
 WHERE {

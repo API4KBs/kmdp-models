@@ -17,7 +17,7 @@ package edu.mayo.kmdp;
 
 import java.util.Properties;
 
-public class FooConfig extends ConfigProperties<FooConfig, BarOpts> {
+public class FooConfig extends ConfigProperties<FooConfig, FooConfig.BarOpts> {
 
   private static final Properties defaults = defaulted(BarOpts.class);
 
@@ -26,7 +26,26 @@ public class FooConfig extends ConfigProperties<FooConfig, BarOpts> {
   }
 
   @Override
-  protected BarOpts[] properties() {
+  public BarOpts[] properties() {
     return BarOpts.values();
+  }
+
+  public enum BarOpts implements Option<BarOpts> {
+
+    A(Opt.of("_a", "defaultA", "A", String.class, false)),
+    B(Opt.of("_b", "true", "B", Boolean.class, false)),
+    C(Opt.of("_c", "42", "C", Integer.class, false));
+
+
+    private Opt opt;
+
+    BarOpts(Opt opt) {
+      this.opt = opt;
+    }
+
+    @Override
+    public Opt getOption() {
+      return opt;
+    }
   }
 }

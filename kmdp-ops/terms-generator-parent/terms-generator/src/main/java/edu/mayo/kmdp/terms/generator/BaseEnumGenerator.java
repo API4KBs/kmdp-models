@@ -18,13 +18,12 @@ package edu.mayo.kmdp.terms.generator;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
-import edu.mayo.kmdp.terms.generator.config.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.util.NameUtils;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.SimpleTemplateRegistry;
 import org.mvel2.templates.TemplateCompiler;
 import org.mvel2.templates.TemplateRuntime;
-import org.semanticweb.owlapi.model.IRI;
 
 import java.io.File;
 import java.io.FileWriter;

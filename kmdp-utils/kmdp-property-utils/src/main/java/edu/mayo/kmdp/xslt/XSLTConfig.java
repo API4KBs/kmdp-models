@@ -17,9 +17,11 @@ package edu.mayo.kmdp.xslt;
 
 import edu.mayo.kmdp.ConfigProperties;
 
+import edu.mayo.kmdp.Opt;
+import edu.mayo.kmdp.Option;
 import java.util.Properties;
 
-public class XSLTConfig extends ConfigProperties<XSLTConfig, XSLTOptions> {
+public class XSLTConfig extends ConfigProperties<XSLTConfig, XSLTConfig.XSLTOptions> {
 
   private static final Properties defaults = defaulted(XSLTOptions.class);
 
@@ -28,7 +30,49 @@ public class XSLTConfig extends ConfigProperties<XSLTConfig, XSLTOptions> {
   }
 
   @Override
-  protected XSLTOptions[] properties() {
+  public XSLTOptions[] properties() {
     return XSLTOptions.values();
+  }
+
+  public enum XSLTOptions implements Option<XSLTOptions> {
+
+    OUTPUT_RESOLVER(Opt.of(
+        "http://saxon.sf.net/feature/outputURIResolver",
+        null,
+        "A class with a no-arg constructor that implements URIResolver",
+        Class.class,
+        false)),
+    CATALOGS(Opt.of(
+        "http://edu.mayo.kmdp/xslt/catalog",
+        null,
+        "URL of an XML catalog file",
+        String.class,
+        false)),
+    OUTPUT_TYPE(Opt.of(
+        "http://edu.mayo.kmdp/xslt/output",
+        OUTPUT.XML.name(),
+        "Asserts whether the transformation will produce XML ('XML'), or not ('TXT')",
+        OUTPUT.class,
+        false)),
+    TARGET_NS(
+        Opt.of(
+            "http://edu.mayo.kmdp/xslt/targetNamespace",
+            "http://kmdp.mayo.edu/common/models",
+            "The default namespace of the generated XML",
+            String.class,
+            false));
+
+    public enum OUTPUT {XML, TXT}
+
+    private Opt opt;
+
+    XSLTOptions(Opt opt) {
+      this.opt = opt;
+    }
+
+    @Override
+    public Opt getOption() {
+      return opt;
+    }
   }
 }
