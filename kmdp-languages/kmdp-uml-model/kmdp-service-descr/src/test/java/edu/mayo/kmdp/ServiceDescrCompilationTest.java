@@ -129,15 +129,16 @@ public class ServiceDescrCompilationTest {
     deploy(src, "/xsd/API4KP/api4kp/services/transrepresentation/transrepresentation.xsd");
     deploy(src, "/xsd/API4KP/api4kp/services/transrepresentation/transrepresentation.openapi.xsd");
 
-    deploy(src, "/xsd/api4kp-catalog.xml");
+    deploy(src, "/xsd/terms-catalog.xml");
 
     showDirContent(folder);
 
-    applyJaxb(Collections.singletonList(src),
+    String jaxbPath = src.getPath() + "/xsd/API4KP";
+    applyJaxb(Collections.singletonList(new File(jaxbPath)),
         Collections.emptyList(),
         gen,
         null,
-        new File(src.getPath() + "/xsd/api4kp-catalog.xml"),
+        new File(src.getPath() + "/xsd/terms-catalog.xml"),
         true,
         false);
 

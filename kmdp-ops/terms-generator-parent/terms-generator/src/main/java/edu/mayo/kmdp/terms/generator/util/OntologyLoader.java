@@ -50,7 +50,8 @@ public class OntologyLoader {
 
   private OWLOntology loadOntologyPiece(String file, OWLOntologyManager manager)
       throws OWLOntologyCreationException {
-    InputStream inputStream;
+    InputStream inputStream = null;
+    OWLOntology onto;
 
     File res = new File(file);
 
@@ -60,11 +61,20 @@ public class OntologyLoader {
       } else {
         inputStream = new FileInputStream(res);
       }
+      onto = manager.loadOntologyFromOntologyDocument(inputStream);
     } catch (IOException e) {
       throw new RuntimeException(e);
+    } finally {
+      if (inputStream != null) {
+        try {
+          inputStream.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
 
-    return manager.loadOntologyFromOntologyDocument(inputStream);
+    return onto;
   }
 
 }

@@ -22,7 +22,6 @@ import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.Options;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -129,7 +128,7 @@ public abstract class CodeGenTestBase {
     return Object.class;
   }
 
-  public static File deployResource(String resourcePath, File targetFolder, String targetFileName) {
+  public static String deployResource(String resourcePath, File targetFolder, String targetFileName) {
     return deployResource(resourcePath, targetFolder, targetFileName, CodeGenTestBase::read);
   }
 
@@ -144,26 +143,19 @@ public abstract class CodeGenTestBase {
   }
 
 
-  public static File deployResource(String resourcePath, File targetFolder, String targetFileName,
+  public static String deployResource(String resourcePath, File targetFolder, String targetFileName,
       Function<InputStream, byte[]> mapper) {
     return deployResource(CodeGenTestBase.class.getResourceAsStream(resourcePath), targetFolder,
         targetFileName, mapper);
   }
 
-  public static File deployResource(InputStream is, File targetFolder, String targetFileName,
+  public static String deployResource(InputStream is, File targetFolder, String targetFileName,
       Function<InputStream, byte[]> mapper) {
     assertTrue(targetFolder.exists());
     assertTrue(targetFolder.isDirectory());
     File out = new File(targetFolder.getAbsolutePath() + File.separator + targetFileName);
-    FileOutputStream fos = null;
-    try {
-      fos = new FileOutputStream(out);
-      fos.write(mapper.apply(is));
-    } catch (IOException e) {
-      e.printStackTrace();
-      fail(e.getMessage());
-    }
-    return out;
+    FileUtil.write(mapper.apply(is),out);
+    return out.getAbsolutePath();
   }
 
 
@@ -244,15 +236,15 @@ public abstract class CodeGenTestBase {
     }
 
     XJC22Mojo mojo = new XJC22Mojo();
-    mojo.setLog(new SystemStreamLog());
-    mojo.setVerbose(true);
+    //mojo.setLog(new SystemStreamLog());
+    mojo.setVerbose(false);
     mojo.setExtension(true);
 
     mojo.setEpisode(true);
     mojo.setAddIfExistsToEpisodeSchemaBindings(true);
     mojo.setScanDependenciesForBindings(true);
     mojo.setUseDependenciesAsEpisodes(true);
-    mojo.setDebug(true);
+    mojo.setDebug(false);
 
     if (episode != null) {
       mojo.setEpisodeFile(episode);

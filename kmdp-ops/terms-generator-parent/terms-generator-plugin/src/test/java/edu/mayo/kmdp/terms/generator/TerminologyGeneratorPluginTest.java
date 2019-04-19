@@ -21,7 +21,6 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.deployResource;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.printSourceFile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -45,7 +44,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
 
 public class TerminologyGeneratorPluginTest {
 
@@ -58,7 +56,7 @@ public class TerminologyGeneratorPluginTest {
   private File genSource;
   private File target;
 
-  private File owl;
+  private String owlPath;
 
   @BeforeEach
   public void initFolders() {
@@ -67,7 +65,7 @@ public class TerminologyGeneratorPluginTest {
     genSource = initFolder(folder,"generated-sources");
     target = initFolder(folder,"target");
 
-    owl = deploySkosOntology();
+    owlPath = deploySkosOntology();
   }
 
   @Test
@@ -78,6 +76,7 @@ public class TerminologyGeneratorPluginTest {
     try {
       plugin.execute();
     } catch (MojoExecutionException | MojoFailureException e) {
+      e.printStackTrace();
       fail(e.getMessage());
     }
 
@@ -142,7 +141,7 @@ public class TerminologyGeneratorPluginTest {
   }
 
 
-  private File deploySkosOntology() {
+  private String deploySkosOntology() {
     return deployResource("/cito.rdf", resources, "skosCito.rdf", this::owl2skos);
   }
 
@@ -167,7 +166,7 @@ public class TerminologyGeneratorPluginTest {
     plugin.setJaxb(true);
     plugin.setTermsProvider(MockTermsDirectory.provider);
     plugin.setOutputDirectory(genSrc);
-    plugin.setOwlFiles(Collections.singletonList(owl.getAbsolutePath()));
+    plugin.setOwlFiles(Collections.singletonList(owlPath));
     plugin.setSourceCatalogPath("/test-catalog.xml");
 
     return plugin;

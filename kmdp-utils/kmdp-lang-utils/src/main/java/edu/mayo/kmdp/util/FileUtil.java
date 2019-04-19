@@ -199,14 +199,36 @@ public class FileUtil {
         : path;
   }
 
-  public static void write(String content, File file) {
+  public static void write(byte[] content, File file) {
+    FileOutputStream fos = null;
     try {
-      PrintWriter wr = new PrintWriter(file);
+      fos = new FileOutputStream(file);
+      fos.write(content);
+      fos.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      if (fos != null) {
+        try {
+          fos.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+  public static void write(String content, File file) {
+    PrintWriter wr = null;
+    try {
+      wr = new PrintWriter(file);
       wr.write(content);
       wr.flush();
-      wr.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
+    } finally {
+      if (wr != null) {
+        wr.close();
+      }
     }
   }
 }

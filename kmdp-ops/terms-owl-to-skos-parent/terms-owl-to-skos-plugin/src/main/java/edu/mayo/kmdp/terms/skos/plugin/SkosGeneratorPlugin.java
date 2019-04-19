@@ -20,6 +20,7 @@ import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Modes;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
+import java.io.IOException;
 import org.apache.jena.rdf.model.Model;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -232,6 +233,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
   }
 
   public void execute() throws MojoExecutionException {
+    InputStream is = null;
     try {
       if (owlFile == null) {
         getLog().info("No ontology file to process, exiting...");
@@ -246,7 +248,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
         skosOutputFile = generateDefaultOutputFile(owlFile);
       }
 
-      InputStream is = resolve(owlFile);
+      is = resolve(owlFile);
 
       MireotExtractor extractor = new MireotExtractor(ensureFormat(is,
           new RDFXMLDocumentFormat(),
@@ -270,7 +272,11 @@ public class SkosGeneratorPlugin extends AbstractMojo {
             + File.separator
             + getSkosOutputFile());
         FileOutputStream fos = new FileOutputStream(f);
-        skosModel.get().write(fos);
+        try {
+          skosModel.get().write(fos);
+        } finally {
+          fos.close();
+        }
       } else {
         getLog().error("Unable to generate a SKOS model");
       }
@@ -279,6 +285,14 @@ public class SkosGeneratorPlugin extends AbstractMojo {
       System.err.println(e.getMessage());
       e.printStackTrace();
       throw new MojoExecutionException(e.getMessage(), e);
+    } finally {
+      if (is != null) {
+        try {
+          is.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
 
   }
