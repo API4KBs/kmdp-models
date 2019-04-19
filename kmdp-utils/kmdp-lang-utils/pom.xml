@@ -81,6 +81,10 @@
       <groupId>xml-resolver</groupId>
       <artifactId>xml-resolver</artifactId>
     </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+    </dependency>
 
 
   </dependencies>
