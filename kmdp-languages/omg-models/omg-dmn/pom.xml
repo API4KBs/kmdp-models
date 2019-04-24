@@ -39,7 +39,12 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.jvnet.jaxb2_commons</groupId>
+      <artifactId>jaxb2-basics</artifactId>
+    </dependency>
   </dependencies>
+
 
   <build>
     <plugins>
@@ -47,20 +52,29 @@
       <plugin>
         <groupId>org.jvnet.jaxb2.maven2</groupId>
         <artifactId>maven-jaxb2-plugin</artifactId>
-        <configuration>
-          <schemas>
-            <schema>
-              <fileset>
-                <!-- Cannot use URL due to platform-specific file separators -->
-                <directory>${project.build.outputDirectory}${file.separator}xsd</directory>
-                <includes>
-                  <include>${xsd-name}</include>
-                </includes>
-              </fileset>
-            </schema>
-          </schemas>
-          <bindingDirectory>${project.build.outputDirectory}</bindingDirectory>
-        </configuration>
+        <executions>
+          <execution>
+            <id>gen-dmn</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <schemas>
+                <schema>
+                  <fileset>
+                    <!-- Cannot use URL due to platform-specific file separators -->
+                    <directory>${project.build.outputDirectory}${file.separator}xsd</directory>
+                    <includes>
+                      <include>${xsd-name}</include>
+                    </includes>
+                  </fileset>
+                </schema>
+              </schemas>
+              <bindingDirectory>${project.build.outputDirectory}</bindingDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>

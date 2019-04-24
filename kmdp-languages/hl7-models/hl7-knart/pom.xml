@@ -64,26 +64,35 @@
       <plugin>
         <groupId>org.jvnet.jaxb2.maven2</groupId>
         <artifactId>maven-jaxb2-plugin</artifactId>
-        <configuration>
-          <schemas>
-            <schema>
-              <fileset>
-                <!-- Cannot use URL due to platform-specific file separators -->
-                <directory>
-                  ${project.build.outputDirectory}${s}xsd${s}org${s}hl7${s}knowledgeartifact
-                </directory>
-                <includes>
-                  <include>${xsd-name}</include>
-                </includes>
-              </fileset>
-            </schema>
-          </schemas>
-          <bindingDirectory>${project.build.outputDirectory}</bindingDirectory>
-          <bindingIncludes>
-            <include>**/*.xjb</include>
-            <include>**/*.episode</include>
-          </bindingIncludes>
-        </configuration>
+        <executions>
+          <execution>
+            <id>gen-knart</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <schemas>
+                <schema>
+                  <fileset>
+                    <!-- Cannot use URL due to platform-specific file separators -->
+                    <directory>
+                      ${project.build.outputDirectory}${s}xsd${s}org${s}hl7${s}knowledgeartifact
+                    </directory>
+                    <includes>
+                      <include>${xsd-name}</include>
+                    </includes>
+                  </fileset>
+                </schema>
+              </schemas>
+              <bindingDirectory>${project.build.outputDirectory}</bindingDirectory>
+              <bindingIncludes>
+                <include>**/*.xjb</include>
+                <include>**/*.episode</include>
+              </bindingIncludes>
+            </configuration>
+          </execution>
+        </executions>
         <dependencies>
           <dependency>
             <groupId>info.cqframework</groupId>
