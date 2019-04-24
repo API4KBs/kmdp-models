@@ -471,7 +471,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.0.2</version>
         <executions>
           <execution>
             <id>unpack-xslt</id>
@@ -571,7 +570,7 @@
           <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
-            <version>9.8.0-8</version>
+            <version>${saxon.version}</version>
           </dependency>
         </dependencies>
       </plugin>
