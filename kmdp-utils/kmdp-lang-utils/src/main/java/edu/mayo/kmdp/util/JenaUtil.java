@@ -177,4 +177,9 @@ public abstract class JenaUtil {
         new PropertyImpl(propURI),
         ResourceFactory.createStringLiteral(val));
   }
+  public static Statement dat_a(String subjURI, Property prop, String val) {
+    return new StatementImpl(new ResourceImpl(subjURI),
+        prop,
+        ResourceFactory.createStringLiteral(val));
+  }
 }
