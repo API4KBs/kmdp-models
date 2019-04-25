@@ -20,6 +20,8 @@ CONSTRUCT {
 
     skos:notation ?notation;
     skos:prefLabel ?pLab;
+    skos:altLabel ?aLab;
+    skos:hiddenLabel ?hLab;
     skos:definition ?def;
     skos:note ?note;
     skos:example ?example;
@@ -45,6 +47,8 @@ WHERE {
         OPTIONAL { ?X rdfs:isDefinedBy ?isDefinedBy. }
 
         OPTIONAL { ?X skos:prefLabel ?pLab. }
+        OPTIONAL { ?X skos:altLabel ?aLab. }
+        OPTIONAL { ?X skos:hiddenLabel ?hLab. }
         OPTIONAL { ?X skos:definition ?def. }
         OPTIONAL { ?X skos:note ?note. }
         OPTIONAL { ?X skos:example ?example. }

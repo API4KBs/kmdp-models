@@ -46,6 +46,12 @@
     
 
 
+    <!-- http://www.w3.org/2004/02/skos/core#altLabel -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#altLabel"/>
+    
+
+
     <!-- http://www.w3.org/2004/02/skos/core#definition -->
 
     <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#definition"/>
@@ -55,6 +61,12 @@
     <!-- http://www.w3.org/2004/02/skos/core#example -->
 
     <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#example"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#hiddenLabel -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#hiddenLabel"/>
     
 
 
@@ -94,8 +106,10 @@
         <rdfs:comment>comment</rdfs:comment>
         <rdfs:isDefinedBy>http://org.test/labelsTest</rdfs:isDefinedBy>
         <rdfs:label>My Class</rdfs:label>
+        <skos:altLabel>alternative</skos:altLabel>
         <skos:definition>definition</skos:definition>
         <skos:example>example</skos:example>
+        <skos:hiddenLabel>hidden</skos:hiddenLabel>
         <skos:notation>Inconsistent</skos:notation>
         <skos:note>note</skos:note>
         <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Pref Way to name My Class</skos:prefLabel>

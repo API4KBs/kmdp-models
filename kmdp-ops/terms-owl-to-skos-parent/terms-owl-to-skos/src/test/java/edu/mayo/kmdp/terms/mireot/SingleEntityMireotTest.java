@@ -76,6 +76,8 @@ public class SingleEntityMireotTest extends BaseMireotTest {
     assertTrue(m.contains(dat_a(klass, RDFS.comment, "comment")));
     assertTrue(m.contains(dat_a(klass, RDFS.isDefinedBy, base)));
     assertTrue(m.contains(dat_a(klass, SKOS.prefLabel, "Pref Way to name My Class")));
+    assertTrue(m.contains(dat_a(klass, SKOS.altLabel, "alternative")));
+    assertTrue(m.contains(dat_a(klass, SKOS.hiddenLabel, "hidden")));
     assertTrue(m.contains(dat_a(klass, SKOS.example, "example")));
     assertTrue(m.contains(dat_a(klass, SKOS.note, "note")));
     assertTrue(m.contains(dat_a(klass, SKOS.definition, "definition")));
