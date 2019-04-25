@@ -32,9 +32,8 @@ import edu.mayo.kmdp.util.JenaUtil;
 import java.io.ByteArrayOutputStream;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Resource;
 
 //import org.springframework.hateoas.Link;
 //import org.springframework.hateoas.Resource;
@@ -57,7 +56,8 @@ public class MetadataJSonTest {
   }
 
   @Test
-  public void testJSerialization() {
+  @Disabled("Role of HATEOAS not yet fully evaluated")
+  public void testSerializationWithHateoas() {
     KnowledgeAsset ks = new KnowledgeAsset()
 
         .withResourceId(uri("http://foo.bar", "234"))
@@ -77,15 +77,15 @@ public class MetadataJSonTest {
             new Citation()
                 .withRel(CitationRelType.Cites));
 
-    Resource<KnowledgeAsset> axx = new Resource<>(ks);
-    axx.add(new Link("http://foo.bax").withRel("goto")
-        .withHref("http://www.google.it.yourself.com")
-        .withTitle("What next")
-        .withType("http://my/onto/type/this_or_that_operation"));
+//    Resource<KnowledgeAsset> axx = new Resource<>(ks);
+//    axx.add(new Link("http://foo.bax").withRel("goto")
+//        .withHref("http://www.google.it.yourself.com")
+//        .withTitle("What next")
+//        .withType("http://my/onto/type/this_or_that_operation"));
 
-    String jsonTree = toJsonLD(ks);
-    //System.out.println(jsonTree);
-
+//    String jsonTree = toJsonLD(ks);
+//    System.out.println(jsonTree);
+//
 //		JenaUtil.toSystemOut( toTriples( jsonTree ) );
 
   }
