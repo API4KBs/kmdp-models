@@ -29,6 +29,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.terms.generator.plugin.TermsGeneratorPlugin;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.FileUtil;
 import example.MockTermsDirectory;
@@ -149,10 +151,12 @@ public class TerminologyGeneratorPluginTest {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     MireotExtractor exporter = new MireotExtractor(inputStream, "http://purl.org/spar/cito/");
-    Owl2SkosConverter converter = new Owl2SkosConverter(tns);
+    Owl2SkosConfig cfg = new Owl2SkosConfig()
+        .with(OWLtoSKOSTxParams.TGT_NAMESPACE, tns)
+        .with(OWLtoSKOSTxParams.ADD_IMPORTS, Boolean.TRUE);
 
     exporter.fetch("http://purl.org/spar/cito/cites", false)
-        .flatMap((ext) -> converter.run(ext, true, true))
+        .flatMap((ext) -> new Owl2SkosConverter().apply(ext, cfg))
         .map((model) -> model.write(baos));
 
     return baos.toByteArray();

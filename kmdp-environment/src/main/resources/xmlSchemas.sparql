@@ -4,7 +4,8 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX know: <http://www.omg.org/spec/API4KP/core#>
-PREFIX dc: <http://purl.org/dc/terms/>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX w3c: <http://www.w3.org/TR/>
 PREFIX dol: <http://www.omg.org/spec/DOL/DOL-terms/>
 
@@ -14,7 +15,7 @@ WHERE {
        ?L a know:ConstructedLanguage;
             dol:supportsSerialization ?Ser.
 
-        ?Ser dc:source ?NS;
+        ?Ser dct:source ?NS;
             know:associated-to w3c:xml11.
   }
 }

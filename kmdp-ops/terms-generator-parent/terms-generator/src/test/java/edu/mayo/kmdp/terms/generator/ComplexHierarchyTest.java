@@ -17,6 +17,10 @@ package edu.mayo.kmdp.terms.generator;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.skosifier.Modes;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
+import java.util.UUID;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
@@ -31,7 +35,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static edu.mayo.kmdp.terms.mireot.MireotExtractor.extract;
-import static edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter.convert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -44,7 +47,8 @@ public class ComplexHierarchyTest {
     assertEquals(15, list.size());
 
     assertTrue(list.stream()
-        .anyMatch((t) -> "http://test.foo#ClinicalRule".equals(t.getRef().toString())));
+        .anyMatch((t) -> ("http://test.foo#" + UUID.nameUUIDFromBytes("ClinicalRule".getBytes()))
+            .equals(t.getRef().toString())));
   }
 
   @Test
@@ -64,11 +68,12 @@ public class ComplexHierarchyTest {
       Optional<Model> skosModel = extract(
           Owl2Skos2TermsTest.class.getResourceAsStream("/kac-test.rdf"),
           "http://test.org/KAO#ClinicalKnowledgeAsset")
-          .flatMap((extract) -> convert(extract,
-              "http://test.foo",
-              modes,
-              false,
-              true));
+          .flatMap((extract) -> new Owl2SkosConverter().apply(extract,
+              new Owl2SkosConfig()
+                  .with(OWLtoSKOSTxParams.TGT_NAMESPACE,"http://test.foo")
+              .with(OWLtoSKOSTxParams.MODE,modes)
+              .with(OWLtoSKOSTxParams.FLATTEN,true)
+              .with(OWLtoSKOSTxParams.VALIDATE,false)));
 
       if (!skosModel.isPresent()) {
         fail("Unable to generate skos model");

@@ -45,6 +45,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 public abstract class JenaUtil {
 
@@ -129,7 +132,13 @@ public abstract class JenaUtil {
       Function<Statement, String> formatter) {
     StmtIterator iter = target.listStatements();
     while (iter.hasNext()) {
-      os.println(formatter.apply(iter.nextStatement()));
+      Statement stmt = iter.nextStatement();
+      String subjNS = stmt.getSubject().getNameSpace();
+      if (!(RDF.getURI().equals(subjNS)
+      || RDFS.getURI().equals(subjNS)
+      || OWL.getURI().equals(subjNS))) {
+        os.println(formatter.apply(stmt));
+      }
     }
     return target;
   }

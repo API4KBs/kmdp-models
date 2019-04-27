@@ -15,10 +15,18 @@
  */
 package edu.mayo.kmdp.terms.skos.plugin;
 
+import static edu.mayo.kmdp.terms.util.JenaUtil.applyVersionToURI;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Modes;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.NameUtils;
+import java.util.Optional;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.Ontology;
 import org.apache.jena.rdf.model.Model;
@@ -29,13 +37,6 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import ru.avicomp.ontapi.OntManagers;
 import ru.avicomp.ontapi.OntologyManager;
-
-import java.util.Optional;
-
-import static edu.mayo.kmdp.terms.util.JenaUtil.applyVersionToURI;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class VersioningTest {
@@ -72,8 +73,10 @@ public class VersioningTest {
     Optional<Model> mireot = extractor.fetch("http://my.org.test/onto#Foo", true);
     assertTrue(mireot.isPresent());
 
-    Owl2SkosConverter converter = new Owl2SkosConverter(ontoURI, Modes.SKOS);
-    Optional<Model> skos = converter.run(mireot.get(), false, false);
+    Owl2SkosConfig cfg = new Owl2SkosConfig()
+        .with(OWLtoSKOSTxParams.TGT_NAMESPACE,ontoURI)
+        .with(OWLtoSKOSTxParams.MODE,Modes.SKOS);
+    Optional<Model> skos = new Owl2SkosConverter().apply(mireot.get(), cfg);
 
     assertTrue(skos.isPresent() && skos.get() instanceof OntModel);
 

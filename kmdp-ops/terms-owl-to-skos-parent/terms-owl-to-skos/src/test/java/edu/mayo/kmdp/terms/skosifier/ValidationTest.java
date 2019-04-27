@@ -15,7 +15,9 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.util.JenaUtil;
+import java.util.UUID;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.PrintUtil;
@@ -32,8 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ValidationTest extends TestBase {
 
-  private Owl2SkosConverter cv;
-
   private static String NS = "http://my.edu/test";
 
   @BeforeAll
@@ -45,18 +45,15 @@ public class ValidationTest extends TestBase {
   @Test
   public void testResultNoInference() {
 
-    cv = new Owl2SkosConverter(NS, Modes.CON);
+    Owl2SkosConfig cfg = new Owl2SkosConfig()
+        .with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
+        .with(OWLtoSKOSTxParams.MODE,Modes.CON.name());
 
-    Optional<Model> result = cv.run(singletonList("/ontology/singleClass.owl"),
-        false,
-        false);
-    assertTrue(result.isPresent());
+    Model m = run(singletonList("/ontology/singleClass.owl"),cfg);
 
-    Model m = result.get();
+    JenaUtil.iterateAndStreamModel(m, System.out, PrintUtil::print);
 
-    //JenaUtil.iterateAndStreamModel(m, System.out, PrintUtil::print);
-
-    Resource klass = m.getResource(NS + "#Klass");
+    Resource klass = m.getResource(NS + "#" + uuid("Klass"));
     assertNotNull(klass);
     assertNotNull(m.getProperty(klass, SKOS.inScheme));
     assertNotNull(m.getProperty(klass, SKOS.broader));
@@ -77,15 +74,14 @@ public class ValidationTest extends TestBase {
   @Test
   public void testResultWithInference() {
 
-    cv = new Owl2SkosConverter(NS, Modes.CON);
+    Owl2SkosConfig cfg = new Owl2SkosConfig()
+        .with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
+        .with(OWLtoSKOSTxParams.MODE,Modes.CON.name())
+        .with(OWLtoSKOSTxParams.VALIDATE,Boolean.TRUE);
 
-    Optional<Model> result = cv.run(singletonList("/ontology/singleClass.owl"),
-        true,
-        false);
-    assertTrue(result.isPresent());
-    Model m = result.get();
+    Model m = run(singletonList("/ontology/singleClass.owl"),cfg);
 
-    Resource klass = m.getResource(NS + "#Klass");
+    Resource klass = m.getResource(NS + "#" + uuid("Klass"));
     assertNotNull(klass);
     assertNotNull(m.getProperty(klass, SKOS.inScheme));
     assertNotNull(m.getProperty(klass, SKOS.broader));

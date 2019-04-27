@@ -22,18 +22,22 @@ public enum Modes {
   LEX(false, true, "/query/skosify/entities2ontolex.sparql"),
   CON(true, false, "/query/skosify/entities2concept.sparql"),
   ANN(true, false, "/query/skosify/entities2skosMeta.sparql"),
+
   SKOS(true, false, "/query/skosify/entities2concept.sparql",
       "/query/skosify/entities2skosMeta.sparql"),
+  LEX_CON(true,true, "/query/skosify/entities2ontolex.sparql",
+      "/query/skosify/entities2concept.sparql" ),
+
   FULL(true, true, "/query/skosify/entities2concept.sparql",
       "/query/skosify/entities2skosMeta.sparql", "/query/skosify/entities2ontolex.sparql");
 
   public final List<String> queries;
   public final boolean skos;
-  public final boolean olex;
+  public final boolean usesOlex;
 
   Modes(boolean skos, boolean olex, String... qs) {
     this.skos = skos;
-    this.olex = olex;
+    this.usesOlex = olex;
     queries = Arrays.asList(qs);
   }
 

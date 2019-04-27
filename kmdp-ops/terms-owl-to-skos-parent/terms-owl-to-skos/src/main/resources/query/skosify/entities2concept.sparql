@@ -5,7 +5,11 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX olex: <http://www.w3.org/ns/lemon/ontolex#>
 PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX lcc-lr: <http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/>
 PREFIX afn: <http://jena.apache.org/ARQ/function#>
+PREFIX f: <http://kmdp.mayo.edu/sparql/function#>
+
 
 CONSTRUCT {
 
@@ -42,12 +46,13 @@ WHERE {
 
         ?X a ?entity.
             FILTER isUri( ?X ).
-            OPTIONAL { ?X skos:notation ?N1. }
-            OPTIONAL { ?X dct:identifier ?Id. }
 
-        # Create a URI for the related concept
-        BIND ( URI( CONCAT( STR( tgt: ),
-                            COALESCE( ?Id, ?N1, afn:localname(?X) ) ) ) as ?Cid ).
+            # Create a URI for the related concept
+            OPTIONAL { ?X dc:identifier ?dcId. }
+            OPTIONAL { ?X dct:identifier ?dctId. }
+            OPTIONAL { ?Code lcc-lr:identifies ?X. ?Code lcc-lr:hasTag ?Tag. }
+            BIND ( URI( CONCAT( STR( tgt: ),
+                            f:uuidFrom( COALESCE( ?dcId, ?dctId, ?Tag, f:localName(?X) ) ) ) ) as ?Cid ).
 
         BIND ( tgt: as ?Namespace ).
         BIND ( STRLEN( STR( ?Namespace ) ) as ?Len ).
@@ -58,27 +63,36 @@ WHERE {
 
         OPTIONAL {
                     ?X rdfs:subClassOf ?Y;
-                    OPTIONAL { ?Y skos:notation ?N2. }
+                    OPTIONAL { ?Y dc:identifier ?dcId2. }
+                    OPTIONAL { ?Y dct:identifier ?dctId2. }
+                    OPTIONAL { ?Code2 lcc-lr:identifies ?Y. ?Code2 lcc-lr:hasTag ?Tag2. }
                     BIND ( URI( CONCAT( STR( tgt: ),
-                                        COALESCE( ?N2, afn:localname(?Y) ) ) ) as ?ClassParent ).
+                                  f:uuidFrom( COALESCE( ?dcId2, ?dctId2, ?Tag2, f:localName(?Y) ) ) ) ) as ?ClassParent ).
                     FILTER( afn:namespace(?Y) != "http://www.w3.org/2002/07/owl#" ).
                 }
         OPTIONAL {
                     ?X rdf:type ?Y;
-                    OPTIONAL { ?Y skos:notation ?N3. }
+                    OPTIONAL { ?Y dc:identifier ?dcId3. }
+                    OPTIONAL { ?Y dct:identifier ?dctId3. }
+                    OPTIONAL { ?Code3 lcc-lr:identifies ?Y. ?Code3 lcc-lr:hasTag ?Tag3. }
                     BIND ( URI( CONCAT( STR( tgt: ),
-                                        COALESCE( ?N3, afn:localname(?Y) ) ) ) as ?InstanceParent ).
+                                  f:uuidFrom( COALESCE( ?dcId3, ?dctId3, ?Tag3, f:localName(?Y) ) ) ) ) as ?InstanceParent ).
                     FILTER( afn:namespace(?Y) != "http://www.w3.org/2002/07/owl#" ).
                 }
         OPTIONAL {
-                    ?X rdfs:subPropertyOf ?Y.
-                    OPTIONAL { ?Y skos:notation ?N4. }
+                    ?X rdfs:subPropertyOf ?Y;
+                    OPTIONAL { ?Y dc:identifier ?dcId4. }
+                    OPTIONAL { ?Y dct:identifier ?dctId4. }
+                    OPTIONAL { ?Code4 lcc-lr:identifies ?Y. ?Code4 lcc-lr:hasTag ?Tag4. }
                     BIND ( URI( CONCAT( STR( tgt: ),
-                                        COALESCE( ?N4, afn:localname(?Y) ) ) ) as ?PropertyParent ).
+                                  f:uuidFrom( COALESCE( ?dcId4, ?dctId4, ?Tag4, f:localName(?Y) ) ) ) ) as ?PropertyParent ).
                     FILTER( afn:namespace(?Y) != "http://www.w3.org/2002/07/owl#" ).
                 }
 
-        BIND ( URI( CONCAT( STR( tgt: ), CONCAT( afn:localname( ?Scheme ), "_Top" ) ) ) as ?Top ).
+
+
+        BIND ( URI( CONCAT( STR( tgt: ),
+                COALESCE( ?schemeName, CONCAT( afn:localname( ?Scheme ), "_Top" ) ) ) ) as ?Top ).
 
         BIND ( COALESCE( ?ClassParent,
                          ?InstanceParent,

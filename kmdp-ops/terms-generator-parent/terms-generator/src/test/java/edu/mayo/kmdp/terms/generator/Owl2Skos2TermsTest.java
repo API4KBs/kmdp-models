@@ -17,7 +17,6 @@ package edu.mayo.kmdp.terms.generator;
 
 import static edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.SKOS_NAMESPACE;
 import static edu.mayo.kmdp.terms.mireot.MireotExtractor.extract;
-import static edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter.convert;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
@@ -30,6 +29,9 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.NameUtils;
 import java.io.File;
 import java.io.IOException;
@@ -64,11 +66,14 @@ public class Owl2Skos2TermsTest {
 
     OntologyManager manager = OntManagers.createONT();
 
+    Owl2SkosConfig cfg = new Owl2SkosConfig()
+        .with(OWLtoSKOSTxParams.TGT_NAMESPACE,targetNS)
+        .with(OWLtoSKOSTxParams.FLATTEN,false)
+        .with(OWLtoSKOSTxParams.ADD_IMPORTS,true);
+
     Optional<Model> skosModel = extract(Owl2Skos2TermsTest.class.getResourceAsStream(owlPath),
-        entityURI).flatMap((extract) -> convert(extract,
-        targetNS,
-        false,
-        true));
+        entityURI).flatMap((extract) -> new Owl2SkosConverter().apply(extract, cfg));
+
 
     if (!skosModel.isPresent()) {
       fail("Unable to generate skos model");

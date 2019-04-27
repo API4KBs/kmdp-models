@@ -65,6 +65,12 @@
     
 
 
+    <!-- http://purl.org/dc/elements/1.1/identifier -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/identifier"/>
+    
+
+
     <!-- http://purl.org/dc/terms/contributor -->
 
     <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/contributor"/>
@@ -523,7 +529,7 @@
     <owl:NamedIndividual rdf:about="http://hl7.org/KNART/1.3">
         <rdf:type rdf:resource="http://www.omg.org/spec/API4KP/core#ConstructedLanguage"/>
         <rdfs:label>KNART 1.3</rdfs:label>
-        <co:notation>knart-v13</co:notation>
+        <dc:identifier>knart-v13</dc:identifier>
     </owl:NamedIndividual>
     
 
@@ -532,8 +538,9 @@
 
     <owl:NamedIndividual rdf:about="http://hl7.org/cql/1.2">
         <rdf:type rdf:resource="http://www.omg.org/spec/API4KP/core#ConstructedLanguage"/>
+        <dc:identifier>cql-v12</dc:identifier>
         <rdfs:label>CQL 1.2</rdfs:label>
-        <co:notation>cql-v12</co:notation>
+        <dc:identifier>cql-v12</dc:identifier>
     </owl:NamedIndividual>
     
 
@@ -544,7 +551,7 @@
         <rdf:type rdf:resource="http://www.omg.org/spec/API4KP/core#ConstructedLanguage"/>
         <rdf:type rdf:resource="http://www.omg.org/spec/DOL/DOL-terms/OMSLanguage"/>
         <rdfs:label>FHIR DSTU2</rdfs:label>
-        <co:notation>fhir-v2</co:notation>
+        <dc:identifier>fhir-v2</dc:identifier>
         <co:prefLabel>FHIR DSTU2</co:prefLabel>
     </owl:NamedIndividual>
     
@@ -556,7 +563,7 @@
         <rdf:type rdf:resource="http://www.omg.org/spec/API4KP/core#ConstructedLanguage"/>
         <rdf:type rdf:resource="http://www.omg.org/spec/DOL/DOL-terms/OMSLanguage"/>
         <rdfs:label>FHIR STU3</rdfs:label>
-        <co:notation>fhir-v3</co:notation>
+        <dc:identifier>fhir-v3</dc:identifier>
         <co:prefLabel>FHIR STU3</co:prefLabel>
     </owl:NamedIndividual>
     
@@ -1843,7 +1850,7 @@
     <owl:NamedIndividual rdf:about="http://reaction.ruleml.org/1.02">
         <rdf:type rdf:resource="http://www.omg.org/spec/API4KP/core#ConstructedLanguage"/>
         <rdfs:label>Reaction RuleML 1.2</rdfs:label>
-        <co:notation>rruleml-v12</co:notation>
+        <dc:identifier>rruleml-v12</dc:identifier>
     </owl:NamedIndividual>
     
 
@@ -1862,7 +1869,7 @@
     <owl:NamedIndividual rdf:about="http://www.openapis.org/versions/2.3.x">
         <rdf:type rdf:resource="http://www.omg.org/spec/API4KP/core#ConstructedLanguage"/>
         <rdfs:label>OpenAPI 2.3</rdfs:label>
-        <co:notation>openapi-v2</co:notation>
+        <dc:identifier>openapi-v2</dc:identifier>
     </owl:NamedIndividual>
     
 
@@ -1884,7 +1891,7 @@
         <terms:source>http://www.w3.org/TR/owl2-overview/</terms:source>
         <rdfs:comment>Ontology Web Language 2</rdfs:comment>
         <rdfs:label>OWL 2</rdfs:label>
-        <co:notation>owl-v2</co:notation>
+        <dc:identifier>owl-v2</dc:identifier>
         <co:prefLabel>OWL 2</co:prefLabel>
     </owl:NamedIndividual>
     
@@ -1924,7 +1931,7 @@
         <rdf:type rdf:resource="http://www.omg.org/spec/API4KP/core#ConstructedLanguage"/>
         <rdf:type rdf:resource="http://www.omg.org/spec/DOL/DOL-terms/OMSLanguage"/>
         <rdfs:label>BPMN 2.0.2</rdfs:label>
-        <co:notation>bpmn-v2</co:notation>
+        <dc:identifier>bpmn-v2</dc:identifier>
         <co:prefLabel>BPMN 2.0.2</co:prefLabel>
     </owl:NamedIndividual>
     
@@ -1936,7 +1943,7 @@
         <rdf:type rdf:resource="http://www.omg.org/spec/API4KP/core#ConstructedLanguage"/>
         <rdf:type rdf:resource="http://www.omg.org/spec/DOL/DOL-terms/OMSLanguage"/>
         <rdfs:label>CMMN 1.1</rdfs:label>
-        <co:notation>cmmn-v11</co:notation>
+        <dc:identifier>cmmn-v11</dc:identifier>
         <co:prefLabel>CMMN 1.1</co:prefLabel>
     </owl:NamedIndividual>
     
@@ -1948,7 +1955,7 @@
         <rdf:type rdf:resource="http://www.omg.org/spec/API4KP/core#ConstructedLanguage"/>
         <rdf:type rdf:resource="http://www.omg.org/spec/DOL/DOL-terms/OMSLanguage"/>
         <rdfs:label>DMN 1.1</rdfs:label>
-        <co:notation>dmn-v11</co:notation>
+        <dc:identifier>dmn-v11</dc:identifier>
         <co:prefLabel>DMN 1.1</co:prefLabel>
     </owl:NamedIndividual>
     

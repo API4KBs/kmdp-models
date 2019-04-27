@@ -15,46 +15,74 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.util.JenaUtil;
+import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.Util;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.apache.jena.sparql.expr.NodeValue;
+import org.apache.jena.sparql.function.FunctionBase;
+import org.apache.jena.sparql.function.FunctionBase1;
+import org.apache.jena.sparql.function.FunctionRegistry;
 
 public abstract class ConverterInitBase {
 
-  protected String baseURI;
 
-  protected List<Query> arQueries;
-
-  protected List<Query> getQueriesForModes(Modes... modes) {
-    return loadQueries(Arrays.stream(modes)
-        .map((m) -> m.queries)
-        .reduce(new ArrayList<>(),
-            (acc, list) -> {
-              acc.addAll(list);
-              return acc;
-            }));
+  static {
+    FunctionRegistry.get().put("http://kmdp.mayo.edu/sparql/function#uuidFrom", UuidFrom.class);
+    FunctionRegistry.get().put("http://kmdp.mayo.edu/sparql/function#localName", LocalName.class);
   }
 
-  private List<Query> loadQueries(List<String> queryFiles) {
-    return queryFiles.stream()
+
+  protected List<Query> getQueriesForModes(Modes modes, Owl2SkosConfig cfg) {
+    return modes.queries.stream()
         .map(JenaUtil::read)
-        .map(this::createParamQueryString)
+        .map((qryStr) -> createParamQueryString(qryStr,cfg))
         .map(ParameterizedSparqlString::toString)
         .map(QueryFactory::create)
         .collect(Collectors.toList());
   }
 
-  private ParameterizedSparqlString createParamQueryString(String s) {
-    ParameterizedSparqlString pqs = new ParameterizedSparqlString(s, baseURI);
-    pqs.setNsPrefix("tgt", baseURI.endsWith("/") ? baseURI : baseURI + "#");
+  private ParameterizedSparqlString createParamQueryString(String s, Owl2SkosConfig cfg) {
+    String baseUri = cfg.getTyped(OWLtoSKOSTxParams.TGT_NAMESPACE);
+    ParameterizedSparqlString pqs = new ParameterizedSparqlString(s, baseUri);
+    pqs.setNsPrefix("tgt", baseUri.endsWith("/") ? baseUri : baseUri + "#");
+
+    String schemeName = cfg.getTyped(OWLtoSKOSTxParams.SCHEME_NAME);
+    if (!Util.isEmpty(schemeName)) {
+      pqs.setLiteral("?schemeName",schemeName);
+    }
+
     return pqs;
   }
 
 
+  public static class UuidFrom extends FunctionBase1 {
+
+    public UuidFrom() {
+    }
+
+    @Override
+    public NodeValue exec(NodeValue nodeValue) {
+      String s = nodeValue.asString();
+      return NodeValue.makeString(UUID.nameUUIDFromBytes(s.getBytes()).toString());
+    }
+  }
+
+  public static class LocalName extends FunctionBase1 {
+
+    public LocalName() {
+    }
+
+    @Override
+    public NodeValue exec(NodeValue nodeValue) {
+      String s = NameUtils.getTrailingPart(nodeValue.asString());
+      return NodeValue.makeString(s);
+    }
+  }
 }

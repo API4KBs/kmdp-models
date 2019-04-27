@@ -15,7 +15,17 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
+import static edu.mayo.kmdp.terms.util.JenaUtil.applyVersionToURI;
+import static edu.mayo.kmdp.terms.util.JenaUtil.detectVersionFragment;
+import static edu.mayo.kmdp.util.Util.removeLastChar;
+
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.util.JenaUtil;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BiFunction;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.Ontology;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -27,84 +37,45 @@ import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.ValidityReport;
 import org.apache.jena.vocabulary.OWL2;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static edu.mayo.kmdp.terms.util.JenaUtil.applyVersionToURI;
-import static edu.mayo.kmdp.terms.util.JenaUtil.detectVersionFragment;
-import static edu.mayo.kmdp.util.Util.removeLastChar;
+import org.apache.jena.vocabulary.SKOS;
 
 
-public class Owl2SkosConverter extends ConverterInitBase {
+public class Owl2SkosConverter extends ConverterInitBase implements
+    BiFunction<Model, Owl2SkosConfig, Optional<Model>> {
 
-  public static final String SKOS_NAMESPACE = "http://www.w3.org/2004/02/skos/core#";
+  public static final String SKOS_NAMESPACE = SKOS.getURI();
   public static final String OLEX = "http://www.w3.org/ns/lemon/ontolex#";
 
   private static Model schema;
   private static InfModel schemaInferred;
-  private final boolean olex;
 
-
-  public static Optional<Model> convert(Model source, String targetNamespace, Modes mode,
-      boolean verify, boolean flatten) {
-    return new Owl2SkosConverter(targetNamespace, mode).run(source, verify, flatten);
-  }
-
-  public static Optional<Model> convert(Model source, String targetNamespace, boolean verify,
-      boolean flatten) {
-    return convert(source, targetNamespace, Modes.SKOS, verify, flatten);
-  }
-
-  public static Optional<Model> convert(Model source, String targetNamespace) {
-    return convert(source, targetNamespace, false, false);
-  }
-
-  public static Optional<Model> convert(InputStream source, String targetNamespace) {
-    return convert(JenaUtil.loadModel(source, targetNamespace), targetNamespace, false, false);
-  }
-
-
-  public Owl2SkosConverter(String targetNamespace, Modes... modes) {
-    this.baseURI = targetNamespace;
-
-    if (modes == null || modes.length == 0) {
-      modes = new Modes[]{Modes.SKOS};
-    }
-    this.arQueries = getQueriesForModes(modes);
-    this.olex = Arrays.stream(modes).anyMatch((m) -> m.olex);
-  }
-
-
-  public Optional<Model> run(final Model source, boolean validate, boolean flatten) {
-    return postProcess(applyQueries(source),
+  @Override
+  public Optional<Model> apply(Model source, Owl2SkosConfig cfg) {
+    Modes mode = cfg.get(OWLtoSKOSTxParams.MODE).map(Modes::valueOf).orElse(Modes.SKOS);
+    return postProcess(
+        applyQueries(source, mode, cfg),
         detectVersionFragment(source).orElse(null),
-        validate,
-        flatten);
+        mode,
+        cfg);
   }
 
-
-  public Optional<Model> run(final List<String> sources,
-      boolean validate,
-      boolean flatten) {
+  public Optional<Model> run(final List<String> sources, Owl2SkosConfig cfg) {
+    Modes mode = cfg.get(OWLtoSKOSTxParams.MODE).map(Modes::valueOf).orElse(Modes.SKOS);
     Model result = sources.stream()
         .map(Owl2SkosConverter::createSourceModel)
-        .map(this::applyQueries)
+        .map((s) -> applyQueries(s, mode, cfg))
         .reduce(ModelFactory.createDefaultModel(), Model::add);
 
-    return postProcess(result, detectVersionFragment(result).orElse(null), validate, flatten);
+    return postProcess(result, detectVersionFragment(result).orElse(null), mode, cfg);
   }
 
   protected Optional<Model> postProcess(Model model,
       String versionFragment,
-      boolean validate,
-      boolean flatten) {
+      Modes mode,
+      Owl2SkosConfig cfg) {
 
     Model result = null;
-    if (validate) {
+    if (cfg.getTyped(OWLtoSKOSTxParams.VALIDATE)) {
       InfModel inf = infer(model, getSchema());
       ValidityReport report = inf.validate();
       if (!report.isValid()) {
@@ -114,26 +85,29 @@ public class Owl2SkosConverter extends ConverterInitBase {
     } else {
       result = model;
     }
-    return Optional.ofNullable(toSKOSOntologyModel(result, versionFragment, flatten));
+    return Optional.ofNullable(toSKOSOntologyModel(result, versionFragment, mode, cfg));
   }
 
-  private OntModel toSKOSOntologyModel(Model result, String versionFragment, boolean flatten) {
-    OntModel ontModel = ModelFactory.createOntologyModel();
 
-    Ontology ont = ontModel.createOntology(this.baseURI);
+  private OntModel toSKOSOntologyModel(Model result, String versionFragment, Modes modes,
+      Owl2SkosConfig cfg) {
+    OntModel ontModel = ModelFactory.createOntologyModel();
+    String baseUri = cfg.getTyped(OWLtoSKOSTxParams.TGT_NAMESPACE);
+
+    Ontology ont = ontModel.createOntology(baseUri);
     if (versionFragment != null && !versionFragment.isEmpty()) {
       ont.addProperty(OWL2.versionIRI,
-          ResourceFactory.createResource(applyVersionToURI(baseURI, versionFragment)));
+          ResourceFactory.createResource(applyVersionToURI(baseUri, versionFragment)));
     }
 
-    if (this.olex) {
+    if (modes.usesOlex) {
       ont.addImport(ontModel.createResource(OLEX));
     }
     ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
 
-    if (flatten) {
-      prefetch(ontModel, this.olex);
-    } else {
+    if (cfg.getTyped(OWLtoSKOSTxParams.FLATTEN)) {
+      prefetch(ontModel, modes.usesOlex);
+    } else if (cfg.getTyped(OWLtoSKOSTxParams.ADD_IMPORTS)) {
       ontModel.loadImports();
     }
 
@@ -167,7 +141,7 @@ public class Owl2SkosConverter extends ConverterInitBase {
   private void debug(InfModel inf, ValidityReport report) {
     report.getReports().forEachRemaining((rep) -> {
       if (rep.isError()) {
-        //System.out.println(rep.toString());
+        System.err.println(rep.toString());
       }
     });
   }
@@ -212,8 +186,8 @@ public class Owl2SkosConverter extends ConverterInitBase {
     return sourceOntology;
   }
 
-  private Model applyQueries(final Model ontModel) {
-    return arQueries.stream()
+  private Model applyQueries(final Model ontModel, final Modes modes, final Owl2SkosConfig cfg) {
+    return getQueriesForModes(modes, cfg).stream()
         .map((q) -> QueryExecutionFactory.create(q, ontModel).execConstruct())
         .reduce(Model::add)
         .orElse(ModelFactory.createDefaultModel());

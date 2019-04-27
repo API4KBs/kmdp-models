@@ -4,11 +4,12 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX olex: <http://www.w3.org/ns/lemon/ontolex#>
-PREFIX afn: <http://jena.apache.org/ARQ/function#>
 PREFIX dce: <http://www.opengroup.org/dce/>
 PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX lcc-lr: <http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/>
-
+PREFIX f: <http://kmdp.mayo.edu/sparql/function#>
+PREFIX afn: <http://jena.apache.org/ARQ/function#>
 
 CONSTRUCT {
   ?Cid
@@ -17,10 +18,16 @@ CONSTRUCT {
     rdfs:comment ?Comment;
 
     skos:notation ?Notation;
-    skos:prefLabel ?PrefLabel;
-    skos:definition ?Def;
 
-    dct:identifier ?Id.
+    skos:prefLabel ?PrefLabel;
+    skos:altLabel ?AltLabel;
+    skos:hiddenLabel ?HiddenLabel;
+
+    skos:definition ?Def;
+    skos:note ?Note;
+    skos:example ?Example;
+
+    dc:identifier ?Id.
 
 }
 WHERE {
@@ -29,34 +36,30 @@ WHERE {
 
     ?X a ?entity.
         FILTER isUri( ?X ).
-        OPTIONAL { ?X skos:notation ?N1. }
-        OPTIONAL { ?X dct:identifier ?Id. }
 
-        # Create a URI for the related concept
-        BIND ( URI( CONCAT( STR( tgt: ),
-                            COALESCE( ?Id, ?N1, afn:localname(?X) ) ) ) as ?Cid ).
+            # Create a URI for the related concept
+            OPTIONAL { ?X dc:identifier ?dcId. }
+            OPTIONAL { ?X dct:identifier ?dctId. }
+            OPTIONAL { ?Code lcc-lr:identifies ?X. ?Code lcc-lr:hasTag ?Tag. }
+
+            BIND ( COALESCE( ?dcId, ?dctId, ?Tag, f:localName(?X) ) as ?Notation )
+            BIND ( f:uuidFrom( ?Notation ) as ?Id )
+            BIND ( URI( CONCAT( STR( tgt: ), ?Id ) ) as ?Cid )
 
         #For each proper ontology entity
-
-        # Manage Labels asserted natively
-        BIND( afn:localname( ?X ) as ?localName )
-
-        OPTIONAL { ?Code lcc-lr:identifies ?X.
-                   ?Code lcc-lr:hasTag ?Tag. }
-        BIND ( STRDT( COALESCE( ?Tag, ?N1, ?localName ), xsd:string ) as ?Notation ).
+        BIND( f:localName( ?X ) as ?localName )
 
         OPTIONAL { ?X rdfs:label ?lab. }
         OPTIONAL { ?X skos:prefLabel ?pLab. }
+        OPTIONAL { ?X skos:altLabel ?AltLabel. }
+        OPTIONAL { ?X skos:hiddenLabel ?HiddenLabel. }
 
         OPTIONAL { ?X skos:definition ?Def. }
+        OPTIONAL { ?X skos:example ?Example. }
+        OPTIONAL { ?X skos:note ?Note. }
 
         OPTIONAL { ?X rdfs:comment ?Comment. }
 
         BIND ( COALESCE( ?lab, ?pLab, ?localName ) as ?Label ).
         BIND ( COALESCE( ?pLab, ?lab, ?localName ) as ?PrefLabel ).
 }
-
-
-
-
-

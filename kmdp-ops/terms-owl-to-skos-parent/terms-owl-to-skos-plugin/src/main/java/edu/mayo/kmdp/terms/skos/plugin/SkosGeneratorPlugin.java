@@ -18,6 +18,8 @@ package edu.mayo.kmdp.terms.skos.plugin;
 import edu.mayo.kmdp.terms.mireot.EntityTypes;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Modes;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
+import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
 import java.io.IOException;
@@ -255,14 +257,15 @@ public class SkosGeneratorPlugin extends AbstractMojo {
           catalogURL),
           targetNamespace);
 
-      Owl2SkosConverter converter = new Owl2SkosConverter(skosNamespace,
-          profile);
+      Owl2SkosConfig cfg = new Owl2SkosConfig()
+          .with(OWLtoSKOSTxParams.TGT_NAMESPACE,skosNamespace)
+          .with(OWLtoSKOSTxParams.MODE,profile);
 
       Optional<Model> skosModel = extractor.fetch(targetURI,
           entityType,
           entityOnly,
           minDepth,
-          maxDepth).flatMap((ext) -> converter.run(ext, reason, false));
+          maxDepth).flatMap((ext) -> new Owl2SkosConverter().apply(ext, cfg));
 
       if (skosModel.isPresent()) {
         if (!getOutputDirectory().exists()) {

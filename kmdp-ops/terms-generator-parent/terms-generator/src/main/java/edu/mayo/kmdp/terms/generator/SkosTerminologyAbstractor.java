@@ -22,6 +22,7 @@ import edu.mayo.kmdp.terms.generator.util.TransitiveClosure;
 import edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme;
 import edu.mayo.kmdp.terms.impl.model.InternalTerm;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.SKOS;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AsOWLNamedIndividual;
@@ -81,7 +82,7 @@ public class SkosTerminologyAbstractor {
 
   static final IRI dceUUID = IRI.create("http://www.opengroup.org/dce/uuid");
 
-  static final IRI dcID = IRI.create("http://purl.org/dc/terms/identifier");
+  static final IRI dctID = IRI.create("http://purl.org/dc/terms/identifier");
 
 
   private OWLOntology model;

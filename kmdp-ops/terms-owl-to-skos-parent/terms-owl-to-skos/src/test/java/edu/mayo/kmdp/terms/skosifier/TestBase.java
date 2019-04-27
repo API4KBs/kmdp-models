@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
+import java.util.UUID;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.PrintUtil;
 import org.apache.jena.vocabulary.OWL;
@@ -39,6 +40,7 @@ class TestBase {
       "PREFIX rdfs: <" + RDFS.getURI() + "> \n" +
       "PREFIX skos: <" + SKOS.getURI() + "> \n" +
       "PREFIX dct: <http://purl.org/dc/terms/> \n" +
+      "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
       "PREFIX olex: <http://www.w3.org/ns/lemon/ontolex#> \n";
 
 
@@ -47,8 +49,12 @@ class TestBase {
     PrintUtil.registerPrefix("olex", "http://www.w3.org/ns/lemon/ontolex#");
   }
 
-  Model run(Owl2SkosConverter cv, List<String> onto) {
-    Optional<Model> model = cv.run(onto, true, false);
+  String uuid(String name) {
+    return UUID.nameUUIDFromBytes(name.getBytes()).toString();
+  }
+
+  Model run(List<String> onto, Owl2SkosConfig cfg) {
+    Optional<Model> model = new Owl2SkosConverter().run(onto, cfg);
     if (model.isPresent()) {
       return model.get();
     } else {
@@ -63,7 +69,6 @@ class TestBase {
   }
 
   class MapBuilder<T, Q> extends HashMap<T, Q> {
-
     public MapBuilder<T, Q> with(T key, Q val) {
       super.put(key, val);
       return this;
