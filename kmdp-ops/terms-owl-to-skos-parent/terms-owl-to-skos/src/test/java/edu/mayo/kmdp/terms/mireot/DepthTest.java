@@ -15,59 +15,76 @@
  */
 package edu.mayo.kmdp.terms.mireot;
 
-import org.apache.jena.rdf.model.Resource;
-import org.junit.jupiter.api.Test;
-
-import java.util.Set;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
+import org.apache.jena.rdf.model.Resource;
+import org.junit.jupiter.api.Test;
 
 public class DepthTest extends BaseMireotTest {
 
   @Test
   public void testClassDepth() {
+    String base = "http://test.org";
 
-    this.baseUri = "http://test.org";
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.CLASS)
+        .with(MireotParameters.MIN_DEPTH, 3)
+        .with(MireotParameters.MAX_DEPTH, 4);
 
-    MireotExtractor extractor = newExtractor("/ontology/deepHier.owl");
-    Set<Resource> c = extractor.extract(baseUri + "#A", EntityTypes.CLASS, 3, 4);
+    Set<Resource> c = new MireotExtractor().fetch(stream("/ontology/deepHier.owl"),
+        URI.create(base + "#A"),
+        cfg)
+        .map((m) -> getResources(base,m))
+        .orElse(new HashSet<>());
 
-    assertTrue(c.contains(h("G")));
-    assertTrue(c.contains(h("H")));
-    assertTrue(c.contains(h("I")));
-    assertTrue(c.contains(h("K")));
+    assertTrue(c.contains(h(base, "G")));
+    assertTrue(c.contains(h(base, "H")));
+    assertTrue(c.contains(h(base, "I")));
+    assertTrue(c.contains(h(base, "K")));
 
-    assertFalse(c.contains(h("A")));
-    assertFalse(c.contains(h("B")));
-    assertFalse(c.contains(h("C")));
-    assertFalse(c.contains(h("D")));
-    assertFalse(c.contains(h("E")));
-    assertFalse(c.contains(h("F")));
-    assertFalse(c.contains(h("J")));
+    assertFalse(c.contains(h(base, "A")));
+    assertFalse(c.contains(h(base, "B")));
+    assertFalse(c.contains(h(base, "C")));
+    assertFalse(c.contains(h(base, "D")));
+    assertFalse(c.contains(h(base, "E")));
+    assertFalse(c.contains(h(base, "F")));
+    assertFalse(c.contains(h(base, "J")));
 
   }
 
   @Test
   public void testClassDepthNoLimit() {
 
-    this.baseUri = "http://test.org";
+    String base = "http://test.org#";
 
-    MireotExtractor extractor = newExtractor("/ontology/deepHier.owl");
-    Set<Resource> c = extractor.extract(baseUri + "#A", EntityTypes.CLASS);
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.CLASS);
 
-    assertTrue(c.contains(h("G")));
-    assertTrue(c.contains(h("H")));
-    assertTrue(c.contains(h("I")));
-    assertTrue(c.contains(h("K")));
+    Set<Resource> c = new MireotExtractor().fetch(stream("/ontology/deepHier.owl"),
+        URI.create(base + "A"),
+        cfg)
+        .map((m) -> getResources(base,m))
+        .orElse(new HashSet<>());
 
-    assertTrue(c.contains(h("A")));
-    assertTrue(c.contains(h("B")));
-    assertTrue(c.contains(h("C")));
-    assertTrue(c.contains(h("D")));
-    assertTrue(c.contains(h("E")));
-    assertTrue(c.contains(h("F")));
-    assertTrue(c.contains(h("J")));
+    assertTrue(c.contains(h(base, "G")));
+    assertTrue(c.contains(h(base, "H")));
+    assertTrue(c.contains(h(base, "I")));
+    assertTrue(c.contains(h(base, "K")));
+
+    assertTrue(c.contains(h(base, "A")));
+    assertTrue(c.contains(h(base, "B")));
+    assertTrue(c.contains(h(base, "C")));
+    assertTrue(c.contains(h(base, "D")));
+    assertTrue(c.contains(h(base, "E")));
+    assertTrue(c.contains(h(base, "F")));
+    assertTrue(c.contains(h(base, "J")));
 
   }
 
@@ -75,18 +92,27 @@ public class DepthTest extends BaseMireotTest {
   @Test
   public void testPropDepth() {
 
-    this.baseUri = "http://test.org";
+    String base = "http://test.org";
 
-    MireotExtractor extractor = newExtractor("/ontology/deepProp.owl");
-    Set<Resource> c = extractor.extract(baseUri + "#propA", EntityTypes.OBJ_PROP, 0, 1);
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.OBJ_PROP)
+        .with(MireotParameters.MIN_DEPTH, 0)
+        .with(MireotParameters.MAX_DEPTH, 1);
 
-    assertTrue(c.contains(h("propA")));
-    assertTrue(c.contains(h("propB")));
-    assertTrue(c.contains(h("propF")));
+    Set<Resource> c = new MireotExtractor().fetch(stream("/ontology/deepProp.owl"),
+        URI.create(base + "#propA"),
+        cfg)
+        .map((m) -> getResources(base,m))
+        .orElse(new HashSet<>());
 
-    assertFalse(c.contains(h("propC")));
-    assertFalse(c.contains(h("propD")));
-    assertFalse(c.contains(h("propE")));
+    assertTrue(c.contains(h(base, "propA")));
+    assertTrue(c.contains(h(base, "propB")));
+    assertTrue(c.contains(h(base, "propF")));
+
+    assertFalse(c.contains(h(base, "propC")));
+    assertFalse(c.contains(h(base, "propD")));
+    assertFalse(c.contains(h(base, "propE")));
 
   }
 
@@ -94,19 +120,28 @@ public class DepthTest extends BaseMireotTest {
   @Test
   public void testDataPropDepth() {
 
-    this.baseUri = "http://test.org";
+    String base = "http://test.org";
 
-    MireotExtractor extractor = newExtractor("/ontology/deepDataProp.owl");
-    Set<Resource> c = extractor.extract(baseUri + "#propA", EntityTypes.DATA_PROP, 1, 2);
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.DATA_PROP)
+        .with(MireotParameters.MIN_DEPTH, 1)
+        .with(MireotParameters.MAX_DEPTH, 2);
 
-    assertTrue(c.contains(h("propB")));
-    assertTrue(c.contains(h("propF")));
-    assertTrue(c.contains(h("propE")));
-    assertTrue(c.contains(h("propC")));
+    Set<Resource> c = new MireotExtractor().fetch(stream("/ontology/deepDataProp.owl"),
+        URI.create(base + "#propA"),
+        cfg)
+        .map((m) -> getResources(base, m))
+        .orElse(new HashSet<>());
 
-    assertFalse(c.contains(h("propA")));
-    assertFalse(c.contains(h("propD")));
-    assertFalse(c.contains(h("propG")));
+    assertTrue(c.contains(h(base, "propB")));
+    assertTrue(c.contains(h(base, "propF")));
+    assertTrue(c.contains(h(base, "propE")));
+    assertTrue(c.contains(h(base, "propC")));
+
+    assertFalse(c.contains(h(base, "propA")));
+    assertFalse(c.contains(h(base, "propD")));
+    assertFalse(c.contains(h(base, "propG")));
 
   }
 

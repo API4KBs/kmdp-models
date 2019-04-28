@@ -15,7 +15,11 @@
  */
 package edu.mayo.kmdp.terms.util;
 
+import static edu.mayo.kmdp.util.NameUtils.strip;
+
 import edu.mayo.kmdp.terms.mireot.EntityTypes;
+import java.util.Optional;
+import java.util.Set;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -23,11 +27,6 @@ import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
-
-import java.util.Optional;
-import java.util.Set;
-
-import static edu.mayo.kmdp.util.NameUtils.strip;
 
 public abstract class JenaUtil {
 

@@ -15,12 +15,18 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
+import static edu.mayo.kmdp.util.JenaUtil.dat_a;
 import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.util.JenaUtil;
+import java.util.UUID;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.PrintUtil;
+import org.apache.jena.vocabulary.DC_11;
+import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -44,7 +50,25 @@ public class AnnotationsTest extends TestBase {
 
     Model m = run(singletonList("/ontology/singleClass.owl"), cfg);
 
-    JenaUtil.iterateAndStreamModel(m, System.out, PrintUtil::print);
+    String id = UUID.nameUUIDFromBytes("Klass".getBytes()).toString();
+    String subj = NS + "#" + id;
+
+    assertTrue(m.contains(
+        dat_a(subj,
+            DC_11.identifier,
+            id)));
+    assertTrue(m.contains(
+        dat_a(subj,
+            SKOS.prefLabel,
+            "Pref Way to name My Class")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            RDFS.label,
+            "My Class")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            SKOS.notation,
+            "Klass")));
 
   }
 
@@ -59,22 +83,48 @@ public class AnnotationsTest extends TestBase {
 
     JenaUtil.iterateAndStreamModel(m, System.out, PrintUtil::print);
 
-//    Resource klass = m.getResource(NS + "#Klass");
-//    assertNotNull(klass);
-//    assertNotNull(m.getProperty(klass, SKOS.inScheme));
-//    assertNotNull(m.getProperty(klass, SKOS.broader));
-//    assertNotNull(m.getProperty(klass, RDF.type));
-//
-//    Resource top = m.getResource(NS + "#test_Scheme_Top");
-//    assertNotNull(top);
-//    assertNotNull(m.getProperty(top, RDF.type));
-//
-//    Resource cs = m.getResource(NS + "#test_Scheme");
-//    assertNotNull(cs);
-//    assertNotNull(m.getProperty(cs, SKOS.hasTopConcept));
-//    assertNotNull(m.getProperty(cs, RDF.type));
+    String id = UUID.nameUUIDFromBytes("id0001".getBytes()).toString();
+    String subj = NS + "#" + id;
 
-    //m.write( System.out );
+    JenaUtil.toSystemOut(m);
+
+    assertTrue(m.contains(
+        dat_a(subj,
+            DC_11.identifier,
+            id)));
+    assertTrue(m.contains(
+        dat_a(subj,
+            SKOS.notation,
+            "id0001")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            RDFS.comment,
+            "comment")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            SKOS.definition,
+            "definition")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            SKOS.example,
+            "example")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            SKOS.note,
+            "note")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            SKOS.hiddenLabel,
+            "hidden")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            SKOS.altLabel,
+            "alternative")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            SKOS.notation,
+            "id0001")));
+
   }
 
 }

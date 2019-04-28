@@ -15,29 +15,29 @@
  */
 package edu.mayo.kmdp.terms.mireot;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
 import edu.mayo.kmdp.util.JenaUtil;
+import java.net.URI;
+import java.util.Optional;
+import java.util.stream.Stream;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class MireotTest extends edu.mayo.kmdp.terms.mireot.BaseMireotTest {
 
   public static Stream<Arguments> argProvider() {
     return Stream.of(
-        Arguments.of("Notebook", EntityTypes.CLASS, 15),
-        Arguments.of("hasSubjectTerm", EntityTypes.OBJ_PROP, 10),
-        Arguments.of("hasShortTitle", EntityTypes.DATA_PROP, 11),
-        Arguments.of("film", EntityTypes.INST, 5),
-        Arguments.of("AnalogStorageMedium", EntityTypes.INST, 20),
-        Arguments.of("StorageMedium", EntityTypes.INST, 82)
+        Arguments.of("Notebook", EntityTypes.CLASS, 16),
+        Arguments.of("hasSubjectTerm", EntityTypes.OBJ_PROP, 11),
+        Arguments.of("hasShortTitle", EntityTypes.DATA_PROP, 12),
+        Arguments.of("film", EntityTypes.INST, 6),
+        Arguments.of("AnalogStorageMedium", EntityTypes.INST, 21),
+        Arguments.of("StorageMedium", EntityTypes.INST, 83)
     );
   }
 
@@ -45,14 +45,18 @@ public class MireotTest extends edu.mayo.kmdp.terms.mireot.BaseMireotTest {
   @ParameterizedTest()
   @MethodSource({"argProvider"})
   public void testEntityHierarchyMireot(String resource, EntityTypes type, Integer count) {
-    MireotExtractor extractor = newExtractor("/ontology/fabio.rdf", "http://purl.org/spar/fabio/");
 
-    Optional<Model> chunk = extractor.fetchResources(baseUri + resource, type);
+    String base = "http://purl.org/spar/fabio/";
 
-    assertTrue(chunk.isPresent());
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, type);
 
-//		JenaUtil.toSystemOut( chunk.get() );
+    Optional<Model> chunk = new MireotExtractor().fetch(stream("/ontology/fabio.rdf"),
+        URI.create(base + resource),
+        cfg);
 
+    JenaUtil.toSystemOut(chunk.get());
     assertEquals(count, JenaUtil.sizeOf(chunk.get()));
   }
 

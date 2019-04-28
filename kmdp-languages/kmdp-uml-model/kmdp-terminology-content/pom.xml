@@ -218,7 +218,7 @@
             </goals>
             <configuration>
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
-              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/derived-from</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/DerivationRelType</skosNamespace>
               <skosOutputFile>rel-deriv.skos.rdf</skosOutputFile>
@@ -232,7 +232,7 @@
             </goals>
             <configuration>
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
-              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/variant-of</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/VariantRelType</skosNamespace>
               <skosOutputFile>rel-variant.skos.rdf</skosOutputFile>
@@ -246,7 +246,7 @@
             </goals>
             <configuration>
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
-              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/compact-representation-of</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/SummaryRelType</skosNamespace>
               <skosOutputFile>rel-summary.skos.rdf</skosOutputFile>
@@ -260,7 +260,7 @@
             </goals>
             <configuration>
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
-              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/compatible-with</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/DependencyRelType</skosNamespace>
               <skosOutputFile>rel-deps.skos.rdf</skosOutputFile>
@@ -275,7 +275,7 @@
             </goals>
             <configuration>
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
-              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/in-series-with</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/RelatedVersionType</skosNamespace>
               <skosOutputFile>rel-series.skos.rdf</skosOutputFile>
@@ -290,7 +290,7 @@
             </goals>
             <configuration>
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
-              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/has-part</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/StructuralRelType</skosNamespace>
               <skosOutputFile>rel-part.skos.rdf</skosOutputFile>
@@ -421,7 +421,7 @@
             </goals>
             <configuration>
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
-              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp</targetNamespace>
+              <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/KnowledgeExpression</targetURI>
               <skosNamespace>http://terms.kmdp.mayo.edu/API4KP/ParsingLevel</skosNamespace>
               <skosOutputFile>level.skos.rdf</skosOutputFile>

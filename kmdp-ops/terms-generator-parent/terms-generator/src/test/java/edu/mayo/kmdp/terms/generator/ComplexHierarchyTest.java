@@ -15,11 +15,20 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.mireot.MireotConfig;
+import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Modes;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
@@ -29,15 +38,6 @@ import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLOntology;
 import ru.avicomp.ontapi.OntManagers;
 import ru.avicomp.ontapi.OntologyManager;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-
-import static edu.mayo.kmdp.terms.mireot.MireotExtractor.extract;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class ComplexHierarchyTest {
 
@@ -65,15 +65,17 @@ public class ComplexHierarchyTest {
   private List<Term> doGenerate(final Modes modes) {
     try {
       OntologyManager manager = OntManagers.createONT();
-      Optional<Model> skosModel = extract(
-          Owl2Skos2TermsTest.class.getResourceAsStream("/kac-test.rdf"),
-          "http://test.org/KAO#ClinicalKnowledgeAsset")
+
+      Optional<Model> skosModel = new MireotExtractor()
+          .fetch(Owl2Skos2TermsTest.class.getResourceAsStream("/kac-test.rdf"),
+              URI.create("http://test.org/KAO#ClinicalKnowledgeAsset"),
+              new MireotConfig())
           .flatMap((extract) -> new Owl2SkosConverter().apply(extract,
               new Owl2SkosConfig()
-                  .with(OWLtoSKOSTxParams.TGT_NAMESPACE,"http://test.foo")
-              .with(OWLtoSKOSTxParams.MODE,modes)
-              .with(OWLtoSKOSTxParams.FLATTEN,true)
-              .with(OWLtoSKOSTxParams.VALIDATE,false)));
+                  .with(OWLtoSKOSTxParams.TGT_NAMESPACE, "http://test.foo")
+                  .with(OWLtoSKOSTxParams.MODE, modes)
+                  .with(OWLtoSKOSTxParams.FLATTEN, true)
+                  .with(OWLtoSKOSTxParams.VALIDATE, false)));
 
       if (!skosModel.isPresent()) {
         fail("Unable to generate skos model");

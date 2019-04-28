@@ -15,32 +15,31 @@
  */
 package edu.mayo.kmdp.terms.mireot;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 
 public abstract class BaseMireotTest {
 
-  protected String baseUri;
-
-  MireotExtractor newExtractor(String sourcePath, String baseURI) {
-    MireotExtractor extractor = new MireotExtractor(
-        SelectResourcesTest.class.getResourceAsStream(sourcePath), baseURI);
-    baseUri = baseURI;
-    return extractor;
+  InputStream stream(String sourcePath) {
+    InputStream s = SelectResourcesTest.class.getResourceAsStream(sourcePath);
+    if (s == null) {
+      fail("Unable to load " + sourcePath);
+    }
+    return s;
   }
 
-  MireotExtractor newExtractor(String sourcePath) {
-    MireotExtractor extractor = new MireotExtractor(
-        SelectResourcesTest.class.getResourceAsStream(sourcePath));
-    baseUri = extractor.getBaseURI();
-    return extractor;
-  }
-
-  Resource r(String localName) {
+  Resource r(String baseUri, String localName) {
     return ResourceFactory.createResource(fix(baseUri, "/") + localName);
   }
 
-  Resource h(String localName) {
+  Resource h(String baseUri, String localName) {
     return ResourceFactory.createResource(fix(baseUri, "#") + localName);
   }
 
@@ -48,4 +47,16 @@ public abstract class BaseMireotTest {
     return baseUri.endsWith(delim) ? baseUri : baseUri + delim;
   }
 
+  public Set<Resource> getResources(String baseUri, Model model) {
+    Set<Resource> resources = new HashSet<>();
+    ResIterator iter = model.listSubjects();
+    while (iter.hasNext()) {
+      Resource res = iter.nextResource();
+      if (! res.toString().equals(baseUri)) {
+        // exclude the ontology itself
+        resources.add(res);
+      }
+    }
+    return resources;
+  }
 }

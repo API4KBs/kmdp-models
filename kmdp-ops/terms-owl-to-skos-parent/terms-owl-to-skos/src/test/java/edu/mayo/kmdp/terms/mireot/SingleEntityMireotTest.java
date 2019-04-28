@@ -20,7 +20,9 @@ import static edu.mayo.kmdp.util.JenaUtil.obj_a;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
 import edu.mayo.kmdp.util.JenaUtil;
+import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.apache.jena.rdf.model.Model;
@@ -38,22 +40,28 @@ public class SingleEntityMireotTest extends BaseMireotTest {
 
   public static Stream<Arguments> argProvider() {
     return Stream.of(
-        Arguments.of("Book", 5),
-        Arguments.of("stores", 5),
-        Arguments.of("hasSubtitle", 5),
-        Arguments.of("hard-drive", 6));
+        Arguments.of("Book", 6),
+        Arguments.of("stores", 6),
+        Arguments.of("hasSubtitle", 6),
+        Arguments.of("hard-drive", 7));
   }
 
   @ParameterizedTest
   @MethodSource("argProvider")
   public void testEntityMireot(String resource, Integer count) {
-    MireotExtractor extractor = newExtractor("/ontology/fabio.rdf",
-        "http://purl.org/spar/fabio/");
-    Optional<Model> chunk = extractor.fetchResource(baseUri + resource);
+
+    String base = "http://purl.org/spar/fabio/";
+
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_ONLY,true);
+
+    Optional<Model> chunk = new MireotExtractor().fetch(stream("/ontology/fabio.rdf"),
+        URI.create(base + resource),
+        cfg);
 
     assertTrue(chunk.isPresent());
-
-//    JenaUtil.toSystemOut(chunk.get());
+    //JenaUtil.toSystemOut(chunk.get());
 
     assertEquals(count, JenaUtil.sizeOf(chunk.get()));
   }
@@ -61,11 +69,16 @@ public class SingleEntityMireotTest extends BaseMireotTest {
 
   @Test
   public void testMireotedProperties() {
+
     String base = "http://org.test/labelsTest";
     String klass = base + "#Klass";
-    MireotExtractor extractor = newExtractor("/ontology/singleClassWithAnnos.owl",
-        base);
-    Optional<Model> chunk = extractor.fetchResource(klass);
+
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base);
+
+    Optional<Model> chunk = new MireotExtractor().fetch(stream("/ontology/singleClassWithAnnos.owl"),
+        URI.create(klass),
+        cfg);
 
     assertTrue(chunk.isPresent());
     Model m = chunk.get();

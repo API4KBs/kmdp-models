@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.terms.generator.plugin.TermsGeneratorPlugin;
+import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
@@ -38,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
@@ -150,12 +152,14 @@ public class TerminologyGeneratorPluginTest {
   private byte[] owl2skos(InputStream inputStream) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    MireotExtractor exporter = new MireotExtractor(inputStream, "http://purl.org/spar/cito/");
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, tns)
         .with(OWLtoSKOSTxParams.ADD_IMPORTS, Boolean.TRUE);
 
-    exporter.fetch("http://purl.org/spar/cito/cites", false)
+    new MireotExtractor()
+        .fetch(inputStream,
+            URI.create("http://purl.org/spar/cito/cites"),
+            new MireotConfig())
         .flatMap((ext) -> new Owl2SkosConverter().apply(ext, cfg))
         .map((model) -> model.write(baos));
 

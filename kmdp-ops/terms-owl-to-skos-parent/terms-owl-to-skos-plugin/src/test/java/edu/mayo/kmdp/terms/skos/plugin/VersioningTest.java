@@ -20,12 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Modes;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.NameUtils;
+import java.net.URI;
 import java.util.Optional;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.Ontology;
@@ -44,9 +46,10 @@ public class VersioningTest {
   @Test
   public void testVersionDetection() {
 
-    MireotExtractor extractor = new MireotExtractor(
-        VersioningTest.class.getResourceAsStream("/version.rdf"));
-    Optional<Model> model = extractor.fetch("http://my.org.test/onto#Foo", true);
+    Optional<Model> model = new MireotExtractor().fetch(
+        VersioningTest.class.getResourceAsStream("/version.rdf"),
+        URI.create("http://my.org.test/onto#Foo"),
+        new MireotConfig());
 
     assertTrue(model.isPresent());
 
@@ -68,9 +71,11 @@ public class VersioningTest {
   public void testVersionPropagation() {
     String ontoURI = "http://foo.com/test#";
 
-    MireotExtractor extractor = new MireotExtractor(
-        VersioningTest.class.getResourceAsStream("/version.rdf"));
-    Optional<Model> mireot = extractor.fetch("http://my.org.test/onto#Foo", true);
+    Optional<Model> mireot = new MireotExtractor().fetch(
+        VersioningTest.class.getResourceAsStream("/version.rdf"),
+        URI.create("http://my.org.test/onto#Foo"),
+        new MireotConfig());
+
     assertTrue(mireot.isPresent());
 
     Owl2SkosConfig cfg = new Owl2SkosConfig()

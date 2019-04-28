@@ -15,22 +15,28 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import edu.mayo.kmdp.terms.mireot.MireotConfig;
+import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
+import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.util.JenaUtil;
-import java.util.UUID;
+import java.net.URI;
+import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.util.PrintUtil;
+import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
-
-import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ValidationTest extends TestBase {
 
@@ -96,6 +102,33 @@ public class ValidationTest extends TestBase {
     assertNotNull(m.getProperty(cs, SKOS.hasTopConcept));
     assertNotNull(m.getProperty(cs, RDF.type));
 
+  }
 
+
+  @Test
+  public void testVersioned() {
+
+
+    MireotConfig mfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, "http://org.test/labelsTest");
+    Owl2SkosConfig cfg = new Owl2SkosConfig()
+        .with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
+        .with(OWLtoSKOSTxParams.MODE,Modes.SKOS.name());
+
+    Optional<Model> model = new MireotExtractor().fetch(
+        ValidationTest.class.getResourceAsStream("/ontology/version.rdf"),
+        URI.create("http://org.test/labelsTest#Parent"),
+        mfg)
+        .flatMap((m) -> new Owl2SkosConverter().apply(m,cfg) );
+
+    assertTrue(model.isPresent());
+
+    StmtIterator s = model.get().listStatements(ResourceFactory.createResource(NS),
+        OWL2.versionIRI,
+        (Resource) null);
+
+    assertTrue(s.hasNext());
+    Statement st = s.nextStatement();
+    assertTrue(st.getObject().toString().contains("20190108"));
   }
 }

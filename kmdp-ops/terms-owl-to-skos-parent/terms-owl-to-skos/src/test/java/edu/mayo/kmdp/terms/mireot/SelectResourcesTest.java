@@ -15,31 +15,46 @@
  */
 package edu.mayo.kmdp.terms.mireot;
 
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.junit.jupiter.api.Test;
-
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.vocabulary.OWL2;
+import org.junit.jupiter.api.Test;
 
 
 public class SelectResourcesTest extends BaseMireotTest {
 
   @Test
   public void testExtractRelationships() {
-    MireotExtractor extractor = newExtractor("/ontology/cito.rdf");
 
-    Set<Resource> props = extractor.extract(baseUri + "/cites", EntityTypes.OBJ_PROP);
+    String base = "http://purl.org/spar/cito/";
 
-    assertTrue(props.contains(r("cites")));
-    assertTrue(props.contains(r("updates")));
-    assertTrue(props.contains(r("supports")));
-    assertTrue(props.contains(r("linksTo")));
-    assertTrue(props.contains(r("disputes")));
-    assertTrue(props.contains(r("extends")));
-    assertTrue(props.contains(r("critiques")));
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.OBJ_PROP);
+
+    Set<Resource> props = new MireotExtractor().fetch(stream("/ontology/cito.rdf"),
+        URI.create(base + "cites"),
+        cfg)
+        .map((m) -> getResources(base,m))
+        .orElse(new HashSet<>());
+
+    assertTrue(props.contains(r(base, "cites")));
+    assertTrue(props.contains(r(base, "updates")));
+    assertTrue(props.contains(r(base, "supports")));
+    assertTrue(props.contains(r(base, "linksTo")));
+    assertTrue(props.contains(r(base, "disputes")));
+    assertTrue(props.contains(r(base, "extends")));
+    assertTrue(props.contains(r(base, "critiques")));
 
     assertEquals(44, props.size());
   }
@@ -47,16 +62,25 @@ public class SelectResourcesTest extends BaseMireotTest {
 
   @Test
   public void testExtractClasses() {
-    MireotExtractor extractor = newExtractor("/ontology/fabio.rdf", "http://purl.org/spar/fabio/");
 
-    Set<Resource> props = extractor.extract(baseUri + "Expression", EntityTypes.CLASS);
+    String base = "http://purl.org/spar/fabio/";
 
-    assertTrue(props.contains(r("Database")));
-    assertTrue(props.contains(r("Oration")));
-    assertTrue(props.contains(r("Supplement")));
-    assertTrue(props.contains(r("LectureNotes")));
-    assertTrue(props.contains(r("ComputerProgram")));
-    assertTrue(props.contains(r("Expression")));
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.CLASS);
+
+    Set<Resource> props = new MireotExtractor().fetch(stream("/ontology/fabio.rdf"),
+        URI.create(base + "Expression"),
+        cfg)
+        .map((m) -> getResources(base,m))
+        .orElse(new HashSet<>());
+
+    assertTrue(props.contains(r(base, "Database")));
+    assertTrue(props.contains(r(base, "Oration")));
+    assertTrue(props.contains(r(base, "Supplement")));
+    assertTrue(props.contains(r(base, "LectureNotes")));
+    assertTrue(props.contains(r(base, "ComputerProgram")));
+    assertTrue(props.contains(r(base, "Expression")));
 
     assertEquals(130, props.size());
 
@@ -64,13 +88,21 @@ public class SelectResourcesTest extends BaseMireotTest {
 
   @Test
   public void testExtractDataProps() {
-    MireotExtractor extractor = newExtractor("/ontology/fabio.rdf", "http://purl.org/spar/fabio/");
 
-    Set<Resource> props = extractor
-        .extract("http://purl.org/dc/terms/title", EntityTypes.DATA_PROP);
+    String base = "http://purl.org/spar/fabio/";
 
-    assertTrue(props.contains(r("hasSubtitle")));
-    assertTrue(props.contains(r("hasTranslatedTitle")));
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.DATA_PROP);
+
+    Set<Resource> props = new MireotExtractor().fetch(stream("/ontology/fabio.rdf"),
+        URI.create("http://purl.org/dc/terms/title"),
+        cfg)
+        .map((m) -> getResources(base,m))
+        .orElse(new HashSet<>());
+
+    assertTrue(props.contains(r(base, "hasSubtitle")));
+    assertTrue(props.contains(r(base, "hasTranslatedTitle")));
     assertTrue(props.contains(ResourceFactory.createResource("http://purl.org/dc/terms/title")));
 
     assertEquals(7, props.size());
@@ -79,40 +111,85 @@ public class SelectResourcesTest extends BaseMireotTest {
 
   @Test
   public void testExtractIndividuals() {
-    MireotExtractor extractor = newExtractor("/ontology/fabio.rdf", "http://purl.org/spar/fabio/");
 
-    Set<Resource> props = extractor.extract(baseUri + "DigitalStorageMedium", EntityTypes.INST);
+    String base = "http://purl.org/spar/fabio/";
 
-    assertTrue(props.contains(r("cloud")));
-    assertTrue(props.contains(r("hard-drive")));
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.INST);
+
+    Set<Resource> props = new MireotExtractor().fetch(stream("/ontology/fabio.rdf"),
+        URI.create(base + "DigitalStorageMedium"),
+        cfg)
+        .map((m) -> getResources(base,m))
+        .orElse(new HashSet<>());
+
+    assertTrue(props.contains(r(base, "cloud")));
+    assertTrue(props.contains(r(base, "hard-drive")));
 
     assertEquals(11, props.size());
   }
 
   @Test
   public void testExtractIndividuals2() {
-    MireotExtractor extractor = newExtractor("/ontology/lcc.rdf",
-        "http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/");
 
-    Set<Resource> props = extractor
-        .extract("http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage",
-            EntityTypes.INST);
+    String base = "http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/";
+
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.INST);
+
+    Set<Resource> props = new MireotExtractor().fetch(stream("/ontology/lcc.rdf"),
+        URI.create("http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage"),
+        cfg)
+        .map((m) -> getResources(base,m))
+        .orElse(new HashSet<>());
 
     assertEquals(154, props.size());
   }
 
   @Test
   public void testExtractIndividuals3() {
-    MireotExtractor extractor = newExtractor("/ontology/kr-registry.owl",
-        "http://edu.mayo.kmdp/registry");
 
-    Set<Resource> props = extractor
-        .extract("http://www.omg.org/spec/API4KP/core#ConstructedLanguage",
-            EntityTypes.INST);
+    String base = "http://edu.mayo.kmdp/registry";
+
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.INST);
+
+    Set<Resource> props = new MireotExtractor().fetch(stream("/ontology/kr-registry.owl"),
+        URI.create("http://www.omg.org/spec/API4KP/core#ConstructedLanguage"),
+        cfg)
+        .map((m) -> getResources(base,m))
+        .orElse(new HashSet<>());
 
     //props.forEach((r) -> System.out.println(r.getURI()));
     assertEquals(10, props.size());
 
+  }
+
+
+  @Test
+  public void testVersionExtraction() {
+
+    String base = "http://org.test/labelsTest";
+
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.INST);
+
+    Optional<Model> model = new MireotExtractor().fetch(stream("/ontology/version.rdf"),
+        URI.create("https://foo"),
+        cfg);
+
+    //props.forEach((r) -> System.out.println(r.getURI()));
+
+    StmtIterator s = model.get().listStatements(ResourceFactory.createResource(base),
+        OWL2.versionIRI,
+        (Resource) null);
+
+    assertTrue(s.hasNext());
+    assertTrue(s.nextStatement().getObject().toString().contains("20190108"));
 
   }
 

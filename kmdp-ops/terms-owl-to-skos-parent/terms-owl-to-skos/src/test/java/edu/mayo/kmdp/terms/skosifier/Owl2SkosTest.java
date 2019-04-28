@@ -20,10 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.terms.mireot.EntityTypes;
+import edu.mayo.kmdp.terms.mireot.MireotConfig;
+import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.kmdp.util.Util;
+import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -60,11 +63,11 @@ public class Owl2SkosTest extends TestBase {
         "   FILTER( ?B != ?C )." +
         "}";
 
-    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
-        .with(OWLtoSKOSTxParams.MODE,Modes.LEX_CON);
+    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.LEX_CON);
     Model result = run(singletonList("/ontology/singleClass.owl"), cfg);
 
-    JenaUtil.toSystemOut(result);
+    //JenaUtil.toSystemOut(result);
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
@@ -88,8 +91,8 @@ public class Owl2SkosTest extends TestBase {
         "   FILTER( ?B = ?C )." +
         "}";
 
-    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
-        .with(OWLtoSKOSTxParams.MODE,Modes.LEX_CON);
+    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.LEX_CON);
     Model result = run(singletonList("/ontology/singleClass.owl"), cfg);
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
@@ -129,8 +132,8 @@ public class Owl2SkosTest extends TestBase {
         "   FILTER( xsd:string(?lP) = ?P ). " +
         "}";
 
-    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
-        .with(OWLtoSKOSTxParams.MODE,Modes.FULL);
+    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.FULL);
     Model result = run(singletonList("/ontology/singleClass.owl"), cfg);
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryTerm, RDFNode::toString);
@@ -169,8 +172,8 @@ public class Owl2SkosTest extends TestBase {
         "   FILTER( xsd:string(?lP) = ?P ). " +
         "}";
 
-    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
-        .with(OWLtoSKOSTxParams.MODE,Modes.FULL);
+    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.FULL);
     Model result = run(singletonList("/ontology/labelsTest.owl"), cfg);
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryTerm, RDFNode::toString);
@@ -211,8 +214,8 @@ public class Owl2SkosTest extends TestBase {
         "   FILTER( ?B != ?C )." +
         "}";
 
-    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
-        .with(OWLtoSKOSTxParams.MODE,Modes.CON);
+    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.CON);
     Model result = run(singletonList("/ontology/hierTest.owl"), cfg);
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
@@ -245,8 +248,8 @@ public class Owl2SkosTest extends TestBase {
         "   FILTER( ?B != ?C )." +
         "}";
 
-    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
-        .with(OWLtoSKOSTxParams.MODE,Modes.CON);
+    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.CON);
     Model result = run(singletonList("/ontology/relHier.owl"), cfg);
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
@@ -281,8 +284,8 @@ public class Owl2SkosTest extends TestBase {
         "   FILTER( ?B != ?C )." +
         "}";
 
-    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
-        .with(OWLtoSKOSTxParams.MODE,Modes.FULL);
+    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.FULL);
     Model result = run(singletonList("/ontology/individuals.owl"), cfg);
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
@@ -313,14 +316,20 @@ public class Owl2SkosTest extends TestBase {
         "       skos:notation ?N; " +
         "}";
 
-    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
-        .with(OWLtoSKOSTxParams.MODE,Modes.FULL);
+    MireotConfig mfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI,
+            "http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/")
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.INST);
+    Owl2SkosConfig cfg = new Owl2SkosConfig()
+        .with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.FULL);
 
-    Model result = MireotExtractor.extract(
+    Model result = new MireotExtractor().fetch(
         Owl2SkosTest.class.getResourceAsStream("/ontology/lcc.rdf"),
-        "http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage",
-        EntityTypes.INST, 0, -1)
-        .flatMap((m) -> new Owl2SkosConverter().apply(m, cfg)).get();
+        URI.create(
+            "http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage"),
+        mfg
+    ).flatMap((m) -> new Owl2SkosConverter().apply(m, cfg)).get();
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
@@ -340,17 +349,22 @@ public class Owl2SkosTest extends TestBase {
         "WHERE { " +
         "   ?C  a skos:Concept; " +
         "       rdfs:label ?L; " +
-				"       skos:prefLabel ?P; " +
+        "       skos:prefLabel ?P; " +
         "       skos:notation ?N; " +
         "}";
 
-    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
-        .with(OWLtoSKOSTxParams.MODE,Modes.SKOS);
+    MireotConfig mfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, "http://www.omg.org/spec/API4KP/core#")
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.INST)
+        .with(MireotParameters.MIN_DEPTH, 1);
 
-    Model result = MireotExtractor.extract(
+    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.SKOS);
+
+    Model result = new MireotExtractor().fetch(
         Owl2SkosTest.class.getResourceAsStream("/ontology/kr-registry.owl"),
-        "http://www.omg.org/spec/API4KP/core#ConstructedLanguage",
-        EntityTypes.INST, 1, -1)
+        URI.create("http://www.omg.org/spec/API4KP/core#ConstructedLanguage"),
+        mfg)
         .flatMap((m) -> new Owl2SkosConverter().apply(m, cfg)).get();
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
@@ -374,8 +388,8 @@ public class Owl2SkosTest extends TestBase {
         "       dc:identifier ?I; " +
         "}";
 
-    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE,NS)
-        .with(OWLtoSKOSTxParams.MODE,Modes.SKOS);
+    Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.SKOS);
     Model result = run(singletonList("/ontology/individuals.owl"), cfg);
 
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);

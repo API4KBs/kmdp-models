@@ -16,13 +16,24 @@
 package edu.mayo.kmdp.terms.skos.plugin;
 
 import edu.mayo.kmdp.terms.mireot.EntityTypes;
+import edu.mayo.kmdp.terms.mireot.MireotConfig;
+import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Modes;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -40,15 +51,6 @@ import org.semanticweb.owlapi.model.OntologyConfigurator;
 import org.semanticweb.owlapi.model.SetOntologyID;
 import org.semanticweb.owlapi.util.OWLOntologyImportsClosureSetProvider;
 import org.semanticweb.owlapi.util.OWLOntologyMerger;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Optional;
 
 
 /**
@@ -252,20 +254,27 @@ public class SkosGeneratorPlugin extends AbstractMojo {
 
       is = resolve(owlFile);
 
-      MireotExtractor extractor = new MireotExtractor(ensureFormat(is,
-          new RDFXMLDocumentFormat(),
-          catalogURL),
-          targetNamespace);
+      MireotConfig mfg = new MireotConfig()
+          .with(MireotParameters.BASE_URI,targetNamespace)
+          .with(MireotParameters.ENTITY_TYPE,entityType)
+          .with(MireotParameters.ENTITY_ONLY,entityOnly)
+          .with(MireotParameters.MIN_DEPTH,minDepth)
+          .with(MireotParameters.MAX_DEPTH,maxDepth);
 
       Owl2SkosConfig cfg = new Owl2SkosConfig()
           .with(OWLtoSKOSTxParams.TGT_NAMESPACE,skosNamespace)
+          .with(OWLtoSKOSTxParams.ADD_IMPORTS,false)
           .with(OWLtoSKOSTxParams.MODE,profile);
 
-      Optional<Model> skosModel = extractor.fetch(targetURI,
-          entityType,
-          entityOnly,
-          minDepth,
-          maxDepth).flatMap((ext) -> new Owl2SkosConverter().apply(ext, cfg));
+      Optional<Model> mireotedModel = new MireotExtractor().fetch(
+          ensureFormat(is,
+              new RDFXMLDocumentFormat(),
+              catalogURL),
+          URI.create(targetURI),
+          mfg);
+
+      Optional<Model> skosModel = mireotedModel
+          .flatMap((ext) -> new Owl2SkosConverter().apply(ext, cfg));
 
       if (skosModel.isPresent()) {
         if (!getOutputDirectory().exists()) {

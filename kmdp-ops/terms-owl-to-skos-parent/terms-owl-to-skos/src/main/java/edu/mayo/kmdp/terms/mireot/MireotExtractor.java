@@ -15,8 +15,17 @@
  */
 package edu.mayo.kmdp.terms.mireot;
 
+import static edu.mayo.kmdp.terms.util.JenaUtil.detectOntologyIRI;
+import static edu.mayo.kmdp.terms.util.JenaUtil.detectType;
+import static edu.mayo.kmdp.terms.util.JenaUtil.detectVersionIRI;
+
+import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
 import edu.mayo.kmdp.util.JenaUtil;
-import org.apache.jena.graph.Node;
+import edu.mayo.kmdp.util.Util;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Optional;
+import java.util.Set;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -29,153 +38,95 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
 
-import java.io.InputStream;
-import java.util.Optional;
-import java.util.Set;
-
-import static edu.mayo.kmdp.terms.util.JenaUtil.detectOntologyIRI;
-import static edu.mayo.kmdp.terms.util.JenaUtil.detectType;
-import static edu.mayo.kmdp.terms.util.JenaUtil.detectVersionIRI;
-
 
 public class MireotExtractor {
 
-  private String baseURI;
-  private String versionURI;
-  private Model source;
-
-  public static Optional<Model> extract(InputStream source, String entityURI, boolean entityOnly) {
-    return extract(source, entityURI, entityOnly, 0, -1);
-  }
-
-  public static Optional<Model> extract(InputStream source, String entityURI, boolean entityOnly,
-      int min, int max) {
-    return new MireotExtractor(source).fetch(entityURI, entityOnly, min, max);
-  }
-
-  public static Optional<Model> extract(InputStream source, String entityURI) {
-    return extract(source, entityURI, 0, -1);
-  }
-
-  public static Optional<Model> extract(InputStream source, String entityURI, int min, int max) {
-    return new MireotExtractor(source).fetch(entityURI, false, min, max);
-  }
-
-  public static Optional<Model> extract(InputStream source, String entityURI, EntityTypes type,
-      int min, int max) {
-    return new MireotExtractor(source).fetch(entityURI, type, false, min, max);
-  }
 
   private final static String mireotPath = "/query/mireot/mireot.sparql";
   private final static ParameterizedSparqlString mireot = new ParameterizedSparqlString(
       JenaUtil.read(mireotPath));
 
 
-  public MireotExtractor(InputStream in) {
-    this(in, "");
-  }
+  public Optional<Model> fetch(InputStream in, URI targetUri, MireotConfig cfg) {
+    String base = cfg.getTyped(MireotParameters.BASE_URI);
 
-  public MireotExtractor(InputStream in, String baseURI) {
-    source = ModelFactory.createDefaultModel().read(in, baseURI);
-    this.baseURI = detectOntologyIRI(source, baseURI).orElse(null);
-    if (this.baseURI != null) {
-      this.versionURI = detectVersionIRI(source, this.baseURI).orElse(null);
+    Model source = ModelFactory.createDefaultModel().read(in, base);
+
+    if (Util.isEmpty(base)) {
+      base = detectOntologyIRI(source, base).orElse(base);
     }
+    final URI baseUri = Util.isEmpty(base) ? null : URI.create(base);
+    final URI versionUri = detectVersionIRI(source, base).map(URI::create).orElse(null);
+
+    Optional<Model> result = (cfg.getTyped(MireotParameters.ENTITY_ONLY)
+        ? fetchResource(source, targetUri, baseUri)
+        : fetchResources(source, targetUri, baseUri, cfg)
+    );
+
+    return result.map(model -> asOntology(model, baseUri, versionUri));
   }
 
-  public Optional<Model> fetchResources(String rootEntityURI, EntityTypes type) {
-    return fetchResources(rootEntityURI, type, 0, -1);
-  }
 
-  public Optional<Model> fetchResources(String rootEntityURI, EntityTypes type, int minDepth,
-      int maxDepth) {
+  Optional<Model> fetchResources(Model source, URI rootEntityUri, URI baseUri, MireotConfig cfg) {
+    EntityTypes type = cfg.getTyped(MireotParameters.ENTITY_TYPE);
 
     if (type == EntityTypes.INST &&
-        source.contains(source.createResource(rootEntityURI),
+        source.contains(source.createResource(rootEntityUri.toString()),
             RDF.type,
             OWL2.NamedIndividual)) {
-      return fetchResource(rootEntityURI);
+      return fetchResource(source, rootEntityUri, baseUri);
     }
 
-    return Optional.ofNullable(extract(rootEntityURI, type, minDepth, maxDepth).stream()
-        .map(this::fetchResource)
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .reduce(ModelFactory.createDefaultModel(),
-            Model::add));
+    return Optional.ofNullable(
+        extract(source, rootEntityUri, baseUri, cfg).stream()
+            .map((x) -> fetchResource(source, URI.create(x.getURI()), baseUri))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .reduce(ModelFactory.createDefaultModel(), Model::add));
   }
 
-  public Optional<Model> fetch(String targetURI, boolean entityOnly) {
-    return fetch(targetURI, entityOnly, 0, -1);
-  }
-
-  public Optional<Model> fetch(String targetURI, boolean entityOnly, int minDepth, int maxDepth) {
-    return fetch(targetURI, null, entityOnly, minDepth, maxDepth);
-  }
-
-  public Optional<Model> fetch(String targetURI, EntityTypes kind, boolean entityOnly, int minDepth,
-      int maxDepth) {
-    return (entityOnly ? fetchResource(targetURI) : fetchResources(
-        targetURI,
-        kind == null || kind == EntityTypes.UNKNOWN ? detectType(targetURI, source) : kind,
-        minDepth,
-        maxDepth)
-    ).map(this::asOntology);
-  }
-
-  private Model asOntology(Model model) {
-    if (this.baseURI != null) {
-      OntModel om = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM, model);
-
-      Ontology o = om.createOntology(this.baseURI);
-
-      if (this.versionURI != null) {
-        o.addProperty(OWL2.versionIRI, ResourceFactory.createResource(this.versionURI));
-      }
-      return om;
-    } else {
-      return model;
-    }
-  }
-
-
-  public Optional<Model> fetchResource(Resource res) {
-    return fetchResource(res.asNode());
-  }
-
-  public Optional<Model> fetchResource(String entityURI) {
-    return fetchResource(NodeFactory.createURI(entityURI));
-  }
-
-  public Optional<Model> fetchResource(Node entity) {
+  Optional<Model> fetchResource(Model source, URI entityURI, URI baseUri) {
     ParameterizedSparqlString pss = mireot.copy();
 
-    pss.setParam("?X", entity);
-    pss.setParam("?baseUri", NodeFactory.createURI(baseURI));
-
-//		System.out.println( pss.toString() );
+    pss.setParam("?X", NodeFactory.createURI(entityURI.toString()));
+    pss.setParam("?baseUri", NodeFactory.createURI(baseUri.toString()));
 
     return Optional.of(JenaUtil.construct(source, pss.asQuery()));
   }
 
 
-  public Set<Resource> extract(String rootUri, EntityTypes type) {
-    return extract(rootUri, type, 0, -1);
-  }
+  Set<Resource> extract(Model source, URI rootEntityUri, URI baseUri, MireotConfig cfg) {
+    EntityTypes type = cfg.getTyped(MireotParameters.ENTITY_TYPE);
+    if (type == null || type == EntityTypes.UNKNOWN) {
+      type = detectType(rootEntityUri.toString(),source);
+    }
+    Integer min = cfg.getTyped(MireotParameters.MIN_DEPTH);
+    Integer max = cfg.getTyped(MireotParameters.MAX_DEPTH);
 
-  public Set<Resource> extract(String rootUri, EntityTypes type, int min, int max) {
-    ParameterizedSparqlString pss = new ParameterizedSparqlString(type.query, baseURI);
+    ParameterizedSparqlString pss = new ParameterizedSparqlString(type.query, baseUri.toString());
 
     // count is 1-based, rather than 0-based
-    pss.setParam("?focus", NodeFactory.createURI(rootUri));
+    pss.setParam("?focus", NodeFactory.createURI(rootEntityUri.toString()));
     pss.setLiteral("?n", min + 1);
     pss.setLiteral("?m", max < 0 ? Integer.MAX_VALUE : max + 1);
 
     return JenaUtil.askQuery(source, pss.asQuery());
   }
 
-  public String getBaseURI() {
-    return baseURI;
+
+  private Model asOntology(Model model, URI baseUri, URI versionUri) {
+    if (baseUri != null) {
+      OntModel om = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM, model);
+
+      Ontology o = om.createOntology(baseUri.toString());
+
+      if (versionUri != null) {
+        o.addProperty(OWL2.versionIRI, ResourceFactory.createResource(versionUri.toString()));
+      }
+      return om;
+    } else {
+      return model;
+    }
   }
 
 }

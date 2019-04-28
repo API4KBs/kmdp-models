@@ -62,6 +62,8 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
         return null;
       } else if (type.equals(Class.class)) {
         return (T) Class.forName(s).newInstance();
+      } else if (type.isEnum()) {
+        return asEnum(type,s);
       } else {
         return type.getConstructor(String.class).newInstance(s);
       }
@@ -71,8 +73,15 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     }
   }
 
+  private <T extends Enum,X> X asEnum(Class<X> type, String s) {
+    return (X) Enum.valueOf(((Class<T>) type),s);
+  }
+
   public P with(O param, Object value) {
-    put(asKey(param), value != null ? value.toString() : null);
+    if (value == null) {
+      return (P) this;
+    }
+    put(asKey(param), value.toString());
     return (P) this;
   }
 
