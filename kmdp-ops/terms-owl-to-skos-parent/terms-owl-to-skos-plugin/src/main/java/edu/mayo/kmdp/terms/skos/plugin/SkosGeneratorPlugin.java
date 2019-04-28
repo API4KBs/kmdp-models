@@ -155,6 +155,18 @@ public class SkosGeneratorPlugin extends AbstractMojo {
     this.targetNamespace = targetNamespace;
   }
 
+  /**
+   * @parameter
+   */
+  private String schemeName;
+
+  public String getSchemeName() {
+    return schemeName;
+  }
+
+  public void setSchemeName(String schemeName) {
+    this.schemeName = schemeName;
+  }
 
   /**
    * @parameter default-value=false
@@ -264,6 +276,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
       Owl2SkosConfig cfg = new Owl2SkosConfig()
           .with(OWLtoSKOSTxParams.TGT_NAMESPACE,skosNamespace)
           .with(OWLtoSKOSTxParams.ADD_IMPORTS,false)
+          .with(OWLtoSKOSTxParams.SCHEME_NAME,schemeName)
           .with(OWLtoSKOSTxParams.MODE,profile);
 
       Optional<Model> mireotedModel = new MireotExtractor().fetch(

@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
+import static edu.mayo.kmdp.util.Util.uuid;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,6 +27,7 @@ import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.util.JenaUtil;
 import java.net.URI;
 import java.util.Optional;
+import java.util.UUID;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -65,11 +67,13 @@ public class ValidationTest extends TestBase {
     assertNotNull(m.getProperty(klass, SKOS.broader));
     assertNotNull(m.getProperty(klass, RDF.type));
 
-    Resource top = m.getResource(NS + "#test_Scheme_Top");
+    String schemeId = UUID.nameUUIDFromBytes("test_Scheme".getBytes()).toString();
+    Resource top = m.getResource(NS + "#" + schemeId + "_Top");
+
     assertNotNull(top);
     assertNotNull(m.getProperty(top, RDF.type));
 
-    Resource cs = m.getResource(NS + "#test_Scheme");
+    Resource cs = m.getResource(NS + "#" + schemeId);
     assertNotNull(cs);
     assertNotNull(m.getProperty(cs, SKOS.hasTopConcept));
     assertNotNull(m.getProperty(cs, RDF.type));
@@ -93,11 +97,12 @@ public class ValidationTest extends TestBase {
     assertNotNull(m.getProperty(klass, SKOS.broader));
     assertNotNull(m.getProperty(klass, RDF.type));
 
-    Resource top = m.getResource(NS + "#test_Scheme_Top");
+    String schemeId = UUID.nameUUIDFromBytes("test_Scheme".getBytes()).toString();
+    Resource top = m.getResource(NS + "#" + schemeId + "_Top");
     assertNotNull(top);
     assertNotNull(m.getProperty(top, RDF.type));
 
-    Resource cs = m.getResource(NS + "#test_Scheme");
+    Resource cs = m.getResource(NS + "#" + schemeId);
     assertNotNull(cs);
     assertNotNull(m.getProperty(cs, SKOS.hasTopConcept));
     assertNotNull(m.getProperty(cs, RDF.type));

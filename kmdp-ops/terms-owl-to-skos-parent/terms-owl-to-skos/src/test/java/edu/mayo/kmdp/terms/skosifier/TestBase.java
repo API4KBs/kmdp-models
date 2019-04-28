@@ -49,10 +49,6 @@ class TestBase {
     PrintUtil.registerPrefix("olex", "http://www.w3.org/ns/lemon/ontolex#");
   }
 
-  String uuid(String name) {
-    return UUID.nameUUIDFromBytes(name.getBytes()).toString();
-  }
-
   Model run(List<String> onto, Owl2SkosConfig cfg) {
     Optional<Model> model = new Owl2SkosConverter().run(onto, cfg);
     if (model.isPresent()) {

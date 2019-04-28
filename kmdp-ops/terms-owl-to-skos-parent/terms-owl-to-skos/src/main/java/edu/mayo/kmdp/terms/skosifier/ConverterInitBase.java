@@ -69,8 +69,7 @@ public abstract class ConverterInitBase {
 
     @Override
     public NodeValue exec(NodeValue nodeValue) {
-      String s = nodeValue.asString();
-      return NodeValue.makeString(UUID.nameUUIDFromBytes(s.getBytes()).toString());
+      return NodeValue.makeString(Util.uuid(nodeValue.asString()).toString());
     }
   }
 
@@ -81,8 +80,7 @@ public abstract class ConverterInitBase {
 
     @Override
     public NodeValue exec(NodeValue nodeValue) {
-      String s = NameUtils.getTrailingPart(nodeValue.asString());
-      return NodeValue.makeString(s);
+      return NodeValue.makeString(NameUtils.getTrailingPart(nodeValue.asString()));
     }
   }
 }

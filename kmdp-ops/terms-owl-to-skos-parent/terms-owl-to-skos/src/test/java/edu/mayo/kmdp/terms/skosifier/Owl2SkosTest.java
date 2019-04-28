@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
+import static edu.mayo.kmdp.util.Util.uuid;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -73,9 +74,10 @@ public class Owl2SkosTest extends TestBase {
 
     assertEquals(1, answers.size());
 
-    assertTrue(answers.contains(a().with("B", NS + "#test_Scheme_Top")
+    assertTrue(answers.contains(a()
+        .with("B", NS + "#" + uuid("test_Scheme") + "_Top")
         .with("C", NS + "#" + uuid("Klass"))
-        .with("S", NS + "#test_Scheme")
+        .with("S", NS + "#" + uuid("test_Scheme"))
         .with("K", "http://org.test/labelsTest#Klass")));
   }
 
@@ -221,7 +223,7 @@ public class Owl2SkosTest extends TestBase {
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
     assertTrue(answers.contains(a().with("C", "http://my.edu/test#" + uuid("Parent"))
-        .with("B", "http://my.edu/test#test_Scheme_Top")));
+        .with("B", "http://my.edu/test#" + uuid("test_Scheme") + "_Top")));
 
     assertTrue(answers.contains(a().with("C", "http://my.edu/test#" + uuid("Child"))
         .with("B", "http://my.edu/test#" + uuid("Parent"))));
@@ -261,10 +263,10 @@ public class Owl2SkosTest extends TestBase {
         .with("B", "http://my.edu/test#" + uuid("dataProp"))));
 
     assertTrue(answers.contains(a().with("C", "http://my.edu/test#" + uuid("parentProp"))
-        .with("B", "http://my.edu/test#test_Scheme_Top")));
+        .with("B", "http://my.edu/test#" + uuid("test_Scheme") + "_Top")));
 
     assertTrue(answers.contains(a().with("C", "http://my.edu/test#" + uuid("dataProp"))
-        .with("B", "http://my.edu/test#test_Scheme_Top")));
+        .with("B", "http://my.edu/test#" + uuid("test_Scheme") + "_Top")));
 
   }
 
@@ -291,7 +293,7 @@ public class Owl2SkosTest extends TestBase {
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
     assertTrue(answers.contains(a().with("P", "the one Thing@en")
-        .with("B", "http://my.edu/test#test_Scheme_Top")
+        .with("B", "http://my.edu/test#" + uuid("test_Scheme") + "_Top")
         .with("C", "http://my.edu/test#" + uuid("Identi2"))
         .with("L", "the one Thing@en")));
 

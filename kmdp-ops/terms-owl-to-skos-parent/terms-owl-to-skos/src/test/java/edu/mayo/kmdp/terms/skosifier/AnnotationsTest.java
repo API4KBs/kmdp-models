@@ -81,12 +81,8 @@ public class AnnotationsTest extends TestBase {
 
     Model m = run(singletonList("/ontology/singleClassWithAnnos.owl"), cfg);
 
-    JenaUtil.iterateAndStreamModel(m, System.out, PrintUtil::print);
-
     String id = UUID.nameUUIDFromBytes("id0001".getBytes()).toString();
     String subj = NS + "#" + id;
-
-    JenaUtil.toSystemOut(m);
 
     assertTrue(m.contains(
         dat_a(subj,

@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import static edu.mayo.kmdp.util.Util.uuid;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -96,7 +97,7 @@ public class ComplexHierarchyTest {
           false);
 
       List<Term> list = abstractor.traverse()
-          .getConceptList(URI.create("http://test.foo#test.foo_Scheme"));
+          .getConceptList(URI.create("http://test.foo#" + uuid("test.foo_Scheme")));
 
       return list;
     } catch (Exception e) {

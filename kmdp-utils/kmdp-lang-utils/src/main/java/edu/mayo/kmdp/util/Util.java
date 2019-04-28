@@ -271,6 +271,10 @@ public class Util {
     return ensureUUIDFormat(tag).map(UUID::fromString);
   }
 
+  public static UUID uuid(String from) {
+    return UUID.nameUUIDFromBytes(from.getBytes());
+  }
+
   public static String compactUUID(UUID tag) {
     return tag.toString().replaceAll("-", "");
   }

@@ -56,9 +56,11 @@ WHERE {
 
         BIND ( tgt: as ?Namespace ).
         BIND ( STRLEN( STR( ?Namespace ) ) as ?Len ).
+        BIND ( COALESCE( ?schemeName,
+                          CONCAT (afn:localname( URI( SUBSTR( STR( ?Namespace ), 1, ?Len - 1 ) ) ),
+                                           "_Scheme" ) ) as ?SchemeLabel )
         BIND ( URI( CONCAT( STR( tgt: ),
-                            afn:localname( URI( SUBSTR( STR( ?Namespace ), 1, ?Len - 1 ) ) ),
-                            "_Scheme" ) )
+                            f:uuidFrom( ?SchemeLabel ) ) )
                as ?Scheme ).
 
         OPTIONAL {
@@ -92,14 +94,13 @@ WHERE {
 
 
         BIND ( URI( CONCAT( STR( tgt: ),
-                COALESCE( ?schemeName, CONCAT( afn:localname( ?Scheme ), "_Top" ) ) ) ) as ?Top ).
+                COALESCE( ?topName, CONCAT( afn:localname( ?Scheme ), "_Top" ) ) ) ) as ?Top ).
 
         BIND ( COALESCE( ?ClassParent,
                          ?InstanceParent,
                          ?PropertyParent,
                          ?Top ) as ?Parent ).
 
-        BIND ( afn:localname( ?Scheme ) as ?SchemeLabel ).
         BIND ( afn:localname( ?Top ) as ?TopLabel ).
 
 

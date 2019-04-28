@@ -20,6 +20,7 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
+import static edu.mayo.kmdp.util.Util.uuid;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -112,7 +113,7 @@ public class Owl2Skos2TermsTest {
       assertTrue(scheme.isEnum());
 
       Field ns = scheme.getField("schemeID");
-      assertEquals("Cito_Scheme", ns.get(null));
+      assertEquals(uuid("Cito_Scheme").toString(), ns.get(null));
 
       Term cd = Term.class.cast(scheme.getEnumConstants()[0]);
       assertEquals("cites", cd.getTag());
