@@ -15,7 +15,7 @@ CONSTRUCT {
 
   ?Cid
     a owl:NamedIndividual;
-    rdf:type skos:Concept;
+    a skos:Concept;
     rdfs:isDefinedBy ?X;
 
     skos:inScheme ?Scheme;
@@ -33,7 +33,10 @@ CONSTRUCT {
     skos:prefLabel ?SchemeLabel;
     skos:hasTopConcept ?Top.
 
-  ?Top a skos:Concept;
+  ?Top
+    a skos:Concept;
+    a owl:NamedIndividual;
+    skos:inScheme ?Scheme;
     rdfs:label ?TopLabel;
     skos:prefLabel ?TopLabel.
 

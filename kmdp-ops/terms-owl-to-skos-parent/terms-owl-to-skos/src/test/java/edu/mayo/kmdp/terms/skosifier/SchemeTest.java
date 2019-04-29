@@ -58,8 +58,6 @@ public class SchemeTest extends TestBase {
 
     String subj = NS + "#" + uuid(schemeName);
 
-    JenaUtil.toSystemOut(result);
-
     assertTrue(result.contains(
         dat_a(subj,
             RDFS.label,

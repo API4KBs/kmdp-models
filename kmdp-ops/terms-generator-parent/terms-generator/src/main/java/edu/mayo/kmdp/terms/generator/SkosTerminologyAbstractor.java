@@ -107,6 +107,7 @@ public class SkosTerminologyAbstractor {
     // then the concepts
     model.individualsInSignature(Imports.INCLUDED)
         .filter((i) -> isConcept(i, model))
+        .filter((i) -> !isTopConcept(i))
         .forEach((ind) -> toCode(ind,
             getOrCreateInSchemes(ind, model, codeSystems),
             model));
@@ -253,6 +254,10 @@ public class SkosTerminologyAbstractor {
       scheme.addConcept(cd);
     }
     return cd;
+  }
+
+  private boolean isAbstract(Term cd) {
+    return cd.getRef().equals(cd.getConceptId());
   }
 
   private URI getReferent(OWLNamedIndividual ind, OWLOntology model) {

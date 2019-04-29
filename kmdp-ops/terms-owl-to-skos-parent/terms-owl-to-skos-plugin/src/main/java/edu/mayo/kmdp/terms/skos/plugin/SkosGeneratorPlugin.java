@@ -249,7 +249,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
 
 
   /**
-   * @parameter default-value=null
+   * @parameter
    */
   private URL catalogURL = null;
 

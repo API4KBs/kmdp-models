@@ -59,8 +59,6 @@ public class ValidationTest extends TestBase {
 
     Model m = run(singletonList("/ontology/singleClass.owl"),cfg);
 
-    JenaUtil.iterateAndStreamModel(m, System.out, PrintUtil::print);
-
     Resource klass = m.getResource(NS + "#" + uuid("Klass"));
     assertNotNull(klass);
     assertNotNull(m.getProperty(klass, SKOS.inScheme));

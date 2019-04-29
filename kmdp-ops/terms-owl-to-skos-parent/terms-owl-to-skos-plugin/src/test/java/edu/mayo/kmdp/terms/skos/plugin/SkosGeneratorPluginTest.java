@@ -82,7 +82,7 @@ public class SkosGeneratorPluginTest {
 //    inds.stream()
 //        .forEach((i) -> System.out.println(i.asOWLNamedIndividual().getIRI().getShortForm()));
 
-    assertEquals(46, inds.size());
+    assertEquals(45, inds.size());
   }
 
   private OWLOntology asOntology() {

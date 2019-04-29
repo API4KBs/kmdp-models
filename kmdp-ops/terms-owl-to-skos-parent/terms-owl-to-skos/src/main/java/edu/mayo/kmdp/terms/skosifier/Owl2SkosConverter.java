@@ -112,6 +112,9 @@ public class Owl2SkosConverter extends ConverterInitBase implements
     }
 
     ontModel.add(result);
+
+    new HierarchySealer().close(ontModel);
+
     return ontModel;
   }
 

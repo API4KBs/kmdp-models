@@ -68,8 +68,6 @@ public class Owl2SkosTest extends TestBase {
         .with(OWLtoSKOSTxParams.MODE, Modes.LEX_CON);
     Model result = run(singletonList("/ontology/singleClass.owl"), cfg);
 
-    //JenaUtil.toSystemOut(result);
-
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
     assertEquals(1, answers.size());
