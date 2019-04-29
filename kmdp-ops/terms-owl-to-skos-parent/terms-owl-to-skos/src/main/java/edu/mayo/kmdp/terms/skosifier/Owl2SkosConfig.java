@@ -55,11 +55,11 @@ public class Owl2SkosConfig extends ConfigProperties<Owl2SkosConfig, OWLtoSKOSTx
         String.class,
         false
     )) ,
-    TOP_CONCEPT( Opt.of(
-        "topConceptUri",
+    TOP_CONCEPT_NAME( Opt.of(
+        "topConceptName",
         null,
-        "The URI of the class that will be mapped to a skos:TopConcept for the new scheme",
-        URI.class,
+        "The Name of the class that will be mapped to a skos:TopConcept for the new scheme",
+        String.class,
         false
     )),
     MODE( Opt.of(

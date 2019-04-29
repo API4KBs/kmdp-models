@@ -169,6 +169,19 @@ public class SkosGeneratorPlugin extends AbstractMojo {
   }
 
   /**
+   * @parameter
+   */
+  private String topConceptName;
+
+  public String getTopConceptName() {
+    return topConceptName;
+  }
+
+  public void setTopConceptName(String topConceptName) {
+    this.topConceptName = topConceptName;
+  }
+
+  /**
    * @parameter default-value=false
    */
   private boolean entityOnly;
@@ -277,6 +290,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
           .with(OWLtoSKOSTxParams.TGT_NAMESPACE,skosNamespace)
           .with(OWLtoSKOSTxParams.ADD_IMPORTS,false)
           .with(OWLtoSKOSTxParams.SCHEME_NAME,schemeName)
+          .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME,topConceptName)
           .with(OWLtoSKOSTxParams.MODE,profile);
 
       Optional<Model> mireotedModel = new MireotExtractor().fetch(

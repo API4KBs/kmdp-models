@@ -58,6 +58,11 @@ public abstract class ConverterInitBase {
       pqs.setLiteral("?schemeName",schemeName);
     }
 
+    String topConcept = cfg.getTyped(OWLtoSKOSTxParams.TOP_CONCEPT_NAME);
+    if (!Util.isEmpty(topConcept)) {
+      pqs.setLiteral("?topName",topConcept);
+    }
+
     return pqs;
   }
 

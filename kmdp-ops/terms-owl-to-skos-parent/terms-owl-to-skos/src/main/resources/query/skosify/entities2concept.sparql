@@ -92,17 +92,17 @@ WHERE {
                 }
 
 
-
+        BIND ( COALESCE( ?topName,
+                          CONCAT( ?SchemeLabel, "_Top" ) ) as ?TopLabel )
         BIND ( URI( CONCAT( STR( tgt: ),
-                COALESCE( ?topName, CONCAT( afn:localname( ?Scheme ), "_Top" ) ) ) ) as ?Top ).
+                            f:uuidFrom( ?TopLabel ) ) )
+               as ?Top ).
+
 
         BIND ( COALESCE( ?ClassParent,
                          ?InstanceParent,
                          ?PropertyParent,
                          ?Top ) as ?Parent ).
-
-        BIND ( afn:localname( ?Top ) as ?TopLabel ).
-
 
     }
 

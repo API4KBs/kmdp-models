@@ -68,7 +68,7 @@ public class ValidationTest extends TestBase {
     assertNotNull(m.getProperty(klass, RDF.type));
 
     String schemeId = UUID.nameUUIDFromBytes("test_Scheme".getBytes()).toString();
-    Resource top = m.getResource(NS + "#" + schemeId + "_Top");
+    Resource top = m.getResource(NS + "#" + uuid("test_Scheme_Top"));
 
     assertNotNull(top);
     assertNotNull(m.getProperty(top, RDF.type));
@@ -98,7 +98,7 @@ public class ValidationTest extends TestBase {
     assertNotNull(m.getProperty(klass, RDF.type));
 
     String schemeId = UUID.nameUUIDFromBytes("test_Scheme".getBytes()).toString();
-    Resource top = m.getResource(NS + "#" + schemeId + "_Top");
+    Resource top = m.getResource(NS + "#" + uuid("test_Scheme_Top"));
     assertNotNull(top);
     assertNotNull(m.getProperty(top, RDF.type));
 
