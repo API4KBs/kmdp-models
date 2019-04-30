@@ -28,7 +28,7 @@ public class KMDPTerms extends ConceptSchemeDirectory {
 
   protected KMDPTerms() {
     new Reflections(new ConfigurationBuilder()
-        .forPackages("edu.mayo.kmdp.terms", "edu.mayo.terms")
+        .forPackages("edu.mayo.kmdp.terms", "edu.mayo.terms","edu.mayo.ontology.taxonomies")
         .filterInputsBy(this::filter))
         .getSubTypesOf(Term.class)
         .forEach(this::register);
