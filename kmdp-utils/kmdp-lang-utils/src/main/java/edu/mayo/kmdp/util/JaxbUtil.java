@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.util;
 
 import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -80,7 +81,12 @@ public class JaxbUtil {
       final Function<T, JAXBElement<? super T>> mapper,
       final Schema schema,
       JaxbConfig p) {
-    return marshall(ctx, mapper.apply(root), schema, p);
+    if  (root.getClass().getAnnotation(XmlRootElement.class) == null) {
+      return marshall(ctx, mapper.apply(root), schema, p);
+    } else {
+      return marshall(ctx, root, schema, p);
+    }
+
   }
 
   public static <T> Optional<ByteArrayOutputStream> marshall(final Collection<Class<?>> ctx,
