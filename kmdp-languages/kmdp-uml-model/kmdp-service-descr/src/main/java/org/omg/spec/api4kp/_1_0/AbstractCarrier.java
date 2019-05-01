@@ -97,9 +97,14 @@ public class AbstractCarrier {
         .withRepresentation(rep);
   }
 
+  public static SyntacticRepresentation rep(SyntacticRepresentation src) {
+    SyntacticRepresentation rep = new org.omg.spec.api4kp._1_0.services.resources.SyntacticRepresentation();
+    src.copyTo(rep);
+    return rep;
+  }
 
   public static SyntacticRepresentation rep(KRLanguage language) {
-    return rep(language, null, null, null);
+    return rep(language, null, null, null, null);
   }
 
   public static SyntacticRepresentation rep(KRLanguage language, KRSerialization serialization) {
@@ -115,6 +120,9 @@ public class AbstractCarrier {
   }
 
 
+  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization ser, KRFormat format, String charset) {
+    return rep(language, ser, format, charset, null);
+  }
   public static SyntacticRepresentation rep(KRLanguage language, KRFormat format, String charset) {
     return rep(language, format, charset, null);
   }
@@ -142,7 +150,7 @@ public class AbstractCarrier {
   }
 
   public static SyntacticRepresentation rep(String encoding) {
-    return rep(null, null, null, encoding);
+    return rep(null, null, null, null, encoding);
   }
 
 
