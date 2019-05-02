@@ -21,8 +21,20 @@ import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
 import edu.mayo.kmdp.terms.generator.util.TransitiveClosure;
 import edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme;
 import edu.mayo.kmdp.terms.impl.model.InternalTerm;
+import edu.mayo.kmdp.util.NameUtils;
+import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.jena.vocabulary.RDFS;
-import org.apache.jena.vocabulary.SKOS;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AsOWLNamedIndividual;
@@ -45,19 +57,6 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.InferredOntologyGenerator;
-
-import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class SkosTerminologyAbstractor {
@@ -230,7 +229,9 @@ public class SkosTerminologyAbstractor {
 
   private Optional<URI> applyVersion(OWLNamedIndividual ind, OWLOntology model) {
     return model.getOntologyID().getVersionIRI()
-        .map((v) -> IRI.create(v.toString(), "#" + ind.getIRI().getRemainder().get()).toURI());
+        .map((v) -> IRI
+            .create(v.toString() + "#" + NameUtils.getTrailingPart(ind.getIRI().toString()))
+            .toURI());
   }
 
   public Term toCode(OWLNamedIndividual ind,

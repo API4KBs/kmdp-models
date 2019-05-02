@@ -15,7 +15,10 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.util.Util.ensureUUID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.KnowledgeOperations;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
@@ -37,6 +40,8 @@ import edu.mayo.ontology.taxonomies.krprofile._2018._08.KRProfile;
 import edu.mayo.ontology.taxonomies.krserialization._2018._08.KRSerialization;
 import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 public class VocabularyTest {
@@ -63,6 +68,17 @@ public class VocabularyTest {
     assertNotNull(LanguageRole.Expression_Language);
     assertNotNull(KnowledgeOperations.Translation_Task);
     assertNotNull(ParsingLevel.Encoded_Knowledge_Expression);
+  }
+
+  @Test
+  public void testGeneratedEnumsVersion() {
+    Optional<UUID> uid = ensureUUID(KnowledgeAssetCategory.schemeID);
+    assertTrue(uid.isPresent());
+
+    assertNotNull(KnowledgeAssetCategory.schemeURI.getVersionId());
+    assertEquals(uid.get().toString(),
+        KnowledgeAssetCategory.schemeURI.getVersionId().getFragment());
+
   }
 
 }

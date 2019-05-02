@@ -32,7 +32,9 @@ public class JavaEnumTermsGenerator extends BaseEnumGenerator {
   public void generate(SkosTerminologyAbstractor.ConceptGraph conceptGraph,
       EnumGenerationConfig options,
       File outputDir) {
-    outputDir.mkdirs();
+    if (outputDir != null && ! outputDir.exists()) {
+      outputDir.mkdirs();
+    }
 
     this.generateConcepts(conceptGraph, options, outputDir);
   }
