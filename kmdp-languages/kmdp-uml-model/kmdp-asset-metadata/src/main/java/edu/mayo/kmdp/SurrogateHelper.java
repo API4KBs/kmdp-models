@@ -16,9 +16,10 @@
 package edu.mayo.kmdp;
 
 
-import static edu.mayo.kmdp.terms.kao.rel.dependencyreltype._20190801.DependencyRelType.Depends_On;
-import static edu.mayo.kmdp.terms.kao.rel.dependencyreltype._20190801.DependencyRelType.Imports;
-import static edu.mayo.kmdp.terms.kao.rel.dependencyreltype._20190801.DependencyRelType.Includes;
+
+import static edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyRelType.Depends_On;
+import static edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyRelType.Imports;
+import static edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyRelType.Includes;
 
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
@@ -30,10 +31,10 @@ import edu.mayo.kmdp.metadata.surrogate.Association;
 import edu.mayo.kmdp.metadata.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
-import edu.mayo.kmdp.terms.kao.rel.dependencyreltype._20190801.DependencyRelType;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyRelType;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;

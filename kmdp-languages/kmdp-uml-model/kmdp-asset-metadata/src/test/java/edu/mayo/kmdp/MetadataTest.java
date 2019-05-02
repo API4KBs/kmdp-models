@@ -26,13 +26,13 @@ import edu.mayo.kmdp.metadata.surrogate.MediaType;
 import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.terms.TermsHelper;
-import edu.mayo.kmdp.terms.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
-import edu.mayo.kmdp.terms.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.kmdp.terms.kao.rel.derivationreltype._20190801.DerivationRelType;
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationRelType;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.transform.stream.StreamSource;

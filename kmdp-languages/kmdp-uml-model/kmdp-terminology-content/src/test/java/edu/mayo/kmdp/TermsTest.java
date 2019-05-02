@@ -15,19 +15,12 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+
 import edu.mayo.kmdp.terms.TermsHelper;
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.UUIDentifier;
-
-import java.net.URI;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class TermsTest {
 

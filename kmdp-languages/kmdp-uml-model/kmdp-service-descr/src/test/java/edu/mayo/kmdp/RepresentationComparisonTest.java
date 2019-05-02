@@ -20,8 +20,8 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._1_0.contrastors.SyntacticRepresentationContrastor.repContrastor;
 
 import edu.mayo.kmdp.comparator.Contrastor.Comparison;
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
-import edu.mayo.kmdp.terms.krserialization._2018._08.KRSerialization;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
+import edu.mayo.ontology.taxonomies.krserialization._2018._08.KRSerialization;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 

@@ -17,26 +17,26 @@ package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import edu.mayo.kmdp.terms.api4kp.knowledgeoperations._2018._06.KnowledgeOperations;
-import edu.mayo.kmdp.terms.api4kp.parsinglevel._20190801.ParsingLevel;
-import edu.mayo.kmdp.terms.iso639_1_languagecodes._20170801.ISO639_1_LanguageCodes;
-import edu.mayo.kmdp.terms.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
-import edu.mayo.kmdp.terms.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.kmdp.terms.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
-import edu.mayo.kmdp.terms.kao.languagerole._1_0.LanguageRole;
-import edu.mayo.kmdp.terms.kao.rel.citationreltype._2018_02_16.CitationRelType;
-import edu.mayo.kmdp.terms.kao.rel.dependencyreltype._20190801.DependencyRelType;
-import edu.mayo.kmdp.terms.kao.rel.derivationreltype._20190801.DerivationRelType;
-import edu.mayo.kmdp.terms.kao.rel.relatedversiontype._20190801.RelatedVersionType;
-import edu.mayo.kmdp.terms.kao.rel.structuralreltype._20190801.StructuralRelType;
-import edu.mayo.kmdp.terms.kao.rel.summaryreltype._20190801.SummaryRelType;
-import edu.mayo.kmdp.terms.kao.rel.variantreltype._20190801.VariantRelType;
-import edu.mayo.kmdp.terms.krformat._2018._08.KRFormat;
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
-import edu.mayo.kmdp.terms.krprofile._2018._08.KRProfile;
-import edu.mayo.kmdp.terms.krserialization._2018._08.KRSerialization;
-import edu.mayo.kmdp.terms.lexicon._2018._08.Lexicon;
-import edu.mayo.kmdp.terms.skos.relatedconcept.RelatedConcept;
+import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.KnowledgeOperations;
+import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
+import edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.ISO639_1_LanguageCodes;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
+import edu.mayo.ontology.taxonomies.kao.languagerole._1_0.LanguageRole;
+import edu.mayo.ontology.taxonomies.kao.rel.citationreltype._2018_02_16.CitationRelType;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyRelType;
+import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationRelType;
+import edu.mayo.ontology.taxonomies.kao.rel.relatedversiontype._20190801.RelatedVersionType;
+import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype._20190801.StructuralRelType;
+import edu.mayo.ontology.taxonomies.kao.rel.summaryreltype._20190801.SummaryRelType;
+import edu.mayo.ontology.taxonomies.kao.rel.variantreltype._20190801.VariantRelType;
+import edu.mayo.ontology.taxonomies.krformat._2018._08.KRFormat;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
+import edu.mayo.ontology.taxonomies.krprofile._2018._08.KRProfile;
+import edu.mayo.ontology.taxonomies.krserialization._2018._08.KRSerialization;
+import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
+import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
 import org.junit.jupiter.api.Test;
 
 public class VocabularyTest {

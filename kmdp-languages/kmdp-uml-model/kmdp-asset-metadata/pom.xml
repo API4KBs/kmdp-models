@@ -143,7 +143,7 @@
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
               <bindingIncludes>
-                <include>edu/mayo/kmdp/terms/**/*.xjb</include>
+                <include>edu/mayo/ontology/**/*.xjb</include>
                 <include>metadata/**/*.xjb</include>
                 <include>**/*.episode</include>
               </bindingIncludes>
@@ -151,7 +151,7 @@
               <schemas>
                 <schema>
                   <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/edu/mayo/kmdp/terms</directory>
+                    <directory>${project.build.outputDirectory}/xsd/edu/mayo/ontology</directory>
                     <includes>
                       <include>**/*.xsd</include>
                     </includes>

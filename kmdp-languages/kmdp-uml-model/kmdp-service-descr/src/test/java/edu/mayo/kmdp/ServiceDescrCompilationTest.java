@@ -32,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -115,14 +115,14 @@ public class ServiceDescrCompilationTest {
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
     deploy(src, "/xsd/API4KP/api4kp/identifiers/bindings.xjb");
 
-    deploy(src, "/xsd/edu/mayo/kmdp/terms/krformat/_2018/_08/KRFormat.xsd");
-    deploy(src, "/xsd/edu/mayo/kmdp/terms/krlanguage/_2018/_08/KRLanguage.xsd");
-    deploy(src, "/xsd/edu/mayo/kmdp/terms/krprofile/_2018/_08/KRProfile.xsd");
-    deploy(src, "/xsd/edu/mayo/kmdp/terms/krserialization/_2018/_08/KRSerialization.xsd");
-    deploy(src, "/xsd/edu/mayo/kmdp/terms/api4kp/parsinglevel/_20190801/ParsingLevel.xsd");
-    deploy(src, "/xsd/edu/mayo/kmdp/terms/lexicon/_2018/_08/Lexicon.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krformat/_2018/_08/KRFormat.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krlanguage/_2018/_08/KRLanguage.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krprofile/_2018/_08/KRProfile.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krserialization/_2018/_08/KRSerialization.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/api4kp/parsinglevel/_20190801/ParsingLevel.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/lexicon/_2018/_08/Lexicon.xsd");
     deploy(src,
-        "/xsd/edu/mayo/kmdp/terms/iso639_1_languagecodes/_20170801/ISO639_1_LanguageCodes.xsd");
+        "/xsd/edu/mayo/ontology/taxonomies/iso639_1_languagecodes/_20170801/ISO639_1_LanguageCodes.xsd");
 
     deploy(src, "/xsd/API4KP/api4kp/services/services.xsd");
     deploy(src, "/xsd/API4KP/api4kp/services/services.openapi.xsd");

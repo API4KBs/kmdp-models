@@ -15,10 +15,10 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.terms.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
-import edu.mayo.kmdp.terms.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
-import edu.mayo.kmdp.terms.skos.relatedconcept.RelatedConcept;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
+import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

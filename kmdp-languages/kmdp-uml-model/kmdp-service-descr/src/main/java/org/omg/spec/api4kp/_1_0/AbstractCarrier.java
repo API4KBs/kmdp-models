@@ -16,11 +16,11 @@
 package org.omg.spec.api4kp._1_0;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.mayo.kmdp.terms.api4kp.parsinglevel._20190801.ParsingLevel;
-import edu.mayo.kmdp.terms.krformat._2018._08.KRFormat;
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
-import edu.mayo.kmdp.terms.krserialization._2018._08.KRSerialization;
 import edu.mayo.kmdp.util.FileUtil;
+import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
+import edu.mayo.ontology.taxonomies.krformat._2018._08.KRFormat;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
+import edu.mayo.ontology.taxonomies.krserialization._2018._08.KRSerialization;
 import java.io.InputStream;
 import java.util.function.Function;
 import org.jvnet.jaxb2_commons.lang.CopyStrategy;

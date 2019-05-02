@@ -16,7 +16,7 @@
 package org.omg.spec.api4kp._1_0.contrastors;
 
 import edu.mayo.kmdp.comparator.Contrastor;
-import edu.mayo.kmdp.terms.krprofile._2018._08.KRProfile;
+import edu.mayo.ontology.taxonomies.krprofile._2018._08.KRProfile;
 
 public class ProfileContrastor extends Contrastor<KRProfile> {
 

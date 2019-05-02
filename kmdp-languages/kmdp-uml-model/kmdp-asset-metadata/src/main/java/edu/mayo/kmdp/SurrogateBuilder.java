@@ -16,7 +16,7 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static edu.mayo.kmdp.terms.iso639_1_languagecodes._20170801.ISO639_1_LanguageCodes.English;
+import static edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.ISO639_1_LanguageCodes.English;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
@@ -29,16 +29,16 @@ import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.metadata.surrogate.SubLanguage;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.terms.AssetVocabulary;
-import edu.mayo.kmdp.terms.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
-import edu.mayo.kmdp.terms.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.kmdp.terms.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
-import edu.mayo.kmdp.terms.kao.languagerole._1_0.LanguageRole;
-import edu.mayo.kmdp.terms.kao.rel.dependencyreltype._20190801.DependencyRelType;
-import edu.mayo.kmdp.terms.krformat._2018._08.KRFormat;
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
-import edu.mayo.kmdp.terms.krprofile._2018._08.KRProfile;
-import edu.mayo.kmdp.terms.lexicon._2018._08.Lexicon;
 import edu.mayo.kmdp.util.Util;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
+import edu.mayo.ontology.taxonomies.kao.languagerole._1_0.LanguageRole;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyRelType;
+import edu.mayo.ontology.taxonomies.krformat._2018._08.KRFormat;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
+import edu.mayo.ontology.taxonomies.krprofile._2018._08.KRProfile;
+import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.UUID;

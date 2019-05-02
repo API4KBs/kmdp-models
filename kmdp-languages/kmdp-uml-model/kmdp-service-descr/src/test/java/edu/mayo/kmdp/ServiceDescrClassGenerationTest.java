@@ -23,9 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;

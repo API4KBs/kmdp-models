@@ -15,12 +15,12 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.terms.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.kmdp.terms.krlanguage._2018._08.KRLanguage;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.annotation.XmlRootElement;

@@ -19,7 +19,7 @@ import static org.omg.spec.api4kp._1_0.contrastors.ParsingLevelContrastor.parsin
 import static org.omg.spec.api4kp._1_0.contrastors.ProfileContrastor.profileContrastor;
 
 import edu.mayo.kmdp.comparator.Contrastor;
-import edu.mayo.kmdp.terms.api4kp.parsinglevel._20190801.ParsingLevel;
+import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
 import java.util.HashSet;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 

@@ -26,14 +26,14 @@ public class TermsYamlTest {
   @Test
   public void testKAOTerms() {
     Swagger model = parseValidateGroup(
-        "/yaml/edu/mayo/kmdp/terms/kao/knowledgeassetcategory/_1_0/KnowledgeAssetCategory.yaml");
+        "/yaml/edu/mayo/ontology/taxonomies/kao/knowledgeassetcategory/_1_0/KnowledgeAssetCategory.yaml");
     assertEquals(2, model.getDefinitions().size());
   }
 
   @Test
   public void testSkosTerms() {
     Swagger model = parseValidateGroup(
-        "/yaml/edu/mayo/kmdp/terms/skos/relatedconcept/RelatedConcept.yaml");
+        "/yaml/edu/mayo/ontology/taxonomies/skos/relatedconcept/RelatedConcept.yaml");
     assertEquals(2, model.getDefinitions().size());
   }
 }

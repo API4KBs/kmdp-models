@@ -123,7 +123,7 @@
               <owlFile>http://edu.mayo.kmdp/registry</owlFile>
               <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
               <targetURI>http://www.omg.org/spec/API4KP/core#ConstructedLanguage</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KRLanguage</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KRLanguage</skosNamespace>
               <skosOutputFile>KRLanguage.skos.rdf</skosOutputFile>
               <entityType>INST</entityType>
             </configuration>
@@ -140,7 +140,7 @@
               <owlFile>http://edu.mayo.kmdp/registry</owlFile>
               <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
               <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Profile</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KRProfile</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KRProfile</skosNamespace>
               <skosOutputFile>KRProfile.skos.rdf</skosOutputFile>
               <entityType>INST</entityType>
             </configuration>
@@ -155,7 +155,7 @@
               <owlFile>http://edu.mayo.kmdp/registry</owlFile>
               <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
               <targetURI>http://www.omg.org/spec/API4KP/core#MetaFormat</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KRFormat</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KRFormat</skosNamespace>
               <skosOutputFile>KRFormat.skos.rdf</skosOutputFile>
               <entityType>INST</entityType>
             </configuration>
@@ -170,7 +170,7 @@
               <owlFile>http://edu.mayo.kmdp/registry</owlFile>
               <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
               <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Serialization</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KRSerialization</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KRSerialization</skosNamespace>
               <skosOutputFile>KRSerialization.skos.rdf</skosOutputFile>
               <entityType>INST</entityType>
             </configuration>
@@ -185,7 +185,7 @@
               <owlFile>http://edu.mayo.kmdp/registry</owlFile>
               <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
               <targetURI>http://www.omg.org/spec/API4KP/core#Lexicon</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/Lexicon</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/Lexicon</skosNamespace>
               <skosOutputFile>Lexicon.skos.rdf</skosOutputFile>
               <entityType>INST</entityType>
             </configuration>
@@ -204,7 +204,7 @@
               <targetURI>
                 http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage
               </targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/ISO639-1-LanguageCodes</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/ISO639-1-LanguageCodes</skosNamespace>
               <skosOutputFile>ISOLanguageCode.skos.rdf</skosOutputFile>
               <entityType>INST</entityType>
             </configuration>
@@ -220,7 +220,7 @@
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
               <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/derived-from</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/DerivationRelType</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/DerivationRelType</skosNamespace>
               <skosOutputFile>rel-deriv.skos.rdf</skosOutputFile>
             </configuration>
           </execution>
@@ -234,7 +234,7 @@
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
               <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/variant-of</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/VariantRelType</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/VariantRelType</skosNamespace>
               <skosOutputFile>rel-variant.skos.rdf</skosOutputFile>
             </configuration>
           </execution>
@@ -248,7 +248,7 @@
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
               <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/compact-representation-of</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/SummaryRelType</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/SummaryRelType</skosNamespace>
               <skosOutputFile>rel-summary.skos.rdf</skosOutputFile>
             </configuration>
           </execution>
@@ -262,7 +262,7 @@
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
               <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/compatible-with</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/DependencyRelType</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/DependencyRelType</skosNamespace>
               <skosOutputFile>rel-deps.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
             </configuration>
@@ -277,7 +277,7 @@
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
               <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/in-series-with</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/RelatedVersionType</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/RelatedVersionType</skosNamespace>
               <skosOutputFile>rel-series.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
             </configuration>
@@ -292,7 +292,7 @@
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
               <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/has-part</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/StructuralRelType</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/StructuralRelType</skosNamespace>
               <skosOutputFile>rel-part.skos.rdf</skosOutputFile>
             </configuration>
           </execution>
@@ -306,7 +306,7 @@
               <owlFile>http://purl.org/spar/cito</owlFile>
               <targetNamespace>http://purl.org/spar/cito</targetNamespace>
               <targetURI>http://purl.org/spar/cito/cites</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/Rel/CitationRelType</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/CitationRelType</skosNamespace>
               <skosOutputFile>rel-cites.skos.rdf</skosOutputFile>
             </configuration>
           </execution>
@@ -323,7 +323,7 @@
               <targetNamespace>http://ckm.ontology.mayo.edu/ontology/KAO</targetNamespace>
               <targetURI>http://ckm.ontology.mayo.edu/ontology/KAO#CategorizedKnowledgeAsset
               </targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetCategory</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetCategory</skosNamespace>
               <skosOutputFile>kac.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
               <maxDepth>1</maxDepth>
@@ -341,7 +341,7 @@
               <targetNamespace>http://ckm.ontology.mayo.edu/ontology/KAO</targetNamespace>
               <targetURI>http://www.omg.org/spec/API4KP/core#KnowledgeProcessingTechnique
               </targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/KnowledgeProcessingTechnique
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeProcessingTechnique
               </skosNamespace>
               <skosOutputFile>kpm.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
@@ -359,7 +359,7 @@
               <owlFile>${ontologyDir}/skos.rdf</owlFile>
               <targetNamespace>http://www.w3.org/2004/02/skos/core</targetNamespace>
               <targetURI>http://www.w3.org/2004/02/skos/core#semanticRelation</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/skos/RelatedConcept</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/skos/RelatedConcept</skosNamespace>
               <skosOutputFile>skos.skos.rdf</skosOutputFile>
             </configuration>
           </execution>
@@ -375,7 +375,7 @@
               <targetNamespace>http://ckm.ontology.mayo.edu/ontology/KAO</targetNamespace>
               <targetURI>http://ckm.ontology.mayo.edu/ontology/KAO#CategorizedKnowledgeAsset
               </targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType</skosNamespace>
               <skosOutputFile>kat.skos.rdf</skosOutputFile>
               <minDepth>2</minDepth>
             </configuration>
@@ -391,7 +391,7 @@
               <owlFile>http://ckm.ontology.mayo.edu/ontology/KAO</owlFile>
               <targetNamespace>http://ckm.ontology.mayo.edu/ontology/KAO</targetNamespace>
               <targetURI>http://ckm.ontology.mayo.edu/ontology/KAO#DedicatedLanguage</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/KAO/LanguageRole</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/LanguageRole</skosNamespace>
               <skosOutputFile>langrol.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
             </configuration>
@@ -407,7 +407,7 @@
               <owlFile>http://www.omg.org/spec/API4KP/Operations</owlFile>
               <targetNamespace>http://www.omg.org/spec/API4KP/Operations</targetNamespace>
               <targetURI>http://www.omg.org/spec/API4KP/core#InformationProcessingTask</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/API4KP/KnowledgeOperations</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/API4KP/KnowledgeOperations</skosNamespace>
               <skosOutputFile>ops.skos.rdf</skosOutputFile>
               <minDepth>2</minDepth>
             </configuration>
@@ -423,7 +423,7 @@
               <owlFile>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlFile>
               <targetNamespace>https://www.omg.org/spec/API4KP/api4kp/</targetNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/KnowledgeExpression</targetURI>
-              <skosNamespace>http://terms.kmdp.mayo.edu/API4KP/ParsingLevel</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/API4KP/ParsingLevel</skosNamespace>
               <skosOutputFile>level.skos.rdf</skosOutputFile>
               <minDepth>0</minDepth>
               <maxDepth>1</maxDepth>
@@ -455,7 +455,7 @@
           <json>true</json>
           <termsProvider>edu.mayo.kmdp.terms.KMDPTerms.directory</termsProvider>
           <sourceCatalogPath>${ontologyDir}${s}catalog.xml</sourceCatalogPath>
-          <catalogNamespace>http://kmdp.mayo.edu/terms</catalogNamespace>
+          <catalogNamespace>https://ontology.mayo.edu/taxonomies</catalogNamespace>
         </configuration>
         <executions>
           <execution>

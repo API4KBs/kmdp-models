@@ -158,7 +158,7 @@
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
               <bindingIncludes>
-                <include>edu/mayo/kmdp/terms/**/*.xjb</include>
+                <include>edu/mayo/ontology/**/*.xjb</include>
                 <include>API4KP/api4kp/services/**/*.xjb</include>
                 <include>**/*.episode</include>
               </bindingIncludes>
@@ -168,7 +168,7 @@
                   <fileset>
                     <directory>${project.build.outputDirectory}/xsd</directory>
                     <includes>
-                      <include>edu/mayo/kmdp/terms/**/*.xsd</include>
+                      <include>edu/mayo/ontology/**/*.xsd</include>
                       <include>API4KP/api4kp/services/**/*.xsd</include>
                     </includes>
                   </fileset>

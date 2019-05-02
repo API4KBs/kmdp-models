@@ -15,7 +15,7 @@
  */
 package org.omg.spec.api4kp._1_0.services;
 
-import edu.mayo.kmdp.terms.api4kp.knowledgeoperations._2018._06.KnowledgeOperations;
+import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.KnowledgeOperations;
 import java.lang.annotation.Repeatable;
 import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;

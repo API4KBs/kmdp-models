@@ -158,6 +158,7 @@ public class VersioningTest {
         applyVersionToURI("http://foo.com/sa#",
             "2012/"));
 
+    System.out.println(applyVersionToURI("http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetCategory#27760345-f553-38d0-8b00-f1e678961783","1.0"));
 
   }
 
