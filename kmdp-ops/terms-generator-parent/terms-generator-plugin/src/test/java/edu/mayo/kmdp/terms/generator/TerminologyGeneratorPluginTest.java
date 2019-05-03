@@ -154,6 +154,7 @@ public class TerminologyGeneratorPluginTest {
 
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, tns)
+        .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME,"Cito")
         .with(OWLtoSKOSTxParams.ADD_IMPORTS, Boolean.TRUE);
 
     new MireotExtractor()

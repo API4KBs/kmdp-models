@@ -19,12 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.ConceptScheme;
-import edu.mayo.kmdp.util.NameUtils;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
 import java.net.URI;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -54,6 +51,12 @@ public class AnonymousConceptScheme extends NamespaceIdentifier implements Conce
   @Override
   @JsonIgnore
   public Stream<Term> getConcepts() {
+    throw new UnsupportedOperationException("Unable to track Concepts in Anonymous Scheme");
+  }
+
+  @Override
+  @JsonIgnore
+  public Optional<Term> getTopConcept() {
     throw new UnsupportedOperationException("Unable to track Concepts in Anonymous Scheme");
   }
 

@@ -20,24 +20,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.KnowledgeOperations;
+import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.KnowledgeProcessingOperation;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
-import edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.ISO639_1_LanguageCodes;
+import edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.Language;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
-import edu.mayo.ontology.taxonomies.kao.languagerole._1_0.LanguageRole;
-import edu.mayo.ontology.taxonomies.kao.rel.citationreltype._2018_02_16.CitationRelType;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyRelType;
-import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationRelType;
+import edu.mayo.ontology.taxonomies.kao.languagerole._1_0.KnowledgeRepresentationLanguageRole;
+import edu.mayo.ontology.taxonomies.kao.rel.citationreltype._2018_02_16.BibliographicCitationType;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
+import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationType;
 import edu.mayo.ontology.taxonomies.kao.rel.relatedversiontype._20190801.RelatedVersionType;
-import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype._20190801.StructuralRelType;
-import edu.mayo.ontology.taxonomies.kao.rel.summaryreltype._20190801.SummaryRelType;
-import edu.mayo.ontology.taxonomies.kao.rel.variantreltype._20190801.VariantRelType;
-import edu.mayo.ontology.taxonomies.krformat._2018._08.KRFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
-import edu.mayo.ontology.taxonomies.krprofile._2018._08.KRProfile;
-import edu.mayo.ontology.taxonomies.krserialization._2018._08.KRSerialization;
+import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype._20190801.StructuralPartType;
+import edu.mayo.ontology.taxonomies.kao.rel.summaryreltype._20190801.SummarizationType;
+import edu.mayo.ontology.taxonomies.kao.rel.variantreltype._20190801.VariantType;
+import edu.mayo.ontology.taxonomies.krformat._2018._08.SerializationFormat;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krprofile._2018._08.KnowledgeRepresentationLanguageProfile;
+import edu.mayo.ontology.taxonomies.krserialization._2018._08.KnowledgeRepresentationLanguageSerialization;
 import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
 import java.util.Optional;
@@ -48,25 +48,25 @@ public class VocabularyTest {
 
   @Test
   public void testGeneratedEnums() {
-    assertNotNull(KRLanguage.DMN_1_1);
-    assertNotNull(KRProfile.OWL_2_Full);
-    assertNotNull(KRFormat.JSON);
-    assertNotNull(KRSerialization.DMN_XML);
+    assertNotNull(KnowledgeRepresentationLanguage.DMN_1_1);
+    assertNotNull(KnowledgeRepresentationLanguageProfile.OWL_2_Full);
+    assertNotNull(SerializationFormat.JSON);
+    assertNotNull(KnowledgeRepresentationLanguageSerialization.DMN_XML);
     assertNotNull(Lexicon.LOINC_US);
-    assertNotNull(ISO639_1_LanguageCodes.Italian);
-    assertNotNull(DerivationRelType.Derived_From);
-    assertNotNull(VariantRelType.Rearrangement_Of);
-    assertNotNull(SummaryRelType.Digest_Of);
-    assertNotNull(DependencyRelType.Depends_On);
+    assertNotNull(Language.Italian);
+    assertNotNull(DerivationType.Derived_From);
+    assertNotNull(VariantType.Rearrangement_Of);
+    assertNotNull(SummarizationType.Digest_Of);
+    assertNotNull(DependencyType.Depends_On);
     assertNotNull(RelatedVersionType.Has_Original);
-    assertNotNull(StructuralRelType.Has_Part);
-    assertNotNull(CitationRelType.Cites_As_Authority);
+    assertNotNull(StructuralPartType.Has_Part);
+    assertNotNull(BibliographicCitationType.Cites_As_Authority);
     assertNotNull(KnowledgeAssetCategory.Rules_Policies_And_Guidelines);
     assertNotNull(KnowledgeProcessingTechnique.Natural_Language_Processing_Technique);
     assertNotNull(KnowledgeAssetType.Decision_Model);
     assertNotNull(RelatedConcept.Has_Broader);
-    assertNotNull(LanguageRole.Expression_Language);
-    assertNotNull(KnowledgeOperations.Translation_Task);
+    assertNotNull(KnowledgeRepresentationLanguageRole.Expression_Language);
+    assertNotNull(KnowledgeProcessingOperation.Translation_Task);
     assertNotNull(ParsingLevel.Encoded_Knowledge_Expression);
   }
 

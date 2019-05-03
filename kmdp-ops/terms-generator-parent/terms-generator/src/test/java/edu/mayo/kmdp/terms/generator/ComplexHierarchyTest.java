@@ -17,10 +17,13 @@ package edu.mayo.kmdp.terms.generator;
 
 import static edu.mayo.kmdp.util.Util.uuid;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptGraph;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Modes;
@@ -31,6 +34,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
@@ -44,17 +48,23 @@ public class ComplexHierarchyTest {
 
   @Test
   public void testGenerateConceptsHierarchy() {
-    List<Term> list = doGenerate(Modes.SKOS);
+    ConceptScheme<Term> scheme = doGenerate(Modes.SKOS);
+    assertNotNull(scheme);
+
+    List<Term> list = scheme.getConcepts().collect(Collectors.toList());
     assertEquals(15, list.size());
 
     assertTrue(list.stream()
         .anyMatch((t) -> ("http://test.foo#" + UUID.nameUUIDFromBytes("ClinicalRule".getBytes()))
-            .equals(t.getRef().toString())));
+            .equals(t.getConceptId().toString())));
   }
 
   @Test
   public void testGenerateConceptsHierarchyFromOntology() {
-    List<Term> list = doGenerate(Modes.FULL);
+    ConceptScheme<Term> scheme = doGenerate(Modes.SKOS);
+    assertNotNull(scheme);
+
+    List<Term> list = scheme.getConcepts().collect(Collectors.toList());
     assertEquals(15, list.size());
 
     assertTrue(list.stream()
@@ -63,7 +73,18 @@ public class ComplexHierarchyTest {
   }
 
 
-  private List<Term> doGenerate(final Modes modes) {
+  @Test
+  public void testTopConcept() {
+    ConceptScheme<Term> scheme = doGenerate(Modes.SKOS);
+    assertNotNull(scheme);
+
+    assertTrue(scheme.getTopConcept().isPresent());
+    assertEquals("KnowledgeAssetCategory",
+        scheme.getTopConcept().map(Term::getLabel).orElse("missing"));
+  }
+
+
+  private ConceptScheme<Term> doGenerate(final Modes modes) {
     try {
       OntologyManager manager = OntManagers.createONT();
 
@@ -75,6 +96,8 @@ public class ComplexHierarchyTest {
               new Owl2SkosConfig()
                   .with(OWLtoSKOSTxParams.TGT_NAMESPACE, "http://test.foo")
                   .with(OWLtoSKOSTxParams.MODE, modes)
+                  .with(OWLtoSKOSTxParams.SCHEME_NAME,"KnowledgeAssetCategories")
+                  .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME,"KnowledgeAssetCategory")
                   .with(OWLtoSKOSTxParams.FLATTEN, true)
                   .with(OWLtoSKOSTxParams.VALIDATE, false)));
 
@@ -93,13 +116,14 @@ public class ComplexHierarchyTest {
       Optional<OWLOntology> skosOntology = Optional
           .ofNullable(manager.addOntology(om.getBaseModel().getGraph()));
 
-      SkosTerminologyAbstractor abstractor = new SkosTerminologyAbstractor(skosOntology.get(),
+      ConceptGraph schemes = new SkosTerminologyAbstractor().traverse(skosOntology.get(),
           false);
 
-      List<Term> list = abstractor.traverse()
-          .getConceptList(URI.create("http://test.foo#" + uuid("test.foo_Scheme")));
+      Optional<ConceptScheme<Term>> scheme  = schemes.getConceptScheme(
+          URI.create("http://test.foo#" + uuid("KnowledgeAssetCategories")));
+      assertTrue(scheme.isPresent());
 
-      return list;
+      return scheme.get();
     } catch (Exception e) {
       e.printStackTrace();
       fail(e.getMessage());

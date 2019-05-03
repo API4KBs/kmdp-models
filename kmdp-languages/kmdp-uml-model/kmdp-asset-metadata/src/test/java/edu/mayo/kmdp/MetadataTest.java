@@ -31,8 +31,8 @@ import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationRelType;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
+import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationType;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.transform.stream.StreamSource;
@@ -82,7 +82,7 @@ public class MetadataTest {
         .withExpression(new KnowledgeExpression()
             .withResourceId(uri("urn:to:do"))
             .withRepresentation(new Representation()
-                .withLanguage(KRLanguage.KNART_1_3))
+                .withLanguage(KnowledgeRepresentationLanguage.KNART_1_3))
             // carrier + external catalog is not perfect
             .withCarrier(new ExternalCatalogEntry()
                 .withResourceId(uri("urn:TODO"))
@@ -91,7 +91,7 @@ public class MetadataTest {
             .withInlined(new InlinedRepresentation()
                 .withExpr("IF so and so DO nothing"))
             .withRelated(new Derivative()
-                .withRel(DerivationRelType.Derived_From)
+                .withRel(DerivationType.Derived_From)
                 // should I have an inverse flag here?
                 .withTgt(new Implementation()
                     .withResourceId(uri("urn:TODO"))

@@ -25,6 +25,8 @@ public enum Modes {
 
   SKOS(true, false, "/query/skosify/entities2concept.sparql",
       "/query/skosify/entities2skosMeta.sparql"),
+  SKOS_RDF(true, false, "/query/skosify/entities2concept.sparql",
+      "/query/skosify/entities2skosMeta.sparql"),
   LEX_CON(true,true, "/query/skosify/entities2ontolex.sparql",
       "/query/skosify/entities2concept.sparql" ),
 

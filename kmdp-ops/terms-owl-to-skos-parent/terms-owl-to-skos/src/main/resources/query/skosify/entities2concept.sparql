@@ -16,13 +16,12 @@ CONSTRUCT {
   ?Cid
     a owl:NamedIndividual;
     a skos:Concept;
-    rdfs:isDefinedBy ?X;
+    rdfs:isDefinedBy ?Definer;
 
     skos:inScheme ?Scheme;
 
     skos:broader ?Parent;
-    skos:broaderTransitive ?Top;
-    skos:broader ?Cid.
+    skos:broaderTransitive ?Top.
 
   ?Parent a skos:Concept.
 
@@ -60,8 +59,7 @@ WHERE {
         BIND ( tgt: as ?Namespace ).
         BIND ( STRLEN( STR( ?Namespace ) ) as ?Len ).
         BIND ( COALESCE( ?schemeName,
-                          CONCAT (afn:localname( URI( SUBSTR( STR( ?Namespace ), 1, ?Len - 1 ) ) ),
-                                           "_Scheme" ) ) as ?SchemeLabel )
+                          afn:localname( URI( SUBSTR( STR( ?Namespace ), 1, ?Len - 1 ) ) ) ) as ?SchemeLabel )
         BIND ( URI( CONCAT( STR( tgt: ),
                             f:uuidFrom( ?SchemeLabel ) ) )
                as ?Scheme ).
@@ -106,6 +104,8 @@ WHERE {
                          ?InstanceParent,
                          ?PropertyParent,
                          ?Top ) as ?Parent ).
+
+        BIND ( STR( ?X ) as ?Definer )
 
     }
 

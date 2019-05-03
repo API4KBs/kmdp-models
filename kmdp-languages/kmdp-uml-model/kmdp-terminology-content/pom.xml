@@ -109,7 +109,7 @@
         <configuration>
           <outputDirectory>${skosDir}</outputDirectory>
           <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
-          <profile>FULL</profile>
+          <profile>SKOS</profile>
         </configuration>
         <executions>
 
@@ -126,6 +126,8 @@
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KRLanguage</skosNamespace>
               <skosOutputFile>KRLanguage.skos.rdf</skosOutputFile>
               <entityType>INST</entityType>
+              <schemeName>KnowledgeRepresentationLanguages</schemeName>
+              <topConceptName>KnowledgeRepresentationLanguage</topConceptName>
             </configuration>
           </execution>
 
@@ -143,6 +145,8 @@
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KRProfile</skosNamespace>
               <skosOutputFile>KRProfile.skos.rdf</skosOutputFile>
               <entityType>INST</entityType>
+              <schemeName>KnowledgeRepresentationLanguageProfiles</schemeName>
+              <topConceptName>KnowledgeRepresentationLanguageProfile</topConceptName>
             </configuration>
           </execution>
           <execution>
@@ -156,6 +160,8 @@
               <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
               <targetURI>http://www.omg.org/spec/API4KP/core#MetaFormat</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KRFormat</skosNamespace>
+              <schemeName>SerializationFormats</schemeName>
+              <topConceptName>SerializationFormat</topConceptName>
               <skosOutputFile>KRFormat.skos.rdf</skosOutputFile>
               <entityType>INST</entityType>
             </configuration>
@@ -172,6 +178,8 @@
               <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Serialization</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KRSerialization</skosNamespace>
               <skosOutputFile>KRSerialization.skos.rdf</skosOutputFile>
+              <schemeName>KnowledgeRepresentationLanguageSerializations</schemeName>
+              <topConceptName>KnowledgeRepresentationLanguageSerialization</topConceptName>
               <entityType>INST</entityType>
             </configuration>
           </execution>
@@ -187,6 +195,8 @@
               <targetURI>http://www.omg.org/spec/API4KP/core#Lexicon</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/Lexicon</skosNamespace>
               <skosOutputFile>Lexicon.skos.rdf</skosOutputFile>
+              <schemeName>Lexica</schemeName>
+              <topConceptName>Lexicon</topConceptName>
               <entityType>INST</entityType>
             </configuration>
           </execution>
@@ -206,6 +216,10 @@
               </targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/ISO639-1-LanguageCodes</skosNamespace>
               <skosOutputFile>ISOLanguageCode.skos.rdf</skosOutputFile>
+              <schemeName>KnowledgeRepresentationSerializations</schemeName>
+              <topConceptName>KnowledgeRepresentationSerialization</topConceptName>
+              <schemeName>Languages</schemeName>
+              <topConceptName>Language</topConceptName>
               <entityType>INST</entityType>
             </configuration>
           </execution>
@@ -222,6 +236,8 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/derived-from</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/DerivationRelType</skosNamespace>
               <skosOutputFile>rel-deriv.skos.rdf</skosOutputFile>
+              <schemeName>DerivationTypes</schemeName>
+              <topConceptName>DerivationType</topConceptName>
             </configuration>
           </execution>
           <execution>
@@ -236,6 +252,8 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/variant-of</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/VariantRelType</skosNamespace>
               <skosOutputFile>rel-variant.skos.rdf</skosOutputFile>
+              <schemeName>VariantTypes</schemeName>
+              <topConceptName>VariantType</topConceptName>
             </configuration>
           </execution>
           <execution>
@@ -250,6 +268,8 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/compact-representation-of</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/SummaryRelType</skosNamespace>
               <skosOutputFile>rel-summary.skos.rdf</skosOutputFile>
+              <schemeName>SummarizationTypes</schemeName>
+              <topConceptName>SummarizationType</topConceptName>
             </configuration>
           </execution>
           <execution>
@@ -265,6 +285,8 @@
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/DependencyRelType</skosNamespace>
               <skosOutputFile>rel-deps.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
+              <schemeName>DependencyTypes</schemeName>
+              <topConceptName>DependencyType</topConceptName>
             </configuration>
           </execution>
           <execution>
@@ -280,6 +302,8 @@
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/RelatedVersionType</skosNamespace>
               <skosOutputFile>rel-series.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
+              <schemeName>RelatedVersionTypes</schemeName>
+              <topConceptName>RelatedVersionType</topConceptName>
             </configuration>
           </execution>
           <execution>
@@ -294,6 +318,8 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/has-part</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/StructuralRelType</skosNamespace>
               <skosOutputFile>rel-part.skos.rdf</skosOutputFile>
+              <schemeName>StructuralPartTypes</schemeName>
+              <topConceptName>StructuralPartType</topConceptName>
             </configuration>
           </execution>
           <execution>
@@ -308,6 +334,8 @@
               <targetURI>http://purl.org/spar/cito/cites</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/Rel/CitationRelType</skosNamespace>
               <skosOutputFile>rel-cites.skos.rdf</skosOutputFile>
+              <schemeName>BibliographicCitationTypes</schemeName>
+              <topConceptName>BibliographicCitationType</topConceptName>
             </configuration>
           </execution>
 
@@ -327,6 +355,8 @@
               <skosOutputFile>kac.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
               <maxDepth>1</maxDepth>
+              <schemeName>KnowledgeAssetCategories</schemeName>
+              <topConceptName>KnowledgeAssetCategory</topConceptName>
             </configuration>
           </execution>
 
@@ -345,6 +375,8 @@
               </skosNamespace>
               <skosOutputFile>kpm.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
+              <schemeName>KnowledgeProcessingTechniques</schemeName>
+              <topConceptName>KnowledgeProcessingTechnique</topConceptName>
             </configuration>
           </execution>
 
@@ -361,6 +393,8 @@
               <targetURI>http://www.w3.org/2004/02/skos/core#semanticRelation</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/skos/RelatedConcept</skosNamespace>
               <skosOutputFile>skos.skos.rdf</skosOutputFile>
+              <schemeName>RelatedConcepts</schemeName>
+              <topConceptName>RelatedConcept</topConceptName>
             </configuration>
           </execution>
 
@@ -378,6 +412,8 @@
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType</skosNamespace>
               <skosOutputFile>kat.skos.rdf</skosOutputFile>
               <minDepth>2</minDepth>
+              <schemeName>KnowledgeAssetTypes</schemeName>
+              <topConceptName>KnowledgeAssetType</topConceptName>
             </configuration>
           </execution>
 
@@ -394,6 +430,8 @@
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/LanguageRole</skosNamespace>
               <skosOutputFile>langrol.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
+              <schemeName>KnowledgeRepresentationLanguageRoles</schemeName>
+              <topConceptName>KnowledgeRepresentationLanguageRole</topConceptName>
             </configuration>
           </execution>
 
@@ -410,6 +448,8 @@
               <skosNamespace>https://ontology.mayo.edu/taxonomies/API4KP/KnowledgeOperations</skosNamespace>
               <skosOutputFile>ops.skos.rdf</skosOutputFile>
               <minDepth>2</minDepth>
+              <schemeName>KnowledgeProcessingOperations</schemeName>
+              <topConceptName>KnowledgeProcessingOperation</topConceptName>
             </configuration>
           </execution>
 
@@ -427,6 +467,8 @@
               <skosOutputFile>level.skos.rdf</skosOutputFile>
               <minDepth>0</minDepth>
               <maxDepth>1</maxDepth>
+              <schemeName>ParsingLevels</schemeName>
+              <topConceptName>ParsingLevel</topConceptName>
             </configuration>
           </execution>
 

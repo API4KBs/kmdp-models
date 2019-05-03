@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -85,7 +85,7 @@ public class ServiceDescrCompilationTest {
       assertTrue(asTrp.isPresent());
 
       Transrepresentator anew = asTrp.get();
-      assertEquals(KRLanguage.BPMN_2_0_2,
+      assertEquals(KnowledgeRepresentationLanguage.BPMN_2_0_2,
           anew.getTxions().get(0).getConsumes().get(0).getLanguage());
 
       Transrepresentator t2 = new Transrepresentator();
@@ -115,14 +115,14 @@ public class ServiceDescrCompilationTest {
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
     deploy(src, "/xsd/API4KP/api4kp/identifiers/bindings.xjb");
 
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krformat/_2018/_08/KRFormat.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krlanguage/_2018/_08/KRLanguage.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krprofile/_2018/_08/KRProfile.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krserialization/_2018/_08/KRSerialization.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krformat/_2018/_08/SerializationFormat.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krlanguage/_2018/_08/KnowledgeRepresentationLanguage.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krprofile/_2018/_08/KnowledgeRepresentationLanguageProfile.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krserialization/_2018/_08/KnowledgeRepresentationLanguageSerialization.xsd");
     deploy(src, "/xsd/edu/mayo/ontology/taxonomies/api4kp/parsinglevel/_20190801/ParsingLevel.xsd");
     deploy(src, "/xsd/edu/mayo/ontology/taxonomies/lexicon/_2018/_08/Lexicon.xsd");
     deploy(src,
-        "/xsd/edu/mayo/ontology/taxonomies/iso639_1_languagecodes/_20170801/ISO639_1_LanguageCodes.xsd");
+        "/xsd/edu/mayo/ontology/taxonomies/iso639_1_languagecodes/_20170801/Language.xsd");
 
     deploy(src, "/xsd/API4KP/api4kp/services/services.xsd");
     deploy(src, "/xsd/API4KP/api4kp/services/services.openapi.xsd");
@@ -149,7 +149,7 @@ public class ServiceDescrCompilationTest {
 
 
   private void init(Transrepresentator component, Transrepresentation rep) {
-    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KRLanguage.BPMN_2_0_2);
+    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KnowledgeRepresentationLanguage.BPMN_2_0_2);
     component
         .withInstanceId(uri("uri:urn:" + UUID.randomUUID()))
         .withTxions(new Transrepresentation()

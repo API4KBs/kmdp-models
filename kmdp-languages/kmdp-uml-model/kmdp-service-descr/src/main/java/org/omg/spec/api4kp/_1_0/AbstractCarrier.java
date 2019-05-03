@@ -18,9 +18,9 @@ package org.omg.spec.api4kp._1_0;
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
-import edu.mayo.ontology.taxonomies.krformat._2018._08.KRFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
-import edu.mayo.ontology.taxonomies.krserialization._2018._08.KRSerialization;
+import edu.mayo.ontology.taxonomies.krformat._2018._08.SerializationFormat;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krserialization._2018._08.KnowledgeRepresentationLanguageSerialization;
 import java.io.InputStream;
 import java.util.function.Function;
 import org.jvnet.jaxb2_commons.lang.CopyStrategy;
@@ -103,35 +103,35 @@ public class AbstractCarrier {
     return rep;
   }
 
-  public static SyntacticRepresentation rep(KRLanguage language) {
+  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language) {
     return rep(language, null, null, null, null);
   }
 
-  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization serialization) {
+  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language, KnowledgeRepresentationLanguageSerialization serialization) {
     return rep(language, serialization,null, null, null);
   }
 
-  public static SyntacticRepresentation rep(KRLanguage language, KRFormat format) {
+  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language, SerializationFormat format) {
     return rep(language, format, null, null);
   }
 
-  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization serialization, KRFormat format) {
+  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language, KnowledgeRepresentationLanguageSerialization serialization, SerializationFormat format) {
     return rep(language, serialization, format, null, null);
   }
 
 
-  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization ser, KRFormat format, String charset) {
+  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language, KnowledgeRepresentationLanguageSerialization ser, SerializationFormat format, String charset) {
     return rep(language, ser, format, charset, null);
   }
-  public static SyntacticRepresentation rep(KRLanguage language, KRFormat format, String charset) {
+  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language, SerializationFormat format, String charset) {
     return rep(language, format, charset, null);
   }
 
-  public static SyntacticRepresentation rep(KRLanguage language, KRFormat format, String charset,
+  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language, SerializationFormat format, String charset,
       String encoding) {
     return rep(language,null,format,charset,encoding);
   }
-  public static SyntacticRepresentation rep(KRLanguage language, KRSerialization serialization, KRFormat format, String charset,
+  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language, KnowledgeRepresentationLanguageSerialization serialization, SerializationFormat format, String charset,
       String encoding) {
     return new org.omg.spec.api4kp._1_0.services.resources.SyntacticRepresentation()
         .withLanguage(language)
@@ -141,7 +141,7 @@ public class AbstractCarrier {
         .withEncoding(encoding);
   }
 
-  public static SyntacticRepresentation rep(KRFormat format, String charset, String encoding) {
+  public static SyntacticRepresentation rep(SerializationFormat format, String charset, String encoding) {
     return rep(null, format, charset, encoding);
   }
 

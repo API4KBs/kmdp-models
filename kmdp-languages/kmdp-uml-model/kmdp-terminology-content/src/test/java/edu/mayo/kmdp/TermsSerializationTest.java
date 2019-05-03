@@ -15,35 +15,34 @@
  */
 package edu.mayo.kmdp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
-import org.junit.jupiter.api.Test;
-
-import javax.xml.bind.annotation.XmlRootElement;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import java.util.Collections;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import javax.xml.bind.annotation.XmlRootElement;
+import org.junit.jupiter.api.Test;
 
 public class TermsSerializationTest {
 
   @Test
   public void testXML() {
     String xml = JaxbUtil.marshallToString(Collections.singleton(Foo.class),
-        new Foo(KnowledgeAssetType.Cognitive_Process_Model, KRLanguage.OWL_2),
+        new Foo(KnowledgeAssetType.Cognitive_Process_Model, KnowledgeRepresentationLanguage.OWL_2),
         JaxbUtil.defaultProperties());
     //System.out.println(xml);
     assertTrue(xml.contains(KnowledgeAssetType.Cognitive_Process_Model.getTag()));
     assertTrue(xml.contains(KnowledgeAssetType.Cognitive_Process_Model.getLabel()));
     assertTrue(xml.contains(KnowledgeAssetType.Cognitive_Process_Model.getRef().toString()));
-    assertTrue(xml.contains(KRLanguage.OWL_2.getTag()));
-    assertTrue(xml.contains(KRLanguage.OWL_2.getLabel()));
-    assertTrue(xml.contains(KRLanguage.OWL_2.getRef().toString()));
+    assertTrue(xml.contains(KnowledgeRepresentationLanguage.OWL_2.getTag()));
+    assertTrue(xml.contains(KnowledgeRepresentationLanguage.OWL_2.getLabel()));
+    assertTrue(xml.contains(KnowledgeRepresentationLanguage.OWL_2.getRef().toString()));
 
     Optional<Foo> f2 = JaxbUtil.unmarshall(Collections.singleton(Foo.class),
         Foo.class,
@@ -51,13 +50,13 @@ public class TermsSerializationTest {
         JaxbUtil.defaultProperties());
     assertTrue(f2.isPresent());
     assertEquals(KnowledgeAssetType.Cognitive_Process_Model, f2.get().getType());
-    assertEquals(KRLanguage.OWL_2, f2.get().getLang());
+    assertEquals(KnowledgeRepresentationLanguage.OWL_2, f2.get().getLang());
   }
 
   @Test
   public void testJSON() {
     String json = JSonUtil
-        .writeJson(new Foo(KnowledgeAssetType.Cognitive_Process_Model, KRLanguage.OWL_2))
+        .writeJson(new Foo(KnowledgeAssetType.Cognitive_Process_Model, KnowledgeRepresentationLanguage.OWL_2))
         .flatMap(Util::asString).get();
 
 //    System.out.println(json);
@@ -65,15 +64,15 @@ public class TermsSerializationTest {
     assertTrue(json.contains(KnowledgeAssetType.Cognitive_Process_Model.getTag()));
     assertTrue(json.contains(KnowledgeAssetType.Cognitive_Process_Model.getLabel()));
     assertTrue(json.contains(KnowledgeAssetType.Cognitive_Process_Model.getRef().toString()));
-    assertTrue(json.contains(KRLanguage.OWL_2.getTag()));
-    assertTrue(json.contains(KRLanguage.OWL_2.getLabel()));
-    assertTrue(json.contains(KRLanguage.OWL_2.getRef().toString()));
+    assertTrue(json.contains(KnowledgeRepresentationLanguage.OWL_2.getTag()));
+    assertTrue(json.contains(KnowledgeRepresentationLanguage.OWL_2.getLabel()));
+    assertTrue(json.contains(KnowledgeRepresentationLanguage.OWL_2.getRef().toString()));
 
     Optional<Foo> f2 = JSonUtil.readJson(json.getBytes(), Foo.class);
 
     assertTrue(f2.isPresent());
     assertEquals(KnowledgeAssetType.Cognitive_Process_Model, f2.get().getType());
-    assertEquals(KRLanguage.OWL_2, f2.get().getLang());
+    assertEquals(KnowledgeRepresentationLanguage.OWL_2, f2.get().getLang());
   }
 
 
@@ -81,13 +80,13 @@ public class TermsSerializationTest {
   public static class Foo {
 
     private KnowledgeAssetType type;
-    private KRLanguage lang;
+    private KnowledgeRepresentationLanguage lang;
 
     public Foo() {
 
     }
 
-    public Foo(KnowledgeAssetType type, KRLanguage lang) {
+    public Foo(KnowledgeAssetType type, KnowledgeRepresentationLanguage lang) {
       this.type = type;
       this.lang = lang;
     }
@@ -100,11 +99,11 @@ public class TermsSerializationTest {
       this.type = type;
     }
 
-    public KRLanguage getLang() {
+    public KnowledgeRepresentationLanguage getLang() {
       return lang;
     }
 
-    public void setLang(KRLanguage lang) {
+    public void setLang(KnowledgeRepresentationLanguage lang) {
       this.lang = lang;
     }
   }

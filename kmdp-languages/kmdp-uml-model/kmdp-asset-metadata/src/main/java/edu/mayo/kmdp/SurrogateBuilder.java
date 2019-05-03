@@ -16,7 +16,7 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.ISO639_1_LanguageCodes.English;
+import static edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.Language.English;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
@@ -33,11 +33,11 @@ import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
-import edu.mayo.ontology.taxonomies.kao.languagerole._1_0.LanguageRole;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyRelType;
-import edu.mayo.ontology.taxonomies.krformat._2018._08.KRFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
-import edu.mayo.ontology.taxonomies.krprofile._2018._08.KRProfile;
+import edu.mayo.ontology.taxonomies.kao.languagerole._1_0.KnowledgeRepresentationLanguageRole;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
+import edu.mayo.ontology.taxonomies.krformat._2018._08.SerializationFormat;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krprofile._2018._08.KnowledgeRepresentationLanguageProfile;
 import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
 import java.net.URI;
 import java.util.Arrays;
@@ -147,12 +147,12 @@ public class SurrogateBuilder {
   }
 
 
-  public SurrogateBuilder withDMNExpression(KRLanguage schema) {
+  public SurrogateBuilder withDMNExpression(KnowledgeRepresentationLanguage schema) {
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
-          .withLanguage(KRLanguage.DMN_1_1)
-          .withFormat(KRFormat.XML_1_1)
-          .withWith(new SubLanguage().withRole(LanguageRole.Schema_Language)
+          .withLanguage(KnowledgeRepresentationLanguage.DMN_1_1)
+          .withFormat(SerializationFormat.XML_1_1)
+          .withWith(new SubLanguage().withRole(KnowledgeRepresentationLanguageRole.Schema_Language)
               .withSubLanguage(new Representation().withLanguage(schema)))));
     }
     return this;
@@ -162,8 +162,8 @@ public class SurrogateBuilder {
   public SurrogateBuilder withOpenAPIExpression() {
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
-          .withLanguage(KRLanguage.OpenAPI_2_3)
-          .withFormat(KRFormat.YAML_1_2)));
+          .withLanguage(KnowledgeRepresentationLanguage.OpenAPI_2_3)
+          .withFormat(SerializationFormat.YAML_1_2)));
     }
     return this;
   }
@@ -172,8 +172,8 @@ public class SurrogateBuilder {
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withLocale(English)
           .withRepresentation(new Representation()
-              .withLanguage(KRLanguage.HTML)
-              .withFormat(KRFormat.XML_1_1)));
+              .withLanguage(KnowledgeRepresentationLanguage.HTML)
+              .withFormat(SerializationFormat.XML_1_1)));
     }
     return this;
   }
@@ -181,9 +181,9 @@ public class SurrogateBuilder {
   public SurrogateBuilder withSKOSExpression() {
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
-          .withLanguage(KRLanguage.OWL_2)
-          .withFormat(KRFormat.RDF_1_1)
-          .withProfile(KRProfile.OWL_2_DL)
+          .withLanguage(KnowledgeRepresentationLanguage.OWL_2)
+          .withFormat(SerializationFormat.RDF_1_1)
+          .withProfile(KnowledgeRepresentationLanguageProfile.OWL_2_DL)
           .withLexicon(Lexicon.SKOS)));
     }
     return this;
@@ -193,8 +193,8 @@ public class SurrogateBuilder {
   public SurrogateBuilder withCQLExpression(Lexicon lex) {
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
-          .withLanguage(KRLanguage.CQL_1_2)
-          .withFormat(KRFormat.TXT)
+          .withLanguage(KnowledgeRepresentationLanguage.CQL_1_2)
+          .withFormat(SerializationFormat.TXT)
           .withLexicon(lex)));
     }
     return this;
@@ -206,15 +206,15 @@ public class SurrogateBuilder {
     }
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
-          .withLanguage(KRLanguage.Service_Profile)
+          .withLanguage(KnowledgeRepresentationLanguage.Service_Profile)
           .withWith(new SubLanguage()
-              .withRole(LanguageRole.Expression_Language)
-              .withSubLanguage(new Representation().withLanguage(KRLanguage.Mustache)))
+              .withRole(KnowledgeRepresentationLanguageRole.Expression_Language)
+              .withSubLanguage(new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
           .withWith(new SubLanguage()
-              .withRole(LanguageRole.Schema_Language)
-              .withSubLanguage(new Representation().withLanguage(KRLanguage.FHIR_DSTU2)))
+              .withRole(KnowledgeRepresentationLanguageRole.Schema_Language)
+              .withSubLanguage(new Representation().withLanguage(KnowledgeRepresentationLanguage.FHIR_DSTU2)))
 
-          .withFormat(KRFormat.XML_1_1)
+          .withFormat(SerializationFormat.XML_1_1)
 
           .withLexicon(getLexicons(vocab))));
     }
@@ -232,12 +232,12 @@ public class SurrogateBuilder {
   public SurrogateBuilder withNLPServiceProfileExpression() {
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
-          .withLanguage(KRLanguage.Service_Profile)
+          .withLanguage(KnowledgeRepresentationLanguage.Service_Profile)
           .withWith(new SubLanguage()
-              .withRole(LanguageRole.Expression_Language)
-              .withSubLanguage(new Representation().withLanguage(KRLanguage.Mustache)))
+              .withRole(KnowledgeRepresentationLanguageRole.Expression_Language)
+              .withSubLanguage(new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
 
-          .withFormat(KRFormat.XML_1_1)
+          .withFormat(SerializationFormat.XML_1_1)
           .withLexicon(Lexicon.Activity_Context)));
     }
     return this;
@@ -246,15 +246,15 @@ public class SurrogateBuilder {
   public SurrogateBuilder withInlinedFhirPath(String expr) {
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
-          .withLanguage(KRLanguage.FHIRPath_STU1)
-          .withFormat(KRFormat.TXT))
+          .withLanguage(KnowledgeRepresentationLanguage.FHIRPath_STU1)
+          .withFormat(SerializationFormat.TXT))
           .withInlined(new InlinedRepresentation().withExpr(expr)));
     }
     return this;
   }
 
 
-  public SurrogateBuilder withRepresentation(KRLanguage lang, KRFormat format) {
+  public SurrogateBuilder withRepresentation(KnowledgeRepresentationLanguage lang, SerializationFormat format) {
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
           .withLanguage(lang)
@@ -281,13 +281,13 @@ public class SurrogateBuilder {
     return this;
   }
 
-  public SurrogateBuilder withDependency(DependencyRelType rel, URIIdentifier relatedAsset) {
+  public SurrogateBuilder withDependency(DependencyType rel, URIIdentifier relatedAsset) {
     get().withRelated(
         new Dependency().withRel(rel).withTgt(new KnowledgeAsset().withResourceId(relatedAsset)));
     return this;
   }
 
-  public SurrogateBuilder withDependency(DependencyRelType rel, KnowledgeAsset relatedAsset) {
+  public SurrogateBuilder withDependency(DependencyType rel, KnowledgeAsset relatedAsset) {
     get().withRelated(new Dependency().withRel(rel).withTgt(relatedAsset));
     return this;
   }

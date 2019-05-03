@@ -87,6 +87,6 @@ public class DepthLinkingTest extends TestBase {
       assertTrue(result.contains(con,SKOS.inScheme));
     });
 
-    assertEquals(new HashSet<>(Arrays.asList("test_Scheme_Top","I","J","K")), ids);
+    assertEquals(new HashSet<>(Arrays.asList("test_Top","I","J","K")), ids);
   }
 }

@@ -18,6 +18,7 @@ package edu.mayo.kmdp.terms;
 import edu.mayo.kmdp.id.IDFormats;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
+import edu.mayo.kmdp.util.NameUtils;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
 import java.net.URI;
@@ -41,7 +42,16 @@ public interface ConceptScheme<T extends Term> extends VersionedIdentifier {
 
   Stream<T> getConcepts();
 
+  Optional<T> getTopConcept();
+
   Optional<T> lookup(Term other);
 
   boolean subsumes(T sup, T sub);
+
+
+  default String getPublicName() {
+    return NameUtils.getTermCodeSystemName(getTopConcept()
+        .map(Term::getLabel)
+        .orElseGet(this::getLabel));
+  }
 }

@@ -15,7 +15,7 @@
  */
 package org.omg.spec.api4kp._1_0.services;
 
-import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.KnowledgeOperations;
+import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.KnowledgeProcessingOperation;
 import java.lang.annotation.Repeatable;
 import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;
@@ -30,5 +30,5 @@ import java.lang.annotation.Target;
 @Repeatable(value = KPOperations.class)
 public @interface KPOperation {
 
-  KnowledgeOperations value();
+  KnowledgeProcessingOperation value();
 }

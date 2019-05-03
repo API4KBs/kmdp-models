@@ -20,8 +20,8 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._1_0.contrastors.SyntacticRepresentationContrastor.repContrastor;
 
 import edu.mayo.kmdp.comparator.Contrastor.Comparison;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
-import edu.mayo.ontology.taxonomies.krserialization._2018._08.KRSerialization;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krserialization._2018._08.KnowledgeRepresentationLanguageSerialization;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
@@ -29,10 +29,10 @@ public class RepresentationComparisonTest {
 
   @Test
   public void languageTest() {
-    SyntacticRepresentation r1 = rep(KRLanguage.OWL_2).withSerialization(KRSerialization.RDF_XML_Syntax);
-    SyntacticRepresentation r2 = rep(KRLanguage.OWL_2).withSerialization(KRSerialization.OWL_Functional_Syntax);
-    SyntacticRepresentation r3 = rep(KRLanguage.DMN_1_1);
-    SyntacticRepresentation r4 = rep(KRLanguage.OWL_2);
+    SyntacticRepresentation r1 = rep(KnowledgeRepresentationLanguage.OWL_2).withSerialization(KnowledgeRepresentationLanguageSerialization.RDF_XML_Syntax);
+    SyntacticRepresentation r2 = rep(KnowledgeRepresentationLanguage.OWL_2).withSerialization(KnowledgeRepresentationLanguageSerialization.OWL_Functional_Syntax);
+    SyntacticRepresentation r3 = rep(KnowledgeRepresentationLanguage.DMN_1_1);
+    SyntacticRepresentation r4 = rep(KnowledgeRepresentationLanguage.OWL_2);
 
     assertEquals(Comparison.INCOMPARABLE,repContrastor.contrast(r1,r2));
     assertEquals(Comparison.INCOMPARABLE,repContrastor.contrast(r1,r3));

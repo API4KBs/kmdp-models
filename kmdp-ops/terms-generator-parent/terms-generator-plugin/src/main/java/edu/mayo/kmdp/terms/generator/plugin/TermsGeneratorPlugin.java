@@ -246,10 +246,8 @@ public class TermsGeneratorPlugin extends AbstractMojo {
       return Stream.empty();
     }
 
-    SkosTerminologyAbstractor skosTerminologyAbstractor = new SkosTerminologyAbstractor(ontology,
+    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor().traverse(ontology,
         this.reason);
-
-    SkosTerminologyAbstractor.ConceptGraph graph = skosTerminologyAbstractor.traverse();
 
     if (!outputDirectory.exists()) {
       outputDirectory.mkdirs();

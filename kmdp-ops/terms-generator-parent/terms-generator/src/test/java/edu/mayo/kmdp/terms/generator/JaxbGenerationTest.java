@@ -214,9 +214,7 @@ public class JaxbGenerationTest {
       OWLOntology o = owlOntologyManager.loadOntologyFromOntologyDocument(
           JaxbGenerationTest.class.getResourceAsStream("/test.owl"));
 
-      SkosTerminologyAbstractor generator = new SkosTerminologyAbstractor(o, true);
-
-      return generator.traverse();
+      return new SkosTerminologyAbstractor().traverse(o, true);
     } catch (Exception e) {
       e.printStackTrace();
       fail(e.getMessage());

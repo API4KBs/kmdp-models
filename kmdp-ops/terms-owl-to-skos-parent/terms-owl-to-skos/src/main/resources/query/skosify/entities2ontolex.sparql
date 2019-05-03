@@ -33,9 +33,6 @@ CONSTRUCT {
         ];
     ].
 
-  ?X
-    a owl:NamedIndividual.
-
 }
 WHERE {
 

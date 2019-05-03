@@ -19,8 +19,6 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.Taxonomic;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-
 import java.lang.reflect.Array;
 import java.net.URI;
 import java.util.Arrays;
@@ -31,6 +29,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
 public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> extends
     NamespaceIdentifier implements ConceptScheme<T> {
@@ -90,6 +89,12 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
 
   public Stream<T> getConcepts() {
     return concepts.stream();
+  }
+
+  @Override
+  public Optional<T> getTopConcept() {
+    return concepts.stream().filter((t) -> !ancestry.containsKey(t) || ancestry.get(t).isEmpty())
+        .findAny();
   }
 
   @Override

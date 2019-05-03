@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
@@ -58,12 +59,13 @@ public class CatalogGenerator extends BaseEnumGenerator {
     private String uri;
 
     public CatalogEntry(ConceptScheme scheme) {
+
+
       this.id = NameUtils.removeFragment(scheme.getVersionId()).toString();
       this.uri = NameUtils.nameSpaceURIToPackage(scheme.getVersionId())
           .replaceAll("\\.", "/")
           + "/"
-          + NameUtils.getTermCodeSystemName(scheme.getLabel())
-          .replace("_Scheme", "")
+          + NameUtils.getTermCodeSystemName(scheme.getPublicName())
           + ".xsd";
     }
 

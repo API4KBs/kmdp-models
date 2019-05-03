@@ -34,7 +34,10 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.SKOS;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AsOWLNamedIndividual;
@@ -61,39 +64,40 @@ import org.semanticweb.owlapi.util.InferredOntologyGenerator;
 
 public class SkosTerminologyAbstractor {
 
-  static final String SKOS_NAMESPACE = "http://www.w3.org/2004/02/skos/core#";
+  static final IRI CONCEPT_SCHEME = iri(SKOS.ConceptScheme);
+  static final IRI CONCEPT = iri(SKOS.Concept);
+  static final IRI LABEL = iri(SKOS.prefLabel);
+  static final IRI IS_DEFINED_BY = iri(RDFS.isDefinedBy);
+  static final IRI COMMENT = iri(RDFS.comment);
+  static final IRI NOTATION = iri(SKOS.notation);
+  static final IRI IN_SCHEME = iri(SKOS.inScheme);
+  static final IRI HAS_TOP = iri(SKOS.hasTopConcept);
+  static final IRI TOP_OF = iri(SKOS.topConceptOf);
+  static final IRI BROADER = iri(SKOS.broader);
+  static final IRI BROADER_TRANSITIVE = iri(SKOS.broaderTransitive);
 
-  static final IRI CONCEPT_SCHEME = IRI.create(SKOS_NAMESPACE + "ConceptScheme");
-  static final IRI CONCEPT = IRI.create(SKOS_NAMESPACE + "Concept");
-  static final IRI LABEL = IRI.create(SKOS_NAMESPACE + "prefLabel");
-  static final IRI COMMENT = IRI.create(RDFS.comment.getURI());
-  static final IRI NOTATION = IRI.create(SKOS_NAMESPACE + "notation");
-  static final IRI IN_SCHEME = IRI.create(SKOS_NAMESPACE + "inScheme");
-  static final IRI HAS_TOP = IRI.create(SKOS_NAMESPACE + "hasTopConcept");
-  static final IRI TOP_OF = IRI.create(SKOS_NAMESPACE + "topConceptOf");
-  static final IRI BROADER = IRI.create(SKOS_NAMESPACE + "broader");
-  static final IRI BROADER_TRANSITIVE = IRI.create(SKOS_NAMESPACE + "broaderTransitive");
+  static final IRI DENOTES = iri("http://www.w3.org/ns/lemon/ontolex#denotes");
+  static final IRI IS_CONCEPT_OF = iri("http://www.w3.org/ns/lemon/ontolex#isConceptOf");
 
-  static final IRI DENOTES = IRI.create("http://www.w3.org/ns/lemon/ontolex#denotes");
-  static final IRI IS_CONCEPT_OF = IRI.create("http://www.w3.org/ns/lemon/ontolex#isConceptOf");
+  static final IRI OID = iri("https://www.hl7.org/oid");
 
-  static final IRI OID = IRI.create("https://www.hl7.org/oid");
+  static final IRI dceUUID = iri("http://www.opengroup.org/dce/uuid");
 
-  static final IRI dceUUID = IRI.create("http://www.opengroup.org/dce/uuid");
+  static final IRI dctID = iri(DCTerms.identifier);
 
-  static final IRI dctID = IRI.create("http://purl.org/dc/terms/identifier");
-
-
-  private OWLOntology model;
-
-  public SkosTerminologyAbstractor(OWLOntology o, boolean reason) {
-    this.model = o;
-    if (reason) {
-      this.doReason(o);
-    }
+  private static IRI iri(Resource res) {
+    return IRI.create(res.getURI());
+  }
+  private static IRI iri(String res) {
+    return IRI.create(res);
   }
 
-  public ConceptGraph traverse() {
+  public ConceptGraph traverse(OWLOntology o, boolean reason) {
+    if (reason) {
+      o = this.doReason(o);
+    }
+    final OWLOntology model = o;
+
     Map<URI, ConceptScheme<Term>> codeSystems;
 
     // build the code systems first
@@ -106,7 +110,7 @@ public class SkosTerminologyAbstractor {
     // then the concepts
     model.individualsInSignature(Imports.INCLUDED)
         .filter((i) -> isConcept(i, model))
-        .filter((i) -> !isTopConcept(i))
+        .filter((i) -> !isTopConcept(i, model))
         .forEach((ind) -> toCode(ind,
             getOrCreateInSchemes(ind, model, codeSystems),
             model));
@@ -126,25 +130,33 @@ public class SkosTerminologyAbstractor {
             && opax.getSubject().isIndividual() && opax.getObject().isNamed()
         )
         // ignore (mock) top concepts
-        .filter((opax) -> !isTopConcept(opax.getObject()))
+        .filter((opax) -> !isTopConcept(opax.getObject(),model))
         // ignore parents that are outside of the recognized schemes (missing assertion, or mireoted parent)
-        .filter((opax) -> isInScheme(opax.getObject()))
+        .filter((opax) -> isInScheme(opax.getObject(),model))
         // register rel
-        .forEach((opax) -> addAncestor(resolve(opax.getSubject(), codeSystems)
+        .forEach((opax) -> addAncestor(resolve(opax.getSubject(), model, codeSystems)
                 .orElseThrow(IllegalStateException::new),
-            resolve(opax.getObject(), codeSystems)
+            resolve(opax.getObject(), model, codeSystems)
                 .orElseThrow(IllegalStateException::new)));
+
+    // finally the Top Concept
+    model.individualsInSignature(Imports.INCLUDED)
+        .filter((i) -> isConcept(i, model))
+        .filter((i) -> isTopConcept(i, model))
+        .forEach((top) -> toTopCode(top,
+            getOrCreateInSchemes(top, model, codeSystems),
+            model));
 
     return new ConceptGraph(codeSystems, join(codeSystems));
   }
 
-  private boolean isInScheme(OWLIndividual ind) {
+  private boolean isInScheme(OWLIndividual ind, OWLOntology model) {
     return model.importsClosure()
         .flatMap((o) -> o.axioms(AxiomType.OBJECT_PROPERTY_ASSERTION))
         .anyMatch((opax) -> (opax.getSubject().equals(ind) && isProperty(IN_SCHEME, opax)));
   }
 
-  private boolean isTopConcept(OWLIndividual ind) {
+  private boolean isTopConcept(OWLIndividual ind, OWLOntology model) {
     return model.importsClosure()
         .flatMap((o) -> o.axioms(AxiomType.OBJECT_PROPERTY_ASSERTION))
         .anyMatch((opax) -> (opax.getSubject().equals(ind) && isProperty(TOP_OF, opax)
@@ -170,7 +182,7 @@ public class SkosTerminologyAbstractor {
   }
 
 
-  private Optional<Term> resolve(final OWLIndividual ind,
+  private Optional<Term> resolve(final OWLIndividual ind, OWLOntology model,
       final Map<URI, ConceptScheme<Term>> codeSystems) {
     return getOrCreateInSchemes(ind.asOWLNamedIndividual(),
         model,
@@ -204,7 +216,7 @@ public class SkosTerminologyAbstractor {
   public ConceptScheme<Term> toScheme(OWLNamedIndividual ind, OWLOntology model) {
     URI uri = getURI(ind);
     URI version = applyVersion(ind, model).orElse(uri);
-    String code = getCodedIdentifier(ind);
+    String code = getCodedIdentifier(ind, model);
 
     // TODO FIXME: check rdfs:label vs skos:prefLabel, and consider that getFragment does not pick /name vs #name
     String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
@@ -212,7 +224,7 @@ public class SkosTerminologyAbstractor {
     return new MutableConceptScheme(uri, version, code, label);
   }
 
-  private String getCodedIdentifier(OWLNamedIndividual ind) {
+  private String getCodedIdentifier(OWLNamedIndividual ind, OWLOntology model) {
     Set<OWLLiteral> notations = getDataValues(ind, model, NOTATION).collect(Collectors.toSet());
 
     if (!notations.isEmpty()) {
@@ -234,9 +246,22 @@ public class SkosTerminologyAbstractor {
             .toURI());
   }
 
+
   public Term toCode(OWLNamedIndividual ind,
       Collection<ConceptScheme<Term>> schemes,
       OWLOntology model) {
+    return toCode(ind, schemes, model, false);
+  }
+
+  public Term toTopCode(OWLNamedIndividual ind,
+      Collection<ConceptScheme<Term>> schemes,
+      OWLOntology model) {
+    return toCode(ind, schemes, model, true);
+  }
+
+  protected Term toCode(OWLNamedIndividual ind,
+      Collection<ConceptScheme<Term>> schemes,
+      OWLOntology model, boolean asTop) {
     if (schemes.size() >= 2) {
       throw new UnsupportedOperationException(
           "TODO: Unable to handle concepts in more than 2 schemes");
@@ -246,13 +271,17 @@ public class SkosTerminologyAbstractor {
 
     URI uri = getReferent(ind, model);
 
-    String code = getCodedIdentifier(ind);
+    String code = getCodedIdentifier(ind, model);
     String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
     String comment = getAnnotationValues(ind, model, COMMENT).findFirst().orElse(null);
 
     Term cd = new InternalTerm(ind.getIRI().toURI(), code, label, comment, uri, scheme);
     if (scheme != null) {
-      scheme.addConcept(cd);
+      if (asTop) {
+        scheme.setTop(cd);
+      } else {
+        scheme.addConcept(cd);
+      }
     }
     return cd;
   }
@@ -262,7 +291,7 @@ public class SkosTerminologyAbstractor {
   }
 
   private URI getReferent(OWLNamedIndividual ind, OWLOntology model) {
-    return getConceptOf(ind, model).orElse(getURI(ind));
+    return getConceptOf(ind, model).orElse(getDefinedBy(ind,model).orElse(getURI(ind)));
   }
 
   private Optional<URI> getConceptOf(OWLNamedIndividual ind, OWLOntology model) {
@@ -271,6 +300,12 @@ public class SkosTerminologyAbstractor {
         .findAny()
         .map(HasIRI.class::cast)
         .map((s) -> s.getIRI().toURI());
+  }
+
+  private Optional<URI> getDefinedBy(OWLNamedIndividual ind, OWLOntology model) {
+    return getAnnotationValues(ind, model, IS_DEFINED_BY)
+        .findAny()
+        .map(URI::create);
   }
 
   private URI getURI(HasIRI x) {
@@ -303,8 +338,7 @@ public class SkosTerminologyAbstractor {
   private Stream<String> getAnnotationValues(OWLNamedIndividual ind, OWLOntology model, IRI prop) {
     OWLAnnotationProperty p = model.getOWLOntologyManager().getOWLDataFactory()
         .getOWLAnnotationProperty(prop);
-    List<OWLAnnotation> allAnnos = EntitySearcher.getAnnotations(ind, model)
-        .collect(Collectors.toList());
+
     return EntitySearcher.getAnnotationObjects(ind, model.importsClosure(), p)
         .map(OWLAnnotation::getValue)
         .map(OWLAnnotationValue::asLiteral)
@@ -319,7 +353,7 @@ public class SkosTerminologyAbstractor {
   }
 
 
-  private void doReason(OWLOntology o) {
+  private OWLOntology doReason(OWLOntology o) {
     OWLReasonerFactory reasonerFactory = new Reasoner.ReasonerFactory();
     OWLReasoner owler = reasonerFactory.createReasoner(o);
 
@@ -328,6 +362,7 @@ public class SkosTerminologyAbstractor {
     OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
 
     reasoner.fillOntology(owlOntologyManager.getOWLDataFactory(), o);
+    return o;
   }
 
 
@@ -335,9 +370,19 @@ public class SkosTerminologyAbstractor {
 
     private Set<Term> concepts = new HashSet<>();
     private Map<Term, Set<Term>> parents = new HashMap<>();
+    private Term top;
 
     public MutableConceptScheme(URI uri, URI version, String code, String label) {
       super(code, label, uri, version);
+    }
+
+    public void setTop(Term top) {
+      this.top = top;
+    }
+
+    @Override
+    public Optional<Term> getTopConcept() {
+      return Optional.ofNullable(top);
     }
 
     public void addConcept(Term cd) {

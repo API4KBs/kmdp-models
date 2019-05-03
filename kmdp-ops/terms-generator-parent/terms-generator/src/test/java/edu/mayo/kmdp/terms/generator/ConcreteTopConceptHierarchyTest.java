@@ -49,9 +49,16 @@ public class ConcreteTopConceptHierarchyTest {
 
     assertTrue(list.stream()
         .anyMatch((t) -> ("http://test.foo#" + UUID.nameUUIDFromBytes("Parent".getBytes()))
-            .equals(t.getRef().toString())));
+            .equals(t.getConceptId().toString())));
     assertTrue(list.stream()
         .anyMatch((t) -> ("http://test.foo#" + UUID.nameUUIDFromBytes("Child".getBytes()))
+            .equals(t.getConceptId().toString())));
+
+    assertTrue(list.stream()
+        .anyMatch((t) -> ("http://org.test/labelsTest#Parent")
+            .equals(t.getRef().toString())));
+    assertTrue(list.stream()
+        .anyMatch((t) -> ("http://org.test/labelsTest#Child")
             .equals(t.getRef().toString())));
   }
 
@@ -82,11 +89,9 @@ public class ConcreteTopConceptHierarchyTest {
       Optional<OWLOntology> skosOntology = Optional
           .ofNullable(manager.addOntology(om.getBaseModel().getGraph()));
 
-      SkosTerminologyAbstractor abstractor = new SkosTerminologyAbstractor(skosOntology.get(),
-          false);
-
-      List<Term> list = abstractor.traverse()
-          .getConceptList(URI.create("http://test.foo#" + uuid("test.foo_Scheme")));
+      List<Term> list = new SkosTerminologyAbstractor().traverse(skosOntology.get(),
+          false)
+          .getConceptList(URI.create("http://test.foo#" + uuid("test.foo")));
 
       return list;
     } catch (Exception e) {

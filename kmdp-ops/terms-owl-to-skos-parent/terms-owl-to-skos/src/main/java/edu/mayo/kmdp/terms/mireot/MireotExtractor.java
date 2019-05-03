@@ -24,6 +24,7 @@ import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.jena.graph.NodeFactory;
@@ -99,6 +100,10 @@ public class MireotExtractor {
     EntityTypes type = cfg.getTyped(MireotParameters.ENTITY_TYPE);
     if (type == null || type == EntityTypes.UNKNOWN) {
       type = detectType(rootEntityUri.toString(),source);
+      if (type == null || type == EntityTypes.UNKNOWN) {
+        System.err.println("WARNING: Cannot Determine Entity Type during MIREOT-ing, URI is likely incorrect");
+        return new HashSet<>();
+      }
     }
     Integer min = cfg.getTyped(MireotParameters.MIN_DEPTH);
     Integer max = cfg.getTyped(MireotParameters.MAX_DEPTH);

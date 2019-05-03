@@ -16,9 +16,9 @@
 package org.omg.spec.api4kp._1_0.contrastors;
 
 import edu.mayo.kmdp.comparator.Contrastor;
-import edu.mayo.ontology.taxonomies.krprofile._2018._08.KRProfile;
+import edu.mayo.ontology.taxonomies.krprofile._2018._08.KnowledgeRepresentationLanguageProfile;
 
-public class ProfileContrastor extends Contrastor<KRProfile> {
+public class ProfileContrastor extends Contrastor<KnowledgeRepresentationLanguageProfile> {
 
   public static ProfileContrastor profileContrastor = new ProfileContrastor();
 
@@ -26,13 +26,13 @@ public class ProfileContrastor extends Contrastor<KRProfile> {
   }
 
   @Override
-  public boolean comparable(KRProfile first, KRProfile second) {
+  public boolean comparable(KnowledgeRepresentationLanguageProfile first, KnowledgeRepresentationLanguageProfile second) {
     // TODO need to consult the profile lattice (for a given language)
     return first != null && first == second;
   }
 
   @Override
-  public int compare(KRProfile o1, KRProfile o2) {
+  public int compare(KnowledgeRepresentationLanguageProfile o1, KnowledgeRepresentationLanguageProfile o2) {
     // this gets invoked only if the profiles are comparable, i.e. if they are the same
     return 0;
   }

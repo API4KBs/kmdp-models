@@ -27,8 +27,8 @@ import edu.mayo.kmdp.metadata.surrogate.KnowledgeExpression;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.rel.citationreltype._2018_02_16.CitationRelType;
-import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationRelType;
+import edu.mayo.ontology.taxonomies.kao.rel.citationreltype._2018_02_16.BibliographicCitationType;
+import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationType;
 import java.io.ByteArrayOutputStream;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
@@ -67,15 +67,15 @@ public class MetadataJSonTest {
         .withDescription("This is a test")
 
         .withRelated(new Derivative()
-                .withRel(DerivationRelType.Abdridgement_Of)
+                .withRel(DerivationType.Abdridgement_Of)
                 .withTgt(new KnowledgeExpression()
                     .withResourceId(uri("http://foo.bar/234"))),
             new Derivative()
-                .withRel(DerivationRelType.Derived_From)
+                .withRel(DerivationType.Derived_From)
                 .withTgt(new KnowledgeAsset()
                     .withResourceId(uri("http://foo.bar/234"))),
             new Citation()
-                .withRel(CitationRelType.Cites));
+                .withRel(BibliographicCitationType.Cites));
 
 //    Resource<KnowledgeAsset> axx = new Resource<>(ks);
 //    axx.add(new Link("http://foo.bax").withRel("goto")

@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.terms.mireot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
 import edu.mayo.kmdp.util.JenaUtil;
@@ -56,7 +57,7 @@ public class MireotTest extends edu.mayo.kmdp.terms.mireot.BaseMireotTest {
         URI.create(base + resource),
         cfg);
 
-    JenaUtil.toSystemOut(chunk.get());
+    assertTrue(chunk.isPresent());
     assertEquals(count, JenaUtil.sizeOf(chunk.get()));
   }
 

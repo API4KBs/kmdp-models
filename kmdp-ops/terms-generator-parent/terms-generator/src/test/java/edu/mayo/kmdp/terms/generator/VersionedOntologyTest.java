@@ -103,8 +103,8 @@ public class VersionedOntologyTest {
     Optional<OWLOntology> skosOntology = skosModel.map(Model::getGraph)
         .map(manager::addOntology);
 
-    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor(skosOntology.get(),
-        true).traverse();
+    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor().traverse(skosOntology.get(),
+        true);
 
     Collection<ConceptScheme<Term>> schemes = graph.getConceptSchemes();
     assertEquals(1, schemes.size());

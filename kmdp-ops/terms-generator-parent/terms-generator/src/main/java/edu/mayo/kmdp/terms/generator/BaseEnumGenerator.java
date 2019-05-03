@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import edu.mayo.kmdp.id.LexicalIdentifier;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
@@ -57,7 +58,7 @@ public class BaseEnumGenerator {
   }
 
 
-  protected Map<String, Object> getContext(ConceptScheme conceptScheme,
+  protected Map<String, Object> getContext(ConceptScheme<Term> conceptScheme,
       EnumGenerationConfig options,
       SkosTerminologyAbstractor.ConceptGraph graph) {
 
@@ -66,8 +67,7 @@ public class BaseEnumGenerator {
     Boolean jsonld = options.getTyped(EnumGenerationParams.WITH_JSONLD);
     Boolean json = options.getTyped(EnumGenerationParams.WITH_JSON);
 
-    String className = NameUtils.getTermCodeSystemName(conceptScheme.getLabel())
-        .replace("_Scheme", "");
+    String className = conceptScheme.getPublicName();
     String innerPackageName = getPackageName(conceptScheme, packageName);
 
     Map<String, Object> context = new HashMap<>();

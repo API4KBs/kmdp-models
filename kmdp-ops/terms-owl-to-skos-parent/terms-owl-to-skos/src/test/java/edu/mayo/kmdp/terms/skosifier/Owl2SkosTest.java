@@ -73,15 +73,15 @@ public class Owl2SkosTest extends TestBase {
     assertEquals(1, answers.size());
 
     assertTrue(answers.contains(a()
-        .with("B", NS + "#" + uuid("test_Scheme" + "_Top"))
+        .with("B", NS + "#" + uuid("test" + "_Top"))
         .with("C", NS + "#" + uuid("Klass"))
-        .with("S", NS + "#" + uuid("test_Scheme"))
+        .with("S", NS + "#" + uuid("test"))
         .with("K", "http://org.test/labelsTest#Klass")));
   }
 
 
   @Test
-  public void testReflexiveBroader() {
+  public void testIrreflexiveBroader() {
     String queryConcept = PREAMBLE +
         "SELECT ?C" +
         " " +
@@ -98,9 +98,8 @@ public class Owl2SkosTest extends TestBase {
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
     //System.out.println( answers );
-    assertEquals(1, answers.size());
+    assertEquals(0, answers.size());
 
-    assertTrue(answers.contains(a().with("C", NS + "#" + uuid("Klass"))));
   }
 
 
@@ -221,7 +220,7 @@ public class Owl2SkosTest extends TestBase {
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
     assertTrue(answers.contains(a().with("C", "http://my.edu/test#" + uuid("Parent"))
-        .with("B", "http://my.edu/test#" + uuid("test_Scheme_Top") )));
+        .with("B", "http://my.edu/test#" + uuid("test_Top") )));
 
     assertTrue(answers.contains(a().with("C", "http://my.edu/test#" + uuid("Child"))
         .with("B", "http://my.edu/test#" + uuid("Parent"))));
@@ -261,10 +260,10 @@ public class Owl2SkosTest extends TestBase {
         .with("B", "http://my.edu/test#" + uuid("dataProp"))));
 
     assertTrue(answers.contains(a().with("C", "http://my.edu/test#" + uuid("parentProp"))
-        .with("B", "http://my.edu/test#" + uuid("test_Scheme" + "_Top"))));
+        .with("B", "http://my.edu/test#" + uuid("test" + "_Top"))));
 
     assertTrue(answers.contains(a().with("C", "http://my.edu/test#" + uuid("dataProp"))
-        .with("B", "http://my.edu/test#" + uuid("test_Scheme" + "_Top"))));
+        .with("B", "http://my.edu/test#" + uuid("test" + "_Top"))));
 
   }
 
@@ -291,7 +290,7 @@ public class Owl2SkosTest extends TestBase {
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
     assertTrue(answers.contains(a().with("P", "the one Thing@en")
-        .with("B", "http://my.edu/test#" + uuid("test_Scheme" + "_Top"))
+        .with("B", "http://my.edu/test#" + uuid("test" + "_Top"))
         .with("C", "http://my.edu/test#" + uuid("Identi2"))
         .with("L", "the one Thing@en")));
 

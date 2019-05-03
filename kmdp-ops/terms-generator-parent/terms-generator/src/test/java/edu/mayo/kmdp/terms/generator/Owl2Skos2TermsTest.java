@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import static edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.SKOS_NAMESPACE;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
@@ -42,6 +41,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.semanticweb.owlapi.model.IRI;
@@ -71,7 +71,8 @@ public class Owl2Skos2TermsTest {
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, targetNS)
         .with(OWLtoSKOSTxParams.FLATTEN, false)
-        .with(OWLtoSKOSTxParams.ADD_IMPORTS, true);
+        .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME, "Cito")
+        .with(OWLtoSKOSTxParams.ADD_IMPORTS, false);
 
     Optional<Model> skosModel = new MireotExtractor()
         .fetch(Owl2Skos2TermsTest.class.getResourceAsStream(owlPath),
@@ -82,7 +83,7 @@ public class Owl2Skos2TermsTest {
     if (!skosModel.isPresent()) {
       fail("Unable to generate skos model");
     }
-    if (!manager.contains(IRI.create(SKOS_NAMESPACE))) {
+    if (!manager.contains(IRI.create(SKOS.uri))) {
 //			try {
 //				InputStream skos = Owl2Skos2TermsTest.class.getResourceAsStream( "/ontology/skos.rdf" );
 //				org.openrdf.model.Model skosModel = ModelFactory.createOntologyModel().read(  )
@@ -95,8 +96,8 @@ public class Owl2Skos2TermsTest {
     Optional<OWLOntology> skosOntology = skosModel.map(Model::getGraph)
         .map(manager::addOntology);
 
-    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor(skosOntology.get(),
-        true).traverse();
+    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor().traverse(skosOntology.get(),
+        true);
 
     new JavaEnumTermsGenerator().generate(graph,
         new EnumGenerationConfig()
@@ -113,7 +114,7 @@ public class Owl2Skos2TermsTest {
       assertTrue(scheme.isEnum());
 
       Field ns = scheme.getField("schemeID");
-      assertEquals(uuid("Cito_Scheme").toString(), ns.get(null));
+      assertEquals(uuid("Cito").toString(), ns.get(null));
 
       Term cd = Term.class.cast(scheme.getEnumConstants()[0]);
       assertEquals("cites", cd.getTag());

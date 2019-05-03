@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KRLanguage;
+import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -64,7 +64,7 @@ public class ServiceDescrClassGenerationTest {
 
   @Test
   public void testSerialization() {
-    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KRLanguage.BPMN_2_0_2);
+    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KnowledgeRepresentationLanguage.BPMN_2_0_2);
 
     Transrepresentator component = new Transrepresentator()
         .withInstanceId(uri("uri:urn:" + UUID.randomUUID()))
