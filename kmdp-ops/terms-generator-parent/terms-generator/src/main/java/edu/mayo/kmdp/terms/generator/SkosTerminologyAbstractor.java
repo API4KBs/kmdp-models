@@ -23,6 +23,7 @@ import edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme;
 import edu.mayo.kmdp.terms.impl.model.InternalTerm;
 import edu.mayo.kmdp.util.NameUtils;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -88,6 +89,7 @@ public class SkosTerminologyAbstractor {
   private static IRI iri(Resource res) {
     return IRI.create(res.getURI());
   }
+
   private static IRI iri(String res) {
     return IRI.create(res);
   }
@@ -130,9 +132,9 @@ public class SkosTerminologyAbstractor {
             && opax.getSubject().isIndividual() && opax.getObject().isNamed()
         )
         // ignore (mock) top concepts
-        .filter((opax) -> !isTopConcept(opax.getObject(),model))
+        .filter((opax) -> !isTopConcept(opax.getObject(), model))
         // ignore parents that are outside of the recognized schemes (missing assertion, or mireoted parent)
-        .filter((opax) -> isInScheme(opax.getObject(),model))
+        .filter((opax) -> isInScheme(opax.getObject(), model))
         // register rel
         .forEach((opax) -> addAncestor(resolve(opax.getSubject(), model, codeSystems)
                 .orElseThrow(IllegalStateException::new),
@@ -193,7 +195,7 @@ public class SkosTerminologyAbstractor {
   }
 
   private void addAncestor(Term sub, Term sup) {
-    InternalTerm subCD = (InternalTerm) sub;
+    ConceptTerm subCD = (ConceptTerm) sub;
     MutableConceptScheme subMCS = (MutableConceptScheme) subCD.getScheme();
 
     subMCS.addParent(sub, sup);
@@ -275,7 +277,7 @@ public class SkosTerminologyAbstractor {
     String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
     String comment = getAnnotationValues(ind, model, COMMENT).findFirst().orElse(null);
 
-    Term cd = new InternalTerm(ind.getIRI().toURI(), code, label, comment, uri, scheme);
+    Term cd = new ConceptTerm(ind.getIRI().toURI(), code, label, comment, uri, scheme);
     if (scheme != null) {
       if (asTop) {
         scheme.setTop(cd);
@@ -291,7 +293,7 @@ public class SkosTerminologyAbstractor {
   }
 
   private URI getReferent(OWLNamedIndividual ind, OWLOntology model) {
-    return getConceptOf(ind, model).orElse(getDefinedBy(ind,model).orElse(getURI(ind)));
+    return getConceptOf(ind, model).orElse(getDefinedBy(ind, model).orElse(getURI(ind)));
   }
 
   private Optional<URI> getConceptOf(OWLNamedIndividual ind, OWLOntology model) {
@@ -371,6 +373,7 @@ public class SkosTerminologyAbstractor {
     private Set<Term> concepts = new HashSet<>();
     private Map<Term, Set<Term>> parents = new HashMap<>();
     private Term top;
+    private Map<Term, List<Term>> closure;
 
     public MutableConceptScheme(URI uri, URI version, String code, String label) {
       super(code, label, uri, version);
@@ -402,7 +405,8 @@ public class SkosTerminologyAbstractor {
     }
 
     public Set<Term> getAncestors(Term cd) {
-      return Collections.unmodifiableSet(parents.get(cd));
+      return parents.containsKey(cd) ? Collections.unmodifiableSet(parents.get(cd))
+          : Collections.emptySet();
     }
 
     public Map<Term, Set<Term>> getAncestorsMap() {
@@ -415,18 +419,31 @@ public class SkosTerminologyAbstractor {
           .findAny();
     }
 
+    public void setClosure(Map<Term, List<Term>> closure) {
+      this.closure = closure;
+    }
 
+    public List<Term> getClosure(Term cd) {
+      return closure.containsKey(cd) ? Collections.unmodifiableList(closure.get(cd))
+          : Collections.emptyList();
+    }
   }
 
   public class ConceptGraph {
 
     private Map<URI, ConceptScheme<Term>> conceptSchemes;
     private Map<Term, Set<Term>> conceptHierarchy;
+    private Map<Term, List<Term>> closure;
 
     public ConceptGraph(Map<URI, ConceptScheme<Term>> conceptSchemes,
         Map<Term, Set<Term>> concepts) {
       this.conceptSchemes = new HashMap<>(conceptSchemes);
       this.conceptHierarchy = new HashMap<>(concepts);
+      this.closure = TransitiveClosure.closure(conceptHierarchy);
+      conceptSchemes.values().stream()
+          .filter(MutableConceptScheme.class::isInstance)
+          .map(MutableConceptScheme.class::cast)
+          .forEach((mcs) -> mcs.setClosure(closure));
     }
 
     public Map<Term, Set<Term>> getConceptHierarchy() {
@@ -438,10 +455,6 @@ public class SkosTerminologyAbstractor {
           conceptHierarchy);
     }
 
-    public Map<Term, List<Term>> getClosure() {
-      return TransitiveClosure.closure(conceptHierarchy);
-    }
-
     public Collection<ConceptScheme<Term>> getConceptSchemes() {
       return conceptSchemes.values();
     }
@@ -449,6 +462,27 @@ public class SkosTerminologyAbstractor {
     public Optional<ConceptScheme<Term>> getConceptScheme(URI schemeURI) {
       return Optional.ofNullable(conceptSchemes.get(schemeURI));
     }
+  }
+
+  public static class ConceptTerm extends InternalTerm {
+
+    public ConceptTerm(URI conceptURI, String code, String label, String comment, URI refUri,
+        ConceptScheme<Term> scheme) {
+      super(conceptURI, code, label, comment, refUri, scheme);
+    }
+
+    public String getTermConceptName() {
+      return edu.mayo.kmdp.util.NameUtils.getTermConceptName(tag, label);
+    }
+
+    public List<Term> getAncestors() {
+      return new ArrayList<>(((MutableConceptScheme) scheme).getAncestors(this));
+    }
+
+    public List<Term> getClosure() {
+      return new ArrayList<>(((MutableConceptScheme) scheme).getClosure(this));
+    }
+
   }
 
 }

@@ -314,7 +314,7 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   }
 
   private List<String> listFiles(File f) {
-    return Arrays.stream(f.listFiles())
+    return Arrays.stream(Util.ensureArray(f.listFiles(),File.class))
         .map(File::getAbsolutePath)
         .collect(Collectors.toList());
   }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings version="2.1"
+               xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <jaxb:bindings schemaLocation="{{typeName}}.xsd"
+                 node="/xs:schema">
+
+    <jaxb:bindings node="//xs:complexType[@name='{{typeName}}']">
+      <jaxb:class ref="{{#packageName}}{{packageName}}.{{/packageName}}{{typeName}}" />
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xs:simpleType[@name='{{typeName}}_Valueset']">
+      <jaxb:typesafeEnumClass ref="{{#packageName}}{{packageName}}.{{/packageName}}{{typeName}}" />
+
+      <xjc:javaType name="{{#packageName}}{{packageName}}.{{/packageName}}{{typeName}}"
+                    adapter="{{#packageName}}{{packageName}}.{{/packageName}}{{typeName}}.Adapter"/>
+    </jaxb:bindings>
+
+  </jaxb:bindings>
+</jaxb:bindings>

@@ -42,8 +42,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.mvel</groupId>
-      <artifactId>mvel2</artifactId>
+      <groupId>com.github.spullara.mustache.java</groupId>
+      <artifactId>compiler</artifactId>
     </dependency>
 
     <dependency>

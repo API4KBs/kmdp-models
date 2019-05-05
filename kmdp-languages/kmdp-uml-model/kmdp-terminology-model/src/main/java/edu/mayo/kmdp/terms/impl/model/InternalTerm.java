@@ -25,9 +25,9 @@ import java.net.URI;
 
 public class InternalTerm extends ConceptIdentifier {
 
-  private ConceptScheme<Term> scheme;
-  private String tag;
-  private String comment;
+  protected ConceptScheme<Term> scheme;
+  protected String tag;
+  protected String comment;
 
   public InternalTerm(URI conceptURI, String code, String label, String comment, URI refUri,
       ConceptScheme<Term> scheme) {

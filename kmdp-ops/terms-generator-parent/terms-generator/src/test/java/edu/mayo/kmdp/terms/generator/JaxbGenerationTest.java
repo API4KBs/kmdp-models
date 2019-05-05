@@ -25,18 +25,23 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static java.util.Collections.singletonList;
+import static org.apache.jena.vocabulary.AS.startIndex;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
+import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.kmdp.util.XPathUtil;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -47,8 +52,12 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.validation.Schema;
+import org.apache.jena.base.Sys;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -57,6 +66,8 @@ import org.omg.spec.api4kp._1_0.identifiers.ObjectFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 @EnableRuleMigrationSupport
 public class JaxbGenerationTest {
@@ -150,6 +161,74 @@ public class JaxbGenerationTest {
       fail(e.getMessage());
     }
   }
+
+
+  @Test
+  public void testXSDConfig() {
+    XSDEnumTermsGenerator xsdGen = new XSDEnumTermsGenerator();
+    ConceptGraph conceptGraph = doAbstract();
+
+    assertNotNull(conceptGraph);
+    assertNotNull(conceptGraph.getConceptSchemes());
+    assertFalse(conceptGraph.getConceptSchemes().isEmpty());
+
+    ConceptScheme<Term> scheme = conceptGraph.getConceptSchemes().iterator().next();
+    Map<String, Object> context = xsdGen.getContext(scheme, new EnumGenerationConfig(), conceptGraph);
+    String xsd = xsdGen.fromTemplate("concepts-xsd",context);
+
+    Optional<Document> odox = XMLUtil.loadXMLDocument(xsd.getBytes());
+    assertTrue(odox.isPresent());
+    Document dox = odox.get();
+
+    Pattern p = Pattern.compile("xs:enumeration", Pattern.LITERAL);
+    Matcher m = p.matcher(xsd);
+    int j = 0;
+    while (m.find()) {
+      j = ++j;
+    }
+    assertEquals(3, j);
+  }
+
+
+  @Test
+  public void testJaxbConfig() {
+    XSDEnumTermsGenerator xsdGen = new XSDEnumTermsGenerator();
+    ConceptGraph conceptGraph = doAbstract();
+
+    assertNotNull(conceptGraph);
+    assertNotNull(conceptGraph.getConceptSchemes());
+    assertFalse(conceptGraph.getConceptSchemes().isEmpty());
+
+    ConceptScheme<Term> scheme = conceptGraph.getConceptSchemes().iterator().next();
+    Map<String, Object> context = xsdGen.getContext(scheme, new EnumGenerationConfig(), conceptGraph);
+    String jxb = xsdGen.fromTemplate("concepts-xjb",context);
+
+    Optional<Document> jdox = XMLUtil.loadXMLDocument(jxb.getBytes());
+    assertTrue(jdox.isPresent());
+  }
+
+
+  @Test
+  public void testJava() {
+    XSDEnumTermsGenerator xsdGen = new XSDEnumTermsGenerator();
+    ConceptGraph conceptGraph = doAbstract();
+
+    assertNotNull(conceptGraph);
+    assertNotNull(conceptGraph.getConceptSchemes());
+    assertFalse(conceptGraph.getConceptSchemes().isEmpty());
+
+    ConceptScheme<Term> scheme = conceptGraph.getConceptSchemes().iterator().next();
+    Map<String, Object> context = xsdGen.getContext(scheme,
+        new EnumGenerationConfig()
+            .with(EnumGenerationParams.WITH_JAXB, true)
+            .with(EnumGenerationParams.WITH_JSON, true)
+            .with(EnumGenerationParams.WITH_JSONLD, true),
+        conceptGraph);
+    String java = xsdGen.fromTemplate("concepts-java",context);
+
+    assertTrue(java.contains("package test.generator.v20180210;"));
+  }
+
 
 
   private File compile() {

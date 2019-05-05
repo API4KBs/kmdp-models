@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema id="@{conceptScheme.label}"
-           targetNamespace="@{ edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.versionId) }"
+<xs:schema id="{{conceptScheme.label}}"
+           targetNamespace="{{namespace}}"
            elementFormDefault="qualified"
-           xmlns="@{ edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.versionId) }"
+           xmlns="{{namespace}}"
            xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import namespace="http://www.omg.org/spec/API4KP/1.0/identifiers"/>
 
-    <xs:complexType name="@{typeName}">
+    <xs:complexType name="{{typeName}}">
       <xs:complexContent>
         <xs:extension base="id:ConceptIdentifier">
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
 
-    <xs:simpleType name="@{typeName}_Valueset">
+    <xs:simpleType name="{{typeName}}_Valueset">
       <xs:restriction base="xs:string">
-      @foreach{ concept : concepts }
-        <xs:enumeration value="@{ concept.ref }"/>
-      @end{}
+      {{#concepts}}
+        <xs:enumeration value="{{ref}}"/>
+      {{/concepts}}
       </xs:restriction>
     </xs:simpleType>
 </xs:schema>

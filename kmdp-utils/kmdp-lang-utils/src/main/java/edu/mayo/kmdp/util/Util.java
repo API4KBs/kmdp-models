@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -55,6 +56,11 @@ public class Util {
         (x) -> x[1],
         (x, y) -> x,
         LinkedHashMap::new));
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> T[] ensureArray(T[] array, Class<T> type) {
+    return array == null ? (T[]) Array.newInstance(type,0) : array;
   }
 
   public static Optional<ByteArrayOutputStream> printOut(ByteArrayOutputStream os) {
@@ -108,8 +114,8 @@ public class Util {
 
   public static void processDir(File root, File dir, BiConsumer<File, File> processor) {
     if (dir != null && dir.isDirectory()) {
-      File[] files = dir.listFiles();
-      if (files != null && files.length > 0) {
+      File[] files = Util.ensureArray(dir.listFiles(),File.class);
+      if (files.length > 0) {
         for (File f : files) {
           if (f.isDirectory()) {
             processDir(root, f, processor);

@@ -27,11 +27,6 @@ import java.util.Map;
 public class XSDEnumTermsGenerator extends BaseEnumGenerator {
 
   public void generate(SkosTerminologyAbstractor.ConceptGraph conceptGraph,
-      File outputDir) {
-    this.generate(conceptGraph, new EnumGenerationConfig(), outputDir);
-  }
-
-  public void generate(SkosTerminologyAbstractor.ConceptGraph conceptGraph,
       EnumGenerationConfig options,
       File outputDir) {
     outputDir.mkdirs();

@@ -40,7 +40,6 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import javax.validation.constraints.NotNull;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.jvnet.mjiip.v_2_2.XJC22Mojo;
 
 public abstract class CodeGenTestBase {
@@ -71,7 +70,7 @@ public abstract class CodeGenTestBase {
 
     boolean success = true;
     for (Diagnostic diag : diagnostics) {
-//      System.out.println(diag.getKind() + " : " + diag);
+      System.out.println(diag.getKind() + " : " + diag);
       if (diag.getKind() == Diagnostic.Kind.ERROR) {
         success = false;
       }
@@ -102,7 +101,7 @@ public abstract class CodeGenTestBase {
   }
 
   public static void explore(File dir, List<File> files) {
-    for (File f : dir.listFiles()) {
+    for (File f : Util.ensureArray(dir.listFiles(),File.class)) {
       if (f.getName().endsWith(".java")) {
         files.add(f);
       }

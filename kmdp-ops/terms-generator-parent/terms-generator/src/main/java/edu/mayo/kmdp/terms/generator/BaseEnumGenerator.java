@@ -15,46 +15,51 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import edu.mayo.kmdp.id.LexicalIdentifier;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
+import edu.mayo.kmdp.terms.impl.model.InternalTerm;
+import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
-import org.mvel2.templates.CompiledTemplate;
-import org.mvel2.templates.SimpleTemplateRegistry;
-import org.mvel2.templates.TemplateCompiler;
-import org.mvel2.templates.TemplateRuntime;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BaseEnumGenerator {
 
-  protected SimpleTemplateRegistry registry;
+  protected static Map<String,Mustache> registry = new HashMap<>();
 
-  public BaseEnumGenerator() {
-    registry = new SimpleTemplateRegistry();
+  static {
     prepareTemplates();
   }
 
-  private void prepareTemplates() {
-    registry.addNamedTemplate("concepts-java",
-        TemplateCompiler.compileTemplate(getResource("concepts-java.mvel")));
-    registry.addNamedTemplate("concepts-xsd",
-        TemplateCompiler.compileTemplate(getResource("concepts-xsd.mvel")));
-    registry.addNamedTemplate("concepts-xjb",
-        TemplateCompiler.compileTemplate(getResource("concepts-xjb.mvel")));
-    registry.addNamedTemplate("catalog",
-        TemplateCompiler.compileTemplate(getResource("catalog.mvel")));
+  public BaseEnumGenerator() {
   }
 
-  private InputStream getResource(String templ) {
-    return JavaEnumTermsGenerator.class.getResourceAsStream("/templates/" + templ);
+  private static void prepareTemplates() {
+    registry.put("concepts-java",
+        getResource("concepts-java.mustache"));
+    registry.put("concepts-xsd",
+        getResource("concepts-xsd.mustache"));
+    registry.put("concepts-xjb",
+        getResource("concepts-xjb.mustache"));
+    registry.put("catalog",
+        getResource("catalog.mustache"));
+  }
+
+  private static Mustache getResource(String templ) {
+    String s = FileUtil.read(BaseEnumGenerator.class.getResourceAsStream("/templates/" + templ))
+        .orElse("Mustache Template " + templ + " not found");
+    MustacheFactory mf = new DefaultMustacheFactory();
+    return mf.compile(new StringReader(s),templ);
   }
 
 
@@ -72,11 +77,9 @@ public class BaseEnumGenerator {
 
     Map<String, Object> context = new HashMap<>();
     context.put("conceptScheme", conceptScheme);
-    context.put("ancestors",
-        ((SkosTerminologyAbstractor.MutableConceptScheme) conceptScheme).getAncestorsMap());
-    context.put("closure", graph.getClosure());
     context.put("concepts", graph.getConceptList(conceptScheme.getId()));
     context.put("typeName", className);
+    context.put("namespace", edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.getVersionId()));
     context.put("packageName", innerPackageName);
     context.put("termsProvider", options.get(EnumGenerationParams.TERMS_PROVIDER).get());
     context.put("implClassName",
@@ -99,10 +102,19 @@ public class BaseEnumGenerator {
 
 
   protected String fromTemplate(String templateId, Map<String, Object> context) {
-    CompiledTemplate compiled = registry.getNamedTemplate(templateId);
-
-    return (String) TemplateRuntime.execute(compiled, this, context);
+    StringWriter sw = new StringWriter();
+    Mustache m = registry.get(templateId);
+    if (m == null) {
+      return "Mustache Template " + templateId + " not found";
+    }
+    try {
+      m.execute(sw, context).flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return sw.toString();
   }
+
 
 
   protected File getFile(File outputDir, Map<String, Object> context, String ext) {
