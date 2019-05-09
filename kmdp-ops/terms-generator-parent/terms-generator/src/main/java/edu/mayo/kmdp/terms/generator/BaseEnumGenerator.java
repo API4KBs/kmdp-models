@@ -15,27 +15,24 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
+import com.samskivert.mustache.Mustache;
+import com.samskivert.mustache.Template;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
-import edu.mayo.kmdp.terms.impl.model.InternalTerm;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BaseEnumGenerator {
 
-  protected static Map<String,Mustache> registry = new HashMap<>();
+  protected static Map<String, Template> registry = new HashMap<>();
 
   static {
     prepareTemplates();
@@ -55,11 +52,10 @@ public class BaseEnumGenerator {
         getResource("catalog.mustache"));
   }
 
-  private static Mustache getResource(String templ) {
+  private static Template getResource(String templ) {
     String s = FileUtil.read(BaseEnumGenerator.class.getResourceAsStream("/templates/" + templ))
         .orElse("Mustache Template " + templ + " not found");
-    MustacheFactory mf = new DefaultMustacheFactory();
-    return mf.compile(new StringReader(s),templ);
+    return Mustache.compiler().compile(s);
   }
 
 
@@ -103,15 +99,11 @@ public class BaseEnumGenerator {
 
   protected String fromTemplate(String templateId, Map<String, Object> context) {
     StringWriter sw = new StringWriter();
-    Mustache m = registry.get(templateId);
+    Template m = registry.get(templateId);
     if (m == null) {
       return "Mustache Template " + templateId + " not found";
     }
-    try {
-      m.execute(sw, context).flush();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    m.execute(context, sw);
     return sw.toString();
   }
 
