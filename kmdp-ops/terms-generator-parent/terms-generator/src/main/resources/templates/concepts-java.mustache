@@ -32,11 +32,13 @@ import {{implClassName}};
 public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
 
    {{#concepts}}
+
+    /* {{comment}} */
     {{#jaxb}}@javax.xml.bind.annotation.XmlEnumValue("{{tag}}"){{/jaxb}}
     {{#jsonld}}@de.escalon.hypermedia.hydra.mapping.Expose( "{{ref}}" ){{/jsonld}}
     {{termConceptName}}( "{{conceptId}}", "{{tag}}", "{{label}}", "{{ref}}",
         new Term[] { {{#ancestors}} {{typeName}}.{{termConceptName}}, {{/ancestors}} },
-        new Term[] { {{#closure}} {{typeName}}.{{termConceptName}}, {{/closure}} } ),
+        new Term[] { {{#closure}} {{typeName}}.{{termConceptName}}, {{/closure}} } ) {{^-last}}, {{/-last}}
    {{/concepts}};
 
 

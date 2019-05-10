@@ -17,6 +17,7 @@ package edu.mayo.kmdp.terms.impl.model;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.util.Util;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
@@ -34,7 +35,7 @@ public class InternalTerm extends ConceptIdentifier {
     this.setRef(refUri);
     this.setTag(code);
     this.setLabel(label);
-    this.setComment(comment);
+    this.setComment(Util.isEmpty(comment) ? label : comment);
     this.scheme = scheme;
     this.conceptId = conceptURI;
     if (scheme != null) {
