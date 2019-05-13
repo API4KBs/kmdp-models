@@ -25,6 +25,7 @@ import java.util.UUID;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.PrintUtil;
 import org.apache.jena.vocabulary.DC_11;
+import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.BeforeAll;
@@ -81,8 +82,10 @@ public class AnnotationsTest extends TestBase {
 
     Model m = run(singletonList("/ontology/singleClassWithAnnos.owl"), cfg);
 
-    String id = UUID.nameUUIDFromBytes("id0001".getBytes()).toString();
+    String id = UUID.nameUUIDFromBytes("id0001-v0042".getBytes()).toString();
     String subj = NS + "#" + id;
+
+    m.write(System.out);
 
     assertTrue(m.contains(
         dat_a(subj,
@@ -120,6 +123,10 @@ public class AnnotationsTest extends TestBase {
         dat_a(subj,
             SKOS.notation,
             "id0001")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            OWL2.versionInfo,
+            "v0042")));
 
   }
 

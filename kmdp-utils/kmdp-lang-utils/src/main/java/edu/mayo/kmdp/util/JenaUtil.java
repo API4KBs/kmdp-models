@@ -15,23 +15,10 @@
  */
 package edu.mayo.kmdp.util;
 
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.rdf.model.impl.PropertyImpl;
-import org.apache.jena.rdf.model.impl.ResourceImpl;
-import org.apache.jena.rdf.model.impl.StatementImpl;
-import org.apache.jena.util.FileManager;
-import org.apache.jena.util.PrintUtil;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
+import static org.apache.jena.rdf.model.ResourceFactory.createStringLiteral;
 
 import java.io.File;
 import java.io.InputStream;
@@ -45,6 +32,21 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.impl.StatementImpl;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.util.PrintUtil;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
@@ -172,23 +174,44 @@ public abstract class JenaUtil {
   }
 
   public static Statement obj_a(String subjURI, String propURI, String objURI) {
-    return new StatementImpl(new ResourceImpl(subjURI),
-        new PropertyImpl(propURI),
-        new ResourceImpl(objURI));
+    return createStatement(createResource(subjURI),
+        createProperty(propURI),
+        createResource(objURI));
   }
 
   public static Statement obj_a(String subjURI, Property prop, Resource obj) {
-    return new StatementImpl(new ResourceImpl(subjURI), prop, obj);
+    return createStatement(createResource(subjURI), prop, obj);
+  }
+
+  public static Statement obj_a(String subjURI, Property prop, String obj) {
+    return createStatement(createResource(subjURI), prop, createResource(obj));
   }
 
   public static Statement dat_a(String subjURI, String propURI, String val) {
-    return new StatementImpl(new ResourceImpl(subjURI),
-        new PropertyImpl(propURI),
-        ResourceFactory.createStringLiteral(val));
+    return createStatement(createResource(subjURI),
+        createProperty(propURI),
+        createStringLiteral(val));
   }
   public static Statement dat_a(String subjURI, Property prop, String val) {
-    return new StatementImpl(new ResourceImpl(subjURI),
+    return createStatement(createResource(subjURI),
         prop,
-        ResourceFactory.createStringLiteral(val));
+        createStringLiteral(val));
+  }
+
+  public static Statement obj_a(Resource subj, Property prop, String val) {
+    return createStatement(subj,
+        prop,
+        createResource(val));
+  }
+  public static Statement obj_a(Resource subj, Property prop, Resource obj) {
+    return createStatement(subj,
+        prop,
+        obj);
+  }
+
+  public static Statement dat_a(Resource subj, Property prop, String val) {
+    return createStatement(subj,
+        prop,
+        createStringLiteral(val));
   }
 }

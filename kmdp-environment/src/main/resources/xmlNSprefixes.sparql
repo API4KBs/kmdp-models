@@ -3,7 +3,7 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX know: <http://www.omg.org/spec/API4KP/core#>
+PREFIX know: <https://www.omg.org/spec/API4KP/api4kp/>
 PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX w3c: <http://www.w3.org/TR/>
@@ -16,13 +16,15 @@ WHERE {
             dc:identifier ?P;
             dol:supportsSerialization ?Ser.
 
-        ?Ser dct:source ?NS;
-            know:associated-to w3c:xml11.
+        ?Ser owl:sameAs ?NS;
+            know:depends-on ?MF.
+
+        ?MF dc:source "http://www.w3.org/TR/xml11".
   }
   UNION
   {
         ?L a know:Lexicon;
             dc:identifier ?P;
-            dct:source ?NS.
+            owl:sameAs ?NS.
   }
 }

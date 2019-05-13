@@ -49,10 +49,10 @@ public class VocabularyTest {
   @Test
   public void testGeneratedEnums() {
     assertNotNull(KnowledgeRepresentationLanguage.DMN_1_1);
-    assertNotNull(KnowledgeRepresentationLanguageProfile.OWL_2_Full);
+    assertNotNull(KnowledgeRepresentationLanguageProfile.OWL2_Full);
     assertNotNull(SerializationFormat.JSON);
-    assertNotNull(KnowledgeRepresentationLanguageSerialization.DMN_XML);
-    assertNotNull(Lexicon.LOINC_US);
+    assertNotNull(KnowledgeRepresentationLanguageSerialization.DMN_1_1_XML_Syntax);
+    assertNotNull(Lexicon.LOINC);
     assertNotNull(Language.Italian);
     assertNotNull(DerivationType.Derived_From);
     assertNotNull(VariantType.Rearrangement_Of);

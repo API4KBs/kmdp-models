@@ -151,7 +151,7 @@ public class SelectResourcesTest extends BaseMireotTest {
   @Test
   public void testExtractIndividuals3() {
 
-    String base = "http://edu.mayo.kmdp/registry";
+    String base = "http://ontology.mayo.edu/KMDP/registry/";
 
     MireotConfig cfg = new MireotConfig()
         .with(MireotParameters.BASE_URI, base)

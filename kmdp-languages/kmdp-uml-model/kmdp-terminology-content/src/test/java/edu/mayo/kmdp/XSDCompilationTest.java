@@ -40,6 +40,8 @@ public class XSDCompilationTest {
     assertEquals("http://ckm.ontology.mayo.edu/ontology/KAO#ClinicalRule", kat.getRef().toString());
 
     KnowledgeRepresentationLanguage dmn = KnowledgeRepresentationLanguage.DMN_1_1;
-    assertEquals("https://www.omg.org/spec/DMN/1.1", dmn.getRef().toString());
+    KnowledgeRepresentationLanguage dmn2 = KnowledgeRepresentationLanguage.DMN_1_2;
+    assertEquals("https://www.omg.org/spec/DMN/1.1/", dmn.getRef().toString());
+    assertEquals("https://www.omg.org/spec/DMN/1.2/", dmn2.getRef().toString());
   }
 }

@@ -64,7 +64,7 @@ public class ServiceDescrClassGenerationTest {
 
   @Test
   public void testSerialization() {
-    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KnowledgeRepresentationLanguage.BPMN_2_0_2);
+    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KnowledgeRepresentationLanguage.BPMN_2_0);
 
     Transrepresentator component = new Transrepresentator()
         .withInstanceId(uri("uri:urn:" + UUID.randomUUID()))

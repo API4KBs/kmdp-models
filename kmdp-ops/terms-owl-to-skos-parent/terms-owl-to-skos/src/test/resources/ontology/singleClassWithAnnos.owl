@@ -106,6 +106,7 @@
         <rdfs:comment>comment</rdfs:comment>
         <rdfs:isDefinedBy>http://org.test/labelsTest</rdfs:isDefinedBy>
         <rdfs:label>My Class</rdfs:label>
+        <owl:versionInfo>v0042</owl:versionInfo>
         <skos:altLabel>alternative</skos:altLabel>
         <skos:definition>definition</skos:definition>
         <skos:example>example</skos:example>

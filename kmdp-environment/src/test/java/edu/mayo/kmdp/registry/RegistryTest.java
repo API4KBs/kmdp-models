@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.registry;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.XMLConstants;
@@ -27,31 +28,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class RegistryTest {
+public class RegistryTest extends RegistryTestBase {
 
 
   @Test
   public void testNamespaceMap() {
 
-    assertEquals("http://kmdp.mayo.edu/metadata/annotations", getNS("ann"));
-    assertEquals("http://kmdp.mayo.edu/metadata/surrogate", getNS("surr"));
     assertEquals(XMLConstants.XML_NS_URI, getNS(XMLConstants.XMLNS_ATTRIBUTE));
     assertEquals(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI, getNS("xsi"));
-    assertEquals(XMLConstants.W3C_XML_SCHEMA_NS_URI, getNS("xsd"));
     assertEquals("urn:hl7-org:knowledgeartifact:r1", getNS("knart"));
     assertEquals("urn:hl7-org:elm:r1", getNS("elm"));
-    assertEquals("http://www.w3.org/1999/xhtml", getNS("xhtml"));
-    assertEquals("urn:hl7-org:cdsdt:r2", getNS("dt"));
-
+    assertEquals("http://kmdp.mayo.edu/metadata/surrogate", getNS("surr"));
+    assertEquals("http://kmdp.mayo.edu/metadata/annotations", getNS("ann"));
   }
 
   @Test
   public void testSchemas() {
 
     assertEquals("http://www.omg.org/spec/DMN/20151101/dmn.xsd",
-        getSchema("https://www.omg.org/spec/DMN/1.1"));
+        getSchema("https://www.omg.org/spec/DMN/1.1/"));
     assertEquals("http://www.omg.org/spec/CMMN/20151109/MODEL",
-        getSchema("https://www.omg.org/spec/CMMN/1.1"));
+        getSchema("https://www.omg.org/spec/CMMN/1.1/"));
     assertEquals("urn:hl7-org:knowledgeartifact:r1", getSchema("http://hl7.org/KNART/1.3"));
     assertEquals("urn:hl7-org:elm:r1", getSchema("http://hl7.org/ELM/1.2"));
 

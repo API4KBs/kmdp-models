@@ -20,14 +20,13 @@ import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.function.FunctionBase;
 import org.apache.jena.sparql.function.FunctionBase1;
+import org.apache.jena.sparql.function.FunctionBase2;
 import org.apache.jena.sparql.function.FunctionRegistry;
 
 public abstract class ConverterInitBase {
@@ -67,15 +66,20 @@ public abstract class ConverterInitBase {
   }
 
 
-  public static class UuidFrom extends FunctionBase1 {
+  public static class UuidFrom extends FunctionBase2 {
 
     public UuidFrom() {
     }
 
     @Override
-    public NodeValue exec(NodeValue nodeValue) {
-      return NodeValue.makeString(Util.uuid(nodeValue.asString()).toString());
+    public NodeValue exec(NodeValue nodeValue, NodeValue nodeValue1) {
+      String cd = nodeValue.asString();
+      if (!Util.isEmpty(nodeValue1.asString())) {
+        cd = cd + "-" + nodeValue1.asString();
+      }
+      return NodeValue.makeString(Util.uuid(cd).toString());
     }
+
   }
 
   public static class LocalName extends FunctionBase1 {

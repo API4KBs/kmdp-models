@@ -85,7 +85,7 @@ public class ServiceDescrCompilationTest {
       assertTrue(asTrp.isPresent());
 
       Transrepresentator anew = asTrp.get();
-      assertEquals(KnowledgeRepresentationLanguage.BPMN_2_0_2,
+      assertEquals(KnowledgeRepresentationLanguage.BPMN_2_0,
           anew.getTxions().get(0).getConsumes().get(0).getLanguage());
 
       Transrepresentator t2 = new Transrepresentator();
@@ -149,7 +149,7 @@ public class ServiceDescrCompilationTest {
 
 
   private void init(Transrepresentator component, Transrepresentation rep) {
-    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KnowledgeRepresentationLanguage.BPMN_2_0_2);
+    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KnowledgeRepresentationLanguage.BPMN_2_0);
     component
         .withInstanceId(uri("uri:urn:" + UUID.randomUUID()))
         .withTxions(new Transrepresentation()

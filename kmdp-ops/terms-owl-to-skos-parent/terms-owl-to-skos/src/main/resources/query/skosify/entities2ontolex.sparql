@@ -45,8 +45,10 @@ WHERE {
             OPTIONAL { ?X dc:identifier ?dcId. }
             OPTIONAL { ?X dct:identifier ?dctId. }
             OPTIONAL { ?Code lcc-lr:identifies ?X. ?Code lcc-lr:hasTag ?Tag. }
+            OPTIONAL { ?X owl:versionInfo ?VersionTag. }
+              BIND( COALESCE( ?VersionTag, "" ) as ?VTag ).
             BIND ( URI( CONCAT( STR( tgt: ),
-                            f:uuidFrom( COALESCE( ?dcId, ?dctId, ?Tag, f:localName(?X) ) ) ) ) as ?Cid ).
+                            f:uuidFrom( COALESCE( ?dcId, ?dctId, ?Tag, f:localName(?X) ), ?VTag ) ) ) as ?Cid ).
 
         # Manage Labels asserted natively
         BIND( afn:localname( ?X ) as ?localName )

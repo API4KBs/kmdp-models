@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
 import org.semanticweb.HermiT.Reasoner;
@@ -76,6 +77,7 @@ public class SkosTerminologyAbstractor {
   static final IRI TOP_OF = iri(SKOS.topConceptOf);
   static final IRI BROADER = iri(SKOS.broader);
   static final IRI BROADER_TRANSITIVE = iri(SKOS.broaderTransitive);
+  static final IRI VERSION = iri(OWL2.versionInfo);
 
   static final IRI DENOTES = iri("http://www.w3.org/ns/lemon/ontolex#denotes");
   static final IRI IS_CONCEPT_OF = iri("http://www.w3.org/ns/lemon/ontolex#isConceptOf");
@@ -228,13 +230,15 @@ public class SkosTerminologyAbstractor {
 
   private String getCodedIdentifier(OWLNamedIndividual ind, OWLOntology model) {
     Set<OWLLiteral> notations = getDataValues(ind, model, NOTATION).collect(Collectors.toSet());
+    Optional<String> version = getAnnotationValues(ind, model, VERSION).findFirst().map(Object::toString);
 
     if (!notations.isEmpty()) {
-      return notations.stream()
+      String code = notations.stream()
           .filter((lit) -> dceUUID.equals(lit.getDatatype().getIRI()))
           .findFirst()
           .map(OWLLiteral::getLiteral)
           .orElse(notations.iterator().next().getLiteral());
+      return version.map((ver) -> code + "-" + ver).orElse(code);
     } else {
       return getAnnotationValues(ind, model, OID).findFirst()
           .orElse(getURI(ind).getFragment());
@@ -293,7 +297,9 @@ public class SkosTerminologyAbstractor {
   }
 
   private URI getReferent(OWLNamedIndividual ind, OWLOntology model) {
-    return getConceptOf(ind, model).orElse(getDefinedBy(ind, model).orElse(getURI(ind)));
+    return getConceptOf(ind, model)
+        .orElse(getDefinedBy(ind, model)
+            .orElse(getURI(ind)));
   }
 
   private Optional<URI> getConceptOf(OWLNamedIndividual ind, OWLOntology model) {

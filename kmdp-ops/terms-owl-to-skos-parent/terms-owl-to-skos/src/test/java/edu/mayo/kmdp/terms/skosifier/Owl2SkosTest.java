@@ -287,6 +287,8 @@ public class Owl2SkosTest extends TestBase {
         .with(OWLtoSKOSTxParams.MODE, Modes.FULL);
     Model result = run(singletonList("/ontology/individuals.owl"), cfg);
 
+    //result.write(System.out);
+
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
     assertTrue(answers.contains(a().with("P", "the one Thing@en")

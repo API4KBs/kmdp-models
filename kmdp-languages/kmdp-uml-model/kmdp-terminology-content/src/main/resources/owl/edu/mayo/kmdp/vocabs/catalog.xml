@@ -40,7 +40,7 @@
 
   <uri id="API4KP-Registry"
     uri="/ontologies/API4KP/informative/api4kp-registry.owl"
-    name="http://edu.mayo.kmdp/registry"/>
+    name="http://ontology.mayo.edu/KMDP/registry/"/>
 
   <uri id="LangCodes"
     uri="LanguageCodes.rdf"

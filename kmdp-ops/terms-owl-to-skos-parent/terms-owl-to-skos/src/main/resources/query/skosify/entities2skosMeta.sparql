@@ -27,6 +27,7 @@ CONSTRUCT {
     skos:note ?Note;
     skos:example ?Example;
 
+    owl:versionInfo ?VersionTag;
     dc:identifier ?Id.
 
 }
@@ -41,9 +42,11 @@ WHERE {
             OPTIONAL { ?X dc:identifier ?dcId. }
             OPTIONAL { ?X dct:identifier ?dctId. }
             OPTIONAL { ?Code lcc-lr:identifies ?X. ?Code lcc-lr:hasTag ?Tag. }
+            OPTIONAL { ?X owl:versionInfo ?VersionTag. }
+              BIND( COALESCE( ?VersionTag, "" ) as ?VTag ).
 
             BIND ( COALESCE( ?dcId, ?dctId, ?Tag, f:localName(?X) ) as ?Notation )
-            BIND ( f:uuidFrom( ?Notation ) as ?Id )
+            BIND ( f:uuidFrom( ?Notation, ?VTag ) as ?Id )
             BIND ( URI( CONCAT( STR( tgt: ), ?Id ) ) as ?Cid )
 
         #For each proper ontology entity

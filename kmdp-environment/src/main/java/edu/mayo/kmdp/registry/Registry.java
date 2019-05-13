@@ -15,15 +15,8 @@
  */
 package edu.mayo.kmdp.registry;
 
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-
-import java.io.IOException;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -31,49 +24,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Scanner;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 
 public class Registry {
 
-  private static final String path = "/ontologies/API4KP/informative/api4kp-registry.owl";
+  public static final String path = "/ontologies/API4KP/informative/api4kp-registry.owl";
 
   public static final String MAYO_ASSETS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/assets/";
 
   private static Model registry;
-  private static Map<String, String> prefixToNamespaceMap = new HashMap<>();
+
+
+
+  private static BiMap<String, String> prefixToNamespaceMap = HashBiMap.create();
   private static Map<String, String> languagSchemas = new HashMap<>();
 
 
   static {
-    try {
-      String xmlPrefixesQry = new Scanner(
-          Registry.class.getResource("/xmlNSprefixes.sparql").openStream(),
-          "UTF-8").useDelimiter("\\A").next();
-      String xmlSchemasQry = new Scanner(
-          Registry.class.getResource("/xmlSchemas.sparql").openStream(),
-          "UTF-8").useDelimiter("\\A").next();
-      registry = ModelFactory.createDefaultModel().read(Registry.class.getResourceAsStream(path),
-          "http://edu.mayo.kmdp/registry");
+    String xmlPrefixesQry = RegistryUtil.read("/xmlNSprefixes.sparql");
+    String xmlSchemasQry = RegistryUtil.read("/xmlSchemas.sparql");
 
-      Query query = QueryFactory.create(xmlPrefixesQry);
-      QueryExecution qexec = QueryExecutionFactory.create(query, registry);
-      ResultSet rs = qexec.execSelect();
-      rs.forEachRemaining((qs) -> {
-        prefixToNamespaceMap.put(qs.get("?P").asLiteral().toString(),
-            qs.get("?NS").asLiteral().toString());
-      });
+    registry = ModelFactory.createOntologyModel()
+        .read(Registry.class.getResourceAsStream(path),null);
 
-      query = QueryFactory.create(xmlSchemasQry);
-      qexec = QueryExecutionFactory.create(query, registry);
-      rs = qexec.execSelect();
-      rs.forEachRemaining((qs) -> {
-        languagSchemas.put(qs.get("?L").asResource().getURI(),
-            qs.get("?NS").asLiteral().toString());
-      });
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
+    RegistryUtil.askQuery(xmlPrefixesQry, registry).forEach(
+        (m) -> {
+          prefixToNamespaceMap.put(m.get("P"), m.get("NS"));
+        }
+    );
+
+    RegistryUtil.askQuery(xmlSchemasQry, registry).forEach(
+        (m) -> {
+          languagSchemas.put(m.get("L"), m.get("NS"));
+        }
+    );
+
+ }
 
 
   public static Optional<String> getNamespaceURIForPrefix(String pfx) {
@@ -81,13 +68,7 @@ public class Registry {
   }
 
   public static Optional<String> getPrefixforNamespace(String namespace) {
-    if (namespace == null) {
-      return Optional.empty();
-    }
-    return prefixToNamespaceMap.keySet()
-        .stream()
-        .filter(key -> namespace.equals(prefixToNamespaceMap.get(key)))
-        .findFirst();
+    return Optional.ofNullable(prefixToNamespaceMap.inverse().get(namespace));
   }
 
   public static Optional<String> getPrefixforNamespace(URI namespace) {
@@ -106,15 +87,12 @@ public class Registry {
   public static List<String> getCatalogs(URI lang) {
     switch (lang.toString()) {
       case "https://www.omg.org/spec/DMN/1.1":
-      case "http://www.omg.org/spec/DMN/1.1":
         return Arrays.asList("dmn-catalog.xml");
       case "https://www.omg.org/spec/CMMN/1.1":
         return Arrays.asList("cmmn-catalog.xml");
       case "urn:hl7-org:knowledgeartifact:r1":
-      case "http://hl7.org/KNART/1.3":
         return Arrays.asList("knart-catalog.xml");
       case "urn:hl7-org:elm:r1":
-      case "http://hl7.org/ELM/1.2":
         return Arrays.asList("cql-catalog.xml");
       case "http://www.omg.org/spec/API4KP/1.0":
         return Arrays.asList("api4kp-catalog.xml");

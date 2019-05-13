@@ -12,6 +12,7 @@ PREFIX lcc-lr: <http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/>
 
 CONSTRUCT {
   ?X a ?Y;
+    owl:sameAs ?Z;
 
     rdfs:label ?lab;
     rdfs:comment ?comm;
@@ -29,6 +30,7 @@ CONSTRUCT {
     rdfs:subClassOf ?parentType;
     rdfs:subPropertyOf ?parentProp;
 
+    owl:versionInfo ?VersionTag;
     dc:identifier ?identifier.
 }
 WHERE {
@@ -41,6 +43,8 @@ WHERE {
         OPTIONAL { ?X rdfs:subPropertyOf ?parentProp.
              FILTER isUri( ?parentProp ).
         }
+
+        OPTIONAL { ?X owl:sameAs ?Z. }
 
         OPTIONAL { ?X rdfs:label ?lab. }
         OPTIONAL { ?X rdfs:comment ?comm. }
@@ -57,6 +61,7 @@ WHERE {
         OPTIONAL { ?X dc:identifier ?dcId. }
 
         #OPTIONAL { ?X skos:notation ?N. }
+        OPTIONAL { ?X owl:versionInfo ?VersionTag. }
         OPTIONAL { ?Code lcc-lr:identifies ?X.
                          ?Code lcc-lr:hasTag ?Tag. }
 

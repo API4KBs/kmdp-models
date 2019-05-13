@@ -43,5 +43,9 @@
       <groupId>org.omg.spec</groupId>
       <artifactId>API4KP</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
   </dependencies>
 </project>

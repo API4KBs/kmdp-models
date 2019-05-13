@@ -120,9 +120,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://edu.mayo.kmdp/registry</owlFile>
-              <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
-              <targetURI>http://www.omg.org/spec/API4KP/core#ConstructedLanguage</targetURI>
+              <owlFile>http://ontology.mayo.edu/KMDP/registry/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/KMDP/registry/</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/BaseConstructedLanguage</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KRLanguage</skosNamespace>
               <skosOutputFile>KRLanguage.skos.rdf</skosOutputFile>
               <entityType>INST</entityType>
@@ -139,8 +139,8 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://edu.mayo.kmdp/registry</owlFile>
-              <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
+              <owlFile>http://ontology.mayo.edu/KMDP/registry/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/KMDP/registry/</targetNamespace>
               <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Profile</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KRProfile</skosNamespace>
               <skosOutputFile>KRProfile.skos.rdf</skosOutputFile>
@@ -156,9 +156,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://edu.mayo.kmdp/registry</owlFile>
-              <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
-              <targetURI>http://www.omg.org/spec/API4KP/core#MetaFormat</targetURI>
+              <owlFile>http://ontology.mayo.edu/KMDP/registry/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/KMDP/registry/</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/MetaFormat</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KRFormat</skosNamespace>
               <schemeName>SerializationFormats</schemeName>
               <topConceptName>SerializationFormat</topConceptName>
@@ -173,8 +173,8 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://edu.mayo.kmdp/registry</owlFile>
-              <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
+              <owlFile>http://ontology.mayo.edu/KMDP/registry/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/KMDP/registry/</targetNamespace>
               <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Serialization</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KRSerialization</skosNamespace>
               <skosOutputFile>KRSerialization.skos.rdf</skosOutputFile>
@@ -190,9 +190,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://edu.mayo.kmdp/registry</owlFile>
-              <targetNamespace>http://edu.mayo.kmdp/registry</targetNamespace>
-              <targetURI>http://www.omg.org/spec/API4KP/core#Lexicon</targetURI>
+              <owlFile>http://ontology.mayo.edu/KMDP/registry/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/KMDP/registry/</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/Lexicon</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/Lexicon</skosNamespace>
               <skosOutputFile>Lexicon.skos.rdf</skosOutputFile>
               <schemeName>Lexica</schemeName>

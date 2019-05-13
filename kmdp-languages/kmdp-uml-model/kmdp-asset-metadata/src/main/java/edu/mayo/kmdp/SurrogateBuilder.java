@@ -162,7 +162,7 @@ public class SurrogateBuilder {
   public SurrogateBuilder withOpenAPIExpression() {
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.OpenAPI_2_3)
+          .withLanguage(KnowledgeRepresentationLanguage.OpenAPI_2_X)
           .withFormat(SerializationFormat.YAML_1_2)));
     }
     return this;
@@ -183,7 +183,7 @@ public class SurrogateBuilder {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.OWL_2)
           .withFormat(SerializationFormat.RDF_1_1)
-          .withProfile(KnowledgeRepresentationLanguageProfile.OWL_2_DL)
+          .withProfile(KnowledgeRepresentationLanguageProfile.OWL2_DL)
           .withLexicon(Lexicon.SKOS)));
     }
     return this;
@@ -193,7 +193,7 @@ public class SurrogateBuilder {
   public SurrogateBuilder withCQLExpression(Lexicon lex) {
     if (get().getExpression() == null) {
       get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.CQL_1_2)
+          .withLanguage(KnowledgeRepresentationLanguage.HL7_CQL)
           .withFormat(SerializationFormat.TXT)
           .withLexicon(lex)));
     }
@@ -223,9 +223,9 @@ public class SurrogateBuilder {
 
   private Lexicon[] getLexicons(Lexicon vocab) {
     if (vocab != null) {
-      return new Lexicon[]{Lexicon.Activity_Context, vocab};
+      return new Lexicon[]{Lexicon.PCV, vocab};
     } else {
-      return new Lexicon[]{Lexicon.Activity_Context};
+      return new Lexicon[]{Lexicon.PCV};
     }
   }
 
@@ -238,7 +238,7 @@ public class SurrogateBuilder {
               .withSubLanguage(new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
 
           .withFormat(SerializationFormat.XML_1_1)
-          .withLexicon(Lexicon.Activity_Context)));
+          .withLexicon(Lexicon.PCV)));
     }
     return this;
   }
