@@ -19,6 +19,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -27,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class FileUtil {
@@ -101,6 +103,14 @@ public class FileUtil {
       e.printStackTrace();
       return Optional.empty();
     }
+  }
+
+  public static String readStatic(String path, Class<?> ctx) {
+    return new Scanner(
+        ctx.getResourceAsStream(path),
+        Charset.defaultCharset().name())
+        .useDelimiter("\\A")
+        .next();
   }
 
   public static List<URL> findFiles(URL rootURL, String regxpFilter) {
