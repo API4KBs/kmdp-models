@@ -83,7 +83,8 @@ public class DatatypeHelper {
 
 
   public static URIIdentifier uri(String base, String id, String versionTag) {
-    return uri(base + id, versionTag);
+    boolean needsSeparator = !(base.endsWith("#") || base.endsWith("/") || base.endsWith(":"));
+    return uri(base + (needsSeparator ? "/" : "") + id, versionTag);
   }
 
   public static URIIdentifier vuri(final String uri, final String versionUri) {

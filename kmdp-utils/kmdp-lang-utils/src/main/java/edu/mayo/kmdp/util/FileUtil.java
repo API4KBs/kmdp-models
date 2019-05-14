@@ -15,8 +15,18 @@
  */
 package edu.mayo.kmdp.util;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -81,6 +91,15 @@ public class FileUtil {
     }
   }
 
+  public static Optional<String> read(URI uri) {
+    try {
+      return read(uri.toURL());
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+      return Optional.empty();
+    }
+  }
+
 
   public static Optional<byte[]> readBytes(InputStream is) {
     try {
@@ -100,6 +119,15 @@ public class FileUtil {
     try {
       return readBytes(url.openStream());
     } catch (IOException e) {
+      e.printStackTrace();
+      return Optional.empty();
+    }
+  }
+
+  public static Optional<byte[]> readBytes(URI uri) {
+    try {
+      return readBytes(uri.toURL());
+    } catch (MalformedURLException e) {
       e.printStackTrace();
       return Optional.empty();
     }

@@ -21,6 +21,7 @@ import edu.mayo.kmdp.id.Identifier;
 import edu.mayo.kmdp.id.ScopedIdentifier;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
+import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import org.junit.jupiter.api.Test;
@@ -136,4 +137,10 @@ public class DatatypeTest {
     assertTrue(XMLUtil.validate(xml, schema.get()));
   }
 
+
+  @Test
+  public void testIDComposition() {
+    URIIdentifier uid = DatatypeHelper.uri("http://foo.bar", "baz", "1");
+    assertEquals(URI.create("http://foo.bar/baz"), uid.getUri());
+  }
 }
