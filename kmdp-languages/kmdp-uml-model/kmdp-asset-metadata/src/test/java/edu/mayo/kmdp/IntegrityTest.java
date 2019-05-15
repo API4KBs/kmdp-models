@@ -53,7 +53,7 @@ public class IntegrityTest {
 
     //System.out.println(allClasses);
 
-    assertEquals(3,
+    assertEquals(2,
         allClasses.size(),
         "Defensive programming: a new 'Resource' class may have been declared, removed, " +
             "or the code generation process has been corrupted");

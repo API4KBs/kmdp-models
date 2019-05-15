@@ -24,7 +24,6 @@ import edu.mayo.kmdp.metadata.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.surrogate.InlinedRepresentation;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeExpression;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.metadata.surrogate.SubLanguage;
 import edu.mayo.kmdp.registry.Registry;
@@ -148,8 +147,8 @@ public class SurrogateBuilder {
 
 
   public SurrogateBuilder withDMNExpression(KnowledgeRepresentationLanguage schema) {
-    if (get().getExpression() == null) {
-      get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
+    if (get().getCarriers().isEmpty()) {
+      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.DMN_1_1)
           .withFormat(SerializationFormat.XML_1_1)
           .withWith(new SubLanguage().withRole(KnowledgeRepresentationLanguageRole.Schema_Language)
@@ -160,8 +159,8 @@ public class SurrogateBuilder {
 
 
   public SurrogateBuilder withOpenAPIExpression() {
-    if (get().getExpression() == null) {
-      get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
+    if (get().getCarriers().isEmpty()) {
+      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.OpenAPI_2_X)
           .withFormat(SerializationFormat.YAML_1_2)));
     }
@@ -169,8 +168,8 @@ public class SurrogateBuilder {
   }
 
   public SurrogateBuilder withHTMLExpression() {
-    if (get().getExpression() == null) {
-      get().withExpression(new KnowledgeExpression().withLocale(English)
+    if (get().getCarriers().isEmpty()) {
+      get().withCarriers(new KnowledgeArtifact().withLocale(English)
           .withRepresentation(new Representation()
               .withLanguage(KnowledgeRepresentationLanguage.HTML)
               .withFormat(SerializationFormat.XML_1_1)));
@@ -179,8 +178,8 @@ public class SurrogateBuilder {
   }
 
   public SurrogateBuilder withSKOSExpression() {
-    if (get().getExpression() == null) {
-      get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
+    if (get().getCarriers().isEmpty()) {
+      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.OWL_2)
           .withFormat(SerializationFormat.RDF_1_1)
           .withProfile(KnowledgeRepresentationLanguageProfile.OWL2_DL)
@@ -191,8 +190,8 @@ public class SurrogateBuilder {
 
 
   public SurrogateBuilder withCQLExpression(Lexicon lex) {
-    if (get().getExpression() == null) {
-      get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
+    if (get().getCarriers().isEmpty()) {
+      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.HL7_CQL)
           .withFormat(SerializationFormat.TXT)
           .withLexicon(lex)));
@@ -204,15 +203,17 @@ public class SurrogateBuilder {
     if (!get().getType().contains(KnowledgeAssetType.Service_Profile)) {
       get().getType().add(KnowledgeAssetType.Service_Profile);
     }
-    if (get().getExpression() == null) {
-      get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
+    if (get().getCarriers().isEmpty()) {
+      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.Service_Profile)
           .withWith(new SubLanguage()
               .withRole(KnowledgeRepresentationLanguageRole.Expression_Language)
-              .withSubLanguage(new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
+              .withSubLanguage(
+                  new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
           .withWith(new SubLanguage()
               .withRole(KnowledgeRepresentationLanguageRole.Schema_Language)
-              .withSubLanguage(new Representation().withLanguage(KnowledgeRepresentationLanguage.FHIR_DSTU2)))
+              .withSubLanguage(
+                  new Representation().withLanguage(KnowledgeRepresentationLanguage.FHIR_DSTU2)))
 
           .withFormat(SerializationFormat.XML_1_1)
 
@@ -230,12 +231,13 @@ public class SurrogateBuilder {
   }
 
   public SurrogateBuilder withNLPServiceProfileExpression() {
-    if (get().getExpression() == null) {
-      get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
+    if (get().getCarriers().isEmpty()) {
+      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.Service_Profile)
           .withWith(new SubLanguage()
               .withRole(KnowledgeRepresentationLanguageRole.Expression_Language)
-              .withSubLanguage(new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
+              .withSubLanguage(
+                  new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
 
           .withFormat(SerializationFormat.XML_1_1)
           .withLexicon(Lexicon.PCV)));
@@ -244,8 +246,8 @@ public class SurrogateBuilder {
   }
 
   public SurrogateBuilder withInlinedFhirPath(String expr) {
-    if (get().getExpression() == null) {
-      get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
+    if (get().getCarriers().isEmpty()) {
+      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.FHIRPath_STU1)
           .withFormat(SerializationFormat.TXT))
           .withInlined(new InlinedRepresentation().withExpr(expr)));
@@ -254,9 +256,10 @@ public class SurrogateBuilder {
   }
 
 
-  public SurrogateBuilder withRepresentation(KnowledgeRepresentationLanguage lang, SerializationFormat format) {
-    if (get().getExpression() == null) {
-      get().withExpression(new KnowledgeExpression().withRepresentation(new Representation()
+  public SurrogateBuilder withRepresentation(KnowledgeRepresentationLanguage lang,
+      SerializationFormat format) {
+    if (get().getCarriers().isEmpty()) {
+      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(lang)
           .withFormat(format)));
     }
@@ -264,14 +267,17 @@ public class SurrogateBuilder {
   }
 
 
-  public SurrogateBuilder withCarrier(URIIdentifier id, URI loc) {
-    KnowledgeArtifact carrier = new KnowledgeArtifact()
-        .withResourceId(id)
-        .withMasterLocation(loc);
-    if (get().getExpression() == null) {
-      get().setExpression(new KnowledgeExpression());
+  public SurrogateBuilder withCarriers(URIIdentifier id, URI loc) {
+    if (get().getCarriers().isEmpty()) {
+      KnowledgeArtifact carrier = new KnowledgeArtifact()
+          .withResourceId(id)
+          .withMasterLocation(loc);
+      get().withCarriers(carrier);
+    } else {
+      ((KnowledgeArtifact) get().getCarriers().get(0))
+          .withResourceId(id)
+          .withMasterLocation(loc);
     }
-    get().getExpression().withCarrier(carrier);
 
     return this;
   }

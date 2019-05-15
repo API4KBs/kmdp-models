@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.metadata.surrogate.Citation;
 import edu.mayo.kmdp.metadata.surrogate.Derivative;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeExpression;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
@@ -68,7 +68,7 @@ public class MetadataJSonTest {
 
         .withRelated(new Derivative()
                 .withRel(DerivationType.Abdridgement_Of)
-                .withTgt(new KnowledgeExpression()
+                .withTgt(new KnowledgeArtifact()
                     .withResourceId(uri("http://foo.bar/234"))),
             new Derivative()
                 .withRel(DerivationType.Derived_From)

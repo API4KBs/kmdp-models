@@ -15,14 +15,17 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.name;
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.Derivative;
 import edu.mayo.kmdp.metadata.surrogate.ExternalCatalogEntry;
 import edu.mayo.kmdp.metadata.surrogate.Implementation;
 import edu.mayo.kmdp.metadata.surrogate.InlinedRepresentation;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeExpression;
-import edu.mayo.kmdp.metadata.surrogate.MediaType;
 import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.terms.TermsHelper;
@@ -33,19 +36,13 @@ import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAss
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationType;
 import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
-import org.junit.jupiter.api.Test;
-
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.Optional;
-
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.name;
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import org.junit.jupiter.api.Test;
 
 public class MetadataTest {
 
@@ -79,15 +76,12 @@ public class MetadataTest {
         .withName("My Favorite Rule")
         .withDescription("When and Whether to Recommend What")
 
-        .withExpression(new KnowledgeExpression()
+        .withCarriers(new ExternalCatalogEntry()
             .withResourceId(uri("urn:to:do"))
             .withRepresentation(new Representation()
                 .withLanguage(KnowledgeRepresentationLanguage.KNART_1_3))
             // carrier + external catalog is not perfect
-            .withCarrier(new ExternalCatalogEntry()
-                .withResourceId(uri("urn:TODO"))
-                .withMediaType(MediaType.APPLICATION)
-                .withCatalogId(name("poc:RUL-12345")))
+            .withCatalogId(name("poc:RUL-12345"))
             .withInlined(new InlinedRepresentation()
                 .withExpr("IF so and so DO nothing"))
             .withRelated(new Derivative()
@@ -95,7 +89,6 @@ public class MetadataTest {
                 // should I have an inverse flag here?
                 .withTgt(new Implementation()
                     .withResourceId(uri("urn:TODO"))
-                    .withMediaType(MediaType.APPLICATION)
                     .withImplId(name("mayo:LGL-123"))
                     .withSystemId(name("epic:mayo")))
             ));
