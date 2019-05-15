@@ -36,7 +36,6 @@ public class Registry {
   private static Model registry;
 
 
-
   private static BiMap<String, String> prefixToNamespaceMap = HashBiMap.create();
   private static Map<String, String> languagSchemas = new HashMap<>();
 
@@ -86,8 +85,10 @@ public class Registry {
 
   public static List<String> getCatalogs(URI lang) {
     switch (lang.toString()) {
-      case "https://www.omg.org/spec/DMN/1.1":
-        return Arrays.asList("dmn-catalog.xml");
+      case "https://www.omg.org/spec/DMN/1.1/":
+        return Arrays.asList("dmn11-catalog.xml");
+      case "https://www.omg.org/spec/DMN/1.2/":
+        return Arrays.asList("dmn12-catalog.xml");
       case "https://www.omg.org/spec/CMMN/1.1":
         return Arrays.asList("cmmn-catalog.xml");
       case "urn:hl7-org:knowledgeartifact:r1":

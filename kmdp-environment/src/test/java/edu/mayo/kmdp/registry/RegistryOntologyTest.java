@@ -211,7 +211,7 @@ public class RegistryOntologyTest extends RegistryTestBase {
     );
 
     assertEquals(new HashSet<>(Arrays.asList("json", "xml")),
-        formats.get("api4kp"));
+        formats.get("api"));
 
     assertEquals(new HashSet<>(Arrays.asList("json", "xml", "rdf")),
         formats.get("fhir"));

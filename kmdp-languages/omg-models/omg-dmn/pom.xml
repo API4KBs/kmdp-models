@@ -43,6 +43,11 @@
       <groupId>org.jvnet.jaxb2_commons</groupId>
       <artifactId>jaxb2-basics</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-test-utils</artifactId>
+    </dependency>
   </dependencies>
 
 
