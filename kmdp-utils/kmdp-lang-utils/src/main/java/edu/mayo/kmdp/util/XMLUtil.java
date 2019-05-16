@@ -236,10 +236,14 @@ public class XMLUtil {
 
   // Now let's do this in Java 8 using FlatMap List<String> flatMapList = playersInWorldCup2016.stream() .flatMap(pList -> pList.stream()) .collect(Collectors.toList());
   public static Optional<Schema> getSchemas(URI... langs) {
-    XMLCatalogResolver cat = catalogResolver(Arrays.stream(langs)
-        .flatMap((l) -> Registry.getCatalogs(l).stream().map((x) -> "/xsd/" + x))
-        .map(XMLUtil.class::getResource)
-        .toArray(URL[]::new));
+    XMLCatalogResolver cat = catalogResolver(
+        Arrays.stream(langs)
+            .map(Registry::getCatalog)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(XMLUtil.class::getResource)
+            .toArray(URL[]::new));
+
     try {
       Optional<String> schemaBaseUrl = Registry.getValidationSchema(langs[0]);
       if (!schemaBaseUrl.isPresent()) {

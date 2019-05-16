@@ -47,5 +47,13 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.stanford.protege</groupId>
+      <artifactId>org.protege.xmlcatalog</artifactId>
+    </dependency>
   </dependencies>
 </project>

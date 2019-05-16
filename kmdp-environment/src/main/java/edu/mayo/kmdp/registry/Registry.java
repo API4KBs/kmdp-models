@@ -17,6 +17,9 @@ package edu.mayo.kmdp.registry;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import java.io.IOException;
+import java.net.URL;
+import org.apache.xerces.util.XMLCatalogResolver;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -33,6 +36,8 @@ public class Registry {
 
   public static final String MAYO_ASSETS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/assets/";
 
+  private static XMLCatalogResolver xcat;
+
   private static Model registry;
 
 
@@ -41,6 +46,8 @@ public class Registry {
 
 
   static {
+    xcat = new XMLCatalogResolver(new String[] {Registry.class.getResource("/meta-catalog.xml").toString()});
+
     String xmlPrefixesQry = RegistryUtil.read("/xmlNSprefixes.sparql");
     String xmlSchemasQry = RegistryUtil.read("/xmlSchemas.sparql");
 
@@ -83,29 +90,17 @@ public class Registry {
     }
   }
 
-  public static List<String> getCatalogs(URI lang) {
-    switch (lang.toString()) {
-      case "https://www.omg.org/spec/DMN/1.1/":
-        return Arrays.asList("dmn11-catalog.xml");
-      case "https://www.omg.org/spec/DMN/1.2/":
-        return Arrays.asList("dmn12-catalog.xml");
-      case "https://www.omg.org/spec/CMMN/1.1":
-        return Arrays.asList("cmmn-catalog.xml");
-      case "urn:hl7-org:knowledgeartifact:r1":
-        return Arrays.asList("knart-catalog.xml");
-      case "urn:hl7-org:elm:r1":
-        return Arrays.asList("cql-catalog.xml");
-      case "http://www.omg.org/spec/API4KP/1.0":
-        return Arrays.asList("api4kp-catalog.xml");
-      case "http://kmdp.mayo.edu/metadata/surrogate":
-        return Arrays.asList("km-metadata-catalog.xml",
-            "terms-catalog.xml",
-            "api4kp-catalog.xml");
-      default:
-        throw new IllegalStateException();
+  public static Optional<String> getCatalog(URI lang) {
+    try {
+      return Optional.ofNullable(xcat.resolvePublic(lang.toString(),null))
+          .map(URI::create)
+          .map(URI::getPath)
+          .map((path)->"/xsd"+path);
+    } catch (IOException e) {
+      e.printStackTrace();
+      return Optional.empty();
     }
   }
-
 
   public static Optional<String> getValidationSchema(URI lang) {
     return Optional.ofNullable(languagSchemas.get(lang.toString()));

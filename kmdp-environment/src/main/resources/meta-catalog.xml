@@ -1,0 +1,27 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <public uri="file:///dmn11-catalog.xml"
+    publicId="https://www.omg.org/spec/DMN/1.1/"/>
+
+  <public uri="file:///dmn12-catalog.xml"
+    publicId="https://www.omg.org/spec/DMN/1.2/"/>
+
+  <public uri="file:///cmmn-catalog.xml"
+    publicId="https://www.omg.org/spec/CMMN/1.1/"/>
+
+  <public uri="file:///knart-catalog.xml"
+    publicId="urn:hl7-org:knowledgeartifact:r1"/>
+
+  <public uri="file:///cql-catalog.xml"
+    publicId="urn:hl7-org:elm:r1"/>
+
+  <public uri="file:///api4kp-catalog.xml"
+    publicId="http://www.omg.org/spec/API4KP/1.0"/>
+
+  <public uri="file:///api4kp-catalog.xml"
+    publicId="https://www.omg.org/spec/API4KP/1.0/"/>
+
+  <public uri="file:///km-metadata-catalog.xml"
+    publicId="http://kmdp.mayo.edu/metadata/surrogate"/>
+
+</catalog>
