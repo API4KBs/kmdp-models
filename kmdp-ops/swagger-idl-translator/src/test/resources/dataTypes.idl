@@ -1,0 +1,37 @@
+
+module org {
+   module omg {
+      module spec {
+
+         module api4kp_1_0_services {
+
+
+            struct KnowledgeCarrier {
+                unsigned long field1;
+                double field2;
+            };
+
+            struct ParameterDefinitions {
+                long type;
+                string name;
+            };
+
+            struct SyntacticRepresentation {
+                unsigned long foo;
+                unsigned long bar;
+            };
+
+
+            module language {
+                struct TransrepresentationOperator {
+                    unsigned short foo;
+                    unsigned short bar;
+                };
+            }; // language
+
+
+         }; // api4kp_1_0_services
+
+      }; // spec
+   }; // omg
+}; // org

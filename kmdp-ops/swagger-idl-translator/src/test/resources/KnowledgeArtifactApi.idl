@@ -1,0 +1,43 @@
+// File: KnowledgeArtifactApi.idl
+// package edu.mayo.kmdp.repository.artifact;
+
+
+module edu {
+module mayo {
+module repository {
+module artifact {
+
+
+interface KnowledgeArtifactApi {
+
+  void deleteKnowledgeArtifactVersion
+     (in string repositoryId,
+      in string artifactId,
+      in string versionTag);
+
+  typedef sequence <octet> byteSequence;
+
+  byteSequence getKnowledgeArtifactVersion
+     (in string repositoryId,
+      in string artifactId,
+      in string versionTag);
+
+  void isKnowledgeArtifactVersion
+     (in string repositoryId,
+      in string artifactId,
+      in string versionTag);
+
+  void setKnowledgeArtifactVersion
+     (in string repositoryId,
+      in string artifactId,
+      in string versionTag,
+      in byteSequence document);
+
+
+
+}; // KnowledgeArtifactApi
+}; // language
+}; // kmdp
+}; // mayo 
+}; // edu
+

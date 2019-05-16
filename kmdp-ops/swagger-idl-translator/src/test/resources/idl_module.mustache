@@ -1,0 +1,20 @@
+module {{name}} {
+{{#subModules}}
+{{> idl_module}}
+{{/subModules}}
+
+{{#interfaces}}
+interface {{name}} {
+
+  {{#operations}}
+  {{returnType.name}} {{name}} (
+    {{#inputs}}
+      {{direction}} {{type.name}} {{name}} {{^-last}}, {{/-last}}
+    {{/inputs}}
+  );
+
+  {{/operations}}
+
+};
+{{/interfaces}}
+}; // {{name}}

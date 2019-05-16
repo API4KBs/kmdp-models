@@ -32,6 +32,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>swagger-idl-translator</module>
     <module>xmi-xsd-translator</module>
     <module>terms-generator-parent</module>
     <module>terms-owl-to-skos-parent</module>
