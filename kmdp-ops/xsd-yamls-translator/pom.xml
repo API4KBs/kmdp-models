@@ -24,11 +24,11 @@
   <parent>
     <groupId>edu.mayo.kmdp</groupId>
     <artifactId>kmdp-ops</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
   </parent>
 
   <artifactId>xsd-yamls-xslt</artifactId>
-  <version>1.0</version>
+  <version>1.0.1</version>
 
   <name>KMDP :: Ops :: XSD to YAML Schema XSLT-based Translator</name>
 

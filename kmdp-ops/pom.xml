@@ -21,13 +21,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <artifactId>kmdp-impl</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
   </parent>
 
   <artifactId>kmdp-ops</artifactId>
-  <version>1.0</version>
+  <version>1.0.1</version>
 
   <packaging>pom</packaging>
 
