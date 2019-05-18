@@ -21,13 +21,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <artifactId>kmdp-utils</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
   </parent>
 
   <artifactId>kmdp-property-utils</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 
   <name>KMDP :: Base :: Properties</name>
 

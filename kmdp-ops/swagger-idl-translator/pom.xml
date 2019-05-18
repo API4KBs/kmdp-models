@@ -24,11 +24,11 @@
   <parent>
     <groupId>edu.mayo.kmdp</groupId>
     <artifactId>kmdp-ops</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
   </parent>
 
   <artifactId>swagger-idl-translator</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 
   <name>KMDP :: Ops :: OpenAPI 2.x to IDL Translator</name>
 
