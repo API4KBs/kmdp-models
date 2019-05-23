@@ -21,6 +21,12 @@
   <uri id="CiTO"
     uri="cito.rdf"
     name="http://purl.org/spar/cito"/>
+  <uri id="PSO"
+    uri="pso.rdf"
+    name="http://purl.org/spar/pso"/>
+  <uri id="PRO"
+    uri="pro.rdf"
+    name="http://purl.org/spar/pro"/>
 
   <uri id="SKOS"
     uri="skos.rdf"
@@ -32,7 +38,11 @@
 
   <uri id="API4KP-KAO"
     uri="/ontologies/API4KP/informative/kao.owl.rdf"
-    name="http://ckm.ontology.mayo.edu/ontology/KAO"/>
+    name="http://ontology.mayo.edu/ontology/KAO/"/>
+
+  <uri id="API4KP-KMDO"
+    uri="/ontologies/API4KP/informative/kmdo.owl"
+    name="http://ontology.mayo.edu/ontologies/KMDO/"/>
 
   <uri id="API4KP-Ops"
     uri="/ontologies/API4KP/api4kp-ops.owl"

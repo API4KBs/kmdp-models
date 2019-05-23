@@ -339,6 +339,98 @@
             </configuration>
           </execution>
 
+          <execution>
+            <id>prov-pro</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <entityType>INST</entityType>
+              <owlFile>http://purl.org/spar/pro</owlFile>
+              <targetNamespace>http://purl.org/spar/pro</targetNamespace>
+              <targetURI>http://purl.org/spar/pro/PublishingRole</targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/PublishingRole</skosNamespace>
+              <skosOutputFile>prov-pro.skos.rdf</skosOutputFile>
+              <schemeName>PublishingRoles</schemeName>
+              <topConceptName>PublishingRole</topConceptName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>prov-pso</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <entityType>INST</entityType>
+              <owlFile>http://purl.org/spar/pso</owlFile>
+              <targetNamespace>http://purl.org/spar/pso</targetNamespace>
+              <targetURI>http://purl.org/spar/pso/PublicationStatus</targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/PublicationStatus</skosNamespace>
+              <skosOutputFile>prov-pso.skos.rdf</skosOutputFile>
+              <schemeName>PublicationStatuses</schemeName>
+              <topConceptName>PublicationStatus</topConceptName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>prov-pub-event</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlFile>http://ontology.mayo.edu/ontologies/KMDO/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/ontologies/KMDO/</targetNamespace>
+              <targetURI>http://ontology.mayo.edu/ontologies/KMDO/KnowledgeManagementActivity</targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/PublicationEventType</skosNamespace>
+              <skosOutputFile>prov-pub-ev.skos.rdf</skosOutputFile>
+              <schemeName>PublicationEventTypes</schemeName>
+              <minDepth>1</minDepth>
+              <topConceptName>PublicationEventType</topConceptName>
+            </configuration>
+          </execution>
+
+
+          <execution>
+            <id>km-about</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <entityType>OBJ_PROP</entityType>
+              <owlFile>http://ontology.mayo.edu/ontologies/KMDO/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/ontologies/KMDO/</targetNamespace>
+              <targetURI>http://ontology.mayo.edu/ontologies/KMDO/associated-with</targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KMDO/AnnotationRelType</skosNamespace>
+              <skosOutputFile>ann.skos.rdf</skosOutputFile>
+              <schemeName>AnnotationRelTypes</schemeName>
+              <minDepth>1</minDepth>
+              <topConceptName>AnnotationRelType</topConceptName>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>mime</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <entityType>INST</entityType>
+              <reason>true</reason>
+              <owlFile>http://www.invincea.com/ontologies/icas/1.0.1/mime/</owlFile>
+              <targetNamespace>http://www.invincea.com/ontologies/icas/1.0.1/mime/</targetNamespace>
+              <targetURI>http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype</targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/MIMEType</skosNamespace>
+              <skosOutputFile>mime.skos.rdf</skosOutputFile>
+              <schemeName>MIMETypes</schemeName>
+              <minDepth>1</minDepth>
+              <topConceptName>MIMEType</topConceptName>
+            </configuration>
+          </execution>
+
 
           <execution>
             <id>kac-skos</id>
@@ -347,9 +439,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://ckm.ontology.mayo.edu/ontology/KAO</owlFile>
-              <targetNamespace>http://ckm.ontology.mayo.edu/ontology/KAO</targetNamespace>
-              <targetURI>http://ckm.ontology.mayo.edu/ontology/KAO#CategorizedKnowledgeAsset
+              <owlFile>http://ontology.mayo.edu/ontology/KAO/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/ontology/KAO/</targetNamespace>
+              <targetURI>http://ontology.mayo.edu/ontology/KAO/CategorizedKnowledgeAsset
               </targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetCategory</skosNamespace>
               <skosOutputFile>kac.skos.rdf</skosOutputFile>
@@ -361,18 +453,34 @@
           </execution>
 
           <execution>
+            <id>karc-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlFile>http://purl.org/dc/dcmitype/</owlFile>
+              <targetNamespace>http://purl.org/dc/dcmitype/</targetNamespace>
+              <targetURI>http://ontology.mayo.edu/ontologies/dcmitype/ContentType</targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeArtifactCategory</skosNamespace>
+              <skosOutputFile>karc.skos.rdf</skosOutputFile>
+              <schemeName>KnowledgeArtifactCategories</schemeName>
+              <topConceptName>KnowledgeArtifactCategory</topConceptName>
+              <minDepth>1</minDepth>
+            </configuration>
+          </execution>
+
+          <execution>
             <id>kpm-skos</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://ckm.ontology.mayo.edu/ontology/KAO</owlFile>
-              <targetNamespace>http://ckm.ontology.mayo.edu/ontology/KAO</targetNamespace>
-              <targetURI>http://www.omg.org/spec/API4KP/core#KnowledgeProcessingTechnique
-              </targetURI>
-              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeProcessingTechnique
-              </skosNamespace>
+              <owlFile>http://ontology.mayo.edu/ontology/KAO/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/ontology/KAO/</targetNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/KnowledgeProcessingTechnique</targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeProcessingTechnique</skosNamespace>
               <skosOutputFile>kpm.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>
               <schemeName>KnowledgeProcessingTechniques</schemeName>
@@ -405,15 +513,33 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://ckm.ontology.mayo.edu/ontology/KAO</owlFile>
-              <targetNamespace>http://ckm.ontology.mayo.edu/ontology/KAO</targetNamespace>
-              <targetURI>http://ckm.ontology.mayo.edu/ontology/KAO#CategorizedKnowledgeAsset
+              <owlFile>http://ontology.mayo.edu/ontology/KAO/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/ontology/KAO/</targetNamespace>
+              <targetURI>http://ontology.mayo.edu/ontology/KAO/CategorizedKnowledgeAsset
               </targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType</skosNamespace>
               <skosOutputFile>kat.skos.rdf</skosOutputFile>
               <minDepth>2</minDepth>
               <schemeName>KnowledgeAssetTypes</schemeName>
               <topConceptName>KnowledgeAssetType</topConceptName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>kar-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlFile>http://ontology.mayo.edu/ontology/KAO/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/ontology/KAO/</targetNamespace>
+              <targetURI>http://ontology.mayo.edu/ontology/KAO/ExplicitRoleKnowledgeAsset
+              </targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetRole</skosNamespace>
+              <skosOutputFile>kar.skos.rdf</skosOutputFile>
+              <minDepth>1</minDepth>
+              <schemeName>KnowledgeAssetRoles</schemeName>
+              <topConceptName>KnowledgeAssetRole</topConceptName>
             </configuration>
           </execution>
 
@@ -424,9 +550,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>http://ckm.ontology.mayo.edu/ontology/KAO</owlFile>
-              <targetNamespace>http://ckm.ontology.mayo.edu/ontology/KAO</targetNamespace>
-              <targetURI>http://ckm.ontology.mayo.edu/ontology/KAO#DedicatedLanguage</targetURI>
+              <owlFile>http://ontology.mayo.edu/ontology/KAO/</owlFile>
+              <targetNamespace>http://ontology.mayo.edu/ontology/KAO/</targetNamespace>
+              <targetURI>http://ontology.mayo.edu/ontology/KAO/DedicatedLanguage</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/LanguageRole</skosNamespace>
               <skosOutputFile>langrol.skos.rdf</skosOutputFile>
               <minDepth>1</minDepth>

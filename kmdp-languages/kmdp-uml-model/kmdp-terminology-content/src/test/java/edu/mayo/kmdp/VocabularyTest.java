@@ -24,9 +24,13 @@ import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.Knowled
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
 import edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.Language;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._1_0.KnowledgeAssetRole;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
 import edu.mayo.ontology.taxonomies.kao.languagerole._1_0.KnowledgeRepresentationLanguageRole;
+import edu.mayo.ontology.taxonomies.kao.publicationeventtype._20180601.PublicationEventType;
+import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
+import edu.mayo.ontology.taxonomies.kao.publishingrole.PublishingRole;
 import edu.mayo.ontology.taxonomies.kao.rel.citationreltype._2018_02_16.BibliographicCitationType;
 import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
 import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationType;
@@ -39,6 +43,7 @@ import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentation
 import edu.mayo.ontology.taxonomies.krprofile._2018._08.KnowledgeRepresentationLanguageProfile;
 import edu.mayo.ontology.taxonomies.krserialization._2018._08.KnowledgeRepresentationLanguageSerialization;
 import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
+import edu.mayo.ontology.taxonomies.mimetype.MIMEType;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
 import java.util.Optional;
 import java.util.UUID;
@@ -68,6 +73,11 @@ public class VocabularyTest {
     assertNotNull(KnowledgeRepresentationLanguageRole.Expression_Language);
     assertNotNull(KnowledgeProcessingOperation.Translation_Task);
     assertNotNull(ParsingLevel.Encoded_Knowledge_Expression);
+    assertNotNull(KnowledgeAssetRole.Operational_Concept_Defintion);
+    assertNotNull(PublicationEventType.Authoring);
+    assertNotNull(PublishingRole.Contributor);
+    assertNotNull(PublicationStatus.Draft);
+    assertNotNull(MIMEType.Application_Pdf);
   }
 
   @Test

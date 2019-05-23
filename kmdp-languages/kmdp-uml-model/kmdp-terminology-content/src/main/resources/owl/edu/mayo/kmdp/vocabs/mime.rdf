@@ -1,0 +1,1027 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.invincea.com/ontologies/icas/1.0.1/mime#"
+     xml:base="http://www.invincea.com/ontologies/icas/1.0.1/mime"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:mime="http://www.invincea.com/ontologies/icas/1.0.1/mime#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:mime1="http://www.invincea.com/ontologies/icas/1.0.1/mime#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:swrlx="http://www.w3.org/2003/11/swrlx#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:tapio="http://www.invincea.com/ontologies/icas/1.0/tapio#"
+     xmlns:owl2="http://www.w3.org/2006/12/owl2#"
+     xmlns:time="http://www.w3.org/2006/time#"
+     xmlns:event="http://purl.org/NET/c4dm/event.owl#"
+     xmlns:foaf="http://xmlns.com/foaf/0.1/"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <owl:Ontology rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime">
+        <owl:versionInfo>1.0.1</owl:versionInfo>
+        <dc:date>2019</dc:date>
+        <dc:creator xml:lang="en">Davide Sottara</dc:creator>
+        <dc:description xml:lang="en">Describes elements related to the MIME content taxonomy and encoding standard</dc:description>
+        <rdfs:comment xml:lang="en">Describes elements related to the MIME content taxonomy and encoding standard.</rdfs:comment>
+        <dc:creator xml:lang="en">Invincea Labs</dc:creator>
+        <rdfs:label xml:lang="en">MultiPurpose Internet Mail Extensions ontology</rdfs:label>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/identifier -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/identifier"/>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#mimeclass -->
+
+    <owl:AnnotationProperty rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#mimeclass"/>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#mimeclass -->
+
+    <owl:AnnotationProperty rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#mimeclass">
+        <rdfs:comment xml:lang="en">the class of datatype within a datatype family. The second half of a MIMEtype identifier.</rdfs:comment>
+        <rdfs:label xml:lang="en">MIME Data Class</rdfs:label>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#hasSubTypes -->
+
+    <owl:ObjectProperty rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#hasSubTypes">
+        <rdfs:domain rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Multipart"/>
+        <rdfs:range rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:comment xml:lang="en">this multi-part MIME entity has the followed sub-types contained within it</rdfs:comment>
+        <rdfs:label xml:lang="en">has Sub-Parts</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#hasType -->
+
+    <owl:ObjectProperty rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#hasType">
+        <owl:inverseOf rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#seenAt"/>
+        <rdfs:range rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:label xml:lang="en">has MIME type</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#seenAt -->
+
+    <owl:ObjectProperty rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#seenAt">
+        <rdfs:domain rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:comment xml:lang="en">the listed entity has been identified as this MIME type</rdfs:comment>
+        <rdfs:label xml:lang="en">was seen in</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#Application -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application">
+        <rdfs:subClassOf rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:label xml:lang="en">Application</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio">
+        <rdfs:subClassOf rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:label xml:lang="en">Audio</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#Example -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#Example">
+        <rdfs:subClassOf rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:comment xml:lang="en">this MIME type family is referenced in the standard, but should not be used in practise</rdfs:comment>
+        <rdfs:label xml:lang="en">EXAMPLE</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#Font -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#Font"/>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#Image -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#Image">
+        <rdfs:subClassOf rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:label xml:lang="en">Image</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEType -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEType"/>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype">
+        <rdfs:comment xml:lang="en">A Generic MIME Type with no top-level category</rdfs:comment>
+        <rdfs:label xml:lang="en">MIME Type</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#Message -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#Message">
+        <rdfs:subClassOf rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:label xml:lang="en">Message</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#Model -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#Model">
+        <rdfs:subClassOf rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:label xml:lang="en">Model</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#Multipart -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#Multipart">
+        <rdfs:subClassOf rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:label xml:lang="en">Multipart</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#Text -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text">
+        <rdfs:subClassOf rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:label xml:lang="en">Text</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#Video -->
+
+    <owl:Class rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video">
+        <rdfs:subClassOf rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype"/>
+        <rdfs:label xml:lang="en">Video</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#alternative -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#alternative">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Multipart"/>
+        <dc:identifier>multipart/alternative</dc:identifier>
+        <rdfs:label xml:lang="en">multipart-alternative</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#atomxml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#atomxml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/atom-xml</dc:identifier>
+        <rdfs:label xml:lang="en">application-atomxml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#avi -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#avi">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video"/>
+        <dc:identifier>video/avi</dc:identifier>
+        <rdfs:label xml:lang="en">video-avi</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#basic -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#basic">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/basic</dc:identifier>
+        <rdfs:label xml:lang="en">audio-basic</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#cmd -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#cmd">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
+        <dc:identifier>text/cmd</dc:identifier>
+        <rdfs:comment xml:lang="en">scripting language content</rdfs:comment>
+        <rdfs:label xml:lang="en">text-cmd</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#css -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#css">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEType"/>
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
+        <dc:identifier>text/css</dc:identifier>
+        <mime:mimeclass xml:lang="en">text-css</mime:mimeclass>
+        <rdfs:comment xml:lang="en">Cascading Style Sheet</rdfs:comment>
+        <rdfs:label xml:lang="en">Cascading Style Sheet</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#csv -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#csv">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
+        <dc:identifier>text/csv</dc:identifier>
+        <mime:mimeclass xml:lang="en">text-csv</mime:mimeclass>
+        <rdfs:label xml:lang="en">Comma-Separated Values</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#ecmascript -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#ecmascript">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/ecmascript</dc:identifier>
+        <mime:mimeclass xml:lang="en">ecmascript</mime:mimeclass>
+        <rdfs:label xml:lang="en">application-ecmascript</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#edi-x12 -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#edi-x12">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/EDI-X12</dc:identifier>
+        <rdfs:label xml:lang="en">application-edi-x12</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#edifact -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#edifact">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/EDIFACT</dc:identifier>
+        <rdfs:label xml:lang="en">application-edifact</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#encrypted -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#encrypted">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Multipart"/>
+        <dc:identifier>multipart/encrypted</dc:identifier>
+        <rdfs:label xml:lang="en">multipart-encrypted</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#exampleapp -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#exampleapp">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/example</dc:identifier>
+        <rdfs:label xml:lang="en">application-example</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#exampleaudio -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#exampleaudio">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/example</dc:identifier>
+        <rdfs:label xml:lang="en">audio-example</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#exampleexample -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#exampleexample">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Example"/>
+        <dc:identifier>example/example</dc:identifier>
+        <rdfs:label xml:lang="en">example-example</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#exampleimage -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#exampleimage">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Image"/>
+        <dc:identifier>image/example</dc:identifier>
+        <rdfs:label xml:lang="en">image-example</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#examplemessage -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#examplemessage">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Message"/>
+        <dc:identifier>message/example</dc:identifier>
+        <rdfs:label xml:lang="en">message-example</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#examplemodel -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#examplemodel">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Model"/>
+        <dc:identifier>model/example</dc:identifier>
+        <rdfs:label xml:lang="en">model-example</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#exampletext -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#exampletext">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
+        <dc:identifier>text/example</dc:identifier>
+        <rdfs:label xml:lang="en">text-example</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#examplevideo -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#examplevideo">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video"/>
+        <dc:identifier>video/example</dc:identifier>
+        <rdfs:label xml:lang="en">video-example</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#exe -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#exe">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/exe</dc:identifier>
+        <mime:mimeclass xml:lang="en">Application/exe</mime:mimeclass>
+        <rdfs:label xml:lang="en">Windows Executable</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#fontwoff -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#fontwoff">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Font"/>
+        <dc:identifier>font/woff</dc:identifier>
+        <rdfs:label xml:lang="en">font-woff</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#formdata -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#formdata">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Multipart"/>
+        <dc:identifier>multipart/data</dc:identifier>
+        <rdfs:label xml:lang="en">multipart-data</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#gif -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#gif">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Image"/>
+        <dc:identifier>image/gif</dc:identifier>
+        <rdfs:label xml:lang="en">image-gif</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#gzip -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#gzip">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/gzip</dc:identifier>
+        <rdfs:label xml:lang="en">application-gzip</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#html -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#html">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
+        <dc:identifier>text/html</dc:identifier>
+        <rdfs:label xml:lang="en">HyperText Markup Language</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#http -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#http">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Message"/>
+        <dc:identifier>message/http</dc:identifier>
+        <rdfs:label xml:lang="en">message-http</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#iges -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#iges">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Model"/>
+        <dc:identifier>model/iges</dc:identifier>
+        <rdfs:label xml:lang="en">model-iges</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#imdnxml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#imdnxml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Message"/>
+        <dc:identifier>model/imd+xml</dc:identifier>
+        <rdfs:label xml:lang="en">message-imdxml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#javascript -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#javascript">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/javascript</dc:identifier>
+        <rdfs:label xml:lang="en">Javascript</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#jpeg -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#jpeg">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Image"/>
+        <dc:identifier>image/jpeg</dc:identifier>
+        <mime:mimeclass xml:lang="en">image/jpeg</mime:mimeclass>
+        <rdfs:label xml:lang="en">JPEG Image</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#json -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#json">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/json</dc:identifier>
+        <mime:mimeclass xml:lang="en">application/json</mime:mimeclass>
+        <rdfs:label xml:lang="en">JSON Data</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#l24 -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#l24">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/L24</dc:identifier>
+        <rdfs:label xml:lang="en">audio-l24</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#mesh -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#mesh">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Model"/>
+        <dc:identifier>model/mesh</dc:identifier>
+        <rdfs:label xml:lang="en">model-mesh</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#mixed -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#mixed">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Multipart"/>
+        <dc:identifier>multipart/mixed</dc:identifier>
+        <rdfs:label xml:lang="en">multipart-mixed</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#mp4 -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#mp4">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/mp4</dc:identifier>
+        <rdfs:label xml:lang="en">audio-mp4</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#mp4video -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#mp4video">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video"/>
+        <dc:identifier>video/mp4</dc:identifier>
+        <rdfs:label xml:lang="en">video-mp4</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#mpegaudio -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#mpegaudio">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/mpeg</dc:identifier>
+        <rdfs:label xml:lang="en">audio-mpeg</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#mpegvideo -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#mpegvideo">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video"/>
+        <dc:identifier>video/mpeg</dc:identifier>
+        <rdfs:label xml:lang="en">video-mpeg</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#octet-stream -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#octet-stream">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/octet-stream</dc:identifier>
+        <mime:mimeclass xml:lang="en">application/octet-stream</mime:mimeclass>
+        <rdfs:label xml:lang="en">Octet-Stream</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#oggapp -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#oggapp">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/ogg</dc:identifier>
+        <rdfs:label xml:lang="en">application-ogg</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#oggaudio -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#oggaudio">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/ogg</dc:identifier>
+        <rdfs:label xml:lang="en">audio-ogg</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#oggvideo -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#oggvideo">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video"/>
+        <dc:identifier>video/ogg</dc:identifier>
+        <rdfs:label xml:lang="en">video-ogg</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#opus -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#opus">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/opus</dc:identifier>
+        <rdfs:label xml:lang="en">audio-opus</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#partial -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#partial">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Message"/>
+        <dc:identifier>message/partial</dc:identifier>
+        <rdfs:label xml:lang="en">message-partial</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#pdf -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#pdf">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/pdf</dc:identifier>
+        <rdfs:label xml:lang="en">application-pdf</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#pjpeg -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#pjpeg">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Image"/>
+        <dc:identifier>image/jpeg</dc:identifier>
+        <rdfs:label xml:lang="en">image-jpeg</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#plain -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#plain">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
+        <dc:identifier>text/plain</dc:identifier>
+        <mime:mimeclass xml:lang="en">text/plain</mime:mimeclass>
+        <rdfs:label xml:lang="en">ASCII Plain Text</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#png -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#png">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Image"/>
+        <dc:identifier>image/png</dc:identifier>
+        <mime:mimeclass xml:lang="en">image/png</mime:mimeclass>
+        <rdfs:label xml:lang="en">Portable Network Graphics Image</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#postscript -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#postscript">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/postscript</dc:identifier>
+        <rdfs:label xml:lang="en">application-postscript</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#quicktime -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#quicktime">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video"/>
+        <dc:identifier>video/quicktime</dc:identifier>
+        <mime:mimeclass xml:lang="en">video/quicktime</mime:mimeclass>
+        <rdfs:label xml:lang="en">Apple QuickTime Video</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#rdfxml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#rdfxml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/rdf+xml</dc:identifier>
+        <rdfs:label xml:lang="en">application-rdfxml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#related -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#related">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Multipart"/>
+        <dc:identifier>multipart/related</dc:identifier>
+        <rdfs:label xml:lang="en">multipart-related</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#rfc822 -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#rfc822">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Message"/>
+        <dc:identifier>message/rfc822</dc:identifier>
+        <mime:mimeclass xml:lang="en">message/rfc822</mime:mimeclass>
+        <rdfs:label xml:lang="en">RFC822 Email Message</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#rssxml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#rssxml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/rss+xml</dc:identifier>
+        <rdfs:label xml:lang="en">application-rssxml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#rtf -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#rtf">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
+        <dc:identifier>text/rtf</dc:identifier>
+        <rdfs:label xml:lang="en">text-rtf</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#signed -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#signed">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Multipart"/>
+        <dc:identifier>multipart/signed</dc:identifier>
+        <rdfs:label xml:lang="en">multipart-signed</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#soapxml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#soapxml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/soap+xml</dc:identifier>
+        <rdfs:label xml:lang="en">application-soapxml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#svgxml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#svgxml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Image"/>
+        <dc:identifier>image/svg+xml</dc:identifier>
+        <rdfs:label xml:lang="en">image-svgxml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#vcard -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#vcard">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
+        <dc:identifier>text/vcard</dc:identifier>
+        <rdfs:label xml:lang="en">text-vcard</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#vndabc -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#vndabc">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
+        <dc:identifier>text/vnd.abc</dc:identifier>
+        <rdfs:label xml:lang="en">text-vndabc</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#vndrnrealaudio -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#vndrnrealaudio">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/vnd.rnrealaudio</dc:identifier>
+        <rdfs:label xml:lang="en">audio-vndrnrealaudio</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#vndwave -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#vndwave">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/wav</dc:identifier>
+        <rdfs:label xml:lang="en">audio-vndwave</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#vorbis -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#vorbis">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/vorbis</dc:identifier>
+        <rdfs:label xml:lang="en">audio-vorbis</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#vrml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#vrml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Model"/>
+        <dc:identifier>model/vrml</dc:identifier>
+        <rdfs:label xml:lang="en">model-vrml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#webmaudio -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#webmaudio">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Audio"/>
+        <dc:identifier>audio/webm</dc:identifier>
+        <rdfs:label xml:lang="en">audio-webm</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#webmvideo -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#webmvideo">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video"/>
+        <dc:identifier>video/webm</dc:identifier>
+        <rdfs:label xml:lang="en">video-webmvideo</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#x3dbinary -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#x3dbinary">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Model"/>
+        <dc:identifier>model/x3d+binary</dc:identifier>
+        <rdfs:label xml:lang="en">model-x3dbinary</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#x3dfastinfoset -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#x3dfastinfoset">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Model"/>
+        <dc:identifier>model/x3d+fastinfoset</dc:identifier>
+        <rdfs:label xml:lang="en">model-x3dfastinfoset</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#x3dvrml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#x3dvrml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Model"/>
+        <dc:identifier>model/x3d+vrml</dc:identifier>
+        <rdfs:label xml:lang="en">model-x3dvrml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#x3dxml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#x3dxml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Model"/>
+        <dc:identifier>model/x3d+xml</dc:identifier>
+        <rdfs:label xml:lang="en">model-x3dxml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#xflv -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#xflv">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video"/>
+        <dc:identifier>video/xflv</dc:identifier>
+        <rdfs:label xml:lang="en">video-xflv</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#xhtmlxml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#xhtmlxml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/xhtml+xml</dc:identifier>
+        <rdfs:label xml:lang="en">application-xhtmlxml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#xml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#xml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
+        <dc:identifier>application/xml</dc:identifier>
+        <rdfs:label xml:lang="en">application-xml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#xmldtd -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#xmldtd">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/xml-dtd</dc:identifier>
+        <rdfs:label xml:lang="en">application-xmldtd</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#xmswmv -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#xmswmv">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video"/>
+        <dc:identifier>video/xms-wmv</dc:identifier>
+        <rdfs:label xml:lang="en">video-xmswmv</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#xnacl -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#xnacl">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/xnacl</dc:identifier>
+        <rdfs:label xml:lang="en">application-xnacl</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#xopxml -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#xopxml">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/xop+xml</dc:identifier>
+        <rdfs:label xml:lang="en">application-xopxml</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#zip -->
+
+    <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#zip">
+        <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
+        <dc:identifier>application/zip</dc:identifier>
+        <mime:mimeclass xml:lang="en">Application/zip</mime:mimeclass>
+        <rdfs:label xml:lang="en">Zip Archive File</rdfs:label>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+

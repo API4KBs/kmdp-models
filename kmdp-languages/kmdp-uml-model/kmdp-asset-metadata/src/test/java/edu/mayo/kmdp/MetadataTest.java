@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.Derivative;
-import edu.mayo.kmdp.metadata.surrogate.ExternalCatalogEntry;
-import edu.mayo.kmdp.metadata.surrogate.Implementation;
 import edu.mayo.kmdp.metadata.surrogate.InlinedRepresentation;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
+import edu.mayo.kmdp.metadata.surrogate.Publication;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.kmdp.util.JaxbUtil;
@@ -34,6 +34,7 @@ import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
 import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationType;
 import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import java.io.ByteArrayInputStream;
@@ -43,6 +44,7 @@ import java.util.Optional;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.identifiers.SimpleIdentifier;
 
 public class MetadataTest {
 
@@ -51,11 +53,13 @@ public class MetadataTest {
   public void testKS() {
     KnowledgeAssetCategory br = KnowledgeAssetCategory.Rules_Policies_And_Guidelines;
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withResourceId(uri("http://foo.bar", "234"))
-        .withCategory(br)
+        .withAssetId(uri("http://foo.bar", "234"))
+        .withName("Foo")
+        .withFormalCategory(br)
+        .withLifecycle(new Publication().withPublicationStatus(PublicationStatus.Draft))
         .withSubject(new SimpleAnnotation().withExpr(TermsHelper.sct("mock", "123")));
 
-    ks = checkRoundTrip(ks);
+    checkRoundTrip(ks);
   }
 
 
@@ -68,34 +72,38 @@ public class MetadataTest {
   public void testScenario_BasicExternalImpl() {
     KnowledgeAsset ks = new KnowledgeAsset()
 
-        .withResourceId(uri("http://foo.bar", "234"))
+        .withAssetId(uri("http://foo.bar", "234"))
+        .withName("Foo")
 
-        .withCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
-        .withType(KnowledgeAssetType.Clinical_Rule)
+        .withFormalCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
+        .withFormalType(KnowledgeAssetType.Clinical_Rule)
 
         .withName("My Favorite Rule")
         .withDescription("When and Whether to Recommend What")
 
-        .withCarriers(new ExternalCatalogEntry()
-            .withResourceId(uri("urn:to:do"))
+        .withLifecycle(new Publication().withPublicationStatus(PublicationStatus.Draft))
+
+        .withCarriers(new ComputableKnowledgeArtifact()
+            .withArtifactId(uri("urn:to:do"))
+            .withName("Bar")
             .withRepresentation(new Representation()
                 .withLanguage(KnowledgeRepresentationLanguage.KNART_1_3))
             // carrier + external catalog is not perfect
-            .withCatalogId(name("poc:RUL-12345"))
+            .withSecondaryId(name("poc:RUL-12345"))
             .withInlined(new InlinedRepresentation()
                 .withExpr("IF so and so DO nothing"))
             .withRelated(new Derivative()
                 .withRel(DerivationType.Derived_From)
                 // should I have an inverse flag here?
-                .withTgt(new Implementation()
-                    .withResourceId(uri("urn:TODO"))
-                    .withImplId(name("mayo:LGL-123"))
-                    .withSystemId(name("epic:mayo")))
+                .withTgt(new ComputableKnowledgeArtifact()
+                    .withArtifactId(uri("urn:TODO"))
+                    .withName("TODO")
+                    .withSecondaryId(new SimpleIdentifier().withTag("urn:epic:LGL-123")))
             ));
 
     checkRoundTrip(ks);
 
-    assertEquals(KnowledgeAssetCategory.Rules_Policies_And_Guidelines, ks.getCategory().get(0));
+    assertEquals(KnowledgeAssetCategory.Rules_Policies_And_Guidelines, ks.getFormalCategory().get(0));
   }
 
 

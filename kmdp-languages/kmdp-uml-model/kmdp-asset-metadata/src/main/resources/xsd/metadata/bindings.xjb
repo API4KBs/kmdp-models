@@ -16,10 +16,15 @@
     <namespace:prefix name="surr"/>
   </jxb:bindings>
 
-  <jxb:bindings schemaLocation="annotations/annotations.xsd">
+  <jxb:bindings schemaLocation="surrogate/annotations/annotations.xsd">
     <xjc:simple/>
     <namespace:prefix name="ann"/>
   </jxb:bindings>
+
+  <!--<jxb:bindings schemaLocation="surrogate/provenance/provenance.xsd">
+    <xjc:simple/>
+    <namespace:prefix name="prov"/>
+  </jxb:bindings>-->
 
 
 </jxb:bindings>

@@ -274,13 +274,18 @@
           test="$primitiveType = 'pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean'">xs:boolean</xsl:when>
         <xsl:when
           test="$primitiveType = 'pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer'">xs:int</xsl:when>
-        <xsl:when test="$primitiveType = 'uml:Enumeration'">xs:string</xsl:when>
+        <xsl:when
+          test="$primitiveType = 'uml:Enumeration'">xs:string</xsl:when>
+        <xsl:when
+          test="$primitiveType = 'pathmap://UML_LIBRARIES/XMLPrimitiveTypes.library.uml#Duration'">xs:duration</xsl:when>
         <xsl:when
           test="$primitiveType = 'pathmap://UML_LIBRARIES/XMLPrimitiveTypes.library.uml#Base64Binary'">xs:base64Binary</xsl:when>
         <xsl:when
           test="$primitiveType = 'pathmap://UML_LIBRARIES/XMLPrimitiveTypes.library.uml#Decimal'">xs:decimal</xsl:when>
         <xsl:when
           test="$primitiveType = 'pathmap://UML_LIBRARIES/XMLPrimitiveTypes.library.uml#DateTime'">xs:dateTime</xsl:when>
+        <xsl:when
+          test="$primitiveType = 'pathmap://UML_LIBRARIES/XMLPrimitiveTypes.library.uml#Date'">xs:date</xsl:when>
         <xsl:when
           test="$primitiveType = 'pathmap://UML_LIBRARIES/XMLPrimitiveTypes.library.uml#AnySimpleType'">xs:anySimpleType</xsl:when>
         <xsl:when

@@ -28,6 +28,7 @@ import edu.mayo.kmdp.metadata.annotations.MultiwordAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.Association;
 import edu.mayo.kmdp.metadata.surrogate.Dependency;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
 import edu.mayo.kmdp.util.JaxbUtil;
@@ -41,6 +42,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.xml.validation.Schema;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.w3c.dom.Node;
 
 public class SurrogateHelper {
@@ -142,6 +144,16 @@ public class SurrogateHelper {
         .filter((ann) -> rel == null || rel.equals(ann.getRel()))
         .map(SimpleAnnotation::getExpr)
         .findAny();
+  }
+
+  public static Optional<URIIdentifier> getIdentifier(KnowledgeResource knowledgeResource) {
+    if (knowledgeResource instanceof KnowledgeAsset) {
+      return Optional.of(((KnowledgeAsset) knowledgeResource).getAssetId());
+    } else if (knowledgeResource instanceof KnowledgeArtifact) {
+      return Optional.of(((KnowledgeArtifact) knowledgeResource).getArtifactId());
+    } else {
+      return Optional.empty();
+    }
   }
 
 }

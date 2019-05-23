@@ -21,8 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.metadata.surrogate.Citation;
+import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.Derivative;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JenaUtil;
@@ -43,7 +43,7 @@ public class MetadataJSonTest {
   @Test
   public void testAssetCore() {
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withResourceId(uri("http://foo.bar", "234"));
+        .withAssetId(uri("http://foo.bar", "234"));
 
     String jsonTree = toJson(ks);
     //System.out.println(jsonTree);
@@ -60,20 +60,21 @@ public class MetadataJSonTest {
   public void testSerializationWithHateoas() {
     KnowledgeAsset ks = new KnowledgeAsset()
 
-        .withResourceId(uri("http://foo.bar", "234"))
+        .withAssetId(uri("http://foo.bar", "234"))
 
-        .withCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
+        .withFormalCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
 
         .withDescription("This is a test")
 
         .withRelated(new Derivative()
                 .withRel(DerivationType.Abdridgement_Of)
-                .withTgt(new KnowledgeArtifact()
-                    .withResourceId(uri("http://foo.bar/234"))),
+                .withTgt(new ComputableKnowledgeArtifact()
+                    .withArtifactId(uri("http://foo.bar/234"))),
             new Derivative()
                 .withRel(DerivationType.Derived_From)
                 .withTgt(new KnowledgeAsset()
-                    .withResourceId(uri("http://foo.bar/234"))),
+                    .withAssetId(uri("http://foo.bar/234"))))
+        .withCitations(
             new Citation()
                 .withRel(BibliographicCitationType.Cites));
 

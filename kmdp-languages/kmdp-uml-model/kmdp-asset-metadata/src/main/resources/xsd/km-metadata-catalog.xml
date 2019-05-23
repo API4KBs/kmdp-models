@@ -24,21 +24,20 @@
   <uri name="http://kmdp.mayo.edu/metadata/surrogate"
     uri="metadata/surrogate/surrogate.xsd"/>
 
-  <public publicId="http://kmdp.mayo.edu/metadata/annotations"
-    uri="metadata/annotations/annotations.xsd"/>
-  <system systemId="http://kmdp.mayo.edu/metadata/annotations"
-    uri="metadata/annotations/annotations.xsd"/>
-  <uri name="http://kmdp.mayo.edu/metadata/annotations"
-    uri="metadata/annotations/annotations.xsd"/>
-
-  <public publicId="http://kmdp.mayo.edu/metadata/iso11179"
-    uri="metadata/iso11179/iso11179.xsd"/>
-  <system systemId="http://kmdp.mayo.edu/metadata/iso11179"
-    uri="metadata/iso11179/iso11179.xsd"/>
-  <uri name="http://kmdp.mayo.edu/metadata/iso11179"
-    uri="metadata/iso11179/iso11179.xsd"/>
-
-
+  <public publicId="http://kmdp.mayo.edu/metadata/surrogate/annotations"
+    uri="metadata/surrogate/annotations/annotations.xsd"/>
+  <system systemId="http://kmdp.mayo.edu/metadata/surrogate/annotations"
+    uri="metadata/surrogate/annotations/annotations.xsd"/>
+  <uri name="http://kmdp.mayo.edu/metadata/surrogate/annotations"
+    uri="metadata/surrogate/annotations/annotations.xsd"/>
+  
+  <!--<public publicId="http://kmdp.mayo.edu/metadata/surrogate/provenance"
+    uri="metadata/surrogate/provenance/provenance.xsd"/>
+  <system systemId="http://kmdp.mayo.edu/metadata/surrogate/provenance"
+    uri="metadata/surrogate/provenance/provenance.xsd"/>
+  <uri name="http://kmdp.mayo.edu/metadata/surrogate/provenance"
+    uri="metadata/surrogate/provenance/provenance.xsd"/>-->
+  
   <public publicId="http://www.omg.org/spec/API4KP/1.0/identifiers"
     uri="API4KP/api4kp/identifiers/identifiers.xsd"/>
   <system systemId="http://www.omg.org/spec/API4KP/1.0/identifiers"

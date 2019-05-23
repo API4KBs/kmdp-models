@@ -37,7 +37,7 @@ public class XSDCompilationTest {
     assertEquals(6, KnowledgeAssetCategory.values().length);
 
     KnowledgeAssetType kat = KnowledgeAssetType.Clinical_Rule;
-    assertEquals("http://ckm.ontology.mayo.edu/ontology/KAO#ClinicalRule", kat.getRef().toString());
+    assertEquals("http://ontology.mayo.edu/ontology/KAO/ClinicalRule", kat.getRef().toString());
 
     KnowledgeRepresentationLanguage dmn = KnowledgeRepresentationLanguage.DMN_1_1;
     KnowledgeRepresentationLanguage dmn2 = KnowledgeRepresentationLanguage.DMN_1_2;

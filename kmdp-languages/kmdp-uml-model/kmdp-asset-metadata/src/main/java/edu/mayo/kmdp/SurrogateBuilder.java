@@ -17,9 +17,11 @@ package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.Language.English;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._1_0.KnowledgeAssetRole.Operational_Concept_Defintion;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.surrogate.InlinedRepresentation;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
@@ -27,13 +29,13 @@ import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.metadata.surrogate.SubLanguage;
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.terms.AssetVocabulary;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
 import edu.mayo.ontology.taxonomies.kao.languagerole._1_0.KnowledgeRepresentationLanguageRole;
 import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20180601.AnnotationRelType;
 import edu.mayo.ontology.taxonomies.krformat._2018._08.SerializationFormat;
 import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.ontology.taxonomies.krprofile._2018._08.KnowledgeRepresentationLanguageProfile;
@@ -50,7 +52,7 @@ public class SurrogateBuilder {
 
   protected SurrogateBuilder(URIIdentifier assetId, boolean root) {
     surrogate = newInstance(root)
-        .withResourceId(assetId);
+        .withAssetId(assetId);
   }
 
   protected KnowledgeAsset newInstance(boolean root) {
@@ -72,74 +74,74 @@ public class SurrogateBuilder {
   }
 
   public SurrogateBuilder withValuesetType() {
-    get().withCategory(KnowledgeAssetCategory.Terminology_Ontology_And_Assertional_KBs)
-        .withType(KnowledgeAssetType.Value_Set);
+    get().withFormalCategory(KnowledgeAssetCategory.Terminology_Ontology_And_Assertional_KBs)
+        .withFormalType(KnowledgeAssetType.Value_Set);
     return this;
   }
 
   public SurrogateBuilder withServiceType() {
-    get().withCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
-        .withType(KnowledgeAssetType.Service_Description);
+    get().withFormalCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
+        .withFormalType(KnowledgeAssetType.Service_Description);
     return this;
   }
 
   public SurrogateBuilder withCohortDefinitionType() {
-    get().withCategory(KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models)
-        .withType(KnowledgeAssetType.Cohort_Definition);
+    get().withFormalCategory(KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models)
+        .withFormalType(KnowledgeAssetType.Cohort_Definition);
     return this;
   }
 
   public SurrogateBuilder withQueryType() {
-    get().withCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
-        .withType(KnowledgeAssetType.Inquiry_Specification);
+    get().withFormalCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
+        .withFormalType(KnowledgeAssetType.Inquiry_Specification);
     return this;
   }
 
   public SurrogateBuilder withContentType() {
-    get().withCategory(KnowledgeAssetCategory.Terminology_Ontology_And_Assertional_KBs)
-        .withType(KnowledgeAssetType.Factual_Knowledge);
+    get().withFormalCategory(KnowledgeAssetCategory.Terminology_Ontology_And_Assertional_KBs)
+        .withFormalType(KnowledgeAssetType.Factual_Knowledge);
     return this;
   }
 
   public SurrogateBuilder withExpressionType() {
-    get().withCategory(KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models)
-        .withType(KnowledgeAssetType.Functional_Expression);
+    get().withFormalCategory(KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models)
+        .withFormalType(KnowledgeAssetType.Functional_Expression);
     return this;
   }
 
-  public SurrogateBuilder withType(KnowledgeAssetCategory cat, KnowledgeAssetType... type) {
-    get().withCategory(cat)
-        .withType(type);
+  public SurrogateBuilder withFormalType(KnowledgeAssetCategory cat, KnowledgeAssetType... type) {
+    get().withFormalCategory(cat)
+        .withFormalType(type);
     return this;
   }
 
   public SurrogateBuilder withDecisionAidType() {
-    get().withCategory(KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models)
-        .withType(KnowledgeAssetType.Computable_Decision_Model);
+    get().withFormalCategory(KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models)
+        .withFormalType(KnowledgeAssetType.Computable_Decision_Model);
     return this;
   }
 
 
   public SurrogateBuilder aaS() {
-    get().withMethod(KnowledgeProcessingTechnique.Service_Based_Technique);
+    get().withProcessingMethod(KnowledgeProcessingTechnique.Service_Based_Technique);
     return this;
   }
 
 
   public SurrogateBuilder asOperationalDefinition(ConceptIdentifier subject, Term proposition,
       Term... inputs) {
-    get().withType(KnowledgeAssetType.Operational_Concept_Defintion);
+    get().withRole(Operational_Concept_Defintion);
 
     if (proposition != null) {
-      this.withAnnotation(AssetVocabulary.DEFINES.asConcept(), proposition.asConcept());
+      this.withAnnotation(AnnotationRelType.Defines.asConcept(), proposition.asConcept());
     }
 
     if (subject != null) {
-      this.withAnnotation(AssetVocabulary.HAS_SUBJECT.asConcept(), subject);
+      this.withAnnotation(AnnotationRelType.Has_Subject.asConcept(), subject);
     }
 
     Arrays.stream(inputs).forEach((input) ->
-        this.withAnnotation(AssetVocabulary.IN_TERMS_OF.asConcept(), input.asConcept())
+        this.withAnnotation(AnnotationRelType.In_Terms_Of.asConcept(), input.asConcept())
     );
 
     return this;
@@ -148,7 +150,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withDMNExpression(KnowledgeRepresentationLanguage schema) {
     if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
+      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.DMN_1_1)
           .withFormat(SerializationFormat.XML_1_1)
           .withWith(new SubLanguage().withRole(KnowledgeRepresentationLanguageRole.Schema_Language)
@@ -160,7 +162,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withOpenAPIExpression() {
     if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
+      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.OpenAPI_2_X)
           .withFormat(SerializationFormat.YAML_1_2)));
     }
@@ -169,7 +171,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withHTMLExpression() {
     if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new KnowledgeArtifact().withLocale(English)
+      get().withCarriers(new ComputableKnowledgeArtifact().withLocalization(English)
           .withRepresentation(new Representation()
               .withLanguage(KnowledgeRepresentationLanguage.HTML)
               .withFormat(SerializationFormat.XML_1_1)));
@@ -179,7 +181,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withSKOSExpression() {
     if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
+      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.OWL_2)
           .withFormat(SerializationFormat.RDF_1_1)
           .withProfile(KnowledgeRepresentationLanguageProfile.OWL2_DL)
@@ -191,7 +193,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withCQLExpression(Lexicon lex) {
     if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
+      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.HL7_CQL)
           .withFormat(SerializationFormat.TXT)
           .withLexicon(lex)));
@@ -200,11 +202,11 @@ public class SurrogateBuilder {
   }
 
   public SurrogateBuilder withFHIRServiceProfileExpression(Lexicon vocab) {
-    if (!get().getType().contains(KnowledgeAssetType.Service_Profile)) {
-      get().getType().add(KnowledgeAssetType.Service_Profile);
+    if (!get().getFormalType().contains(KnowledgeAssetType.Service_Profile)) {
+      get().getFormalType().add(KnowledgeAssetType.Service_Profile);
     }
     if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
+      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.Service_Profile)
           .withWith(new SubLanguage()
               .withRole(KnowledgeRepresentationLanguageRole.Expression_Language)
@@ -232,7 +234,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withNLPServiceProfileExpression() {
     if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
+      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.Service_Profile)
           .withWith(new SubLanguage()
               .withRole(KnowledgeRepresentationLanguageRole.Expression_Language)
@@ -247,7 +249,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withInlinedFhirPath(String expr) {
     if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
+      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(KnowledgeRepresentationLanguage.FHIRPath_STU1)
           .withFormat(SerializationFormat.TXT))
           .withInlined(new InlinedRepresentation().withExpr(expr)));
@@ -259,7 +261,7 @@ public class SurrogateBuilder {
   public SurrogateBuilder withRepresentation(KnowledgeRepresentationLanguage lang,
       SerializationFormat format) {
     if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new KnowledgeArtifact().withRepresentation(new Representation()
+      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
           .withLanguage(lang)
           .withFormat(format)));
     }
@@ -269,14 +271,14 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withCarriers(URIIdentifier id, URI loc) {
     if (get().getCarriers().isEmpty()) {
-      KnowledgeArtifact carrier = new KnowledgeArtifact()
-          .withResourceId(id)
-          .withMasterLocation(loc);
+      KnowledgeArtifact carrier = new ComputableKnowledgeArtifact()
+          .withArtifactId(id)
+          .withLocator(loc);
       get().withCarriers(carrier);
     } else {
       ((KnowledgeArtifact) get().getCarriers().get(0))
-          .withResourceId(id)
-          .withMasterLocation(loc);
+          .withArtifactId(id)
+          .withLocator(loc);
     }
 
     return this;
@@ -289,7 +291,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withDependency(DependencyType rel, URIIdentifier relatedAsset) {
     get().withRelated(
-        new Dependency().withRel(rel).withTgt(new KnowledgeAsset().withResourceId(relatedAsset)));
+        new Dependency().withRel(rel).withTgt(new KnowledgeAsset().withAssetId(relatedAsset)));
     return this;
   }
 
