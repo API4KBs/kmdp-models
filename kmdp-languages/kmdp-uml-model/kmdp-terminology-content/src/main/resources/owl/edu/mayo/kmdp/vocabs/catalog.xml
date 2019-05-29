@@ -46,4 +46,16 @@
     uri="LanguageCodes.rdf"
     name="http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/"/>
 
+  <uri id="MIMECodes"
+    uri="mime.rdf"
+    name="http://www.invincea.com/ontologies/icas/1.0.1/mime/"/>
+
+  <uri id="DCMIType"
+    uri="dctype.rdf"
+    name="http://purl.org/dc/dcmitype/"/>
+
+  <uri id="HttpCodes"
+    uri="statusCodes.rdf"
+    name="http://www.w3.org/2011/http-statusCodes#"/>
+
 </catalog>

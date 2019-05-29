@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -44,6 +45,10 @@ public class Util {
 
   public static boolean isEmpty(String str) {
     return str == null || str.trim().length() == 0;
+  }
+
+  public static String concat(List<String> str) {
+    return str == null ? null : str.stream().reduce("",String::concat);
   }
 
   public static String normalize(String str) {

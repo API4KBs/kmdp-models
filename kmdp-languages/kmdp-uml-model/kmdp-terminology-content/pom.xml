@@ -472,6 +472,24 @@
             </configuration>
           </execution>
 
+          <execution>
+            <id>resp-codes-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <entityType>INST</entityType>
+              <owlFile>http://www.w3.org/2011/http-statusCodes#</owlFile>
+              <targetNamespace>http://www.w3.org/2011/http#</targetNamespace>
+              <targetURI>http://www.w3.org/2011/http#StatusCode</targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/API4KP/ResponseCodes</skosNamespace>
+              <skosOutputFile>resp-codes.skos.rdf</skosOutputFile>
+              <schemeName>ResponseCodes</schemeName>
+              <topConceptName>ResponseCode</topConceptName>
+            </configuration>
+          </execution>
+
         </executions>
         <dependencies>
           <dependency>

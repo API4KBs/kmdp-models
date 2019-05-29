@@ -64,13 +64,13 @@ public class MimeCoderTest {
         KnowledgeRepresentationLanguageSerialization.RDF_XML_Syntax,
         SerializationFormat.XML_1_1)
         .withLexicon(Lexicon.SNOMED_CT, Lexicon.LOINC);
-    assertEquals("model/owl2[RL]+rdf/xml+{sct,lnc}", ModelMIMECoder.encode(r4, false));
+    assertEquals("model/owl2[RL]+rdf/xml;lex={sct,lnc}", ModelMIMECoder.encode(r4, false));
   }
 
 
   @Test
   public void testDecode1() {
-    String mime = "model/owl2[QL]+ttl+{sct,rxnorm}";
+    String mime = "model/owl2[QL]+ttl;lex={sct,rxnorm}";
     Optional<SyntacticRepresentation> rep = ModelMIMECoder.decode(mime);
     if (!rep.isPresent()) {
       fail("Unable to decode " + mime);

@@ -61,7 +61,7 @@ public class ModelMIMECoder {
       sb.append("+").append(rep.getFormat().getTag());
     }
     if (!rep.getLexicon().isEmpty()) {
-      sb.append("+").append("{");
+      sb.append(";lex=").append("{");
       rep.getLexicon().forEach((l) -> sb.append(l.getTag()).append(","));
       sb.replace(sb.length() - 1, sb.length(), "}");
     }
@@ -101,7 +101,7 @@ public class ModelMIMECoder {
     String lexTags = isEmpty(matcher.group(5)) ? "" : matcher.group(5).trim()
         .replaceAll("\\}", "")
         .replaceAll("\\{", "")
-        .replaceAll("\\+", "");
+        .replaceAll("\\;lex=", "");
 
     if (!isEmpty(langVerTag)) {
       KnowledgeRepresentationLanguage.resolve(versionedLangTag)

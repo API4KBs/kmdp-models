@@ -33,6 +33,16 @@ import org.w3c.dom.Document;
 
 public class AbstractCarrier {
 
+  public static KnowledgeCarrier ofNaturalLanguageRep(String s) {
+    return new org.omg.spec.api4kp._1_0.services.resources.ExpressionCarrier()
+        .withSerializedExpression(s)
+        .withLevel(ParsingLevel.Concrete_Knowledge_Expression)
+        .withRepresentation(
+            // TODO - ADD "Natural Language" to the list of languages
+            rep(KnowledgeRepresentationLanguage.HTML,
+                SerializationFormat.TXT));
+  }
+
   public static KnowledgeCarrier of(byte[] encoded) {
     return new org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier()
         .withEncodedExpression(encoded)
@@ -188,15 +198,23 @@ public class AbstractCarrier {
     return rep(null, null, null, null, encoding);
   }
 
+  protected Object copyTo(ObjectLocator locator, Object target,
+      CopyStrategy strategy) {
+    return target;
+  }
 
-  //TODO
+
+
+  //TODO Rewrite as proper map/flatMap
   @Deprecated
   public <U> U flatMap(Function<? super KnowledgeCarrier, U> mapper) {
     return mapper.apply((KnowledgeCarrier) this);
   }
 
-  protected Object copyTo(ObjectLocator locator, Object target,
-      CopyStrategy strategy) {
-    return target;
+  //TODO Rewrite as proper map/flatMap
+  @Deprecated
+  public <U extends KnowledgeCarrier> U map(Function<? super AbstractCarrier, U> mapper) {
+    return mapper.apply(this);
   }
+
 }

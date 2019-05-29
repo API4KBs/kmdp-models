@@ -1,0 +1,827 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.w3.org/http-statusCodes#"
+     xml:base="http://www.w3.org/http-statusCodes"
+     xmlns:dct="http://purl.org/dc/terms/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:http1="http://www.w3.org/2011/http#"
+     xmlns:http="http://www.w3.org/2011/http-statusCodes#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <owl:Ontology rdf:about="http://www.w3.org/http-statusCodes#">
+        <owl:versionIRI rdf:resource="http://www.w3.org/2011/http-statusCodes#"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/identifier -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/identifier"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/identifier -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/identifier"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/title -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/title"/>
+    
+
+
+    <!-- http://www.w3.org/2011/http#statusCodeNumber -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2011/http#statusCodeNumber"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/2011/http#StatusCode -->
+
+    <owl:Class rdf:about="http://www.w3.org/2011/http#StatusCode"/>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#StatusCode1xx -->
+
+    <owl:Class rdf:about="http://www.w3.org/2011/http-statusCodes#StatusCode1xx">
+        <rdfs:comment xml:lang="en">A status code starting with 1</rdfs:comment>
+        <rdfs:label xml:lang="en">Informational</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#StatusCode2xx -->
+
+    <owl:Class rdf:about="http://www.w3.org/2011/http-statusCodes#StatusCode2xx">
+        <rdfs:comment xml:lang="en">A status code starting with 2</rdfs:comment>
+        <rdfs:label xml:lang="en">Successful</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#StatusCode3xx -->
+
+    <owl:Class rdf:about="http://www.w3.org/2011/http-statusCodes#StatusCode3xx">
+        <rdfs:comment xml:lang="en">A status code starting with 3</rdfs:comment>
+        <rdfs:label xml:lang="en">Redirection</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#StatusCode4xx -->
+
+    <owl:Class rdf:about="http://www.w3.org/2011/http-statusCodes#StatusCode4xx">
+        <rdfs:comment xml:lang="en">A status code starting with 4</rdfs:comment>
+        <rdfs:label xml:lang="en">Client Error</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#StatusCode5xx -->
+
+    <owl:Class rdf:about="http://www.w3.org/2011/http-statusCodes#StatusCode5xx">
+        <rdfs:comment xml:lang="en">A status code starting with 5</rdfs:comment>
+        <rdfs:label xml:lang="en">Server Error</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Accepted -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Accepted">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode2xx"/>
+        <dc:identifier>202</dc:identifier>
+        <dct:title xml:lang="en">Accepted</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>202</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#BadGateway -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#BadGateway">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode5xx"/>
+        <dc:identifier>502</dc:identifier>
+        <dct:title xml:lang="en">Bad Gateway</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>502</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#BadRequest -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#BadRequest">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>400</dc:identifier>
+        <dct:title xml:lang="en">Bad Request</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>400</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Conflict -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Conflict">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>409</dc:identifier>
+        <dct:title xml:lang="en">Conflict</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>409</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Continue -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Continue">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode1xx"/>
+        <dc:identifier>100</dc:identifier>
+        <dct:title xml:lang="en">Continue</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>100</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Created -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Created">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode2xx"/>
+        <dc:identifier>201</dc:identifier>
+        <dct:title xml:lang="en">Created</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>201</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#ExpectationFailed -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#ExpectationFailed">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>417</dc:identifier>
+        <dct:title xml:lang="en">Expectation Failed</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>417</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#FailedDependency -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#FailedDependency">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>424</dc:identifier>
+        <dct:title xml:lang="en">Failed Dependency</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc4918.txt"/>
+        <http1:statusCodeNumber>424</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Forbidden -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Forbidden">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>403</dc:identifier>
+        <dct:title xml:lang="en">Forbidden</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>403</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Found -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Found">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode3xx"/>
+        <dc:identifier>302</dc:identifier>
+        <dct:title xml:lang="en">Found</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>302</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#GatewayTimeout -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#GatewayTimeout">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode5xx"/>
+        <dc:identifier>504</dc:identifier>
+        <dct:title xml:lang="en">Gateway Timeout</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>504</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Gone -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Gone">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>410</dc:identifier>
+        <dct:title xml:lang="en">Gone</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>410</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#HTTPVersionNotSupported -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#HTTPVersionNotSupported">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode5xx"/>
+        <dc:identifier>505</dc:identifier>
+        <dct:title xml:lang="en">HTTP Version Not Supported</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>505</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#IMUsed -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#IMUsed">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode2xx"/>
+        <dc:identifier>226</dc:identifier>
+        <dct:title xml:lang="en">IM Used</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc3229.txt"/>
+        <http1:statusCodeNumber>226</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#InsufficientStorage -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#InsufficientStorage">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode5xx"/>
+        <dc:identifier>507</dc:identifier>
+        <dct:title xml:lang="en">Insufficient Storage</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc4918.txt"/>
+        <http1:statusCodeNumber>507</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#InternalServerError -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#InternalServerError">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode5xx"/>
+        <dc:identifier>500</dc:identifier>
+        <dct:title xml:lang="en">Internal Server Error</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>500</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#LengthRequired -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#LengthRequired">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>411</dc:identifier>
+        <dct:title xml:lang="en">Length Required</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>411</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Locked -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Locked">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>423</dc:identifier>
+        <dct:title xml:lang="en">Locked</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc4918.txt"/>
+        <http1:statusCodeNumber>423</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#MethodNotAllowed -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#MethodNotAllowed">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>405</dc:identifier>
+        <dct:title xml:lang="en">Method Not Allowed</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>405</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#MovedPermanently -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#MovedPermanently">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode3xx"/>
+        <dc:identifier>301</dc:identifier>
+        <dct:title xml:lang="en">Moved Permanently</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>301</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#MultiStatus -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#MultiStatus">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode2xx"/>
+        <dc:identifier>207</dc:identifier>
+        <dct:title xml:lang="en">Multi-Status</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc4918.txt"/>
+        <http1:statusCodeNumber>207</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#MultipleChoices -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#MultipleChoices">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode3xx"/>
+        <dc:identifier>300</dc:identifier>
+        <dct:title xml:lang="en">Multiple Choices</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>300</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#NoContent -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#NoContent">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode2xx"/>
+        <dc:identifier>204</dc:identifier>
+        <dct:title xml:lang="en">No Content</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>204</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#NonAuthoritativeInformation -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#NonAuthoritativeInformation">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode2xx"/>
+        <dc:identifier>203</dc:identifier>
+        <dct:title xml:lang="en">Non-Authoritative Information</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>203</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#NotAcceptable -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#NotAcceptable">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>406</dc:identifier>
+        <dct:title xml:lang="en">Not Acceptable</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>406</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#NotExtended -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#NotExtended">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode5xx"/>
+        <dc:identifier>510</dc:identifier>
+        <dct:title xml:lang="en">Not Extended</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2774.txt"/>
+        <http1:statusCodeNumber>510</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#NotFound -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#NotFound">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>404</dc:identifier>
+        <dct:title xml:lang="en">Not Found</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>404</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#NotImplemented -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#NotImplemented">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode5xx"/>
+        <dc:identifier>501</dc:identifier>
+        <dct:title xml:lang="en">Not Implemented</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>501</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#NotModified -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#NotModified">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode3xx"/>
+        <dc:identifier>304</dc:identifier>
+        <dct:title xml:lang="en">Not Modified</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>304</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#OK -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#OK">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode2xx"/>
+        <dc:identifier>200</dc:identifier>
+        <dct:title xml:lang="en">OK</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>200</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#PartialContent -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#PartialContent">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode2xx"/>
+        <dc:identifier>206</dc:identifier>
+        <dct:title xml:lang="en">Partial Content</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>206</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#PaymentRequired -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#PaymentRequired">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>402</dc:identifier>
+        <dct:title xml:lang="en">Payment Required</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>402</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#PreconditionFailed -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#PreconditionFailed">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>412</dc:identifier>
+        <dct:title xml:lang="en">Precondition Failed</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>412</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Processing -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Processing">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode1xx"/>
+        <dc:identifier>102</dc:identifier>
+        <dct:title xml:lang="en">Processing</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2518.txt"/>
+        <http1:statusCodeNumber>102</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#ProxyAuthenticationRequired -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#ProxyAuthenticationRequired">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>407</dc:identifier>
+        <dct:title xml:lang="en">Proxy Authentication Required</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>407</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#RequestEntityTooLarge -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#RequestEntityTooLarge">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>413</dc:identifier>
+        <dct:title xml:lang="en">Request Entity Too Large</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>413</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#RequestTimeout -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#RequestTimeout">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>408</dc:identifier>
+        <dct:title xml:lang="en">Request Timeout</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>408</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#RequestURITooLong -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#RequestURITooLong">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>414</dc:identifier>
+        <dct:title xml:lang="en">Request-URI Too Long</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>414</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#RequestedRangeNotSatisfiable -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#RequestedRangeNotSatisfiable">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>416</dc:identifier>
+        <dct:title xml:lang="en">Requested Range Not Satisfiable</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>416</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Reserved -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Reserved">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode3xx"/>
+        <dc:identifier>306</dc:identifier>
+        <dct:title xml:lang="en">(Reserved)</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>306</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#ResetContent -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#ResetContent">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode2xx"/>
+        <dc:identifier>205</dc:identifier>
+        <dct:title xml:lang="en">Reset Content</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>205</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#SeeOther -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#SeeOther">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode3xx"/>
+        <dc:identifier>303</dc:identifier>
+        <dct:title xml:lang="en">See Other</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>303</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#ServiceUnavailable -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#ServiceUnavailable">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode5xx"/>
+        <dc:identifier>503</dc:identifier>
+        <dct:title xml:lang="en">Service Unavailable</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>503</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#SwitchingProtocols -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#SwitchingProtocols">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode1xx"/>
+        <dc:identifier>101</dc:identifier>
+        <dct:title xml:lang="en">Switching Protocols</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>101</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#TemporaryRedirect -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#TemporaryRedirect">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode3xx"/>
+        <dc:identifier>307</dc:identifier>
+        <dct:title xml:lang="en">Temporary Redirect</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>307</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#Unauthorized -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#Unauthorized">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>401</dc:identifier>
+        <dct:title xml:lang="en">Unauthorized</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>401</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#UnprocessableEntity -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#UnprocessableEntity">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>422</dc:identifier>
+        <dct:title xml:lang="en">Unprocessable Entity</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc4918.txt"/>
+        <http1:statusCodeNumber>422</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#UnsupportedMediaType -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#UnsupportedMediaType">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>415</dc:identifier>
+        <dct:title xml:lang="en">Unsupported Media Type</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>415</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#UpgradeRequired -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#UpgradeRequired">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode4xx"/>
+        <dc:identifier>426</dc:identifier>
+        <dct:title xml:lang="en">Upgrade Required</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2817.txt"/>
+        <http1:statusCodeNumber>426</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#UseProxy -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#UseProxy">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode3xx"/>
+        <dc:identifier>305</dc:identifier>
+        <dct:title xml:lang="en">Use Proxy</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2616.txt"/>
+        <http1:statusCodeNumber>305</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2011/http-statusCodes#VariantAlsoNegotiates -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2011/http-statusCodes#VariantAlsoNegotiates">
+        <rdf:type rdf:resource="http://www.w3.org/2011/http#StatusCode"/>
+        <rdf:type rdf:resource="http://www.w3.org/2011/http-statusCodes#StatusCode5xx"/>
+        <dc:identifier>506</dc:identifier>
+        <dct:title xml:lang="en">Variant Also Negotiates (Experimental)</dct:title>
+        <rdfs:isDefinedBy rdf:resource="http://www.ietf.org/rfc/rfc2295.txt"/>
+        <http1:statusCodeNumber>506</http1:statusCodeNumber>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotations
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description rdf:about="http://www.ietf.org/rfc/rfc2518.txt">
+        <dct:identifier>http://www.ietf.org/rfc/rfc2518.txt</dct:identifier>
+        <dct:title xml:lang="en">HTTP Extensions for Distributed Authoring -- WEBDAV</dct:title>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.ietf.org/rfc/rfc2616.txt">
+        <dct:title xml:lang="en">Hypertext Transfer Protocol -- HTTP/1.1</dct:title>
+        <dct:identifier>http://www.ietf.org/rfc/rfc2616.txt</dct:identifier>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.ietf.org/rfc/rfc2774.txt">
+        <dct:identifier>http://www.ietf.org/rfc/rfc2774.txt</dct:identifier>
+        <dct:title xml:lang="en">An HTTP Extension Framework</dct:title>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.ietf.org/rfc/rfc2817.txt">
+        <dct:identifier>http://www.ietf.org/rfc/rfc2817.txt</dct:identifier>
+        <dct:title xml:lang="en">Upgrading to TLS Within HTTP/1.1</dct:title>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.ietf.org/rfc/rfc3229.txt">
+        <dct:identifier>http://www.ietf.org/rfc/rfc3229.txt</dct:identifier>
+        <dct:title xml:lang="en">Delta encoding in HTTP</dct:title>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.ietf.org/rfc/rfc4918.txt">
+        <dct:title xml:lang="en">HTTP Extensions for Distributed Authoring - WebDAV</dct:title>
+        <dct:identifier>http://www.ietf.org/rfc/rfc4918.txt</dct:identifier>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+
