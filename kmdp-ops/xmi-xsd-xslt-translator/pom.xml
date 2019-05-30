@@ -27,13 +27,11 @@
     <version>2.0.0</version>
   </parent>
 
-  <artifactId>xsd-yamls-xslt</artifactId>
-  <version>2.0.0</version>
+  <artifactId>xmi-xsd-xslt-translator</artifactId>
 
-  <name>KMDP :: Ops :: XSD to YAML Schema XSLT-based Translator</name>
+  <name>KMDP :: Ops :: XMI/XML to XSD XSLT-based Translator</name>
 
   <dependencies>
-
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-lang-utils</artifactId>
@@ -44,11 +42,6 @@
       <artifactId>junit-jupiter-engine</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-test-utils</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>Saxon-HE</artifactId>

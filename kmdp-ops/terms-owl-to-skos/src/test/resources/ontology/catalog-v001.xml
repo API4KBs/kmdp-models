@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="http://edu.mayo.kmdp/registry" uri="kr-registry.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://org.test/labelsTest" uri="labelsTest.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://org.test/labelsTest" uri="hierTest.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://org.test/labelsTest" uri="singleClassWithDCIdentifier.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://org.test/labelsTest" uri="singleClassWithAnnos.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://org.test/labelsTest" uri="individuals.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://org.test/labelsTest" uri="relHier.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://org.test/labelsTest" uri="singleClass.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://org.test/labelsTest" uri="version.rdf"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="http://purl.org/spar/cito/" uri="cito.rdf"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://test.org" uri="deepHier.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://test.org" uri="deepDataProp.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://test.org" uri="deepProp.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/" uri="lcc.rdf"/>
+    </group>
+</catalog>

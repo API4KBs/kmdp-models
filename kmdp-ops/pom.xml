@@ -27,16 +27,17 @@
   </parent>
 
   <artifactId>kmdp-ops</artifactId>
-  <version>2.0.0</version>
 
   <packaging>pom</packaging>
 
   <modules>
     <module>swagger-idl-translator</module>
-    <module>xmi-xsd-translator</module>
-    <module>terms-generator-parent</module>
-    <module>terms-owl-to-skos-parent</module>
-    <module>xsd-yamls-translator</module>
+    <module>xmi-xsd-xslt-translator</module>
+    <module>xsd-yamls-xslt-translator</module>
+    <module>terms-generator</module>
+    <module>terms-generator-plugin</module>
+    <module>terms-owl-to-skos</module>
+    <module>terms-owl-to-skos-plugin</module>
   </modules>
 
   <name>KMDP :: Functions, Operations and Transformations</name>

@@ -22,20 +22,38 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>kmdp-ops</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
+    <artifactId>kmdp-ops</artifactId>
     <version>2.0.0</version>
   </parent>
 
-  <artifactId>terms-owl-to-skos-parent</artifactId>
-  <packaging>pom</packaging>
+  <artifactId>xsd-yamls-xslt-translator</artifactId>
 
+  <name>KMDP :: Ops :: XSD to YAML Schema XSLT-based Translator</name>
 
-  <name>KMDP :: Ops :: Terms OWL -> SKOS Generator Parent</name>
+  <dependencies>
 
-  <modules>
-    <module>terms-owl-to-skos</module>
-    <module>terms-owl-to-skos-plugin</module>
-  </modules>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-lang-utils</artifactId>
+    </dependency>
 
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-test-utils</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>Saxon-HE</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
 </project>
+
