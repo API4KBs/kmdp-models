@@ -23,7 +23,7 @@
   <parent>
     <artifactId>kmdp-uml-model</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
-    <version>1.0.2</version>
+    <version>2.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -105,7 +105,7 @@
       <plugin>
         <groupId>edu.mayo.kmdp</groupId>
         <artifactId>terms-owl-to-skos-plugin</artifactId>
-        <version>1.0.2</version>
+        <version>2.0.0</version>
         <configuration>
           <outputDirectory>${skosDir}</outputDirectory>
           <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>

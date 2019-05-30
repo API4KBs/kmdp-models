@@ -21,13 +21,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <version>1.0.2</version>
+    <version>2.0.0</version>
     <artifactId>kmdp-utils</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
   </parent>
 
   <artifactId>kmdp-fhir2-utils</artifactId>
-  <version>1.0.2</version>
+  <version>2.0.0</version>
 
   <name>KMDP :: Base :: FHIR DSTU2 Utilities</name>
 
