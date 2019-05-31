@@ -34,7 +34,11 @@
   <dependencies>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-lang-utils</artifactId>
+      <artifactId>kmdp-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-terminology-content</artifactId>
     </dependency>
     <dependency>
       <groupId>io.swagger</groupId>
@@ -44,7 +48,6 @@
     <dependency>
       <groupId>com.samskivert</groupId>
       <artifactId>jmustache</artifactId>
-      <version>1.12</version>
     </dependency>
 
     <dependency>

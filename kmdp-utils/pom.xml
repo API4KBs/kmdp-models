@@ -27,20 +27,77 @@
   </parent>
 
   <artifactId>kmdp-utils</artifactId>
-  <version>2.0.0</version>
 
-  <packaging>pom</packaging>
+  <name>KMDP :: Base :: Utilities</name>
 
-  <modules>
-    <module>kmdp-lang-utils</module>
-    <module>kmdp-test-utils</module>
-    <module>kmdp-property-utils</module>
-    <module>kmdp-comparator-utils</module>
-    <module>kmdp-fhir2-utils</module>
-    <module>kmdp-fhir3-utils</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-environment</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
-  <name>KMDP :: Common Foundations</name>
+    <dependency>
+      <groupId>ca.uhn.hapi.fhir</groupId>
+      <artifactId>hapi-fhir-structures-dstu2</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>ca.uhn.hapi.fhir</groupId>
+      <artifactId>hapi-fhir-structures-dstu3</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>de.escalon.hypermedia</groupId>
+      <artifactId>hydra-jsonld</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>Saxon-HE</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.stanford.protege</groupId>
+      <artifactId>org.protege.xmlcatalog</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+    </dependency>
+  </dependencies>
 
 </project>

@@ -35,7 +35,7 @@
 
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-lang-utils</artifactId>
+      <artifactId>kmdp-utils</artifactId>
     </dependency>
 
     <dependency>
@@ -51,6 +51,17 @@
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>Saxon-HE</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.stanford.protege</groupId>
+      <artifactId>org.protege.xmlcatalog</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
       <scope>test</scope>
     </dependency>
 

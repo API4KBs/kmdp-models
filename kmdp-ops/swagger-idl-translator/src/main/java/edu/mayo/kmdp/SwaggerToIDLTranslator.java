@@ -22,6 +22,7 @@ import edu.mayo.kmdp.idl.Type;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
 import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.RefModel;
@@ -41,7 +42,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Optional;
-import org.apache.http.HttpStatus;
 
 public class SwaggerToIDLTranslator {
 
@@ -133,8 +133,8 @@ public class SwaggerToIDLTranslator {
 
   private Type getReturnType(Operation swaggerOp) {
     return Optional.ofNullable(swaggerOp.getResponses()
-        .getOrDefault(s(HttpStatus.SC_CREATED),
-            swaggerOp.getResponses().getOrDefault(s(HttpStatus.SC_OK),
+        .getOrDefault(ResponseCode.Created.getTag(),
+            swaggerOp.getResponses().getOrDefault(ResponseCode.OK.getTag(),
                 null)))
         .map(this::toIDLType)
         .orElse(new Type(Void));

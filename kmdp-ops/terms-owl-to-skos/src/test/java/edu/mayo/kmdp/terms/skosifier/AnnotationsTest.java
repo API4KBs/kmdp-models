@@ -85,8 +85,6 @@ public class AnnotationsTest extends TestBase {
     String id = UUID.nameUUIDFromBytes("id0001-v0042".getBytes()).toString();
     String subj = NS + "#" + id;
 
-    m.write(System.out);
-
     assertTrue(m.contains(
         dat_a(subj,
             DC_11.identifier,

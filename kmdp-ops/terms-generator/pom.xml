@@ -20,7 +20,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>terms-generator-parent</artifactId>
+    <artifactId>kmdp-ops</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
     <version>2.0.0</version>
   </parent>
@@ -33,7 +33,7 @@
   <dependencies>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-lang-utils</artifactId>
+      <artifactId>kmdp-utils</artifactId>
     </dependency>
 
     <dependency>
@@ -84,6 +84,11 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-test-utils</artifactId>

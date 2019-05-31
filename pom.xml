@@ -46,8 +46,9 @@
   <modules>
     <module>kmdp-environment</module>
     <module>kmdp-utils</module>
-    <module>kmdp-languages</module>
+    <module>kmdp-core</module>
     <module>kmdp-ops</module>
+    <module>kmdp-test-utils</module>
   </modules>
 
   <profiles>

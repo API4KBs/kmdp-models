@@ -1,0 +1,333 @@
+<!--
+
+    Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <version>2.0.0</version>
+    <artifactId>kmdp-impl</artifactId>
+    <groupId>edu.mayo.kmdp</groupId>
+  </parent>
+
+  <artifactId>kmdp-core</artifactId>
+
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>kmdp-datatype</module>
+    <module>kmdp-service-descr</module>
+    <module>kmdp-terminology-model</module>
+    <module>kmdp-terminology-content</module>
+    <module>kmdp-asset-metadata</module>
+  </modules>
+
+  <name>KMDP :: Languages (Meta)Models, Grammars and Schemas</name>
+
+  <properties>
+    <uml-directory>${project.build.directory}/uml</uml-directory>
+    <uml-included-packages>*</uml-included-packages>
+  </properties>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>xmi-xsd-xslt-translator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>xsd-yamls-xslt-translator</artifactId>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>unpack-xslt</id>
+              <phase>initialize</phase>
+              <goals>
+                <goal>unpack</goal>
+              </goals>
+              <configuration>
+                <artifactItems>
+                  <artifactItem>
+
+                    <groupId>edu.mayo.kmdp</groupId>
+                    <artifactId>xmi-xsd-xslt-translator</artifactId>
+                    <version>${project.version}</version>
+
+                    <type>jar</type>
+                    <overWrite>false</overWrite>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <excludes>**/*.class</excludes>
+                  </artifactItem>
+                  <artifactItem>
+
+                    <groupId>edu.mayo.kmdp</groupId>
+                    <artifactId>xsd-yamls-xslt-translator</artifactId>
+                    <version>${project.version}</version>
+
+                    <type>jar</type>
+                    <overWrite>false</overWrite>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <excludes>**/*.class</excludes>
+                  </artifactItem>
+                </artifactItems>
+              </configuration>
+            </execution>
+
+            <execution>
+              <id>unpack-xmi</id>
+              <phase>initialize</phase>
+              <goals>
+                <goal>unpack</goal>
+              </goals>
+              <configuration>
+                <artifactItems>
+                  <artifactItem>
+
+                    <artifactId>API4KP</artifactId>
+                    <groupId>org.omg.spec</groupId>
+                    <version>${api4kp.version}</version>
+
+                    <type>jar</type>
+                    <overWrite>false</overWrite>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <includes>**/*.uml</includes>
+                  </artifactItem>
+                </artifactItems>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>xml-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>generate-xsd</id>
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>transform</goal>
+              </goals>
+              <configuration>
+                <transformationSets>
+                  <transformationSet>
+                    <dir>${uml-directory}</dir>
+                    <includes>${uml-model}</includes>
+                    <stylesheet>${project.build.directory}/edu/mayo/kmdp/xmi-to-xsd.xsl</stylesheet>
+                    <fileMappers>
+                      <!-- The stylesheet generates XSD files independently (one per UML package) using the xslt:result-document feature.
+                      The 'main' output does not contain XSD information, but (optionally) logging information -->
+                      <fileMapper
+                        implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                        <targetExtension>.log.txt</targetExtension>
+                      </fileMapper>
+                    </fileMappers>
+                    <outputDir>${project.build.directory}/logs</outputDir>
+                    <parameters>
+                      <parameter>
+                        <name>targetFolder</name>
+                        <value>${project.build.outputDirectory}/xsd/</value>
+                      </parameter>
+                      <parameter>
+                        <name>includedPackages</name>
+                        <value>${uml-included-packages}</value>
+                      </parameter>
+                    </parameters>
+                  </transformationSet>
+                </transformationSets>
+              </configuration>
+            </execution>
+            <execution>
+              <id>generate-jaxb-bindings</id>
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>transform</goal>
+              </goals>
+              <configuration>
+                <forceCreation>true</forceCreation>
+                <transformationSets>
+                  <transformationSet>
+                    <dir>${uml-directory}</dir>
+                    <includes>${uml-model}</includes>
+                    <stylesheet>${project.build.directory}/edu/mayo/kmdp/xmi-to-jxb-jsonld.xsl
+                    </stylesheet>
+                    <fileMappers>
+                      <!-- The stylesheet generates XSD files independently (one per UML package) using the xslt:result-document feature.
+                      The 'main' output does not contain XSD information, but (optionally) logging information -->
+                      <fileMapper
+                        implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                        <targetExtension>.log.txt</targetExtension>
+                      </fileMapper>
+                    </fileMappers>
+                    <outputDir>${project.build.directory}/logs</outputDir>
+                    <parameters>
+                      <parameter>
+                        <name>targetFolder</name>
+                        <value>${project.build.outputDirectory}/xsd/</value>
+                      </parameter>
+                      <parameter>
+                        <name>includedPackages</name>
+                        <value>${uml-included-packages}</value>
+                      </parameter>
+                    </parameters>
+                  </transformationSet>
+                </transformationSets>
+              </configuration>
+            </execution>
+            <execution>
+              <id>generate-yaml</id>
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>transform</goal>
+              </goals>
+              <configuration>
+                <transformationSets>
+                  <transformationSet>
+                    <dir>${project.build.outputDirectory}/xsd/</dir>
+                    <includes>**/*.xsd</includes>
+                    <excludes>**/*.openapi.xsd</excludes>
+                    <stylesheet>file:${project.build.directory}/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl
+                    </stylesheet>
+                    <fileMappers>
+                      <fileMapper
+                        implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                        <targetExtension>.yaml</targetExtension>
+                      </fileMapper>
+                    </fileMappers>
+                    <outputDir>${project.build.outputDirectory}/yaml</outputDir>
+                    <parameters>
+                      <parameter>
+                        <name>CATALOGS</name>
+                        <value>
+                          file:/${project.build.outputDirectory}${file.separator}xsd${file.separator}terms-catalog.xml,file:/${project.build.outputDirectory}${file.separator}xsd${file.separator}api4kp-catalog.xml
+                        </value>
+                      </parameter>
+                    </parameters>
+                  </transformationSet>
+                </transformationSets>
+              </configuration>
+            </execution>
+            <execution>
+              <id>generate-openapi</id>
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>transform</goal>
+              </goals>
+              <configuration>
+                <forceCreation>true</forceCreation>
+                <transformationSets>
+                  <transformationSet>
+                    <dir>${uml-directory}</dir>
+                    <includes>${uml-model}</includes>
+                    <stylesheet>${project.build.directory}/edu/mayo/kmdp/xmi-to-xsd-ws.xsl
+                    </stylesheet>
+                    <fileMappers>
+                      <fileMapper
+                        implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                        <targetExtension>.log.txt</targetExtension>
+                      </fileMapper>
+                    </fileMappers>
+                    <outputDir>${project.build.directory}/logs</outputDir>
+                    <parameters>
+                      <parameter>
+                        <name>targetFolder</name>
+                        <value>${project.build.outputDirectory}/xsd/</value>
+                      </parameter>
+                      <parameter>
+                        <name>includedPackages</name>
+                        <value>${uml-included-packages}</value>
+                      </parameter>
+                      <parameter>
+                        <name>targetNamespace</name>
+                        <value>http://kmdp.mayo.edu/common/model</value>
+                      </parameter>
+                    </parameters>
+                  </transformationSet>
+                </transformationSets>
+              </configuration>
+            </execution>
+          </executions>
+
+          <dependencies>
+            <dependency>
+              <groupId>net.sf.saxon</groupId>
+              <artifactId>Saxon-HE</artifactId>
+              <version>${saxon.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>copy-xsd</id>
+              <phase>prepare-package</phase>
+              <goals>
+                <goal>copy-resources</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${project.build.outputDirectory}/xsd</outputDirectory>
+                <resources>
+                  <resource>
+                    <directory>${project.build.directory}/xsd</directory>
+                    <filtering>true</filtering>
+                  </resource>
+                </resources>
+              </configuration>
+            </execution>
+            <execution>
+              <id>copy-episode</id>
+              <phase>prepare-package</phase>
+              <goals>
+                <goal>copy-resources</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
+                <resources>
+                  <resource>
+                    <directory>${project.build.directory}/generated-sources/xjc/META-INF</directory>
+                    <filtering>true</filtering>
+                  </resource>
+                </resources>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+
+      </plugins>
+    </pluginManagement>
+  </build>
+
+</project>

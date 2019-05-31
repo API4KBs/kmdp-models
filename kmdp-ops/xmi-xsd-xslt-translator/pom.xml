@@ -34,7 +34,7 @@
   <dependencies>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-lang-utils</artifactId>
+      <artifactId>kmdp-utils</artifactId>
     </dependency>
 
     <dependency>
@@ -45,6 +45,11 @@
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>Saxon-HE</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-environment</artifactId>
       <scope>test</scope>
     </dependency>
 
