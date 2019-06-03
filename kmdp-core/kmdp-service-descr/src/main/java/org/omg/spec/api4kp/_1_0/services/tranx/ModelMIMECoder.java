@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0.services.language;
+package org.omg.spec.api4kp._1_0.services.tranx;
 
 import static edu.mayo.kmdp.util.Util.isEmpty;
 

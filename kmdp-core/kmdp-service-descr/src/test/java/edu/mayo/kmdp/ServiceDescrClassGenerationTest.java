@@ -45,10 +45,10 @@ import org.omg.spec.api4kp._1_0.services.Job;
 import org.omg.spec.api4kp._1_0.services.JobStatus;
 import org.omg.spec.api4kp._1_0.services.KnowledgePlatformComponent;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._1_0.services.language.Transrepresentation;
-import org.omg.spec.api4kp._1_0.services.language.TransrepresentationOperator;
-import org.omg.spec.api4kp._1_0.services.language.Transrepresentator;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeArtifactRepository;
+import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentation;
+import org.omg.spec.api4kp._1_0.services.tranx.TransrepresentationOperator;
+import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentator;
 
 public class ServiceDescrClassGenerationTest {
 
@@ -76,7 +76,7 @@ public class ServiceDescrClassGenerationTest {
             .withVersion("1")
             .withNamespace("edu.test"));
 
-    org.omg.spec.api4kp._1_0.services.language.ObjectFactory of = new org.omg.spec.api4kp._1_0.services.language.ObjectFactory();
+    org.omg.spec.api4kp._1_0.services.tranx.ObjectFactory of = new org.omg.spec.api4kp._1_0.services.tranx.ObjectFactory();
     String xml = JaxbUtil.marshallToString(Collections.singleton(of.getClass()),
         component,
         of::createTransrepresentator,
@@ -120,7 +120,7 @@ public class ServiceDescrClassGenerationTest {
 
       assertTrue(
           files.contains(org.omg.spec.api4kp._1_0.services.repository.KnowledgeArtifactRepository.class.getName()));
-      assertFalse(files.contains(org.omg.spec.api4kp._1_0.services.language.Transrepresentation.class.getName()));
+      assertFalse(files.contains(org.omg.spec.api4kp._1_0.services.tranx.Transrepresentation.class.getName()));
 
     } catch (URISyntaxException e) {
       e.printStackTrace();

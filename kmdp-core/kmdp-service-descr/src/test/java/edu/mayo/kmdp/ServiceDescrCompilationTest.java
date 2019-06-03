@@ -45,8 +45,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._1_0.identifiers.GAVIdentifier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._1_0.services.language.Transrepresentation;
-import org.omg.spec.api4kp._1_0.services.language.Transrepresentator;
+import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentation;
+import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentator;
 
 public class ServiceDescrCompilationTest {
 
@@ -60,8 +60,8 @@ public class ServiceDescrCompilationTest {
 
     try {
 
-      Class<?> txc = getNamedClass("org.omg.spec.api4kp._1_0.services.language.resources.Transrepresentator", tgt);
-      Class<?> txr = getNamedClass("org.omg.spec.api4kp._1_0.services.language.resources.Transrepresentation", tgt);
+      Class<?> txc = getNamedClass("org.omg.spec.api4kp._1_0.services.tranx.resources.Transrepresentator", tgt);
+      Class<?> txr = getNamedClass("org.omg.spec.api4kp._1_0.services.tranx.resources.Transrepresentation", tgt);
       assertNotNull(txc);
       assertNotNull(txr);
 

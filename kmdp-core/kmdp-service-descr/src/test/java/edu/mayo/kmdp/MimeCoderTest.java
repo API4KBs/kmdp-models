@@ -28,7 +28,7 @@ import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._1_0.services.language.ModelMIMECoder;
+import org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder;
 
 public class MimeCoderTest {
 
