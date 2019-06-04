@@ -51,6 +51,33 @@
     <module>kmdp-test-utils</module>
   </modules>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.reformanda.semper</groupId>
+        <artifactId>dependencyversion-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>set-api4kp-ver</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>set-version</goal>
+            </goals>
+            <configuration>
+              <propertySets>
+                <propertySet>
+                  <includes>
+                    <include>org.omg.spec:API4KP:jar</include>
+                  </includes>
+                </propertySet>
+              </propertySets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
       <id>public</id>

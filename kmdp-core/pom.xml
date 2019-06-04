@@ -112,7 +112,7 @@
 
                     <artifactId>API4KP</artifactId>
                     <groupId>org.omg.spec</groupId>
-                    <version>${api4kp.version}</version>
+                    <version>${org.omg.spec:API4KP:jar.version}</version>
 
                     <type>jar</type>
                     <overWrite>false</overWrite>
