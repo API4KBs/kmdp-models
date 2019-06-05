@@ -15,6 +15,8 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import static edu.mayo.kmdp.util.Util.ensureUTF8;
+
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
@@ -474,7 +476,8 @@ public class SkosTerminologyAbstractor {
 
     public ConceptTerm(URI conceptURI, String code, String label, String comment, URI refUri,
         ConceptScheme<Term> scheme) {
-      super(conceptURI, code, label, comment, refUri, scheme);
+
+      super(conceptURI, code, label, ensureUTF8(comment), refUri, scheme);
     }
 
     public String getTermConceptName() {

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
@@ -290,5 +291,12 @@ public class Util {
     return tag.toString().replaceAll("-", "");
   }
 
+  public static String ensureUTF8(String str) {
+    if (isEmpty(str)) {
+      return "";
+    }
+    Charset charset = Charset.forName("UTF-8");
+    return charset.decode(charset.encode(str)).toString();
+  }
 
 }
