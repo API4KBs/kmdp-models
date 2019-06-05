@@ -90,4 +90,86 @@
     </profile>
   </profiles>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>kmdp-environment</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- Utils -->
+
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>kmdp-utils</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>kmdp-test-utils</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- Models -->
+
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>kmdp-datatype</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>kmdp-terminology-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>kmdp-terminology-content</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>kmdp-asset-metadata</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>kmdp-service-descr</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+
+      <!-- Ops -->
+
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>xmi-xsd-xslt-translator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>xsd-yamls-xslt-translator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>terms-owl-to-skos</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>terms-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mayo.kmdp</groupId>
+        <artifactId>terms-generator</artifactId>
+        <type>test-jar</type>
+        <scope>test</scope>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>
