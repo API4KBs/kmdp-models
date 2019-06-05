@@ -183,8 +183,6 @@ Because it is based on the Time-indexed Value in Context ontology pattern (http:
 </dc:description>
     <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">David Shotton</dc:creator>
     <owl:versionIRI rdf:resource="http://purl.org/spar/pso/2014-02-01"/>
-    <owl:imports rdf:resource="http://purl.org/swan/2.0/foaf-essential/"/>
-    <owl:imports rdf:resource="http://www.essepuntato.it/2012/04/tvc"/>
     <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Silvio Peroni</dc:creator>
     <rdfs:comment xml:lang="en">The Publishing Status Ontology (PSO) is an ontology designed to characterise the publication status of documents at each stage of the publishing process (draft, submitted, under review, etc.).
 
@@ -198,7 +196,6 @@ Because it is based on the Time-indexed Value in Context ontology pattern (http:
 
 **Cite as:** Peroni, S., Shotton, D., Vitali, F. (2012). Scholarly publishing and the Linked Data: describing roles, statuses, temporal and contextual extents. In Proceedings of the 8th International Conference on Semantic Systems (i-Semantics 2012): 9-16. DOI: https://doi.org/10.1145/2362499.2362502. Open Access at: http://speroni.web.cs.unibo.it/publications/peroni-2012-scholarly-publishing-linked.pdf</rdfs:comment>
     <dc:description rdf:resource="http://purl.org/spar/pso/pso.png"/>
-    <owl:imports rdf:resource="http://www.ontologydesignpatterns.org/cp/owl/participation.owl"/>
     <dc:date rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2014-02-01</dc:date>
     <owl:priorVersion rdf:resource="https://svn.code.sf.net/p/sempublishing/code/PSO/2014-01-31-pso-1_6.owl"/>
     <dc:title xml:lang="en">PSO, the Publishing Status Ontology</dc:title>

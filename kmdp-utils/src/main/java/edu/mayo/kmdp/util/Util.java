@@ -295,8 +295,7 @@ public class Util {
     if (isEmpty(str)) {
       return "";
     }
-    Charset charset = Charset.forName("UTF-8");
-    return charset.decode(charset.encode(str)).toString();
+    return str.replaceAll("[^\\x20-\\x7e]", "");
   }
 
 }
