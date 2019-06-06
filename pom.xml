@@ -7,11 +7,11 @@
   <parent>
     <groupId>edu.mayo.kmdp</groupId>
     <artifactId>kmdp-bom</artifactId>
-    <version>(1.9.0,2.0.1)</version>
+    <version>(2.0.1,2.0.3)</version>
   </parent>
 
   <artifactId>kmdp-impl</artifactId>
-  <version>2.0.0</version>
+  <version>2.0.2</version>
 
   <packaging>pom</packaging>
 
