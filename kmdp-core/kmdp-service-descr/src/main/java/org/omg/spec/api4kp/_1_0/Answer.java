@@ -19,6 +19,7 @@ package org.omg.spec.api4kp._1_0;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
@@ -58,7 +60,7 @@ public class Answer<T> extends Explainer {
   public static <X> Answer<X> failed(Throwable t) {
     return new Answer<X>()
         .withCodedOutcome(mapCode(t))
-        .withMeta(Collections.emptyMap())
+        .withMeta(new HashMap<>())
         .withValue(null)
         .withExplanation(t.getMessage());
   }
@@ -66,9 +68,21 @@ public class Answer<T> extends Explainer {
   public static <X> Answer<X> of(X value) {
     return new Answer<X>()
         .withCodedOutcome(ResponseCode.OK)
-        .withMeta(Collections.emptyMap())
+        .withMeta(new HashMap<>())
         .withValue(value)
         .withExplanation("OK : Lift " + value.toString());
+  }
+
+  public static <X> Answer<X> of(String responseCode, X value) {
+    return of(resolveCode(responseCode),value,new HashMap<>());
+  }
+
+  public static <X> Answer<X> of(Integer responseCode, X value) {
+    return of(responseCode.toString(),value,new HashMap<>());
+  }
+
+  public static <X> Answer<X> of(ResponseCode responseCode, X value) {
+    return of(responseCode,value,new HashMap<>());
   }
 
   public static <X> Answer<X> of(String responseCode, X value, Map<String, List<String>> meta) {
@@ -183,8 +197,14 @@ public class Answer<T> extends Explainer {
     return this;
   }
 
-  protected Answer<T> withExplanation(String msg) {
+  public Answer<T> withExplanation(String msg) {
     super.addExplanation(msg);
+
+    String key = "urn:uuid:" + UUID.randomUUID().toString();
+    this.getMeta().put(Explainer.EXPL_HEADER, Arrays
+        .asList("<" + key + ">;rel=\"" + Explainer.PROV_KEY+ "\";"));
+    this.getMeta().put(key, Arrays.asList(msg));
+
     return this;
   }
 
@@ -202,7 +222,9 @@ public class Answer<T> extends Explainer {
       if (!this.meta.containsKey(k)) {
         this.meta.put(k, new ArrayList<>(v));
       } else {
-        this.meta.get(k).addAll(additionalMeta.get(k));
+        if (! EXPL_HEADER.equals(k)) {
+          this.meta.get(k).addAll(additionalMeta.get(k));
+        }
       }
     });
     return this;

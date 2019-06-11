@@ -19,9 +19,12 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.ofNaturalLanguageRep;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
@@ -76,6 +79,11 @@ public abstract class Explainer {
       s.setSerializedExpression(s.getSerializedExpression() + "\n" + o.getSerializedExpression());
     }
 
+  }
+
+  public Explainer withExplanation(String expl) {
+    addExplanation(expl);
+    return this;
   }
 
   protected void addExplanation(String s) {

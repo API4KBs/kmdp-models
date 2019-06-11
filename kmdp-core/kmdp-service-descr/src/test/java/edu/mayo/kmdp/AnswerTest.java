@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
 import java.util.Collections;
@@ -52,7 +53,7 @@ public class AnswerTest {
     assertTrue(ans.isSuccess());
     assertFalse(ans.isFailure());
 
-    assertTrue(ans.listMeta().isEmpty());
+    assertFalse(Util.isEmpty(ans.printExplanation()));
   }
 
   @Test
@@ -99,18 +100,10 @@ public class AnswerTest {
     assertEquals(backLink, ans.getMeta("Link").orElse("META not found"));
   }
 
-  //TODO This is the most unwieldy.. probably needs better APIs
   @Test
   public void testExplanationConstruction() {
     String msg = "This is the history";
-
-    String key = "urn:uuid:" + UUID.randomUUID().toString();
-    Map<String, List<String>> headers = new HashMap<>();
-    headers.put(Explainer.EXPL_HEADER, Collections.singletonList("<" + key + ">;rel=\"" + Explainer.PROV_KEY+ "\";"));
-    headers.put(key, Collections.singletonList(msg));
-
-    Answer<String> ans = Answer.of(ResponseCode.OK, "foo", headers);
-
+    Answer<String> ans = Answer.of(ResponseCode.OK, "foo").withExplanation(msg);
     assertEquals(msg, ans.printExplanation());
   }
 
@@ -120,7 +113,9 @@ public class AnswerTest {
   public void testWithKCarrier() {
     Answer<? extends KnowledgeCarrier> ans = Answer.of(AbstractCarrier.ofNaturalLanguageRep("Foo"));
 
-    ans = ans.map( (kc) -> kc.map( (self) -> KnowledgeCarrier.ofNaturalLanguageRep( "mapped " + ((ExpressionCarrier)self).getSerializedExpression() ) ) );
+    ans = ans.map(
+        (kc) -> kc.map( (self) -> KnowledgeCarrier.ofNaturalLanguageRep(
+            "mapped " + ((ExpressionCarrier)self).getSerializedExpression() ) ) );
 
     KnowledgeCarrier kc = ans.getOptionalValue().get();
     assertNotNull(kc);
