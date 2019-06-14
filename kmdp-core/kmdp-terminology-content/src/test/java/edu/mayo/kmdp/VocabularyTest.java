@@ -73,7 +73,7 @@ public class VocabularyTest {
     assertNotNull(KnowledgeRepresentationLanguageRole.Expression_Language);
     assertNotNull(KnowledgeProcessingOperation.Translation_Task);
     assertNotNull(ParsingLevel.Encoded_Knowledge_Expression);
-    assertNotNull(KnowledgeAssetRole.Operational_Concept_Defintion);
+    assertNotNull(KnowledgeAssetRole.Operational_Concept_Definition);
     assertNotNull(PublicationEventType.Authoring);
     assertNotNull(PublishingRole.Contributor);
     assertNotNull(PublicationStatus.Draft);

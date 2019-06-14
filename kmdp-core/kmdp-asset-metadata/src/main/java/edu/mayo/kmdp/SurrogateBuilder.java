@@ -17,7 +17,7 @@ package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.Language.English;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._1_0.KnowledgeAssetRole.Operational_Concept_Defintion;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._1_0.KnowledgeAssetRole.Operational_Concept_Definition;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
@@ -130,7 +130,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder asOperationalDefinition(ConceptIdentifier subject, Term proposition,
       Term... inputs) {
-    get().withRole(Operational_Concept_Defintion);
+    get().withRole(Operational_Concept_Definition);
 
     if (proposition != null) {
       this.withAnnotation(AnnotationRelType.Defines.asConcept(), proposition.asConcept());
