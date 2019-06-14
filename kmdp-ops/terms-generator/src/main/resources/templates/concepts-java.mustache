@@ -128,6 +128,10 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
 		return {{termsProvider}}.resolveRef( refUri, {{typeName}}.class );
 	}
 
+	public static Optional<{{typeName}}> resolveId( final String conceptId ) {
+		return {{termsProvider}}.resolveId( conceptId, {{typeName}}.class );
+	}
+
   public static class Adapter extends TermsXMLAdapter {
     public static final TermsXMLAdapter instance = new Adapter();
     protected Term[] getValues() { return values(); }

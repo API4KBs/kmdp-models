@@ -52,8 +52,34 @@ public class DatatypeHelper {
         .withVersion(version);
   }
 
-
   public static ConceptIdentifier trm(final String termUri) {
+    return trm(termUri,null,termUri);
+  }
+
+  public static ConceptIdentifier trm(final String termUri, final String label) {
+    return trm(termUri,label,termUri);
+  }
+
+  public static ConceptIdentifier trm(final String termUri, final String label, final String refUri) {
+    URI u = ensureResolved(termUri);
+    String l = ensureLabel(label, u);
+    URI r = Util.isEmpty(refUri) ? u : ensureResolved(refUri);
+    return new ConceptIdentifier()
+        .withConceptId(u)
+        .withLabel(l)
+        .withRef(r);
+  }
+
+  private static String ensureLabel(String label, URI u) {
+    if (!Util.isEmpty(label)) {
+      return label;
+    }
+    return Util.isEmpty(u.getFragment())
+        ? u.getPath().substring(u.getPath().lastIndexOf('/') + 1)
+        : u.getFragment();
+  }
+
+  private static URI ensureResolved(String termUri) {
     String uri = termUri;
     if (uri.matches("\\w+:.+")) {
       String candidatePfx = uri.substring(0, uri.indexOf(":"));
@@ -62,17 +88,9 @@ public class DatatypeHelper {
         uri = base + "#" + termUri.substring(termUri.lastIndexOf(":") + 1);
       }
     }
-    URI u = URI.create(uri);
-    return new ConceptIdentifier()
-        .withLabel(Util.isEmpty(u.getFragment())
-            ? u.getPath().substring(u.getPath().lastIndexOf('/') + 1)
-            : u.getFragment())
-        .withRef(u);
+    return URI.create(uri);
   }
 
-  public static ConceptIdentifier trm(final String termUri, final String label) {
-    return trm(termUri).withLabel(label);
-  }
 
   public static URIIdentifier uri(final String id, final String versionTag) {
     return new URIIdentifier()

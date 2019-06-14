@@ -62,6 +62,12 @@ public class ConceptSchemeDirectory {
         .findAny();
   }
 
+  public <T extends Term> Optional<T> resolveId(final String conceptId, final Class<T> enumKlass) {
+    return Arrays.stream(enumKlass.getEnumConstants())
+        .filter((x) -> x.getConceptId().toString().equals(conceptId))
+        .findAny();
+  }
+
   public <T extends Term> Optional<T> resolveRef(final String refUri, final Class<T> enumKlass) {
     return Arrays.stream(enumKlass.getEnumConstants())
         .filter((x) -> x.getRef().toString().equals(refUri))
