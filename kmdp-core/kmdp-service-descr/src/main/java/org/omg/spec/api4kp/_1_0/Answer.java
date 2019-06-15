@@ -112,6 +112,13 @@ public class Answer<T> extends Explainer {
     return getHandler().map(this, mapper);
   }
 
+  public static <U> Answer<U> first(List<U> coll) {
+    return coll.isEmpty()
+        ? Answer.failed(new NoSuchElementException())
+        : Answer.of(coll.iterator().next());
+  }
+
+
   protected OutcomeStrategy<T> getHandler() {
     if (handler == null) {
       handler = selectHandler(getCodedOutcome());
@@ -231,7 +238,7 @@ public class Answer<T> extends Explainer {
   }
 
   protected Answer<T> withMeta(Map<String, List<String>> meta) {
-    setMeta(meta);
+    setMeta(new HashMap<>(meta));
     return this;
   }
 
@@ -267,7 +274,7 @@ public class Answer<T> extends Explainer {
   }
 
   protected void setMeta(Map<String, List<String>> meta) {
-    this.meta = meta;
+    this.meta = new HashMap<>(meta);
   }
 
 
@@ -326,6 +333,7 @@ public class Answer<T> extends Explainer {
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
       } catch (Throwable t) {
+        t.printStackTrace();
         return Answer.<U>failed(t)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);

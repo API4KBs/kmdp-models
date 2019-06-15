@@ -68,17 +68,20 @@ public abstract class Explainer {
 
   protected void mergeExplanation(KnowledgeCarrier other) {
     //TODO This should be a "combiner" for KnowledgeCarriers, depending on the adopted representation language
-    if (this.explanation == null) {
-      this.explanation = other;
-    } else {
-      if (! (this.explanation instanceof ExpressionCarrier) || ! (other instanceof ExpressionCarrier)) {
-        throw new UnsupportedOperationException("TODO : Only natural language explanations are currently supported");
+    if (other != null) {
+      if (this.explanation == null) {
+        this.explanation = other;
+      } else {
+        if (!(this.explanation instanceof ExpressionCarrier)
+            || !(other instanceof ExpressionCarrier)) {
+          throw new UnsupportedOperationException(
+              "TODO : Only natural language explanations are currently supported");
+        }
+        ExpressionCarrier s = (ExpressionCarrier) explanation;
+        ExpressionCarrier o = (ExpressionCarrier) other;
+        s.setSerializedExpression(s.getSerializedExpression() + "\n" + o.getSerializedExpression());
       }
-      ExpressionCarrier s = (ExpressionCarrier) explanation;
-      ExpressionCarrier o = (ExpressionCarrier) other;
-      s.setSerializedExpression(s.getSerializedExpression() + "\n" + o.getSerializedExpression());
     }
-
   }
 
   public Explainer withExplanation(String expl) {
