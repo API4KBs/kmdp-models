@@ -23,6 +23,7 @@ import edu.mayo.kmdp.util.Util;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class CatalogGenerator extends BaseEnumGenerator {
@@ -34,6 +35,9 @@ public class CatalogGenerator extends BaseEnumGenerator {
   public void generate(String namespace, Collection<CatalogEntry> entries, File outputDir,
       String catalogName) {
     Map<String, Object> context = new HashMap<>();
+
+    // ensure no duplicates
+    entries = new HashSet<>(entries);
 
     context.put("targetNamespace", namespace);
     //context.put( "base", NameUtils.namespaceURIToPackage( namespace ).replaceAll( "\\.", "/" ) );
@@ -80,6 +84,25 @@ public class CatalogGenerator extends BaseEnumGenerator {
 
     public String getUri() {
       return uri;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof CatalogEntry)) {
+        return false;
+      }
+
+      CatalogEntry that = (CatalogEntry) o;
+
+      return uri != null ? uri.equals(that.uri) : that.uri == null;
+    }
+
+    @Override
+    public int hashCode() {
+      return uri != null ? uri.hashCode() : 0;
     }
   }
 }
