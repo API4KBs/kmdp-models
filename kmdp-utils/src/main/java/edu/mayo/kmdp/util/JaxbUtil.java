@@ -129,6 +129,13 @@ public class JaxbUtil {
     }
   }
 
+  public static String marshallToString(final Object root) {
+    return marshall(Collections.singleton(root.getClass()), root, defaultProperties())
+        .map(ByteArrayOutputStream::toByteArray)
+        .map(String::new)
+        .orElse("");
+  }
+
   public static String marshallToString(final Collection<Class<?>> ctx,
       final Object root,
       JaxbConfig p) {

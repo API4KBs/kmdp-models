@@ -309,6 +309,10 @@ public class SurrogateBuilder {
     return uri(construct(validate(uuid)),
         versionTag);
   }
+  public static URIIdentifier id(UUID uuid, String versionTag) {
+    return uri(construct(uuid.toString()),
+        versionTag);
+  }
 
   private static String construct(String id) {
     return Registry.MAYO_ASSETS_BASE_URI + id;
