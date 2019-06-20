@@ -16,6 +16,7 @@
 package org.omg.spec.api4kp._1_0;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
 import edu.mayo.ontology.taxonomies.krformat._2018._08.SerializationFormat;
@@ -132,6 +133,11 @@ public class AbstractCarrier {
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format) {
     return rep(language, serialization, format, null, null);
+  }
+
+  // TODO Should the object be unified?
+  public static SyntacticRepresentation rep(Representation meta) {
+    return rep(meta.getLanguage(), meta.getSerialization(), meta.getFormat(), null, null);
   }
 
 

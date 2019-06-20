@@ -74,6 +74,10 @@ public class ModelMIMECoder {
   }
 
   public static Optional<SyntacticRepresentation> decode(String mime) {
+    if (Util.isEmpty(mime)) {
+      return Optional.empty();
+    }
+
     Matcher matcher = rxPattern.matcher(mime);
     if (!matcher.matches()) {
       return Optional.empty();
