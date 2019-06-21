@@ -80,14 +80,20 @@ public abstract class CodeGenTestBase {
 
 
   public static void showDirContent(File folder) {
-    showDirContent(folder, 0);
+    showDirContent(folder,false);
   }
 
-  public static void showDirContent(File file, int i) {
-//    System.out.println(tab(i) + " " + file.getName());
+  public static void showDirContent(File folder, boolean enablePrintout) {
+    showDirContent(folder, 0, enablePrintout);
+  }
+
+  public static void showDirContent(File file, int i, boolean enablePrintout) {
+    if (enablePrintout) {
+      System.out.println(tab(i) + " " + file.getName());
+    }
     if (file.isDirectory()) {
       for (File sub : file.listFiles()) {
-        showDirContent(sub, i + 1);
+        showDirContent(sub, i + 1, enablePrintout);
       }
     }
   }

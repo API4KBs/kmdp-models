@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
@@ -67,6 +68,21 @@ public class PropertiesUtil {
     return p.containsKey(name)
         ? Optional.of(builder.apply(p.getProperty(name)))
         : Optional.empty();
+  }
+
+  public static Optional<Properties> parse(String serializedProperties) {
+    try {
+      Properties prop = new Properties();
+      prop.load(new ByteArrayInputStream(serializedProperties.getBytes()));
+      return Optional.of(prop);
+    } catch (IOException e) {
+      e.printStackTrace();
+      return Optional.empty();
+    }
+  }
+
+  public static Properties doParse(String serializedProperties) {
+    return parse(serializedProperties).orElse(new Properties());
   }
 
   public static class PropertyBuilder {
