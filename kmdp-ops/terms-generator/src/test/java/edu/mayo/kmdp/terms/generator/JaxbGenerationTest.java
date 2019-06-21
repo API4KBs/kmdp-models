@@ -25,7 +25,6 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static java.util.Collections.singletonList;
-import static org.apache.jena.vocabulary.AS.startIndex;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,10 +37,11 @@ import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.util.XPathUtil;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -57,7 +57,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.validation.Schema;
-import org.apache.jena.base.Sys;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -67,7 +66,6 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 @EnableRuleMigrationSupport
 public class JaxbGenerationTest {
@@ -293,7 +291,9 @@ public class JaxbGenerationTest {
       OWLOntology o = owlOntologyManager.loadOntologyFromOntologyDocument(
           JaxbGenerationTest.class.getResourceAsStream("/test.owl"));
 
-      return new SkosTerminologyAbstractor().traverse(o, true);
+      return new SkosTerminologyAbstractor()
+          .traverse(o, new SkosAbstractionConfig()
+              .with(SkosAbstractionParameters.REASON, true));
     } catch (Exception e) {
       e.printStackTrace();
       fail(e.getMessage());

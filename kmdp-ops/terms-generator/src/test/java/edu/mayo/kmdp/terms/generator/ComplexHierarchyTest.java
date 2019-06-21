@@ -116,8 +116,7 @@ public class ComplexHierarchyTest {
       Optional<OWLOntology> skosOntology = Optional
           .ofNullable(manager.addOntology(om.getBaseModel().getGraph()));
 
-      ConceptGraph schemes = new SkosTerminologyAbstractor().traverse(skosOntology.get(),
-          false);
+      ConceptGraph schemes = new SkosTerminologyAbstractor().traverse(skosOntology.get());
 
       Optional<ConceptScheme<Term>> scheme  = schemes.getConceptScheme(
           URI.create("http://test.foo#" + uuid("KnowledgeAssetCategories")));

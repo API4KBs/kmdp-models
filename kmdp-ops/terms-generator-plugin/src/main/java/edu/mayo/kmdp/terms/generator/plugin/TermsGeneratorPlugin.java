@@ -21,9 +21,21 @@ import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor;
 import edu.mayo.kmdp.terms.generator.XSDEnumTermsGenerator;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.util.OntologyLoader;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
 import edu.mayo.kmdp.util.Util;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -31,16 +43,10 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.protege.xmlcatalog.CatalogUtilities;
 import org.protege.xmlcatalog.owlapi.XMLCatalogIRIMapper;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Goal
@@ -64,6 +70,19 @@ public class TermsGeneratorPlugin extends AbstractMojo {
 
   public void setReason(boolean reason) {
     this.reason = reason;
+  }
+
+  /**
+   * @parameter default-value="false"
+   */
+  private boolean enforceClosure = false;
+
+  public boolean isEnforceClosure() {
+    return enforceClosure;
+  }
+
+  public void setEnforceClosure(boolean enforceClosure) {
+    this.enforceClosure = enforceClosure;
   }
 
   /**
@@ -158,6 +177,19 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   }
 
   /**
+   * @parameter
+   */
+  private List<String> ignoredIRIs;
+
+  public List<String> getIgnoredIRIs() {
+    return ignoredIRIs;
+  }
+
+  public void setIgnoredIRIs(List<String> ignoredIRIs) {
+    this.ignoredIRIs = ignoredIRIs;
+  }
+
+  /**
    * @parameter default-value="./target/generated-sources"
    */
   private File outputDirectory;
@@ -240,14 +272,25 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   private Stream<CatalogGenerator.CatalogEntry> transform(String source) {
     OWLOntology ontology = null;
     try {
-      ontology = new OntologyLoader().loadOntology(new String[]{source},
-          getSourceCatalog().orElse(null));
+      IRI[] ignoreds = getIgnoredIRIs() == null
+          ? new IRI[0]
+          : getIgnoredIRIs().stream()
+              .map(IRI::create)
+              .collect(Collectors.toList())
+              .toArray(new IRI[getIgnoredIRIs().size()]);
+      ontology = new OntologyLoader().loadOntology(
+          new String[]{source},
+          getSourceCatalog().orElse(null),
+          ignoreds);
     } catch (OWLOntologyCreationException e) {
       return Stream.empty();
     }
 
-    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor().traverse(ontology,
-        this.reason);
+    SkosAbstractionConfig cfg = new SkosAbstractionConfig()
+        .with(SkosAbstractionParameters.REASON,this.reason)
+        .with(SkosAbstractionParameters.ENFORCE_CLOSURE,enforceClosure);
+    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
+        .traverse(ontology,cfg);
 
     if (!outputDirectory.exists()) {
       outputDirectory.mkdirs();

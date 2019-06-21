@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
@@ -71,8 +73,9 @@ public class ReferentTest {
       fail("Unable to extract graph");
     }
 
-    return new SkosTerminologyAbstractor().traverse(skosOntology.get(),
-        true);
+    return new SkosTerminologyAbstractor()
+        .traverse(skosOntology.get(),new SkosAbstractionConfig()
+            .with(SkosAbstractionParameters.REASON,true));
 
   }
 

@@ -15,10 +15,15 @@
  */
 package edu.mayo.kmdp.terms.generator.util;
 
+import java.util.Arrays;
+import org.semanticweb.HermiT.Configuration;
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
+import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import java.io.File;
@@ -33,13 +38,22 @@ public class OntologyLoader {
     return loadOntology(resources, null);
   }
 
-  public OWLOntology loadOntology(String[] resources, OWLOntologyIRIMapper catalog)
+  public OWLOntology loadOntology(String[] resources, OWLOntologyIRIMapper catalog, IRI... ignoredImports)
       throws OWLOntologyCreationException {
     OWLOntology ontology = null;
     OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+
     if (catalog != null) {
       manager.getIRIMappers().add(catalog);
     }
+
+    OWLOntologyLoaderConfiguration cfg = manager.getOntologyLoaderConfiguration().clearIgnoredImports();
+    for (IRI iri: ignoredImports) {
+      // The add clones the configuration, need to reassign
+      cfg = cfg.addIgnoredImport(iri);
+    }
+    manager.setOntologyLoaderConfiguration(cfg);
+
 
     for (String res : resources) {
       ontology = loadOntologyPiece(res, manager);

@@ -18,6 +18,7 @@ package edu.mayo.kmdp.terms.generator.config;
 import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
+import java.util.Map;
 import java.util.Properties;
 
 public class EnumGenerationConfig extends
@@ -36,12 +37,6 @@ public class EnumGenerationConfig extends
 
   public enum EnumGenerationParams implements Option<EnumGenerationParams> {
 
-    PACKAGE_NAME(Opt.of(
-        "packageName",
-        "",
-        "Name of the Java package",
-        String.class,
-        true)),
     WITH_JAXB(Opt.of(
         "withJaxb",
         "false",
@@ -59,6 +54,18 @@ public class EnumGenerationConfig extends
         "false",
         "Enable JSON support",
         Boolean.class,
+        false)),
+    PACKAGE_NAME(Opt.of(
+        "packageName",
+        "",
+        "Forces all enums to be generated in the given package (overrides and native will be ignored)",
+        String.class,
+        false)),
+    PACKAGE_OVERRIDES(Opt.of(
+        "packageOverrides",
+        "",
+        "Override package names from URI-driven defaults, provided as a comma-separated list of <defaultName>=<overriddenName>",
+        String.class,
         false)),
     TERMS_PROVIDER(Opt.of(
         "termsProvider",

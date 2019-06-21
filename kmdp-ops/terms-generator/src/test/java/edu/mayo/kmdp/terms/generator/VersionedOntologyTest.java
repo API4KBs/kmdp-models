@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
@@ -42,42 +44,42 @@ public class VersionedOntologyTest {
 
   String owl =
       "<rdf:RDF xmlns=\"http://org.test/labelsTest\"\n"
-      + "     xml:base=\"http://org.test/labelsTest\"\n"
-      + "     xmlns:dct=\"http://purl.org/dc/terms/\"\n"
-      + "     xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
-      + "     xmlns:owl=\"http://www.w3.org/2002/07/owl#\"\n"
-      + "     xmlns:xml=\"http://www.w3.org/XML/1998/namespace\"\n"
-      + "     xmlns:xsd=\"http://www.w3.org/2001/XMLSchema#\"\n"
-      + "     xmlns:skos=\"http://www.w3.org/2004/02/skos/core#\"\n"
-      + "     xmlns:sm=\"http://www.omg.org/techprocess/ab/SpecificationMetadata/\"\n"
-      + "     xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n"
-      + "     xmlns:lcc-lr=\"http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/\"\n"
-      + "     xmlns:api4kp=\"http://org.test/labelsTest\">\n"
-      + "    <owl:Ontology rdf:about=\"http://org.test/labelsTest\">\n"
-      + "        <owl:versionIRI rdf:resource=\"http://org.test/20190108/labelsTest\"/>\n"
-      + "    </owl:Ontology>\n"
-      + "    \n"
-      + "<!-- http://org.test/labelsTest#Child -->\n"
-      + "\n"
-      + "    <owl:Class rdf:about=\"http://org.test/labelsTest#Child\">\n"
-      + "        <rdfs:subClassOf rdf:resource=\"http://org.test/labelsTest#Parent\"/>\n"
-      + "    </owl:Class>\n"
-      + "    \n"
-      + "\n"
-      + "\n"
-      + "    <!-- http://org.test/labelsTest#GrandChild -->\n"
-      + "\n"
-      + "    <owl:Class rdf:about=\"http://org.test/labelsTest#GrandChild\">\n"
-      + "        <rdfs:subClassOf rdf:resource=\"http://org.test/labelsTest#Child\"/>\n"
-      + "    </owl:Class>\n"
-      + "    \n"
-      + "\n"
-      + "\n"
-      + "    <!-- http://org.test/labelsTest#Parent -->\n"
-      + "\n"
-      + "    <owl:Class rdf:about=\"http://org.test/labelsTest#Parent\"/>    \n"
-      + "\n"
-      + "</rdf:RDF>\n";
+          + "     xml:base=\"http://org.test/labelsTest\"\n"
+          + "     xmlns:dct=\"http://purl.org/dc/terms/\"\n"
+          + "     xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
+          + "     xmlns:owl=\"http://www.w3.org/2002/07/owl#\"\n"
+          + "     xmlns:xml=\"http://www.w3.org/XML/1998/namespace\"\n"
+          + "     xmlns:xsd=\"http://www.w3.org/2001/XMLSchema#\"\n"
+          + "     xmlns:skos=\"http://www.w3.org/2004/02/skos/core#\"\n"
+          + "     xmlns:sm=\"http://www.omg.org/techprocess/ab/SpecificationMetadata/\"\n"
+          + "     xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n"
+          + "     xmlns:lcc-lr=\"http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/\"\n"
+          + "     xmlns:api4kp=\"http://org.test/labelsTest\">\n"
+          + "    <owl:Ontology rdf:about=\"http://org.test/labelsTest\">\n"
+          + "        <owl:versionIRI rdf:resource=\"http://org.test/20190108/labelsTest\"/>\n"
+          + "    </owl:Ontology>\n"
+          + "    \n"
+          + "<!-- http://org.test/labelsTest#Child -->\n"
+          + "\n"
+          + "    <owl:Class rdf:about=\"http://org.test/labelsTest#Child\">\n"
+          + "        <rdfs:subClassOf rdf:resource=\"http://org.test/labelsTest#Parent\"/>\n"
+          + "    </owl:Class>\n"
+          + "    \n"
+          + "\n"
+          + "\n"
+          + "    <!-- http://org.test/labelsTest#GrandChild -->\n"
+          + "\n"
+          + "    <owl:Class rdf:about=\"http://org.test/labelsTest#GrandChild\">\n"
+          + "        <rdfs:subClassOf rdf:resource=\"http://org.test/labelsTest#Child\"/>\n"
+          + "    </owl:Class>\n"
+          + "    \n"
+          + "\n"
+          + "\n"
+          + "    <!-- http://org.test/labelsTest#Parent -->\n"
+          + "\n"
+          + "    <owl:Class rdf:about=\"http://org.test/labelsTest#Parent\"/>    \n"
+          + "\n"
+          + "</rdf:RDF>\n";
 
   @Test
   public void testOWLtoTerms() throws IOException {
@@ -103,8 +105,9 @@ public class VersionedOntologyTest {
     Optional<OWLOntology> skosOntology = skosModel.map(Model::getGraph)
         .map(manager::addOntology);
 
-    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor().traverse(skosOntology.get(),
-        true);
+    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
+        .traverse(skosOntology.get(), new SkosAbstractionConfig()
+            .with(SkosAbstractionParameters.REASON, true));
 
     Collection<ConceptScheme<Term>> schemes = graph.getConceptSchemes();
     assertEquals(1, schemes.size());

@@ -19,16 +19,24 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptTerm;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.PropertiesUtil;
+import edu.mayo.kmdp.util.Util;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class BaseEnumGenerator {
 
@@ -63,20 +71,24 @@ public class BaseEnumGenerator {
       EnumGenerationConfig options,
       SkosTerminologyAbstractor.ConceptGraph graph) {
 
-    String packageName = options.getTyped(EnumGenerationParams.PACKAGE_NAME);
     Boolean jaxb = options.getTyped(EnumGenerationParams.WITH_JAXB);
     Boolean jsonld = options.getTyped(EnumGenerationParams.WITH_JSONLD);
     Boolean json = options.getTyped(EnumGenerationParams.WITH_JSON);
 
+    String defaultPackage = options.getTyped(EnumGenerationParams.PACKAGE_NAME);
+    Properties overrides = PropertiesUtil.doParse(options.getTyped(EnumGenerationParams.PACKAGE_OVERRIDES));
+
     String className = conceptScheme.getPublicName();
-    String innerPackageName = getPackageName(conceptScheme, packageName);
+    String innerPackageName = getPackageName(conceptScheme, defaultPackage, overrides);
 
     Map<String, Object> context = new HashMap<>();
     context.put("conceptScheme", conceptScheme);
+    context.put("conceptSchemeID", NameUtils.getTrailingPart(conceptScheme.getId().toString()));
     context.put("concepts", graph.getConceptList(conceptScheme.getId()));
     context.put("typeName", className);
     context.put("namespace", edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.getVersionId()));
     context.put("packageName", innerPackageName);
+    context.put("overridePk", overridePk(defaultPackage,overrides));
     context.put("termsProvider", options.get(EnumGenerationParams.TERMS_PROVIDER).get());
     context.put("implClassName",
         edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme.class.getName());
@@ -89,11 +101,23 @@ public class BaseEnumGenerator {
     return context;
   }
 
+  private Mustache.Lambda overridePk(String defaultPackage, Properties overrides) {
+    return (frag, out) -> {
+      String key = frag.execute();
+      out.write(getPackageName(key,defaultPackage,overrides));
+    };
+  }
 
-  protected String getPackageName(ConceptScheme<Term> conceptScheme, String packageName) {
-    return packageName != null && !packageName.isEmpty()
-        ? packageName
-        : NameUtils.namespaceURIToPackage(conceptScheme.getVersionId().toString());
+  protected String getPackageName(ConceptScheme<Term> conceptScheme, String defaultPackage, Properties packageNameOverrides) {
+    String packageName = NameUtils.namespaceURIToPackage(conceptScheme.getVersionId().toString());
+    return getPackageName(packageName,defaultPackage,packageNameOverrides);
+  }
+
+  protected String getPackageName(String nativePackage, String defaultPackage, Properties packageNameOverrides) {
+    if (!Util.isEmpty(defaultPackage)) {
+      return defaultPackage;
+    }
+    return packageNameOverrides.getOrDefault(nativePackage,nativePackage).toString();
   }
 
 

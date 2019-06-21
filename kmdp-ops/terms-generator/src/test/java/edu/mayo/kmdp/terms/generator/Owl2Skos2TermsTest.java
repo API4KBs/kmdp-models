@@ -28,6 +28,8 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
@@ -96,14 +98,13 @@ public class Owl2Skos2TermsTest {
     Optional<OWLOntology> skosOntology = skosModel.map(Model::getGraph)
         .map(manager::addOntology);
 
-    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor().traverse(skosOntology.get(),
-        true);
+    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
+        .traverse(skosOntology.get(),new SkosAbstractionConfig()
+            .with(SkosAbstractionParameters.REASON,true));
 
     new JavaEnumTermsGenerator().generate(graph,
         new EnumGenerationConfig()
-            .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider)
-            .with(EnumGenerationParams.PACKAGE_NAME,
-                NameUtils.nameSpaceURIToPackage(URI.create(targetNS))),
+            .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider),
         src);
 
     showDirContent(folder);

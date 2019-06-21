@@ -37,14 +37,14 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
     {{#jaxb}}@javax.xml.bind.annotation.XmlEnumValue("{{tag}}"){{/jaxb}}
     {{#jsonld}}@de.escalon.hypermedia.hydra.mapping.Expose( "{{ref}}" ){{/jsonld}}
     {{termConceptName}}( "{{conceptId}}", "{{tag}}", "{{label}}", "{{ref}}",
-        new Term[] { {{#ancestors}} {{typeName}}.{{termConceptName}}, {{/ancestors}} },
-        new Term[] { {{#closure}} {{typeName}}.{{termConceptName}}, {{/closure}} } ) {{^-last}}, {{/-last}}
+        new Term[] { {{#ancestors}} {{#overridePk}}{{termConceptPackage}}{{/overridePk}}.{{termConceptScheme}}.{{termConceptName}}, {{/ancestors}} },
+        new Term[] { {{#closure}} {{#overridePk}}{{termConceptPackage}}{{/overridePk}}.{{termConceptScheme}}.{{termConceptName}}, {{/closure}} } ) {{^-last}}, {{/-last}}
    {{/concepts}};
 
 
 
   public static final String schemeName = "{{conceptScheme.label}}";
-  public static final String schemeID = "{{conceptScheme.id.fragment}}";
+  public static final String schemeID = "{{conceptSchemeID}}";
 
   public static final URIIdentifier schemeURI = new URIIdentifier()
                                                     .withUri( URI.create( "{{conceptScheme.id}}" ) )

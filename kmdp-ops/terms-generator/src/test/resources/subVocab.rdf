@@ -1,0 +1,45 @@
+# baseURI: https://foo.org/child/
+# imports: https://test.foo/taxonomies/parent/
+# prefix: pcv
+
+@prefix metadata: <http://topbraid.org/metadata#> .
+@prefix pcv:   <https://foo.org/child/> .
+@prefix olex:  <http://www.w3.org/ns/lemon/ontolex#> .
+@prefix scv:   <https://test.foo/taxonomies/parent/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+pcv:123
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://foo.org/ontologies/propositionalconcepts#resolvable>
+                true ;
+        <http://purl.org/dc/elements/1.1/identifier>
+                "123" ;
+        <http://www.w3.org/2004/02/skos/core#broader>
+                scv:000 , pcv:subTop ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "123" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Some child Concept" ;
+        <http://www.w3.org/ns/lemon/ontolex#isConceptOf>
+                <http://foo.org/ontologies/referent/AThing> .
+
+pcv:subScheme
+        a       <http://www.w3.org/2004/02/skos/core#ConceptScheme> ;
+        <http://www.w3.org/2004/02/skos/core#hasTopConcept>
+                pcv:subTop ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Sub Scheme" .
+
+pcv:subTop
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Top of Sub" .
+
+olex:isConceptOf  a  owl:ObjectProperty ;
+        rdfs:domain  <http://www.w3.org/2004/02/skos/core#Concept> .
+
+pcv:    a                owl:Ontology ;
+        rdfs:label       "Child Vocabulary" ;
+        owl:imports      <https://test.foo/taxonomies/parent/> .

@@ -19,6 +19,8 @@ import static edu.mayo.kmdp.util.Util.ensureUTF8;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
 import edu.mayo.kmdp.terms.generator.util.TransitiveClosure;
 import edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme;
@@ -98,8 +100,16 @@ public class SkosTerminologyAbstractor {
     return IRI.create(res);
   }
 
-  public ConceptGraph traverse(OWLOntology o, boolean reason) {
-    if (reason) {
+  private SkosAbstractionConfig cfg;
+
+  public ConceptGraph traverse(OWLOntology o) {
+    return traverse(o,new SkosAbstractionConfig());
+  }
+
+  public ConceptGraph traverse(OWLOntology o, SkosAbstractionConfig config) {
+    cfg = config != null ? config : new SkosAbstractionConfig();
+
+    if (cfg.getTyped(SkosAbstractionParameters.REASON)) {
       o = this.doReason(o);
     }
     final OWLOntology model = o;
@@ -190,12 +200,20 @@ public class SkosTerminologyAbstractor {
 
   private Optional<Term> resolve(final OWLIndividual ind, OWLOntology model,
       final Map<URI, ConceptScheme<Term>> codeSystems) {
-    return getOrCreateInSchemes(ind.asOWLNamedIndividual(),
+    Optional<ConceptScheme<Term>> parentScheme = getOrCreateInSchemes(
+        ind.asOWLNamedIndividual(),
         model,
-        codeSystems).stream().findAny()
-        .map(MutableConceptScheme.class::cast)
-        .flatMap((mcs) -> mcs.resolve(getReferent(ind.asOWLNamedIndividual(),
-            model)));
+        codeSystems)
+        .stream()
+        .findAny();
+
+//    URI uri = getURI(ind.asOWLNamedIndividual());
+    URI uri = getReferent(ind.asOWLNamedIndividual(),model);
+
+    Optional<Term> resolved = parentScheme.map(MutableConceptScheme.class::cast)
+        .flatMap((mcs) -> mcs.resolve(uri));
+
+    return resolved;
   }
 
   private void addAncestor(Term sub, Term sup) {
@@ -213,10 +231,36 @@ public class SkosTerminologyAbstractor {
   private Collection<ConceptScheme<Term>> getOrCreateInSchemes(OWLNamedIndividual ind,
       OWLOntology model,
       Map<URI, ConceptScheme<Term>> codeSystems) {
-    return getPropertyValues(ind, model, IN_SCHEME)
+
+    Collection<ConceptScheme<Term>> schems = getPropertyValues(ind, model, IN_SCHEME)
         .map(AsOWLNamedIndividual::asOWLNamedIndividual)
         .map((sch) -> codeSystems.getOrDefault(getURI(sch), toScheme(sch, model)))
         .collect(Collectors.toSet());
+
+    if (cfg.getTyped(SkosAbstractionParameters.ENFORCE_CLOSURE)) {
+      // FIXME Also, needs to be recursive in the traversal of the BROADER hierarchy, with an eye on performance
+      if (schems.isEmpty()) {
+        schems = getPropertyValues(ind, model, BROADER)
+            .filter((parent) -> isTopConcept(parent, model))
+            .flatMap((top) -> getSchemesForTopConcept(top, model))
+            .map(AsOWLNamedIndividual::asOWLNamedIndividual)
+            .map((sch) -> codeSystems.getOrDefault(getURI(sch), toScheme(sch, model)))
+            .collect(Collectors.toSet());
+      }
+    }
+
+    return schems;
+  }
+
+  private Stream<OWLIndividual> getSchemesForTopConcept(OWLIndividual top, OWLOntology model) {
+    Set<OWLIndividual> schemes1 = getPropertyValues(top.asOWLNamedIndividual(), model, TOP_OF)
+        .collect(Collectors.toSet());
+    Set<OWLIndividual> schemes2 = model.individualsInSignature(Imports.INCLUDED)
+        .filter((ind) -> isConceptScheme(ind, model))
+        .filter((sch) -> getPropertyValues(sch, model, HAS_TOP).anyMatch((t) -> t.equals(top)))
+        .collect(Collectors.toSet());
+    schemes1.addAll(schemes2);
+    return schemes1.stream();
   }
 
   public ConceptScheme<Term> toScheme(OWLNamedIndividual ind, OWLOntology model) {
@@ -232,7 +276,8 @@ public class SkosTerminologyAbstractor {
 
   private String getCodedIdentifier(OWLNamedIndividual ind, OWLOntology model) {
     Set<OWLLiteral> notations = getDataValues(ind, model, NOTATION).collect(Collectors.toSet());
-    Optional<String> version = getAnnotationValues(ind, model, VERSION).findFirst().map(Object::toString);
+    Optional<String> version = getAnnotationValues(ind, model, VERSION).findFirst()
+        .map(Object::toString);
 
     if (!notations.isEmpty()) {
       String code = notations.stream()
@@ -480,8 +525,20 @@ public class SkosTerminologyAbstractor {
       super(conceptURI, code, label, ensureUTF8(comment), refUri, scheme);
     }
 
+    public ConceptTerm(ConceptTerm other) {
+      this(other.getConceptId(), other.getTag(), other.getLabel(), other.getComment(), other.getRef(), other.getScheme());
+    }
+
     public String getTermConceptName() {
       return edu.mayo.kmdp.util.NameUtils.getTermConceptName(tag, label);
+    }
+
+    public String getTermConceptPackage() {
+      return NameUtils.namespaceURIToPackage(getScheme().getVersionId().toString());
+    }
+
+    public String getTermConceptScheme() {
+      return getScheme().getPublicName();
     }
 
     public List<Term> getAncestors() {

@@ -29,11 +29,14 @@ import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.impl.model.InternalTerm;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -114,14 +117,14 @@ public class TerminologyGeneratorTest {
     try {
       File folder = tmp.toFile();
 
-      File src = initFolder(folder,"src");
-      File target = initFolder(folder,"output");
+      File src = initFolder(folder, "src");
+      File target = initFolder(folder, "output");
 
       new JavaEnumTermsGenerator().generate(graph,
           new EnumGenerationConfig()
               .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider)
-              .with(EnumGenerationParams.PACKAGE_NAME,
-                  "org.foo.test"),
+              .with(EnumGenerationParams.PACKAGE_OVERRIDES,
+                  "test.generator.v20180210=org.foo.test"),
           src);
       showDirContent(folder);
 
@@ -177,7 +180,9 @@ public class TerminologyGeneratorTest {
       OWLOntology o = owlOntologyManager.loadOntologyFromOntologyDocument(
           TerminologyGeneratorTest.class.getResourceAsStream("/test.owl"));
 
-      return new SkosTerminologyAbstractor().traverse(o, true);
+      return new SkosTerminologyAbstractor()
+          .traverse(o, new SkosAbstractionConfig()
+              .with(SkosAbstractionParameters.REASON, true));
     } catch (Exception e) {
       e.printStackTrace();
       fail(e.getMessage());

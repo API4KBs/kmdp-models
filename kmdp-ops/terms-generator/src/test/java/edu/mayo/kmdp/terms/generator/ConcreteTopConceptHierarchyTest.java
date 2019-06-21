@@ -89,8 +89,7 @@ public class ConcreteTopConceptHierarchyTest {
       Optional<OWLOntology> skosOntology = Optional
           .ofNullable(manager.addOntology(om.getBaseModel().getGraph()));
 
-      List<Term> list = new SkosTerminologyAbstractor().traverse(skosOntology.get(),
-          false)
+      List<Term> list = new SkosTerminologyAbstractor().traverse(skosOntology.get())
           .getConceptList(URI.create("http://test.foo#" + uuid("test.foo")));
 
       return list;
