@@ -35,6 +35,7 @@ import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractio
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
@@ -64,9 +65,9 @@ public class GenerateWithImportsTest {
 
     ensureSuccessCompile(src, src, target);
 
-    Class<?> subScheme = getNamedClass("org.foo.child.subscheme.Sub_Scheme", target);
+    Class<?> subScheme = getNamedClass("org.foo.child.Sub_Scheme", target);
     assertTrue(subScheme.isEnum());
-    Class<?> supScheme = getNamedClass("foo.test.taxonomies.parent.superscheme.Top_Of_Super",
+    Class<?> supScheme = getNamedClass("foo.test.taxonomies.parent.Top_Of_Super",
         target);
     assertTrue(supScheme.isEnum());
 
@@ -112,9 +113,9 @@ public class GenerateWithImportsTest {
 
     ensureSuccessCompile(src, src, target);
 
-    Class<?> subScheme = getNamedClass("org.foo.child.subscheme.Sub_Scheme", target);
+    Class<?> subScheme = getNamedClass("org.foo.child.Sub_Scheme", target);
     assertTrue(subScheme.isEnum());
-    Class<?> supScheme = getNamedClass("foo.test.taxonomies.parent.superscheme.Top_Of_Super",
+    Class<?> supScheme = getNamedClass("foo.test.taxonomies.parent.Top_Of_Super",
         target);
     assertTrue(supScheme.isEnum());
 

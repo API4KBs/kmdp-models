@@ -15,6 +15,8 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import static edu.mayo.kmdp.util.NameUtils.namespaceURIToPackage;
+import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 import static edu.mayo.kmdp.util.Util.ensureUTF8;
 
 import edu.mayo.kmdp.id.Term;
@@ -599,7 +601,7 @@ public class SkosTerminologyAbstractor {
     }
 
     public String getTermConceptPackage() {
-      return NameUtils.namespaceURIToPackage(getScheme().getVersionId().toString());
+      return namespaceURIToPackage(removeTrailingPart(getScheme().getVersionId().toString()));
     }
 
     public String getTermConceptScheme() {

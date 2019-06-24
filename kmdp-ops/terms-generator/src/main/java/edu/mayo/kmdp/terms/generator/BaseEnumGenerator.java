@@ -15,11 +15,13 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import static edu.mayo.kmdp.util.NameUtils.namespaceURIToPackage;
+import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
+
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
-import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptTerm;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.util.FileUtil;
@@ -109,7 +111,7 @@ public class BaseEnumGenerator {
   }
 
   protected String getPackageName(ConceptScheme<Term> conceptScheme, String defaultPackage, Properties packageNameOverrides) {
-    String packageName = NameUtils.namespaceURIToPackage(conceptScheme.getVersionId().toString());
+    String packageName = namespaceURIToPackage(removeTrailingPart(conceptScheme.getVersionId().toString()));
     return getPackageName(packageName,defaultPackage,packageNameOverrides);
   }
 
