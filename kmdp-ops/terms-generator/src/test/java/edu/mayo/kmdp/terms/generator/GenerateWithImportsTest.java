@@ -20,7 +20,7 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -30,14 +30,14 @@ import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
-import java.util.Arrays;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -49,15 +49,9 @@ public class GenerateWithImportsTest {
   @TempDir
   public Path tmp;
 
-  @BeforeAll
-  public static void init() {
-    graph = doGenerate();
-  }
-
-
   @Test
   public void testGenerateConceptsHierarchyWithImports() {
-    ConceptGraph graph = doGenerate();
+    ConceptGraph graph = doGenerate(CLOSURE_MODE.IMPORTS);
     assertEquals(2, graph.getConceptSchemes().size());
 
     File src = initFolder(tmp.toFile(), "src");
@@ -72,7 +66,8 @@ public class GenerateWithImportsTest {
 
     Class<?> subScheme = getNamedClass("org.foo.child.subscheme.Sub_Scheme", target);
     assertTrue(subScheme.isEnum());
-    Class<?> supScheme = getNamedClass("foo.test.taxonomies.parent.superscheme.Top_Of_Super", target);
+    Class<?> supScheme = getNamedClass("foo.test.taxonomies.parent.superscheme.Top_Of_Super",
+        target);
     assertTrue(supScheme.isEnum());
 
     Object t = subScheme.getEnumConstants()[0];
@@ -87,12 +82,12 @@ public class GenerateWithImportsTest {
       Object anx = subScheme.getMethod("getAncestors").invoke(t);
       assertTrue(anx.getClass().isArray());
       Object[] ancestors = (Object[]) anx;
-      assertEquals(1,ancestors.length);
+      assertEquals(1, ancestors.length);
 
       Object f = ancestors[0];
       assertTrue(f instanceof Term);
       // avoid dealing with classloaders
-      assertEquals(supScheme.getName(),f.getClass().getName());
+      assertEquals(supScheme.getName(), f.getClass().getName());
 
       assertEquals("000", f.getClass().getMethod("getTag").invoke(f));
     } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -102,7 +97,66 @@ public class GenerateWithImportsTest {
   }
 
 
-  public static SkosTerminologyAbstractor.ConceptGraph doGenerate() {
+  @Test
+  public void testGenerateConceptsHierarchyWithIncludes() {
+    ConceptGraph graph = doGenerate(CLOSURE_MODE.INCLUDES);
+    assertEquals(2, graph.getConceptSchemes().size());
+
+    File src = initFolder(tmp.toFile(), "src");
+    File target = initFolder(tmp.toFile(), "tgt");
+
+    new JavaEnumTermsGenerator().generate(graph, new EnumGenerationConfig()
+            .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider),
+        src);
+    showDirContent(tmp.toFile(), true);
+
+    ensureSuccessCompile(src, src, target);
+
+    Class<?> subScheme = getNamedClass("org.foo.child.subscheme.Sub_Scheme", target);
+    assertTrue(subScheme.isEnum());
+    Class<?> supScheme = getNamedClass("foo.test.taxonomies.parent.superscheme.Top_Of_Super",
+        target);
+    assertTrue(supScheme.isEnum());
+
+
+    try {
+      assertEquals(2,subScheme.getEnumConstants().length);
+
+      Object t1 = subScheme.getEnumConstants()[0];
+      String tag1 = (String) t1.getClass().getMethod("getTag").invoke(t1);
+
+      Object t2 = subScheme.getEnumConstants()[1];
+      String tag2 = (String) t2.getClass().getMethod("getTag").invoke(t2);
+
+      assertTrue("000".equals(tag1) || "000".equals(tag2));
+      assertTrue("123".equals(tag1) || "123".equals(tag2));
+
+      Object child = "123".equalsIgnoreCase(tag1) ? t1 : t2;
+
+      Object anx = subScheme.getMethod("getAncestors").invoke(child);
+      assertTrue(anx.getClass().isArray());
+      Object[] ancestors = (Object[]) anx;
+      assertEquals(1, ancestors.length);
+
+      Object prn = ancestors[0];
+      assertNotNull(prn);
+
+      Object sUri = prn.getClass().getMethod("getNamespace").invoke(prn);
+      assertTrue(sUri instanceof NamespaceIdentifier);
+
+      assertEquals("https://foo.org/child/subScheme",
+          ((NamespaceIdentifier) sUri).getId().toString());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    }
+
+  }
+
+
+
+  public static SkosTerminologyAbstractor.ConceptGraph doGenerate(CLOSURE_MODE closureMode) {
     try {
       OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
       owlOntologyManager.loadOntologyFromOntologyDocument(
@@ -113,7 +167,8 @@ public class GenerateWithImportsTest {
       return new SkosTerminologyAbstractor()
           .traverse(o, new SkosAbstractionConfig()
               .with(SkosAbstractionParameters.REASON, false)
-              .with(SkosAbstractionParameters.ENFORCE_CLOSURE, true));
+              .with(SkosAbstractionParameters.ENFORCE_CLOSURE, true)
+              .with(SkosAbstractionParameters.CLOSURE_MODE, closureMode));
     } catch (Exception e) {
       e.printStackTrace();
       fail(e.getMessage());

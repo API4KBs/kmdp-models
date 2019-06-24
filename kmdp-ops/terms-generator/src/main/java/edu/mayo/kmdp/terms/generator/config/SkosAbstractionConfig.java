@@ -30,6 +30,10 @@ public class SkosAbstractionConfig extends
     super(defaults);
   }
 
+  public enum CLOSURE_MODE {
+    IMPORTS, INCLUDES;
+  }
+
   @Override
   public SkosAbstractionParameters[] properties() {
     return SkosAbstractionParameters.values();
@@ -42,6 +46,12 @@ public class SkosAbstractionConfig extends
         "false",
         "Enforce the non-standard rule broader(Concept,Top) and topConceptOf(Top,Scheme) => inScheme(Concept,Scheme)",
         Boolean.class,
+        false)),
+    CLOSURE_MODE(Opt.of(
+        "closureMode",
+        "IMPORTS",
+        "Lets a scheme reference another (import), vs redeclaring the concepts (includes)",
+        CLOSURE_MODE.class,
         false)),
     REASON(Opt.of(
         "reason",

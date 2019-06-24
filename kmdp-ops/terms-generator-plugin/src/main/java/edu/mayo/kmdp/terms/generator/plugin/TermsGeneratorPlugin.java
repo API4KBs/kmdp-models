@@ -22,6 +22,7 @@ import edu.mayo.kmdp.terms.generator.XSDEnumTermsGenerator;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
+import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.util.OntologyLoader;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
@@ -83,6 +84,20 @@ public class TermsGeneratorPlugin extends AbstractMojo {
 
   public void setEnforceClosure(boolean enforceClosure) {
     this.enforceClosure = enforceClosure;
+  }
+
+  /**
+   * @parameter default-value="IMPORTS"
+   */
+  private CLOSURE_MODE closureMode;
+
+  public CLOSURE_MODE getClosureMode() {
+    return closureMode;
+  }
+
+  public void setClosureMode(
+      CLOSURE_MODE closureMode) {
+    this.closureMode = closureMode;
   }
 
   /**
@@ -288,7 +303,8 @@ public class TermsGeneratorPlugin extends AbstractMojo {
 
     SkosAbstractionConfig cfg = new SkosAbstractionConfig()
         .with(SkosAbstractionParameters.REASON,this.reason)
-        .with(SkosAbstractionParameters.ENFORCE_CLOSURE,enforceClosure);
+        .with(SkosAbstractionParameters.ENFORCE_CLOSURE,enforceClosure)
+        .with(SkosAbstractionParameters.CLOSURE_MODE,closureMode);
     SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
         .traverse(ontology,cfg);
 
