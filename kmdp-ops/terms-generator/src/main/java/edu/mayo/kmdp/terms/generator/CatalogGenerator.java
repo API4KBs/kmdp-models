@@ -15,7 +15,9 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import edu.mayo.kmdp.id.Term;
+import static edu.mayo.kmdp.util.NameUtils.removeFragment;
+import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
+
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
@@ -65,8 +67,8 @@ public class CatalogGenerator extends BaseEnumGenerator {
     public CatalogEntry(ConceptScheme scheme) {
 
 
-      this.id = NameUtils.removeFragment(scheme.getVersionId()).toString();
-      this.uri = NameUtils.nameSpaceURIToPackage(scheme.getVersionId())
+      this.id = removeFragment(scheme.getVersionId()).toString();
+      this.uri = NameUtils.namespaceURIToPackage(removeTrailingPart(scheme.getVersionId().toString()))
           .replaceAll("\\.", "/")
           + "/"
           + NameUtils.getTermCodeSystemName(scheme.getPublicName())
