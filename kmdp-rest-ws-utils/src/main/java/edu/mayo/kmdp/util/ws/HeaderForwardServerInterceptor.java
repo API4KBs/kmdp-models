@@ -15,8 +15,8 @@
  */
 package edu.mayo.kmdp.util.ws;
 
-import com.google.common.collect.Maps;
-import org.apache.jena.ext.com.google.common.collect.Sets;
+import java.util.HashMap;
+import java.util.HashSet;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,14 +29,14 @@ public class HeaderForwardServerInterceptor extends HandlerInterceptorAdapter {
     private Set<String> headersToForward;
 
     public HeaderForwardServerInterceptor(Set<String> headersToForward) {
-        this.headersToForward = Sets.newHashSet(headersToForward);
+        this.headersToForward = new HashSet<>(headersToForward);
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        Map<String,String> values = Maps.newHashMap();
+        Map<String,String> values = new HashMap<>();
 
-        this.headersToForward.stream().forEach(header -> values.put(header, request.getHeader(header)));
+        this.headersToForward.forEach(header -> values.put(header, request.getHeader(header)));
         WebSessionContext.setHeaders(values);
 
         return true;

@@ -15,8 +15,8 @@
  */
 package edu.mayo.kmdp.util.ws;
 
-import com.google.common.collect.Maps;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class WebSessionContext {
@@ -24,7 +24,7 @@ public class WebSessionContext {
     private static final ThreadLocal<Map<String,String>> CONTEXT = new ThreadLocal<>();
 
     public static void setHeaders(Map<String,String> headers) {
-        CONTEXT.set(Maps.newHashMap(headers));
+        CONTEXT.set(new HashMap<>(headers));
     }
 
     public static Map<String,String> getHeaders() {

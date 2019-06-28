@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp.util.ws;
 
-import org.apache.jena.ext.com.google.common.collect.Sets;
+import java.util.HashSet;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -30,7 +30,7 @@ public class HeaderForwardClientInterceptor implements ClientHttpRequestIntercep
     private Set<String> headersToForward;
 
     public HeaderForwardClientInterceptor(Set<String> headersToForward) {
-        this.headersToForward = Sets.newHashSet(headersToForward);
+        this.headersToForward = new HashSet<>(headersToForward);
     }
 
     @Override

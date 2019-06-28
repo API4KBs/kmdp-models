@@ -15,7 +15,8 @@
  */
 package edu.mayo.kmdp.util.ws;
 
-import com.google.common.collect.Sets;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -27,7 +28,9 @@ public class AuthorizationHeaderForwardConfiguration implements WebMvcConfigurer
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new HeaderForwardServerInterceptor(Sets.newHashSet(AUTHORIZATION_HEADER)));
+        Set<String> headers = new HashSet<>();
+        headers.add(AUTHORIZATION_HEADER);
+        registry.addInterceptor(new HeaderForwardServerInterceptor(headers));
     }
 
 }
