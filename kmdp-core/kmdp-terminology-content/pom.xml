@@ -199,13 +199,9 @@
               <owlFile>${ontologyDir}/LanguageCodes.rdf</owlFile>
               <targetNamespace>http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/
               </targetNamespace>
-              <targetURI>
-                http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage
-              </targetURI>
+              <targetURI>http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguagei</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/ISO639-1-LanguageCodes</skosNamespace>
               <skosOutputFile>ISOLanguageCode.skos.rdf</skosOutputFile>
-              <schemeName>KnowledgeRepresentationSerializations</schemeName>
-              <topConceptName>KnowledgeRepresentationSerialization</topConceptName>
               <schemeName>Languages</schemeName>
               <topConceptName>Language</topConceptName>
               <entityType>INST</entityType>
