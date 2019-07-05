@@ -54,7 +54,7 @@
 
   <uri id="LangCodes"
     uri="LanguageCodes.rdf"
-    name="http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/"/>
+    name="https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/"/>
 
   <uri id="MIMECodes"
     uri="mime.rdf"

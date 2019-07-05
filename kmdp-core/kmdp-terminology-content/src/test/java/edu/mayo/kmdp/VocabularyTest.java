@@ -18,11 +18,12 @@ package edu.mayo.kmdp;
 import static edu.mayo.kmdp.util.Util.ensureUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.KnowledgeProcessingOperation;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
-import edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.Language;
+import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._1_0.KnowledgeAssetRole;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
@@ -78,6 +79,18 @@ public class VocabularyTest {
     assertNotNull(PublishingRole.Contributor);
     assertNotNull(PublicationStatus.Draft);
     assertNotNull(MIMEType.Application_Pdf);
+  }
+
+  @Test
+  public void testLanguages() {
+    assertNotNull(Language.Italian);
+    assertNotNull(Language.Central_Khmer);
+    assertNotNull(Language.Arabic);
+    assertNotNull(Language.Chinese);
+    assertNotNull(Language.Spanish);
+    assertNotNull(Language.Vietnamese);
+    assertNotNull(Language.Hmong);
+    assertNotNull(Language.Somali);
   }
 
   @Test

@@ -197,10 +197,9 @@
             </goals>
             <configuration>
               <owlFile>${ontologyDir}/LanguageCodes.rdf</owlFile>
-              <targetNamespace>http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/
-              </targetNamespace>
-              <targetURI>http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguagei</targetURI>
-              <skosNamespace>https://ontology.mayo.edu/taxonomies/ISO639-1-LanguageCodes</skosNamespace>
+              <targetNamespace>https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/</targetNamespace>
+              <targetURI>https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguage</targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/ISO639-2-LanguageCodes</skosNamespace>
               <skosOutputFile>ISOLanguageCode.skos.rdf</skosOutputFile>
               <schemeName>Languages</schemeName>
               <topConceptName>Language</topConceptName>

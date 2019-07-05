@@ -122,7 +122,7 @@ public class ServiceDescrCompilationTest {
     deploy(src, "/xsd/edu/mayo/ontology/taxonomies/api4kp/parsinglevel/_20190801/ParsingLevel.xsd");
     deploy(src, "/xsd/edu/mayo/ontology/taxonomies/lexicon/_2018/_08/Lexicon.xsd");
     deploy(src,
-        "/xsd/edu/mayo/ontology/taxonomies/iso639_1_languagecodes/_20170801/Language.xsd");
+        "/xsd/edu/mayo/ontology/taxonomies/iso639_2_languagecodes/_20190201/Language.xsd");
 
     deploy(src, "/xsd/API4KP/api4kp/services/services.xsd");
     deploy(src, "/xsd/API4KP/api4kp/services/services.openapi.xsd");

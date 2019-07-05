@@ -16,7 +16,7 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.Language.English;
+import static edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language.English;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._1_0.KnowledgeAssetRole.Operational_Concept_Definition;
 
 import edu.mayo.kmdp.id.Term;
