@@ -20,4 +20,5 @@ Affected sub-modules
 
 ### Nex Dev Branch
 1. Set parent and project to the next desired version
+  * Use mvn versions:set and update-child-modules to ensure all children are updated
 2. Set the 'unpack-xmi' version to ${org.omg.spec:API4KP:jar.version}
