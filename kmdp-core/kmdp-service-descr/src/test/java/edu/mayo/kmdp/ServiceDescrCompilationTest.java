@@ -37,6 +37,7 @@ import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -114,6 +115,7 @@ public class ServiceDescrCompilationTest {
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.openapi.xsd");
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
     deploy(src, "/xsd/API4KP/api4kp/identifiers/bindings.xjb");
+    deploy(src, "/xsd/terms-bindings.xjb");
 
     deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krformat/_2018/_08/SerializationFormat.xsd");
     deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krlanguage/_2018/_08/KnowledgeRepresentationLanguage.xsd");
@@ -135,7 +137,7 @@ public class ServiceDescrCompilationTest {
 
     String jaxbPath = src.getPath() + "/xsd/API4KP";
     applyJaxb(Collections.singletonList(new File(jaxbPath)),
-        Collections.emptyList(),
+        Arrays.asList( new File( src.getPath() + "/xsd/terms-bindings.xjb")),
         gen,
         null,
         new File(src.getPath() + "/xsd/terms-catalog.xml"),

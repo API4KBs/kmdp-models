@@ -91,6 +91,8 @@ public class VocabularyTest {
     assertNotNull(Language.Vietnamese);
     assertNotNull(Language.Hmong);
     assertNotNull(Language.Somali);
+
+    assertEquals(366,Language.values().length);
   }
 
   @Test
