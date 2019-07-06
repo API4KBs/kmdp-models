@@ -33,12 +33,11 @@ import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.resources.Pointer;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
-public class IntegrityTest {
+public class MetadataIntegrityTest {
 
   @Test
   public void testIntegrity() {
@@ -61,7 +60,7 @@ public class IntegrityTest {
 
   @Test
   public void testCodegeneration() {
-    URL url = IntegrityTest.class.getResource("/");
+    URL url = MetadataIntegrityTest.class.getResource("/");
     //System.out.println(url);
     try {
       File f = new File(url.toURI());
@@ -84,7 +83,7 @@ public class IntegrityTest {
 
   @Test
   public void testCodegeneration2() {
-    URL url = IntegrityTest.class.getResource("/");
+    URL url = MetadataIntegrityTest.class.getResource("/");
     //System.out.println(url);
     try {
       File f = new File(url.toURI());
