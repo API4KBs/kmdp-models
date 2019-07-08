@@ -256,6 +256,19 @@ public class TermsGeneratorPlugin extends AbstractMojo {
     this.termsProvider = termsProvider;
   }
 
+  /**
+   * @parameter
+   */
+  private String xmlAdapter;
+
+  public String getXmlAdapter() {
+    return xmlAdapter;
+  }
+
+  public void setXmlAdapter(String xmlAdapter) {
+    this.xmlAdapter = xmlAdapter;
+  }
+
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   private MavenProject project;
 
@@ -316,7 +329,8 @@ public class TermsGeneratorPlugin extends AbstractMojo {
         .with(EnumGenerationParams.WITH_JSONLD, Boolean.toString(isJsonLD()))
         .with(EnumGenerationParams.WITH_JSON, Boolean.toString(isJson()))
         .with(EnumGenerationParams.WITH_JAXB, Boolean.toString(isJaxb()))
-        .with(EnumGenerationParams.TERMS_PROVIDER, termsProvider);
+        .with(EnumGenerationParams.TERMS_PROVIDER, termsProvider)
+        .with(EnumGenerationParams.XML_ADAPTER,xmlAdapter);
     if (packageName != null) {
       opts.with(EnumGenerationParams.PACKAGE_NAME, packageName);
     }

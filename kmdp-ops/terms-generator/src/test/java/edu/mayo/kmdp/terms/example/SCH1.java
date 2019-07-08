@@ -20,7 +20,7 @@ import de.escalon.hypermedia.hydra.mapping.Expose;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.Taxonomic;
-import edu.mayo.kmdp.terms.TermsXMLAdapter;
+import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.impl.model.DefaultConceptScheme;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
@@ -113,7 +113,7 @@ public enum SCH1 implements Term, Taxonomic<SCH1> {
     return ancestors;
   }
 
-  public static class Adapter extends TermsXMLAdapter {
+  public static class Adapter extends MockTermsXMLAdapter {
 
     @Override
     protected Term[] getValues() {

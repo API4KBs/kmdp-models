@@ -23,7 +23,7 @@ import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
  * Duplicated in order to avoid a dependency on one additional module
  */
 @Deprecated
-public abstract class TermsXMLAdapter extends
+public abstract class MockTermsXMLAdapter extends
     javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier, Term> {
 
   @Override

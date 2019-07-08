@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
@@ -36,7 +37,6 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -123,6 +123,7 @@ public class TerminologyGeneratorTest {
       new JavaEnumTermsGenerator().generate(graph,
           new EnumGenerationConfig()
               .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider)
+              .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName())
               .with(EnumGenerationParams.PACKAGE_OVERRIDES,
                   "test.generator.v20180210=org.foo.test"),
           src);
@@ -157,7 +158,8 @@ public class TerminologyGeneratorTest {
 
       new JavaEnumTermsGenerator().generate(graph,
           new EnumGenerationConfig()
-              .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider),
+              .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider)
+              .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
           src);
       showDirContent(folder);
 

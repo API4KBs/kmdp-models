@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
@@ -35,7 +36,6 @@ import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractio
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
@@ -59,7 +59,8 @@ public class GenerateWithImportsTest {
     File target = initFolder(tmp.toFile(), "tgt");
 
     new JavaEnumTermsGenerator().generate(graph, new EnumGenerationConfig()
-            .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider),
+            .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider)
+            .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
         src);
     showDirContent(tmp.toFile(), true);
 
@@ -107,7 +108,8 @@ public class GenerateWithImportsTest {
     File target = initFolder(tmp.toFile(), "tgt");
 
     new JavaEnumTermsGenerator().generate(graph, new EnumGenerationConfig()
-            .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider),
+            .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider)
+            .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
         src);
     showDirContent(tmp.toFile(), true);
 

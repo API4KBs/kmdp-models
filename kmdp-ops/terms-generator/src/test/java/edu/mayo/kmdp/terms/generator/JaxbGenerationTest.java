@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
@@ -236,7 +237,8 @@ public class JaxbGenerationTest {
     File gen = initGenSourceFolder(folder);
     File tgt = initTargetFolder(folder);
     EnumGenerationConfig opts = config()
-        .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider);
+        .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider)
+        .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName());
 
     deploy(new StringInputStream(parentXSD), src, "/parent.xsd");
     deploy(new StringInputStream(bindings), src, "/bindings.xjb");

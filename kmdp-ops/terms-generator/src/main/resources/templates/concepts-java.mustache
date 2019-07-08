@@ -10,7 +10,6 @@ import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.ConceptSchemeDirectory;
 import edu.mayo.kmdp.terms.Taxonomic;
-import edu.mayo.kmdp.terms.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.impl.model.DefaultConceptScheme;
 
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
@@ -132,8 +131,8 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
 		return {{termsProvider}}.resolveId( conceptId, {{typeName}}.class );
 	}
 
-  public static class Adapter extends TermsXMLAdapter {
-    public static final TermsXMLAdapter instance = new Adapter();
+  public static class Adapter extends {{baseXmlAdapter}} {
+    public static final {{baseXmlAdapter}} instance = new Adapter();
     protected Term[] getValues() { return values(); }
 	}
 }
