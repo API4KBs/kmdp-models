@@ -35,6 +35,7 @@ public class Registry {
   public static final String path = "/ontologies/API4KP/informative/api4kp-registry.owl";
 
   public static final String MAYO_ASSETS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/assets/";
+  public static final String BASE_UUID_URN = "urn:uuid:";
 
   private static XMLCatalogResolver xcat;
 

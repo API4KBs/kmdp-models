@@ -92,7 +92,7 @@ public class SkosTerminologyAbstractor {
 
   static final IRI OID = iri("https://www.hl7.org/oid");
 
-  static final IRI dceUUID = iri("http://www.opengroup.org/dce/uuid");
+  static final IRI dceUUID = iri("urn:uuid");
 
   static final IRI dctID = iri(DCTerms.identifier);
 
