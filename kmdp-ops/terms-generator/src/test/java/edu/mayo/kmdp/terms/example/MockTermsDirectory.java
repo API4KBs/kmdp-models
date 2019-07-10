@@ -24,7 +24,7 @@ public class MockTermsDirectory extends ConceptSchemeDirectory {
   public static final String provider = MockTermsDirectory.class.getName() + ".directory";
 
   private MockTermsDirectory() {
-    register(Cito.class);
-    register(SCH1.class);
+    register(Cito.schemeURI.getUri(),Cito.class);
+    register(SCH1.schemeURI.getUri(),SCH1.class);
   }
 }

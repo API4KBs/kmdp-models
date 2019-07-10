@@ -15,27 +15,11 @@
  */
 package edu.mayo.kmdp.terms;
 
-import edu.mayo.kmdp.id.Term;
-import org.reflections.Reflections;
-import org.reflections.util.ConfigurationBuilder;
-
 /**
  * This class is a placeholder for a terminology as a Service instance
  */
 public class KMDPTerms extends ConceptSchemeDirectory {
 
   public static final KMDPTerms directory = new KMDPTerms();
-
-  protected KMDPTerms() {
-    new Reflections(new ConfigurationBuilder()
-        .forPackages("edu.mayo.kmdp.terms", "edu.mayo.terms","edu.mayo.ontology.taxonomies")
-        .filterInputsBy(this::filter))
-        .getSubTypesOf(Term.class)
-        .forEach(this::register);
-  }
-
-  private boolean filter(String sourceName) {
-    return sourceName.endsWith(".class");
-  }
 
 }

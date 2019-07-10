@@ -26,15 +26,8 @@ public class ConceptSchemeDirectory {
 
   private Map<URI, Class<? extends Term>> registry = new HashMap<>();
 
-  public void register(Class<? extends Term> klass) {
-    Term[] terms = klass.getEnumConstants();
-    if (terms != null && terms.length > 0) {
-      Identifier id = klass.getEnumConstants()[0].getNamespace();
-      if (id instanceof NamespaceIdentifier) {
-        registry.put(((NamespaceIdentifier) id).getId(),
-            klass);
-      }
-    }
+  public void register(URI namespaceId, Class<? extends Term> klass) {
+    registry.put(namespaceId,klass);
   }
 
 

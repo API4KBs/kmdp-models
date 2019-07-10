@@ -56,6 +56,11 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
     	                                                                      .withTag( schemeID )
     	                                                                      .withVersion( DatatypeHelper.versionOf( schemeURI.getVersionId(), schemeURI.getUri() ) );
 
+  static {
+    {{termsProvider}}.register(schemeURI.getUri(),{{typeName}}.class);
+  }
+
+
   private URI	ref;
   private UUID conceptUUID;
 	private String displayName;
