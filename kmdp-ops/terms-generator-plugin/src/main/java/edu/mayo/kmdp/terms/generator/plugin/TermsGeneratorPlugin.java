@@ -155,6 +155,19 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   /**
    * @parameter
    */
+  private List<String> exclusions;
+
+  public List<String> getExclusions() {
+    return exclusions;
+  }
+
+  public void setExclusions(List<String> exclusions) {
+    this.exclusions = exclusions;
+  }
+
+  /**
+   * @parameter
+   */
   private String packageName;
 
   public String getPackageName() {
@@ -259,6 +272,19 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   /**
    * @parameter
    */
+  private String tagFormat;
+
+  public String getTagFormat() {
+    return tagFormat;
+  }
+
+  public void setTagFormat(String tagFormat) {
+    this.tagFormat = tagFormat;
+  }
+
+  /**
+   * @parameter
+   */
   private String xmlAdapter;
 
   public String getXmlAdapter() {
@@ -279,6 +305,9 @@ public class TermsGeneratorPlugin extends AbstractMojo {
       }
 
       List<String> files = flatten(owlFiles);
+      if (exclusions != null) {
+        files.removeAll(exclusions);
+      }
 
       Collection<CatalogGenerator.CatalogEntry> entries = files.stream()
           .flatMap(this::transform)
@@ -317,7 +346,8 @@ public class TermsGeneratorPlugin extends AbstractMojo {
     SkosAbstractionConfig cfg = new SkosAbstractionConfig()
         .with(SkosAbstractionParameters.REASON,this.reason)
         .with(SkosAbstractionParameters.ENFORCE_CLOSURE,enforceClosure)
-        .with(SkosAbstractionParameters.CLOSURE_MODE,closureMode);
+        .with(SkosAbstractionParameters.CLOSURE_MODE,closureMode)
+        .with(SkosAbstractionParameters.TAG_TYPE,tagFormat);
     SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
         .traverse(ontology,cfg);
 

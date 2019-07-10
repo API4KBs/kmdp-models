@@ -55,8 +55,10 @@ public class TermsSerializationTest {
 
   @Test
   public void testJSON() {
+    Foo f = new Foo(KnowledgeAssetType.Cognitive_Process_Model, KnowledgeRepresentationLanguage.OWL_2);
+
     String json = JSonUtil
-        .writeJson(new Foo(KnowledgeAssetType.Cognitive_Process_Model, KnowledgeRepresentationLanguage.OWL_2))
+        .writeJson(f)
         .flatMap(Util::asString).get();
 
 //    System.out.println(json);
@@ -73,6 +75,8 @@ public class TermsSerializationTest {
     assertTrue(f2.isPresent());
     assertEquals(KnowledgeAssetType.Cognitive_Process_Model, f2.get().getType());
     assertEquals(KnowledgeRepresentationLanguage.OWL_2, f2.get().getLang());
+
+    assertEquals(1, f2.get().getLang().getTags().size());
   }
 
 

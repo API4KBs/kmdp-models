@@ -6,7 +6,7 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX olex: <http://www.w3.org/ns/lemon/ontolex#>
 PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
-PREFIX lcc-lr: <http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/>
+PREFIX lcc-lr: <https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/>
 PREFIX afn: <http://jena.apache.org/ARQ/function#>
 PREFIX f: <http://kmdp.mayo.edu/sparql/function#>
 
@@ -57,7 +57,7 @@ WHERE {
             OPTIONAL { ?X owl:versionInfo ?VersionTag. }
               BIND( COALESCE( ?VersionTag, "" ) as ?VTag ).
             BIND ( URI( CONCAT( STR( tgt: ),
-                            f:uuidFrom( COALESCE( ?dcId, ?dctId, ?Tag, f:localName(?X) ), ?VTag ) ) ) as ?Cid ).
+                            f:uuidFrom( COALESCE( ?dcId, ?dctId, f:localName(?X) ), ?VTag ) ) ) as ?Cid ).
 
         BIND ( tgt: as ?Namespace ).
         BIND ( STRLEN( STR( ?Namespace ) ) as ?Len ).

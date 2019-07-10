@@ -196,7 +196,7 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlFile>${ontologyDir}/LanguageCodes.rdf</owlFile>
+              <owlFile>${ontologyDir}/lcc2.rdf</owlFile>
               <targetNamespace>https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/</targetNamespace>
               <targetURI>https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguage</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/ISO639-2-LanguageCodes</skosNamespace>
@@ -620,9 +620,6 @@
         <artifactId>terms-generator-plugin</artifactId>
         <version>${project.version}</version>
         <configuration>
-          <owlFiles>
-            <owlFile>${skosDir}</owlFile>
-          </owlFiles>
           <outputDirectory>${skosDir}</outputDirectory>
           <jaxb>true</jaxb>
           <jsonld>true</jsonld>
@@ -633,10 +630,32 @@
         </configuration>
         <executions>
           <execution>
+            <id>def-term-gen</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>generate-terms</goal>
             </goals>
+            <configuration>
+              <owlFiles>
+                <owlFile>${skosDir}</owlFile>
+              </owlFiles>
+              <exclusions>
+                <exclusion>${skosDir}${s}ISOLanguageCode.skos.rdf</exclusion>
+              </exclusions>
+            </configuration>
+          </execution>
+          <execution>
+            <id>iso-lang-term-gen</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate-terms</goal>
+            </goals>
+            <configuration>
+              <owlFiles>
+                <owlFile>${skosDir}${s}ISOLanguageCode.skos.rdf</owlFile>
+              </owlFiles>
+              <tagFormat>urn:Alpha2Code</tagFormat>
+            </configuration>
           </execution>
         </executions>
       </plugin>

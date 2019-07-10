@@ -52,8 +52,8 @@
     uri="/ontologies/API4KP/informative/api4kp-registry.owl"
     name="http://ontology.mayo.edu/KMDP/registry/"/>
 
-  <uri id="LangCodes"
-    uri="LanguageCodes.rdf"
+  <uri id="LangCodes-ISO639-2"
+    uri="lcc2.rdf"
     name="https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/"/>
 
   <uri id="MIMECodes"

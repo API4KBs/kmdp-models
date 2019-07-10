@@ -18,6 +18,7 @@ package edu.mayo.kmdp.terms.generator;
 import static edu.mayo.kmdp.util.NameUtils.namespaceURIToPackage;
 import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 import static edu.mayo.kmdp.util.Util.ensureUTF8;
+import static edu.mayo.kmdp.util.Util.isUUID;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
@@ -29,16 +30,19 @@ import edu.mayo.kmdp.terms.generator.util.TransitiveClosure;
 import edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme;
 import edu.mayo.kmdp.terms.impl.model.InternalTerm;
 import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -107,7 +111,7 @@ public class SkosTerminologyAbstractor {
   private SkosAbstractionConfig cfg;
 
   public ConceptGraph traverse(OWLOntology o) {
-    return traverse(o,new SkosAbstractionConfig());
+    return traverse(o, new SkosAbstractionConfig());
   }
 
   public ConceptGraph traverse(OWLOntology o, SkosAbstractionConfig config) {
@@ -167,11 +171,11 @@ public class SkosTerminologyAbstractor {
             getOrCreateInSchemes(top, model, codeSystems),
             model));
 
-    Map<Term,Set<Term>> parents = join(codeSystems);
+    Map<Term, Set<Term>> parents = join(codeSystems);
 
     ConceptGraph graph = new ConceptGraph(codeSystems, parents);
 
-    return applyClosure(graph,cfg.getTyped(SkosAbstractionParameters.CLOSURE_MODE));
+    return applyClosure(graph, cfg.getTyped(SkosAbstractionParameters.CLOSURE_MODE));
   }
 
   private boolean isInScheme(OWLIndividual ind, OWLOntology model) {
@@ -216,7 +220,7 @@ public class SkosTerminologyAbstractor {
         .findAny();
 
 //    URI uri = getURI(ind.asOWLNamedIndividual());
-    URI uri = getReferent(ind.asOWLNamedIndividual(),model);
+    URI uri = getReferent(ind.asOWLNamedIndividual(), model);
 
     Optional<Term> resolved = parentScheme.map(MutableConceptScheme.class::cast)
         .flatMap((mcs) -> mcs.resolve(uri));
@@ -275,7 +279,7 @@ public class SkosTerminologyAbstractor {
   public ConceptScheme<Term> toScheme(OWLNamedIndividual ind, OWLOntology model) {
     URI uri = getURI(ind);
     URI version = applyVersion(ind, model).orElse(uri);
-    String code = getCodedIdentifier(ind, model);
+    String code = getCodedIdentifiers(ind, model).get(0);
 
     // TODO FIXME: check rdfs:label vs skos:prefLabel, and consider that getFragment does not pick /name vs #name
     String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
@@ -283,21 +287,29 @@ public class SkosTerminologyAbstractor {
     return new MutableConceptScheme(uri, version, code, label);
   }
 
-  private String getCodedIdentifier(OWLNamedIndividual ind, OWLOntology model) {
+  private List<String> getCodedIdentifiers(OWLNamedIndividual ind, OWLOntology model) {
     Set<OWLLiteral> notations = getDataValues(ind, model, NOTATION).collect(Collectors.toSet());
     Optional<String> version = getAnnotationValues(ind, model, VERSION).findFirst()
         .map(Object::toString);
 
     if (!notations.isEmpty()) {
       String code = notations.stream()
-          .filter((lit) -> dceUUID.equals(lit.getDatatype().getIRI()))
+          .filter((lit) -> cfg.getTyped(SkosAbstractionParameters.TAG_TYPE)
+              .equals(lit.getDatatype().getIRI().toURI()))
           .findFirst()
           .map(OWLLiteral::getLiteral)
           .orElse(notations.iterator().next().getLiteral());
-      return version.map((ver) -> code + "-" + ver).orElse(code);
+      String primaryId = version.map((ver) -> code + "-" + ver).orElse(code);
+
+      Set<String> aliases = notations.stream().map(OWLLiteral::getLiteral).collect(Collectors.toSet());
+      aliases.remove(code);
+
+      LinkedList<String> tags = new LinkedList<>(aliases);
+      tags.addFirst(primaryId);
+      return tags;
     } else {
-      return getAnnotationValues(ind, model, OID).findFirst()
-          .orElse(getURI(ind).getFragment());
+      return Collections.singletonList(getAnnotationValues(ind, model, OID).findFirst()
+          .orElse(getURI(ind).getFragment()));
     }
   }
 
@@ -331,13 +343,24 @@ public class SkosTerminologyAbstractor {
     MutableConceptScheme scheme =
         schemes.isEmpty() ? null : (MutableConceptScheme) schemes.iterator().next();
 
-    URI uri = getReferent(ind, model);
 
-    String code = getCodedIdentifier(ind, model);
-    String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
+    List<String> codes = getCodedIdentifiers(ind, model);
+    URI referentUri = getReferent(ind, model);
     String comment = getAnnotationValues(ind, model, COMMENT).findFirst().orElse(null);
+    String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(referentUri.getFragment());
 
-    Term cd = new ConceptTerm(ind.getIRI().toURI(), code, label, comment, uri, scheme);
+    URI conceptId = ind.getIRI().toURI();
+    String tag = codes.get(0);
+    UUID uuid = makeUUID(conceptId);
+    Term cd = new ConceptTerm(
+        conceptId,
+        tag,
+        label,
+        comment,
+        referentUri,
+        scheme,
+        uuid,
+        codes);
     if (scheme != null) {
       if (asTop) {
         scheme.setTop(cd);
@@ -348,8 +371,14 @@ public class SkosTerminologyAbstractor {
     return cd;
   }
 
-  private boolean isAbstract(Term cd) {
-    return cd.getRef().equals(cd.getConceptId());
+  private UUID makeUUID(URI conceptId) {
+    String id = NameUtils.getTrailingPart(conceptId.toString());
+    if (id == null) {
+      return UUID.nameUUIDFromBytes(conceptId.toString().getBytes());
+    }
+    return isUUID(id)
+        ? Util.ensureUUID(id).get()
+        : UUID.nameUUIDFromBytes(id.getBytes());
   }
 
   private URI getReferent(OWLNamedIndividual ind, OWLOntology model) {
@@ -496,7 +525,8 @@ public class SkosTerminologyAbstractor {
     }
 
     public MutableConceptScheme clone() {
-      MutableConceptScheme clonedScheme = new MutableConceptScheme(getId(),getVersionId(),getTag(),getLabel());
+      MutableConceptScheme clonedScheme = new MutableConceptScheme(getId(), getVersionId(),
+          getTag(), getLabel());
 
       clonedScheme.setTop(getTopConcept()
           .map(ConceptTerm.class::cast)
@@ -509,7 +539,7 @@ public class SkosTerminologyAbstractor {
           .map(ConceptTerm.class::cast)
           .forEach(clonedScheme::addConcept);
 
-      getAncestorsMap().forEach((trm,anc) -> {
+      getAncestorsMap().forEach((trm, anc) -> {
         anc.forEach((a) -> {
           Term child = clonedScheme.getConcepts()
               .filter((c) -> c.equals(trm))
@@ -519,7 +549,7 @@ public class SkosTerminologyAbstractor {
               .filter((c) -> c.equals(trm))
               .findFirst()
               .orElse(a);
-          clonedScheme.addParent(child,a);
+          clonedScheme.addParent(child, a);
         });
       });
 
@@ -536,7 +566,7 @@ public class SkosTerminologyAbstractor {
 
     public boolean equals(Object other) {
       return other instanceof MutableConceptScheme &&
-          getId().equals(((MutableConceptScheme)other).getId());
+          getId().equals(((MutableConceptScheme) other).getId());
     }
 
     public int hashCode() {
@@ -586,14 +616,20 @@ public class SkosTerminologyAbstractor {
 
   public static class ConceptTerm extends InternalTerm {
 
+    private UUID conceptUUID;
+    private List<String> notations;
+
     public ConceptTerm(URI conceptURI, String code, String label, String comment, URI refUri,
-        ConceptScheme<Term> scheme) {
+        ConceptScheme<Term> scheme, UUID conceptUUID, List<String> notations) {
 
       super(conceptURI, code, label, ensureUTF8(comment), refUri, scheme);
+      this.conceptUUID = conceptUUID;
+      this.notations = new ArrayList<>(notations);
     }
 
     public ConceptTerm(ConceptTerm other) {
-      this(other.getConceptId(), other.getTag(), other.getLabel(), other.getComment(), other.getRef(), other.getScheme());
+      this(other.getConceptId(), other.getTag(), other.getLabel(), other.getComment(),
+          other.getRef(), other.getScheme(), other.getConceptUUID(), other.getNotations());
     }
 
     public String getTermConceptName() {
@@ -617,7 +653,16 @@ public class SkosTerminologyAbstractor {
     }
 
     public ConceptTerm cloneInto(ConceptScheme cs) {
-      return new ConceptTerm(getConceptId(), getTag(), getLabel(), getComment(), getRef(), cs);
+      return new ConceptTerm(getConceptId(), getTag(), getLabel(), getComment(), getRef(),
+          cs, getConceptUUID(), new ArrayList<>(getNotations()));
+    }
+
+    public UUID getConceptUUID() {
+      return conceptUUID;
+    }
+
+    public List<String> getNotations() {
+      return notations;
     }
 
     @Override
@@ -627,7 +672,8 @@ public class SkosTerminologyAbstractor {
 
     @Override
     public boolean equals(Object object) {
-      return object instanceof ConceptTerm && getConceptId().equals(((ConceptTerm) object).conceptId);
+      return object instanceof ConceptTerm && getConceptId()
+          .equals(((ConceptTerm) object).conceptId);
     }
 
     @Override
@@ -643,24 +689,25 @@ public class SkosTerminologyAbstractor {
     }
 
     // detect all cross-scheme dependencies
-    Map<ConceptScheme<Term>,Set<ConceptScheme<Term>>> dependencies = new HashMap<>();
+    Map<ConceptScheme<Term>, Set<ConceptScheme<Term>>> dependencies = new HashMap<>();
     graph.conceptSchemes.values().stream()
         .map(MutableConceptScheme.class::cast)
         .forEach((cs) -> cs.getConcepts()
             .flatMap(cs::streamAncestors)
             .map(ConceptTerm.class::cast)
-            .filter((a)->! a.getScheme().equals(cs))
+            .filter((a) -> !a.getScheme().equals(cs))
             .forEach((a) -> {
               if (!dependencies.containsKey(cs)) {
-                dependencies.put(cs,new HashSet<>());
+                dependencies.put(cs, new HashSet<>());
               }
               dependencies.get(cs).add(a.getScheme());
             })
-    );
+        );
 
     // sort in case of transitive dependencies
     HierarchySorter<ConceptScheme<Term>> sorter = new HierarchySorter<>();
-    List<ConceptScheme<Term>> sortedSchemes = sorter.linearize(graph.conceptSchemes.values(),dependencies);
+    List<ConceptScheme<Term>> sortedSchemes = sorter
+        .linearize(graph.conceptSchemes.values(), dependencies);
 
     List<MutableConceptScheme> clonedSchemes = sortedSchemes.stream()
         .map(MutableConceptScheme.class::cast)
@@ -683,10 +730,10 @@ public class SkosTerminologyAbstractor {
 
     // Now rewrite the parents to point to the internal concept
     clonedSchemes.forEach((src) -> {
-      src.getAncestorsMap().forEach((trm,parents) -> {
+      src.getAncestorsMap().forEach((trm, parents) -> {
         Set<Term> includedParents = parents.stream()
             .filter((prn) -> src.getConcepts().anyMatch((c) -> c.equals(prn)))
-            .filter((prn) -> ! ((ConceptTerm) prn).getScheme().equals(src))
+            .filter((prn) -> !((ConceptTerm) prn).getScheme().equals(src))
             .collect(Collectors.toSet());
         parents.removeAll(includedParents);
         includedParents.forEach((p) -> parents.add(src.getConcept(p.getConceptId())));
@@ -695,7 +742,7 @@ public class SkosTerminologyAbstractor {
 
     Map<URI, ConceptScheme<Term>> codeSystems = clonedSchemes.stream()
         .collect(Collectors.toMap(NamespaceIdentifier::getId, Function.identity()));
-    Map<Term,Set<Term>> parents = join(codeSystems);
+    Map<Term, Set<Term>> parents = join(codeSystems);
 
     return new ConceptGraph(codeSystems, parents);
   }

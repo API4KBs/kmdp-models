@@ -16,6 +16,9 @@
 package edu.mayo.kmdp.id;
 
 import edu.mayo.kmdp.id.adapter.QualifiedId;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 
 import java.net.URI;
@@ -27,6 +30,16 @@ public interface Term extends LexicalIdentifier {
   URI getRef();
 
   URI getConceptId();
+
+  default UUID getConceptUUID() {
+    return getTag() != null ? UUID.nameUUIDFromBytes(getTag().getBytes()) : null;
+  }
+
+  default List<String> getTags() {
+    List<String> l = new ArrayList<>(1);
+    l.add(getTag());
+    return l;
+  }
 
   default ConceptIdentifier asConcept() {
     return (ConceptIdentifier) this;

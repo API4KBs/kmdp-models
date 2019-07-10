@@ -91,10 +91,6 @@ public class AnnotationsTest extends TestBase {
             id)));
     assertTrue(m.contains(
         dat_a(subj,
-            SKOS.notation,
-            "id0001")));
-    assertTrue(m.contains(
-        dat_a(subj,
             RDFS.comment,
             "comment")));
     assertTrue(m.contains(
@@ -120,7 +116,11 @@ public class AnnotationsTest extends TestBase {
     assertTrue(m.contains(
         dat_a(subj,
             SKOS.notation,
-            "id0001")));
+            "my-not")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            DC_11.identifier,
+            id)));
     assertTrue(m.contains(
         dat_a(subj,
             OWL2.versionInfo,

@@ -24,6 +24,8 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.OWL2;
+import org.apache.jena.vocabulary.RDF;
 
 public abstract class BaseMireotTest {
 
@@ -56,6 +58,16 @@ public abstract class BaseMireotTest {
         // exclude the ontology itself
         resources.add(res);
       }
+    }
+    return resources;
+  }
+
+  public Set<Resource> getIndividuals(String baseUri, Model model) {
+    Set<Resource> resources = new HashSet<>();
+    ResIterator iter = model.listSubjectsWithProperty(RDF.type, OWL2.NamedIndividual);
+    while (iter.hasNext()) {
+      Resource res = iter.nextResource();
+        resources.add(res);
     }
     return resources;
   }
