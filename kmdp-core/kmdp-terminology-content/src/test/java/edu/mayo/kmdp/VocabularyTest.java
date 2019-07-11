@@ -119,6 +119,12 @@ public class VocabularyTest {
     assertEquals("it",
         Language.Italian.getTag());
 
+    assertEquals("fr",
+        Language.French.getTag());
+
+    assertEquals("fr",
+        edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20190201.Language.French.getTag());
+
   }
 
   @Test

@@ -190,7 +190,7 @@
           </execution>
 
           <execution>
-            <id>lang-codes-skos</id>
+            <id>lang2-codes-skos</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>owl-to-skos</goal>
@@ -200,7 +200,24 @@
               <targetNamespace>https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/</targetNamespace>
               <targetURI>https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguage</targetURI>
               <skosNamespace>https://ontology.mayo.edu/taxonomies/ISO639-2-LanguageCodes</skosNamespace>
-              <skosOutputFile>ISOLanguageCode.skos.rdf</skosOutputFile>
+              <skosOutputFile>ISO639_2_LanguageCode.skos.rdf</skosOutputFile>
+              <schemeName>Languages</schemeName>
+              <topConceptName>Language</topConceptName>
+              <entityType>INST</entityType>
+            </configuration>
+          </execution>
+          <execution>
+            <id>lang-codes-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlFile>${ontologyDir}/lcc.rdf</owlFile>
+              <targetNamespace>https://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/</targetNamespace>
+              <targetURI>https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguage</targetURI>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/ISO639-1-LanguageCodes</skosNamespace>
+              <skosOutputFile>ISO639_1_LanguageCode.skos.rdf</skosOutputFile>
               <schemeName>Languages</schemeName>
               <topConceptName>Language</topConceptName>
               <entityType>INST</entityType>
@@ -640,7 +657,7 @@
                 <owlFile>${skosDir}</owlFile>
               </owlFiles>
               <exclusions>
-                <exclusion>${skosDir}${s}ISOLanguageCode.skos.rdf</exclusion>
+                <exclusion>${skosDir}${s}ISO639_2_LanguageCode.skos.rdf</exclusion>
               </exclusions>
             </configuration>
           </execution>
@@ -652,7 +669,7 @@
             </goals>
             <configuration>
               <owlFiles>
-                <owlFile>${skosDir}${s}ISOLanguageCode.skos.rdf</owlFile>
+                <owlFile>${skosDir}${s}ISO639_2_LanguageCode.skos.rdf</owlFile>
               </owlFiles>
               <tagFormat>urn:Alpha2Code</tagFormat>
             </configuration>

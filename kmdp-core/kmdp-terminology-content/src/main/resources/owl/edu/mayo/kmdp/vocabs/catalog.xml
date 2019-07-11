@@ -64,6 +64,10 @@
     uri="dctype.rdf"
     name="http://purl.org/dc/dcmitype/"/>
 
+  <uri id="DCT"
+    uri="dcterms.rdf"
+    name="http://purl.org/dc/terms/"/>
+
   <uri id="HttpCodes"
     uri="statusCodes.rdf"
     name="http://www.w3.org/2011/http-statusCodes#"/>
