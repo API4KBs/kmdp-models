@@ -75,7 +75,7 @@ public class Owl2Skos2TermsTest {
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, targetNS)
         .with(OWLtoSKOSTxParams.FLATTEN, false)
         .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME, "Cito")
-        .with(OWLtoSKOSTxParams.ADD_IMPORTS, false);
+        .with(OWLtoSKOSTxParams.ADD_IMPORTS, true);
 
     Optional<Model> skosModel = new MireotExtractor()
         .fetch(Owl2Skos2TermsTest.class.getResourceAsStream(owlPath),

@@ -28,7 +28,7 @@ CONSTRUCT {
     skos:example ?Example;
 
     owl:versionInfo ?VersionTag;
-    dc:identifier ?Id.
+    dct:identifier ?Id.
 
 }
 WHERE {

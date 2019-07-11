@@ -288,7 +288,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
 
       Owl2SkosConfig cfg = new Owl2SkosConfig()
           .with(OWLtoSKOSTxParams.TGT_NAMESPACE,skosNamespace)
-          .with(OWLtoSKOSTxParams.ADD_IMPORTS,false)
+          .with(OWLtoSKOSTxParams.ADD_IMPORTS,true)
           .with(OWLtoSKOSTxParams.SCHEME_NAME,schemeName)
           .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME,topConceptName)
           .with(OWLtoSKOSTxParams.MODE,profile);

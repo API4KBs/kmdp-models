@@ -85,7 +85,7 @@ public class Owl2SkosConfig extends ConfigProperties<Owl2SkosConfig, OWLtoSKOSTx
     )),
     ADD_IMPORTS( Opt.of(
         "imports",
-        Boolean.FALSE.toString(),
+        Boolean.TRUE.toString(),
         "if true, imports the dependency ontologies (SKOS, OLEX)",
         Boolean.class,
         false

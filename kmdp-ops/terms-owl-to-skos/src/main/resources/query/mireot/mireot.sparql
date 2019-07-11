@@ -31,7 +31,7 @@ CONSTRUCT {
     rdfs:subPropertyOf ?parentProp;
 
     owl:versionInfo ?VersionTag;
-    dc:identifier ?identifier.
+    dct:identifier ?identifier.
 
   ?Dx a rdfs:Datatype.
 }

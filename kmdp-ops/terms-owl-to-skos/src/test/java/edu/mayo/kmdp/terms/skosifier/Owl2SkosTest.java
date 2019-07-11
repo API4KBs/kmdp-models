@@ -432,7 +432,7 @@ public class Owl2SkosTest extends TestBase {
         "WHERE { " +
         "   ?C  a skos:Concept; " +
         "       skos:prefLabel ?P; " +
-        "       dc:identifier ?I; " +
+        "       dct:identifier ?I; " +
         "}";
 
     Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
