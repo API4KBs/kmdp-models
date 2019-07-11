@@ -25,7 +25,7 @@ public class SwaggerToIDLTranslatorTest {
 
   @Test
   public void testArtifactAPI() {
-    String source = "/openapi/v2/org/omg/spec/api4kp/knowledgeArtifactRepository.yaml";
+    String source = "/openapi/v2/org/omg/spec/api4kp/2.0.0/knowledgeArtifactRepository.yaml";
     InputStream input = SwaggerToIDLTranslatorTest.class.getResourceAsStream(source);
 
     Optional<String> target = (new SwaggerToIDLTranslator()

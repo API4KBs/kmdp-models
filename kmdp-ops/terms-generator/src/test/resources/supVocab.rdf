@@ -1,0 +1,35 @@
+@prefix scv:   <https://test.foo/taxonomies/parent/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+scv:superScheme
+        a       <http://www.w3.org/2004/02/skos/core#ConceptScheme> ;
+        <http://www.w3.org/2004/02/skos/core#hasTopConcept>
+                scv:superTop ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Super Scheme" .
+
+scv:superTop
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                        scv:superScheme ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Top of Super" .
+
+scv:000
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://www.w3.org/2004/02/skos/core#broader>
+                scv:superTop ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                scv:superScheme ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "000" ;
+        <http://www.w3.org/ns/lemon/ontolex#isConceptOf>
+                <http://foo.org/ontologies/referent/AThing> ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Parent" .
+
+scv:    a                owl:Ontology ;
+        rdfs:label       "Test Parent Vocabulary" ;
+        owl:imports      <http://www.w3.org/2004/02/skos/core> .

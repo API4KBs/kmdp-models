@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <uri id="CiTO"
+    uri="cito.rdf"
+    name="http://purl.org/spar/cito"/>
+  <uri id="PSO"
+    uri="pso.rdf"
+    name="http://purl.org/spar/pso"/>
+  <uri id="PRO"
+    uri="pro.rdf"
+    name="http://purl.org/spar/pro"/>
+
+  <uri id="SKOS"
+    uri="skos.rdf"
+    name="http://www.w3.org/2004/02/skos/core"/>
+
+  <uri id="API4KP"
+    uri="/ontologies/API4KP/api4kp.rdf"
+    name="https://www.omg.org/spec/API4KP/20190801/api4kp/"/>
+
+  <uri id="API4KP-KAO"
+    uri="/ontologies/API4KP/informative/kao.owl.rdf"
+    name="http://ontology.mayo.edu/ontology/KAO/"/>
+
+  <uri id="API4KP-KMDO"
+    uri="/ontologies/API4KP/informative/kmdo.owl"
+    name="http://ontology.mayo.edu/ontologies/KMDO/"/>
+
+  <uri id="API4KP-Ops"
+    uri="/ontologies/API4KP/api4kp-ops.owl"
+    name="http://www.omg.org/spec/API4KP/Operations"/>
+
+  <uri id="API4KP-Registry"
+    uri="/ontologies/API4KP/informative/api4kp-registry.owl"
+    name="http://ontology.mayo.edu/KMDP/registry/"/>
+
+  <uri id="LangCodes"
+    uri="LanguageCodes.rdf"
+    name="https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/"/>
+
+  <uri id="MIMECodes"
+    uri="mime.rdf"
+    name="http://www.invincea.com/ontologies/icas/1.0.1/mime/"/>
+
+  <uri id="DCMIType"
+    uri="dctype.rdf"
+    name="http://purl.org/dc/dcmitype/"/>
+
+  <uri id="HttpCodes"
+    uri="statusCodes.rdf"
+    name="http://www.w3.org/2011/http-statusCodes#"/>
+
+</catalog>
