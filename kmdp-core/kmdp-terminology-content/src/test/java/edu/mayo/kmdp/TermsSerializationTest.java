@@ -22,8 +22,8 @@ import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import java.util.Collections;
 import java.util.Optional;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -61,7 +61,7 @@ public class TermsSerializationTest {
         .writeJson(f)
         .flatMap(Util::asString).get();
 
-//    System.out.println(json);
+    System.out.println(json);
 
     assertTrue(json.contains(KnowledgeAssetType.Cognitive_Process_Model.getTag()));
     assertTrue(json.contains(KnowledgeAssetType.Cognitive_Process_Model.getLabel()));

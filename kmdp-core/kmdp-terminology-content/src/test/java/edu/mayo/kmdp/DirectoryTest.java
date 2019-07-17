@@ -16,7 +16,7 @@
 package edu.mayo.kmdp;
 
 import edu.mayo.kmdp.terms.KMDPTerms;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

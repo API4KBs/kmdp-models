@@ -22,15 +22,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.KnowledgeProcessingOperation;
+import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._20190801.KnowledgeProcessingOperation;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
 import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._1_0.KnowledgeAssetRole;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
-import edu.mayo.ontology.taxonomies.kao.languagerole._1_0.KnowledgeRepresentationLanguageRole;
-import edu.mayo.ontology.taxonomies.kao.publicationeventtype._20180601.PublicationEventType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._20190801.KnowledgeAssetRole;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._20190801.KnowledgeProcessingTechnique;
+import edu.mayo.ontology.taxonomies.kao.languagerole._20190801.KnowledgeRepresentationLanguageRole;
+import edu.mayo.ontology.taxonomies.kao.publicationeventtype._20190801.PublicationEventType;
 import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
 import edu.mayo.ontology.taxonomies.kao.publishingrole.PublishingRole;
 import edu.mayo.ontology.taxonomies.kao.rel.citationreltype._2018_02_16.BibliographicCitationType;
@@ -40,11 +40,12 @@ import edu.mayo.ontology.taxonomies.kao.rel.relatedversiontype._20190801.Related
 import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype._20190801.StructuralPartType;
 import edu.mayo.ontology.taxonomies.kao.rel.summaryreltype._20190801.SummarizationType;
 import edu.mayo.ontology.taxonomies.kao.rel.variantreltype._20190801.VariantType;
-import edu.mayo.ontology.taxonomies.krformat._2018._08.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
-import edu.mayo.ontology.taxonomies.krprofile._2018._08.KnowledgeRepresentationLanguageProfile;
-import edu.mayo.ontology.taxonomies.krserialization._2018._08.KnowledgeRepresentationLanguageSerialization;
-import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
+import edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat;
+import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krprofile._20190801.KnowledgeRepresentationLanguageProfile;
+import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
+import edu.mayo.ontology.taxonomies.lexicon._20190801.Lexicon;
 import edu.mayo.ontology.taxonomies.mimetype.MIMEType;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
 import java.util.Arrays;
@@ -84,6 +85,7 @@ public class VocabularyTest {
     assertNotNull(PublishingRole.Contributor);
     assertNotNull(PublicationStatus.Draft);
     assertNotNull(MIMEType.Application_Pdf);
+    assertNotNull(AnnotationRelType.Defines);
   }
 
   @Test
