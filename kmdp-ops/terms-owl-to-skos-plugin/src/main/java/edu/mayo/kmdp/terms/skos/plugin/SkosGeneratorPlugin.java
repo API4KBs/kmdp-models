@@ -42,10 +42,14 @@ import org.protege.xmlcatalog.XMLCatalog;
 import org.protege.xmlcatalog.owlapi.XMLCatalogIRIMapper;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
+import org.semanticweb.owlapi.io.StreamDocumentSource;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
 import org.semanticweb.owlapi.model.OWLDocumentFormat;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OntologyConfigurator;
 import org.semanticweb.owlapi.model.SetOntologyID;
@@ -291,14 +295,15 @@ public class SkosGeneratorPlugin extends AbstractMojo {
           .with(OWLtoSKOSTxParams.ADD_IMPORTS,true)
           .with(OWLtoSKOSTxParams.SCHEME_NAME,schemeName)
           .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME,topConceptName)
-          .with(OWLtoSKOSTxParams.MODE,profile);
+          .with(OWLtoSKOSTxParams.MODE, profile);
 
-      Optional<Model> mireotedModel = new MireotExtractor().fetch(
-          ensureFormat(is,
-              new RDFXMLDocumentFormat(),
-              catalogURL),
-          URI.create(targetURI),
-          mfg);
+      Optional<Model> mireotedModel = new MireotExtractor()
+          .fetch(
+              ensureFormat(is,
+                  new RDFXMLDocumentFormat(),
+                  catalogURL),
+              URI.create(targetURI),
+              mfg);
 
       Optional<Model> skosModel = mireotedModel
           .flatMap((ext) -> new Owl2SkosConverter().apply(ext, cfg));
@@ -348,25 +353,25 @@ public class SkosGeneratorPlugin extends AbstractMojo {
   }
 
 
-  public static InputStream ensureFormat(InputStream is, OWLDocumentFormat fmt, URL catalogURL) {
+  public InputStream ensureFormat(InputStream is, OWLDocumentFormat fmt, URL catalogURL) {
     try {
-      OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-      manager.setOntologyConfigurator(new OntologyConfigurator()
-          .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
-
-      if (catalogURL != null) {
-        XMLCatalog catalog = CatalogUtilities.parseDocument(catalogURL);
-        manager.setIRIMappers(Collections.singleton(new XMLCatalogIRIMapper(catalog)));
-      }
+      OWLOntologyManager manager = getManager(catalogURL);
 
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       OWLOntology onto = manager.loadOntologyFromOntologyDocument(is);
       OWLOntologyID originalId = onto.getOntologyID();
 
+      preloadImports(manager,onto);
+
       OWLOntologyMerger merger = new OWLOntologyMerger(
           new OWLOntologyImportsClosureSetProvider(manager, onto));
-      onto = merger.createMergedOntology(OWLManager.createOWLOntologyManager(),
-          onto.getOntologyID().getOntologyIRI().get());
+
+      onto = merger.createMergedOntology(
+          manager,
+          null
+      );
+      // swap the original ontology with a new ontology that contains the imports closure
+      manager.removeOntology(originalId);
       onto.getOWLOntologyManager().applyChange(new SetOntologyID(onto, originalId));
       onto.saveOntology(fmt, baos);
 
@@ -377,6 +382,50 @@ public class SkosGeneratorPlugin extends AbstractMojo {
       e.printStackTrace();
       return is;
     }
+  }
+
+  private void preloadImports(final OWLOntologyManager manager, final OWLOntology onto) {
+    onto.directImportsDocuments().forEach(
+        ontologyIRI -> {
+          if (manager.getOntology(ontologyIRI) == null) {
+            try {
+              if (applyMappings(ontologyIRI, manager).isPresent()) {
+                OWLOntology importedOntology = manager.loadOntologyFromOntologyDocument(new StreamDocumentSource(
+                    resolve(ontologyIRI.toString()),
+                    ontologyIRI));
+                preloadImports(manager,importedOntology);
+              } else {
+                OWLOntology importedOntology = manager.loadOntology(ontologyIRI);
+                preloadImports(manager,importedOntology);
+              }
+            } catch (OWLOntologyCreationException e) {
+              e.printStackTrace();
+            }
+          }
+        }
+    );
+  }
+
+  private static Optional<IRI> applyMappings(IRI ontologyIRI, OWLOntologyManager manager) {
+    for (OWLOntologyIRIMapper owlOntologyIRIMapper : manager.getIRIMappers()) {
+      IRI mappedIRI = owlOntologyIRIMapper.getDocumentIRI(ontologyIRI);
+      if (mappedIRI != null) {
+        return Optional.of(mappedIRI);
+      }
+    }
+    return Optional.empty();
+  }
+
+  private static OWLOntologyManager getManager(URL catalogURL) throws IOException {
+    OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+    manager.setOntologyConfigurator(new OntologyConfigurator()
+        .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
+
+    if (catalogURL != null) {
+      XMLCatalog catalog = CatalogUtilities.parseDocument(catalogURL);
+      manager.setIRIMappers(Collections.singleton(new XMLCatalogIRIMapper(catalog)));
+    }
+    return manager;
   }
 
 }

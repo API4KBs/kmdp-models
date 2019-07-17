@@ -314,9 +314,18 @@ public class SkosTerminologyAbstractor {
   }
 
   private Optional<URI> applyVersion(OWLNamedIndividual ind, OWLOntology model) {
+    String ontoUri = model.getOntologyID().getOntologyIRI().map(IRI::toString).orElse("");
+    String versionUri = model.getOntologyID().getVersionIRI().map(IRI::toString).orElse("");
+    String versionFragment = NameUtils.strip(ontoUri,versionUri);
+
+    String indURI = ind.getIRI().toString();
+    String localId = NameUtils.getTrailingPart(ind.getIRI().toString());
+
     return model.getOntologyID().getVersionIRI()
         .map((v) -> IRI
-            .create(v.toString() + "#" + NameUtils.getTrailingPart(ind.getIRI().toString()))
+            .create( indURI.substring(0,indURI.lastIndexOf(localId) - 1)
+                    + versionFragment
+                    + "#" + localId)
             .toURI());
   }
 

@@ -101,7 +101,7 @@ public class Owl2Skos2TermsTest {
 
     SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
         .traverse(skosOntology.get(),new SkosAbstractionConfig()
-            .with(SkosAbstractionParameters.REASON,true));
+            .with(SkosAbstractionParameters.REASON,false));
 
     new JavaEnumTermsGenerator().generate(graph,
         new EnumGenerationConfig()
