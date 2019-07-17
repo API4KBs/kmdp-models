@@ -50,12 +50,12 @@ public class RegistryOntologyTest extends RegistryTestBase {
     });
 
     assertTrue(
-        langs.contains("http://ontology.mayo.edu/KMDP/registry/languages/api4kp/DMN/versions/1.2"));
-    assertTrue(langs.contains("http://ontology.mayo.edu/KMDP/registry/profiles/dol/OWL2QL"));
+        langs.contains("http://ontology.mayo.edu/ontologies/kmdp-registry/languages/api4kp/DMN/versions/1.2"));
+    assertTrue(langs.contains("http://ontology.mayo.edu/ontologies/kmdp-registry/profiles/dol/OWL2QL"));
 
     assertTrue(langs.stream().allMatch(
-        (l) -> l.startsWith("http://ontology.mayo.edu/KMDP/registry/languages/") || l
-            .startsWith("http://ontology.mayo.edu/KMDP/registry/profiles/")));
+        (l) -> l.startsWith("http://ontology.mayo.edu/ontologies/kmdp-registry/languages/") || l
+            .startsWith("http://ontology.mayo.edu/ontologies/kmdp-registry/profiles/")));
   }
 
   @Test
@@ -76,7 +76,7 @@ public class RegistryOntologyTest extends RegistryTestBase {
     ));
 
     assertEquals("ccpm-v1",
-        ids.get("http://ontology.mayo.edu/KMDP/registry/languages/kmdp/CognitiveCareProcessModel/versions/1.0"));
+        ids.get("http://ontology.mayo.edu/ontologies/kmdp-registry/languages/kmdp/CognitiveCareProcessModel/versions/1.0"));
 
   }
 
@@ -99,9 +99,9 @@ public class RegistryOntologyTest extends RegistryTestBase {
     ));
 
     assertEquals("ccpm-v1",
-        ids.get("http://ontology.mayo.edu/KMDP/registry/languages/kmdp/CognitiveCareProcessModel/versions/1.0"));
+        ids.get("http://ontology.mayo.edu/ontologies/kmdp-registry/languages/kmdp/CognitiveCareProcessModel/versions/1.0"));
     assertEquals("QL",
-        ids.get("http://ontology.mayo.edu/KMDP/registry/profiles/dol/OWL2QL"));
+        ids.get("http://ontology.mayo.edu/ontologies/kmdp-registry/profiles/dol/OWL2QL"));
 
   }
 
