@@ -120,6 +120,9 @@ public class TerminologyGeneratorPluginTest {
   private void testWithJaxb() {
     deploy(genSource, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
     deploy(genSource, "/xsd/API4KP/api4kp/identifiers/bindings.xjb");
+    deploy(genSource, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd");
+    deploy(genSource, "/xsd/API4KP/api4kp/datatypes/bindings.xjb");
+
     deploy(genSource, "/xsd/api4kp-catalog.xml");
 
     deploy(TerminologyGeneratorPluginTest.class.getResourceAsStream("/schema.xsd"), genSource,

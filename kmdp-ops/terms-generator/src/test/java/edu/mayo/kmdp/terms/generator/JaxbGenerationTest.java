@@ -243,6 +243,7 @@ public class JaxbGenerationTest {
     deploy(new StringInputStream(parentXSD), src, "/parent.xsd");
     deploy(new StringInputStream(bindings), src, "/bindings.xjb");
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
+    deploy(src, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd");
     deploy(src, "/xsd/api4kp-catalog.xml");
 
     SkosTerminologyAbstractor.ConceptGraph graph = doAbstract();
