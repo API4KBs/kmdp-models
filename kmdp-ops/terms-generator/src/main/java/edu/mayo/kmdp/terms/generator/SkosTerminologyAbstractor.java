@@ -283,7 +283,6 @@ public class SkosTerminologyAbstractor {
 
     // TODO FIXME: check rdfs:label vs skos:prefLabel, and consider that getFragment does not pick /name vs #name
     String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
-
     return new MutableConceptScheme(uri, version, code, label);
   }
 
@@ -324,9 +323,10 @@ public class SkosTerminologyAbstractor {
     return model.getOntologyID().getVersionIRI()
         .map((v) -> IRI
             .create( indURI.substring(0,indURI.lastIndexOf(localId) - 1)
-                    + versionFragment
+                    + ( versionFragment.startsWith("/") ? versionFragment : "/" + versionFragment )
                     + "#" + localId)
             .toURI());
+
   }
 
 
