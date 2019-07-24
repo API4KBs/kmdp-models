@@ -14,6 +14,6 @@
         <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://test.org" uri="deepHier.owl"/>
         <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://test.org" uri="deepDataProp.owl"/>
         <uri id="Automatically generated entry, Timestamp=1557692455077" name="duplicate:http://test.org" uri="deepProp.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1557692455077" name="http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/" uri="lcc.rdf"/>
+        <uri id="Automatically generated entry, Timestamp=1557692455077" name="https://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/" uri="lcc.rdf"/>
     </group>
 </catalog>

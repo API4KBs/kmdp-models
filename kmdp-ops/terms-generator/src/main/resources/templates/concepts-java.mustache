@@ -2,7 +2,9 @@ package {{packageName}};
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.Identifier;
@@ -10,7 +12,6 @@ import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.ConceptSchemeDirectory;
 import edu.mayo.kmdp.terms.Taxonomic;
-import edu.mayo.kmdp.terms.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.impl.model.DefaultConceptScheme;
 
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
@@ -36,7 +37,7 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
     /* {{comment}} */
     {{#jaxb}}@javax.xml.bind.annotation.XmlEnumValue("{{tag}}"){{/jaxb}}
     {{#jsonld}}@de.escalon.hypermedia.hydra.mapping.Expose( "{{ref}}" ){{/jsonld}}
-    {{termConceptName}}( "{{conceptId}}", "{{tag}}", "{{label}}", "{{ref}}",
+    {{termConceptName}}( "{{conceptId}}", "{{conceptUUID}}", "{{tag}}", java.util.Arrays.asList( {{#notations}}"{{.}}"{{^-last}}, {{/-last}}{{/notations}} ), "{{label}}", "{{ref}}",
         new Term[] { {{#ancestors}} {{#overridePk}}{{termConceptPackage}}{{/overridePk}}.{{termConceptScheme}}.{{termConceptName}}, {{/ancestors}} },
         new Term[] { {{#closure}} {{#overridePk}}{{termConceptPackage}}{{/overridePk}}.{{termConceptScheme}}.{{termConceptName}}, {{/closure}} } ) {{^-last}}, {{/-last}}
    {{/concepts}};
@@ -55,21 +56,30 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
     	                                                                      .withTag( schemeID )
     	                                                                      .withVersion( DatatypeHelper.versionOf( schemeURI.getVersionId(), schemeURI.getUri() ) );
 
+  static {
+    {{termsProvider}}.register(schemeURI.getUri(),{{typeName}}.class);
+  }
+
+
   private URI	ref;
+  private UUID conceptUUID;
 	private String displayName;
 	private String tag;
+	private List<String> tags;
 	private URI conceptId;
 
 	private Term[] ancestors;
 	private Term[] ancestorsClosure;
 
-	{{typeName}}( String conceptId, String code, String displayName, String referent, Term[] ancestors, Term[] closure ) {
+	{{typeName}}( String conceptId, String conceptUUID, String code, List<String> additionalCodes, String displayName, String referent, Term[] ancestors, Term[] closure ) {
 		this.ref = URI.create( referent );
 		this.tag = code;
+		this.tags = java.util.Collections.unmodifiableList(additionalCodes);
 		this.displayName = displayName;
 		this.ancestors = ancestors;
 		this.ancestorsClosure = closure;
-		this.conceptId = URI.create( conceptId );
+		this.conceptId = URI.create(conceptId);
+		this.conceptUUID = UUID.fromString(conceptUUID);
 	}
 
 
@@ -81,6 +91,14 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
 	@Override
 	public String getTag() {
 		return tag;
+	}
+
+	public List<String> getTags() {
+	  return tags;
+	}
+
+	public UUID getConceptUUID() {
+	  return conceptUUID;
 	}
 
 	@Override
@@ -124,6 +142,14 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
 		return {{termsProvider}}.resolve( tag, {{typeName}}.class );
 	}
 
+	public static Optional<{{typeName}}> resolveTag( final String tag ) {
+		return {{termsProvider}}.resolveTag( tag, {{typeName}}.class );
+	}
+
+	public static Optional<{{typeName}}> resolveUUID( final UUID id ) {
+		return {{termsProvider}}.resolveUUID( id, {{typeName}}.class );
+	}
+
 	public static Optional<{{typeName}}> resolveRef( final String refUri ) {
 		return {{termsProvider}}.resolveRef( refUri, {{typeName}}.class );
 	}
@@ -132,8 +158,8 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
 		return {{termsProvider}}.resolveId( conceptId, {{typeName}}.class );
 	}
 
-  public static class Adapter extends TermsXMLAdapter {
-    public static final TermsXMLAdapter instance = new Adapter();
+  public static class Adapter extends {{baseXmlAdapter}} {
+    public static final {{baseXmlAdapter}} instance = new Adapter();
     protected Term[] getValues() { return values(); }
 	}
 }

@@ -133,16 +133,16 @@ public class SelectResourcesTest extends BaseMireotTest {
   @Test
   public void testExtractIndividuals2() {
 
-    String base = "http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/";
+    String base = "https://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/";
 
     MireotConfig cfg = new MireotConfig()
         .with(MireotParameters.BASE_URI, base)
         .with(MireotParameters.ENTITY_TYPE, EntityTypes.INST);
 
     Set<Resource> props = new MireotExtractor().fetch(stream("/ontology/lcc.rdf"),
-        URI.create("http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage"),
+        URI.create("https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage"),
         cfg)
-        .map((m) -> getResources(base,m))
+        .map((m) -> getIndividuals(base,m))
         .orElse(new HashSet<>());
 
     assertEquals(154, props.size());

@@ -19,6 +19,7 @@ import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
+import java.net.URI;
 import java.util.Properties;
 
 public class SkosAbstractionConfig extends
@@ -58,6 +59,12 @@ public class SkosAbstractionConfig extends
         "false",
         "Runs a DL reasoner on the SKOS ontology before performing the abstraction",
         Boolean.class,
+        false)),
+    TAG_TYPE(Opt.of(
+        "tag_type",
+        "urn:uuid",
+        "Chooses the type of 'notation' to use as primary tag, when multiple are present",
+        URI.class,
         false));
 
     private Opt opt;

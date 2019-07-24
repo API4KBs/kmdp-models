@@ -26,15 +26,8 @@ public class ConceptSchemeDirectory {
 
   private Map<URI, Class<? extends Term>> registry = new HashMap<>();
 
-  public void register(Class<? extends Term> klass) {
-    Term[] terms = klass.getEnumConstants();
-    if (terms != null && terms.length > 0) {
-      Identifier id = klass.getEnumConstants()[0].getNamespace();
-      if (id instanceof NamespaceIdentifier) {
-        registry.put(((NamespaceIdentifier) id).getId(),
-            klass);
-      }
-    }
+  public void register(URI namespaceId, Class<? extends Term> klass) {
+    registry.put(namespaceId,klass);
   }
 
 
@@ -50,25 +43,40 @@ public class ConceptSchemeDirectory {
     return (Class<T>) registry.get(namespaceId);
   }
 
-  public <T extends Term> Optional<T> resolve(final Term trm, final Class<T> enumKlass) {
+
+
+
+  public static <T extends Term> Optional<T> resolve(final Term trm, final Class<T> enumKlass) {
     return Arrays.stream(enumKlass.getEnumConstants())
         .filter((x) -> trm.getRef().equals(x.getRef()))
         .findAny();
   }
 
-  public <T extends Term> Optional<T> resolve(final String tag, final Class<T> enumKlass) {
+  public static <T extends Term> Optional<T> resolve(final String tag, final Class<T> enumKlass) {
     return Arrays.stream(enumKlass.getEnumConstants())
         .filter((x) -> x.getTag().equals(tag))
         .findAny();
   }
 
-  public <T extends Term> Optional<T> resolveId(final String conceptId, final Class<T> enumKlass) {
+  public static <T extends Term> Optional<T> resolveTag(final String tag, final Class<T> enumKlass) {
     return Arrays.stream(enumKlass.getEnumConstants())
-        .filter((x) -> x.getConceptId().toString().equals(conceptId))
+        .filter((x) -> x.getTags().contains(tag))
         .findAny();
   }
 
-  public <T extends Term> Optional<T> resolveRef(final String refUri, final Class<T> enumKlass) {
+  public static <T extends Term> Optional<T> resolveUUID(final UUID conceptId, final Class<T> enumKlass) {
+    return Arrays.stream(enumKlass.getEnumConstants())
+        .filter((x) -> x.getConceptUUID().equals(conceptId))
+        .findAny();
+  }
+
+  public static <T extends Term> Optional<T> resolveId(final String conceptId, final Class<T> enumKlass) {
+    return Arrays.stream(enumKlass.getEnumConstants())
+        .filter((x) -> x.getConceptId().toString().equals(conceptId) || x.getConceptUUID().toString().equals(conceptId))
+        .findAny();
+  }
+
+  public static <T extends Term> Optional<T> resolveRef(final String refUri, final Class<T> enumKlass) {
     return Arrays.stream(enumKlass.getEnumConstants())
         .filter((x) -> x.getRef().toString().equals(refUri))
         .findAny();

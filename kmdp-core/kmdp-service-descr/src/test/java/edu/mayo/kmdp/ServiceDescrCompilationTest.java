@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -115,14 +115,17 @@ public class ServiceDescrCompilationTest {
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.openapi.xsd");
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
     deploy(src, "/xsd/API4KP/api4kp/identifiers/bindings.xjb");
+    deploy(src, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd");
+    deploy(src, "/xsd/API4KP/api4kp/datatypes/bindings.xjb");
+
     deploy(src, "/xsd/terms-bindings.xjb");
 
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krformat/_2018/_08/SerializationFormat.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krlanguage/_2018/_08/KnowledgeRepresentationLanguage.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krprofile/_2018/_08/KnowledgeRepresentationLanguageProfile.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krserialization/_2018/_08/KnowledgeRepresentationLanguageSerialization.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krformat/_20190801/SerializationFormat.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krlanguage/_20190801/KnowledgeRepresentationLanguage.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krprofile/_20190801/KnowledgeRepresentationLanguageProfile.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krserialization/_20190801/KnowledgeRepresentationLanguageSerialization.xsd");
     deploy(src, "/xsd/edu/mayo/ontology/taxonomies/api4kp/parsinglevel/_20190801/ParsingLevel.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/lexicon/_2018/_08/Lexicon.xsd");
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/lexicon/_20190801/Lexicon.xsd");
     deploy(src,
         "/xsd/edu/mayo/ontology/taxonomies/iso639_2_languagecodes/_20190201/Language.xsd");
 

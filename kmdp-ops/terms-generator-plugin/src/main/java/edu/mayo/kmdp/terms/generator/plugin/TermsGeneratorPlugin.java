@@ -155,6 +155,19 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   /**
    * @parameter
    */
+  private List<String> exclusions;
+
+  public List<String> getExclusions() {
+    return exclusions;
+  }
+
+  public void setExclusions(List<String> exclusions) {
+    this.exclusions = exclusions;
+  }
+
+  /**
+   * @parameter
+   */
   private String packageName;
 
   public String getPackageName() {
@@ -256,6 +269,32 @@ public class TermsGeneratorPlugin extends AbstractMojo {
     this.termsProvider = termsProvider;
   }
 
+  /**
+   * @parameter
+   */
+  private String tagFormat;
+
+  public String getTagFormat() {
+    return tagFormat;
+  }
+
+  public void setTagFormat(String tagFormat) {
+    this.tagFormat = tagFormat;
+  }
+
+  /**
+   * @parameter
+   */
+  private String xmlAdapter;
+
+  public String getXmlAdapter() {
+    return xmlAdapter;
+  }
+
+  public void setXmlAdapter(String xmlAdapter) {
+    this.xmlAdapter = xmlAdapter;
+  }
+
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   private MavenProject project;
 
@@ -266,6 +305,9 @@ public class TermsGeneratorPlugin extends AbstractMojo {
       }
 
       List<String> files = flatten(owlFiles);
+      if (exclusions != null) {
+        files.removeAll(exclusions);
+      }
 
       Collection<CatalogGenerator.CatalogEntry> entries = files.stream()
           .flatMap(this::transform)
@@ -304,7 +346,8 @@ public class TermsGeneratorPlugin extends AbstractMojo {
     SkosAbstractionConfig cfg = new SkosAbstractionConfig()
         .with(SkosAbstractionParameters.REASON,this.reason)
         .with(SkosAbstractionParameters.ENFORCE_CLOSURE,enforceClosure)
-        .with(SkosAbstractionParameters.CLOSURE_MODE,closureMode);
+        .with(SkosAbstractionParameters.CLOSURE_MODE,closureMode)
+        .with(SkosAbstractionParameters.TAG_TYPE,tagFormat);
     SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
         .traverse(ontology,cfg);
 
@@ -316,7 +359,8 @@ public class TermsGeneratorPlugin extends AbstractMojo {
         .with(EnumGenerationParams.WITH_JSONLD, Boolean.toString(isJsonLD()))
         .with(EnumGenerationParams.WITH_JSON, Boolean.toString(isJson()))
         .with(EnumGenerationParams.WITH_JAXB, Boolean.toString(isJaxb()))
-        .with(EnumGenerationParams.TERMS_PROVIDER, termsProvider);
+        .with(EnumGenerationParams.TERMS_PROVIDER, termsProvider)
+        .with(EnumGenerationParams.XML_ADAPTER,xmlAdapter);
     if (packageName != null) {
       opts.with(EnumGenerationParams.PACKAGE_NAME, packageName);
     }

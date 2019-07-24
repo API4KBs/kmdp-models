@@ -28,6 +28,7 @@ import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -220,7 +221,7 @@ public class Owl2SkosTest extends TestBase {
     Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
 
     assertTrue(answers.contains(a().with("C", "http://my.edu/test#" + uuid("Parent"))
-        .with("B", "http://my.edu/test#" + uuid("test_Top") )));
+        .with("B", "http://my.edu/test#" + uuid("test_Top"))));
 
     assertTrue(answers.contains(a().with("C", "http://my.edu/test#" + uuid("Child"))
         .with("B", "http://my.edu/test#" + uuid("Parent"))));
@@ -319,7 +320,7 @@ public class Owl2SkosTest extends TestBase {
 
     MireotConfig mfg = new MireotConfig()
         .with(MireotParameters.BASE_URI,
-            "http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/")
+            "https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/")
         .with(MireotParameters.ENTITY_TYPE, EntityTypes.INST);
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
@@ -328,7 +329,7 @@ public class Owl2SkosTest extends TestBase {
     Model result = new MireotExtractor().fetch(
         Owl2SkosTest.class.getResourceAsStream("/ontology/lcc.rdf"),
         URI.create(
-            "http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage"),
+            "https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage"),
         mfg
     ).flatMap((m) -> new Owl2SkosConverter().apply(m, cfg)).get();
 
@@ -336,7 +337,52 @@ public class Owl2SkosTest extends TestBase {
 
     assertTrue(answers.stream()
         .filter((m) -> "Italian".equals(m.get("L")))
-        .anyMatch((x) -> "it".equals(x.get("N"))));
+        .anyMatch((x) -> "it^^urn:Alpha2Code".equals(x.get("N"))));
+  }
+
+  @Test
+  public void testConceptGenerationWithTags2() {
+    String queryConcept = PREAMBLE +
+        "SELECT ?C ?L ?N ?D" +
+        " " +
+        "WHERE { " +
+        "   ?C  a skos:Concept; " +
+        "       rdfs:label ?L; " +
+        "       skos:notation ?N; " +
+        "       rdfs:isDefinedBy ?D" +
+        "}";
+
+    MireotConfig mfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI,
+            "https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/")
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.INST);
+
+    Owl2SkosConfig cfg = new Owl2SkosConfig()
+        .with(OWLtoSKOSTxParams.TGT_NAMESPACE,
+            "https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/")
+        .with(OWLtoSKOSTxParams.MODE, Modes.SKOS);
+
+    Model result = new MireotExtractor()
+        .fetch(
+            Owl2SkosTest.class.getResourceAsStream("/ontology/lcc2.rdf"),
+            URI.create(
+                "https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/IndividualLanguage"),
+            mfg)
+        .flatMap((m) ->
+            new Owl2SkosConverter().apply(m, cfg))
+        .get();
+
+    Set<Map<String, String>> answers = JenaUtil.askQuery(result, queryConcept, RDFNode::toString);
+    
+    Map<String, String> klingon = answers.stream()
+        .filter((m) -> "Klingon".equals(m.get("L")))
+        .findFirst()
+        .orElse(Collections.emptyMap());
+
+    assertEquals(4, klingon.size());
+    assertEquals("tlh^^urn:Alpha3Code", klingon.get("N"));
+    assertEquals("https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/Klingon",
+        klingon.get("D"));
   }
 
   @Test
@@ -386,7 +432,7 @@ public class Owl2SkosTest extends TestBase {
         "WHERE { " +
         "   ?C  a skos:Concept; " +
         "       skos:prefLabel ?P; " +
-        "       dc:identifier ?I; " +
+        "       dct:identifier ?I; " +
         "}";
 
     Owl2SkosConfig cfg = new Owl2SkosConfig().with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)

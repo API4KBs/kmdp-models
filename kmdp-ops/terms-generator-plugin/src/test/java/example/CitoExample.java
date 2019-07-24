@@ -18,7 +18,7 @@ package example;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.Taxonomic;
-import edu.mayo.kmdp.terms.TermsXMLAdapter;
+import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
@@ -129,9 +129,9 @@ public enum CitoExample implements Term, Taxonomic<CitoExample> {
     return MockTermsDirectory.directory.resolve(refUri, CitoExample.class);
   }
 
-  public static class Adapter extends TermsXMLAdapter {
+  public static class Adapter extends MockTermsXMLAdapter {
 
-    public static final TermsXMLAdapter instance = new Adapter();
+    public static final MockTermsXMLAdapter instance = new Adapter();
 
     @Override
     protected Term[] getValues() {

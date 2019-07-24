@@ -19,14 +19,17 @@ import static edu.mayo.kmdp.util.NameUtils.removeFragment;
 import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 
 import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
-
+import edu.mayo.kmdp.util.XMLUtil;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class CatalogGenerator extends BaseEnumGenerator {
 
@@ -53,9 +56,27 @@ public class CatalogGenerator extends BaseEnumGenerator {
   private void generateCatalog(Map<String, Object> context, File outputDir, String catalogName) {
     String mainText = fromTemplate("catalog", context);
 
+    File catalogFile = new File(outputDir, catalogName);
     //System.out.println( mainText );
-    this.writeToFile(mainText,
-        new File(outputDir, catalogName));
+    if (catalogFile.exists()) {
+      mainText = mergeCatalogs(FileUtil.read(catalogFile).orElse(null), mainText);
+    }
+    this.writeToFile(mainText,catalogFile);
+  }
+
+  private String mergeCatalogs(String existingCatalog, String mainText) {
+    Document existing = XMLUtil.loadXMLDocument(existingCatalog.getBytes())
+        .orElseThrow(IllegalStateException::new);
+    Document newCatalog = XMLUtil.loadXMLDocument(mainText.getBytes())
+        .orElseThrow(IllegalStateException::new);
+
+    XMLUtil.asElementStream(newCatalog.getDocumentElement().getChildNodes())
+        .forEach( (n) -> migrate(n,existing));
+    return new String(XMLUtil.toByteArray(existing));
+  }
+
+  private void migrate(Element n, Document existing) {
+    existing.getDocumentElement().appendChild(existing.importNode(n,true));
   }
 
 

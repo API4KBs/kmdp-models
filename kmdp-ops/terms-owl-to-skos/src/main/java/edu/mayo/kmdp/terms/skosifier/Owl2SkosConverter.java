@@ -36,6 +36,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.ValidityReport;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.SKOS;
 
@@ -100,10 +101,17 @@ public class Owl2SkosConverter extends ConverterInitBase implements
           ResourceFactory.createResource(applyVersionToURI(baseUri, versionFragment)));
     }
 
-    if (modes.usesOlex) {
-      ont.addImport(ontModel.createResource(OLEX));
+    if (cfg.getTyped(OWLtoSKOSTxParams.ADD_IMPORTS)) {
+      if (modes.usesOlex) {
+        ont.addImport(ontModel.createResource(OLEX));
+      }
+      ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
+      if (modes.usedDC) {
+        ont.addImport(ontModel.createResource(DCTerms.getURI()));
+      }
+    } else {
+      ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
     }
-    ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
 
     if (cfg.getTyped(OWLtoSKOSTxParams.FLATTEN)) {
       prefetch(ontModel, modes.usesOlex);

@@ -19,27 +19,29 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum Modes {
-  LEX(false, true, "/query/skosify/entities2ontolex.sparql"),
-  CON(true, false, "/query/skosify/entities2concept.sparql"),
-  ANN(true, false, "/query/skosify/entities2skosMeta.sparql"),
+  LEX(false, true, false, "/query/skosify/entities2ontolex.sparql"),
+  CON(true, false, false, "/query/skosify/entities2concept.sparql"),
+  ANN(true, false, true, "/query/skosify/entities2skosMeta.sparql"),
 
-  SKOS(true, false, "/query/skosify/entities2concept.sparql",
+  SKOS(true, false, true, "/query/skosify/entities2concept.sparql",
       "/query/skosify/entities2skosMeta.sparql"),
-  SKOS_RDF(true, false, "/query/skosify/entities2concept.sparql",
+  SKOS_RDF(true, false, true, "/query/skosify/entities2concept.sparql",
       "/query/skosify/entities2skosMeta.sparql"),
-  LEX_CON(true,true, "/query/skosify/entities2ontolex.sparql",
+  LEX_CON(true,true, false, "/query/skosify/entities2ontolex.sparql",
       "/query/skosify/entities2concept.sparql" ),
 
-  FULL(true, true, "/query/skosify/entities2concept.sparql",
+  FULL(true, true, true, "/query/skosify/entities2concept.sparql",
       "/query/skosify/entities2skosMeta.sparql", "/query/skosify/entities2ontolex.sparql");
 
   public final List<String> queries;
   public final boolean skos;
   public final boolean usesOlex;
+  public final boolean usedDC;
 
-  Modes(boolean skos, boolean olex, String... qs) {
+  Modes(boolean skos, boolean olex, boolean dc, String... qs) {
     this.skos = skos;
     this.usesOlex = olex;
+    this.usedDC = dc;
     queries = Arrays.asList(qs);
   }
 

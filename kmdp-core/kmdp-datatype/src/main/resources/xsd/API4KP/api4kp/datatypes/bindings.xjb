@@ -20,6 +20,11 @@
         public Map() { super(); }
       </ci:code>
     </jxb:bindings>
+
+    <jxb:bindings node="//xsd:complexType[@name='UUID']">
+      <jxb:class ref="java.util.UUID"/>
+    </jxb:bindings>
+
   </jxb:bindings>
 
 </jxb:bindings>

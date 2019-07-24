@@ -36,24 +36,28 @@
     uri="/ontologies/API4KP/api4kp.rdf"
     name="https://www.omg.org/spec/API4KP/20190801/api4kp/"/>
 
+  <uri id="API4KP-Ops"
+    uri="/ontologies/API4KP/api4kp-ops.rdf"
+    name="https://www.omg.org/spec/API4KP/20190801/api4kp-ops/"/>
+
   <uri id="API4KP-KAO"
-    uri="/ontologies/API4KP/informative/kao.owl.rdf"
-    name="http://ontology.mayo.edu/ontology/KAO/"/>
+    uri="/ontologies/API4KP/api4kp-kao.rdf"
+    name="https://www.omg.org/spec/API4KP/20190801/api4kp-kao/"/>
+
+  <uri id="CKAO"
+    uri="/ontologies/API4KP/informative/ckao.rdf"
+    name="http://ontology.mayo.edu/ontologies/20190801/clinicalknowledgeassets/"/>
 
   <uri id="API4KP-KMDO"
-    uri="/ontologies/API4KP/informative/kmdo.owl"
-    name="http://ontology.mayo.edu/ontologies/KMDO/"/>
-
-  <uri id="API4KP-Ops"
-    uri="/ontologies/API4KP/api4kp-ops.owl"
-    name="http://www.omg.org/spec/API4KP/Operations"/>
+    uri="/ontologies/API4KP/informative/kmdo.rdf"
+    name="http://ontology.mayo.edu/ontologies/20190801/knowledgemanagementdelivery/"/>
 
   <uri id="API4KP-Registry"
-    uri="/ontologies/API4KP/informative/api4kp-registry.owl"
-    name="http://ontology.mayo.edu/KMDP/registry/"/>
+    uri="/ontologies/API4KP/informative/api4kp-registry.rdf"
+    name="http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/"/>
 
-  <uri id="LangCodes"
-    uri="LanguageCodes.rdf"
+  <uri id="LangCodes-ISO639-2"
+    uri="lcc2.rdf"
     name="https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/"/>
 
   <uri id="MIMECodes"
@@ -63,6 +67,10 @@
   <uri id="DCMIType"
     uri="dctype.rdf"
     name="http://purl.org/dc/dcmitype/"/>
+
+  <uri id="DCT"
+    uri="dcterms.rdf"
+    name="http://purl.org/dc/terms/"/>
 
   <uri id="HttpCodes"
     uri="statusCodes.rdf"

@@ -15,9 +15,9 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +37,7 @@ public class XSDCompilationTest {
     assertEquals(6, KnowledgeAssetCategory.values().length);
 
     KnowledgeAssetType kat = KnowledgeAssetType.Clinical_Rule;
-    assertEquals("http://ontology.mayo.edu/ontology/KAO/ClinicalRule", kat.getRef().toString());
+    assertEquals("http://ontology.mayo.edu/ontologies/clinicalknowledgeassets/ClinicalRule", kat.getRef().toString());
 
     KnowledgeRepresentationLanguage dmn = KnowledgeRepresentationLanguage.DMN_1_1;
     KnowledgeRepresentationLanguage dmn2 = KnowledgeRepresentationLanguage.DMN_1_2;

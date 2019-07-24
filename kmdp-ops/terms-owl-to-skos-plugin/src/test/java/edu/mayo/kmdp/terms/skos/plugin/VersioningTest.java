@@ -69,7 +69,7 @@ public class VersioningTest {
 
   @Test
   public void testVersionPropagation() {
-    String ontoURI = "http://foo.com/test#";
+    String ontoURI = "http://foo.com/test";
 
     Optional<Model> mireot = new MireotExtractor().fetch(
         VersioningTest.class.getResourceAsStream("/version.rdf"),

@@ -2,16 +2,13 @@
 <rdf:RDF xmlns="http://my.org.test/onto#"
      xml:base="http://my.org.test/onto"
      xmlns:schema="http://schema.org/"
-     xmlns:discourse-relationships="http://purl.org/swan/2.0/discourse-relationships/"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
-     xmlns:cpannotationschema="http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:dc="http://purl.org/dc/elements/1.1/"
-     xmlns:cito="http://purl.org/spar/cito/cito:"
-     xmlns:sit="http://www.ontologydesignpatterns.org/cp/owl/situation.owl#">
+     xmlns:cito="http://purl.org/spar/cito/cito:">
     <owl:Ontology rdf:about="http://my.org.test/onto">
         <owl:versionIRI rdf:resource="http://my.org.test/onto/1.0.4"/>
     </owl:Ontology>

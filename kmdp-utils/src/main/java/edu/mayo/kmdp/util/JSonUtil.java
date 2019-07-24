@@ -87,6 +87,12 @@ public class JSonUtil {
     return readJson(new ByteArrayInputStream(data), klass);
   }
 
+  public static Optional<String> writeJsonAsString(Object root) {
+    return writeJson(root, null, defaultProperties())
+        .flatMap(Util::asString);
+  }
+
+
   public static Optional<ByteArrayOutputStream> writeJson(Object root) {
     return writeJson(root, null, defaultProperties());
   }

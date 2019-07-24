@@ -92,6 +92,7 @@ public class BaseEnumGenerator {
     context.put("packageName", innerPackageName);
     context.put("overridePk", overridePk(defaultPackage,overrides));
     context.put("termsProvider", options.get(EnumGenerationParams.TERMS_PROVIDER).get());
+    context.put("baseXmlAdapter", options.get(EnumGenerationParams.XML_ADAPTER).get());
     context.put("implClassName",
         edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme.class.getName());
     context.put("typeIntf", Term.class);

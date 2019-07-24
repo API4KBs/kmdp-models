@@ -26,6 +26,7 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.DC_11;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
@@ -94,7 +95,7 @@ public class SingleEntityMireotTest extends BaseMireotTest {
     assertTrue(m.contains(dat_a(klass, SKOS.example, "example")));
     assertTrue(m.contains(dat_a(klass, SKOS.note, "note")));
     assertTrue(m.contains(dat_a(klass, SKOS.definition, "definition")));
-    assertTrue(m.contains(dat_a(klass, DC_11.identifier, "id0001")));
+    assertTrue(m.contains(dat_a(klass, DCTerms.identifier, "id0001")));
     assertTrue(m.contains(dat_a(klass, OWL2.versionInfo, "v0042")));
 
   }
