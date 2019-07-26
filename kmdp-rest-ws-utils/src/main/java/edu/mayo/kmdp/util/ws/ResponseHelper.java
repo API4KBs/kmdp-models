@@ -19,10 +19,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -47,10 +49,31 @@ public class ResponseHelper {
   }
 
 
+  public static ResponseEntity<Void> succeed() {
+    return ResponseEntity.ok().build();
+  }
+
+  public static ResponseEntity<Void> succeed(HttpStatus status) {
+    checkStatus(status,HttpStatus::is2xxSuccessful);
+    return new ResponseEntity<>(status);
+  }
+
   public static <T> ResponseEntity<T> succeed(T result) {
     return result == null
         ? ResponseEntity.ok().build()
         : ResponseEntity.ok(result);
+  }
+
+  public static <T> ResponseEntity<T> succeed(T result, HttpStatus status) {
+    checkStatus(status,HttpStatus::is2xxSuccessful);
+    return new ResponseEntity<>(result,status);
+  }
+
+  public static <T> ResponseEntity<Void> succeed(T result, HttpStatus status, BiConsumer<HttpHeaders,T> headerSetter) {
+    checkStatus(status,HttpStatus::is2xxSuccessful);
+    HttpHeaders httpHeaders = new HttpHeaders();
+    headerSetter.accept(httpHeaders,result);
+    return new ResponseEntity<>(httpHeaders,status);
   }
 
   public static <T> ResponseEntity<T> notSupported() {
@@ -131,4 +154,12 @@ public class ResponseHelper {
         .map(Optional::get)
         .collect(Collectors.toList()));
   }
+
+
+  private static void checkStatus(HttpStatus status, Predicate<HttpStatus> test) {
+    if (test != null && ! test.test(status)) {
+      throw new IllegalArgumentException("HTTP Status " + status + "is not adequate in this context" );
+    }
+  }
+
 }

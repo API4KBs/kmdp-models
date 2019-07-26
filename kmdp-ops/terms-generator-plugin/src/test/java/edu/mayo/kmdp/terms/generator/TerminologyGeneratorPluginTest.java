@@ -21,12 +21,14 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.deployResource;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
+import static edu.mayo.kmdp.util.CodeGenTestBase.printSourceFile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.plugin.TermsGeneratorPlugin;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
@@ -86,12 +88,13 @@ public class TerminologyGeneratorPluginTest {
 
     testWithJaxb();
 
-    showDirContent(folder);
+//    showDirContent(folder,true);
+
+//    printSourceFile(new File(genSource.getAbsolutePath() + "/xsd/terms/test/org/cito/Cito.java"),
+//        System.out);
 
     ensureSuccessCompile(genSource, genSource, target);
 
-//    printSourceFile(new File(genSource.getAbsolutePath() + "/xsd/terms/test/org/cito/Cito.xsd"),
-//        System.out);
 
     try {
       Class<?> info = getNamedClass("org.tempuri.test.Info", target);
@@ -117,6 +120,9 @@ public class TerminologyGeneratorPluginTest {
   private void testWithJaxb() {
     deploy(genSource, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
     deploy(genSource, "/xsd/API4KP/api4kp/identifiers/bindings.xjb");
+    deploy(genSource, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd");
+    deploy(genSource, "/xsd/API4KP/api4kp/datatypes/bindings.xjb");
+
     deploy(genSource, "/xsd/api4kp-catalog.xml");
 
     deploy(TerminologyGeneratorPluginTest.class.getResourceAsStream("/schema.xsd"), genSource,
@@ -174,6 +180,7 @@ public class TerminologyGeneratorPluginTest {
     plugin.setReason(false);
     plugin.setJaxb(true);
     plugin.setTermsProvider(MockTermsDirectory.provider);
+    plugin.setXmlAdapter(MockTermsXMLAdapter.class.getName());
     plugin.setOutputDirectory(genSrc);
     plugin.setOwlFiles(Collections.singletonList(owlPath));
     plugin.setSourceCatalogPath("/test-catalog.xml");

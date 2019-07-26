@@ -19,6 +19,7 @@ import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import edu.mayo.kmdp.util.JSonUtil;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
@@ -27,9 +28,9 @@ import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -82,8 +83,29 @@ public class DatatypeJSONTest {
     NamespaceIdentifier nsId = new NamespaceIdentifier().withId(URI.create("http://foo.bar"))
         .withLabel("NS")
         .withTag("foo");
-//    JSonUtil.printOutJson(nsId);
+
+    assertTrue(JSonUtil.printJson(nsId).filter((s) -> s.contains("\"@id\" : \"http://foo.bar\"")).isPresent());
   }
 
+  @Test
+  public void testRoundTrip() {
+    ConceptIdentifier c1 = new ConceptIdentifier()
+        .withConceptId(URI.create("http://foo.bar"))
+        .withTag("bar");
+    Optional<String> s = JSonUtil.writeJsonAsString(c1);
+    assertTrue(s.isPresent());
+
+    System.out.println(s.get());
+
+    Optional<ConceptIdentifier> c2 = JSonUtil.parseJson(s.get(),ConceptIdentifier.class);
+    assertTrue(c2.isPresent());
+
+    assertEquals(c1,c2.get());
+
+    Optional<String> s2 = JSonUtil.writeJsonAsString(c2.get());
+    assertTrue(s2.isPresent());
+
+    assertEquals(s.get(),s2.get());
+  }
 
 }

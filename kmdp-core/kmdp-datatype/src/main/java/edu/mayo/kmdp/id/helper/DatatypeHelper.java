@@ -217,7 +217,7 @@ public class DatatypeHelper {
     UUID uuid = uid.getUUID();
     if (uuid != null) {
       return Optional
-          .ofNullable(new URIIdentifier().withUri(URI.create("uri:uuid:" + uuid.toString())));
+          .ofNullable(new URIIdentifier().withUri(URI.create(Registry.BASE_UUID_URN + uuid.toString())));
     } else {
       return Optional.empty();
     }

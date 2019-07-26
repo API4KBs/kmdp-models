@@ -72,6 +72,12 @@ public class EnumGenerationConfig extends
         "",
         "Java Terminology registry to register the Enumeration",
         String.class,
+        false)),
+    XML_ADAPTER(Opt.of(
+        "baseXmlAdapter",
+        "edu.mayo.kmdp.terms.TermsXMLAdapter",
+        "Base class that controls the XML serialization of terminologies",
+        String.class,
         false));
 
     private Opt opt;

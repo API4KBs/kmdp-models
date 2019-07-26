@@ -20,16 +20,14 @@ import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
-import edu.mayo.kmdp.util.JenaUtil;
 import java.util.UUID;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.PrintUtil;
-import org.apache.jena.vocabulary.DC_11;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class AnnotationsTest extends TestBase {
@@ -56,7 +54,7 @@ public class AnnotationsTest extends TestBase {
 
     assertTrue(m.contains(
         dat_a(subj,
-            DC_11.identifier,
+            DCTerms.identifier,
             id)));
     assertTrue(m.contains(
         dat_a(subj,
@@ -87,14 +85,6 @@ public class AnnotationsTest extends TestBase {
 
     assertTrue(m.contains(
         dat_a(subj,
-            DC_11.identifier,
-            id)));
-    assertTrue(m.contains(
-        dat_a(subj,
-            SKOS.notation,
-            "id0001")));
-    assertTrue(m.contains(
-        dat_a(subj,
             RDFS.comment,
             "comment")));
     assertTrue(m.contains(
@@ -120,7 +110,11 @@ public class AnnotationsTest extends TestBase {
     assertTrue(m.contains(
         dat_a(subj,
             SKOS.notation,
-            "id0001")));
+            "my-not")));
+    assertTrue(m.contains(
+        dat_a(subj,
+            DCTerms.identifier,
+            id)));
     assertTrue(m.contains(
         dat_a(subj,
             OWL2.versionInfo,

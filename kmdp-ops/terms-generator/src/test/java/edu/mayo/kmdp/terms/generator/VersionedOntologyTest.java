@@ -53,7 +53,6 @@ public class VersionedOntologyTest {
           + "     xmlns:skos=\"http://www.w3.org/2004/02/skos/core#\"\n"
           + "     xmlns:sm=\"http://www.omg.org/techprocess/ab/SpecificationMetadata/\"\n"
           + "     xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n"
-          + "     xmlns:lcc-lr=\"http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/\"\n"
           + "     xmlns:api4kp=\"http://org.test/labelsTest\">\n"
           + "    <owl:Ontology rdf:about=\"http://org.test/labelsTest\">\n"
           + "        <owl:versionIRI rdf:resource=\"http://org.test/20190108/labelsTest\"/>\n"

@@ -18,23 +18,22 @@ package edu.mayo.kmdp.registry;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import java.io.IOException;
-import java.net.URL;
-import org.apache.xerces.util.XMLCatalogResolver;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.reasoner.ReasonerRegistry;
+import org.apache.xerces.util.XMLCatalogResolver;
 
 public class Registry {
 
-  public static final String path = "/ontologies/API4KP/informative/api4kp-registry.owl";
+  public static final String path = "/ontologies/API4KP/informative/api4kp-registry.rdf";
 
   public static final String MAYO_ASSETS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/assets/";
+  public static final String BASE_UUID_URN = "urn:uuid:";
 
   private static XMLCatalogResolver xcat;
 
@@ -53,6 +52,7 @@ public class Registry {
 
     registry = ModelFactory.createOntologyModel()
         .read(Registry.class.getResourceAsStream(path),null);
+    registry = ModelFactory.createInfModel(ReasonerRegistry.getOWLMicroReasoner(),registry);
 
     RegistryUtil.askQuery(xmlPrefixesQry, registry).forEach(
         (m) -> {

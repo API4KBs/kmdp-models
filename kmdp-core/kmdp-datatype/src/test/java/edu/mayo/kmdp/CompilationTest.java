@@ -118,6 +118,7 @@ public class CompilationTest {
 
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.openapi.xsd", CompilationTest.class);
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd", CompilationTest.class);
+    deploy(src, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd", CompilationTest.class);
 
     showDirContent(folder);
 

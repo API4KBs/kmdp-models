@@ -19,17 +19,18 @@ import static edu.mayo.kmdp.util.Util.ensureUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._2018._06.KnowledgeProcessingOperation;
+import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._20190801.KnowledgeProcessingOperation;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
 import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._1_0.KnowledgeAssetRole;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._1_0.KnowledgeProcessingTechnique;
-import edu.mayo.ontology.taxonomies.kao.languagerole._1_0.KnowledgeRepresentationLanguageRole;
-import edu.mayo.ontology.taxonomies.kao.publicationeventtype._20180601.PublicationEventType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._20190801.KnowledgeAssetRole;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._20190801.KnowledgeProcessingTechnique;
+import edu.mayo.ontology.taxonomies.kao.languagerole._20190801.KnowledgeRepresentationLanguageRole;
+import edu.mayo.ontology.taxonomies.kao.publicationeventtype._20190801.PublicationEventType;
 import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
 import edu.mayo.ontology.taxonomies.kao.publishingrole.PublishingRole;
 import edu.mayo.ontology.taxonomies.kao.rel.citationreltype._2018_02_16.BibliographicCitationType;
@@ -39,15 +40,20 @@ import edu.mayo.ontology.taxonomies.kao.rel.relatedversiontype._20190801.Related
 import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype._20190801.StructuralPartType;
 import edu.mayo.ontology.taxonomies.kao.rel.summaryreltype._20190801.SummarizationType;
 import edu.mayo.ontology.taxonomies.kao.rel.variantreltype._20190801.VariantType;
-import edu.mayo.ontology.taxonomies.krformat._2018._08.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
-import edu.mayo.ontology.taxonomies.krprofile._2018._08.KnowledgeRepresentationLanguageProfile;
-import edu.mayo.ontology.taxonomies.krserialization._2018._08.KnowledgeRepresentationLanguageSerialization;
-import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
+import edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat;
+import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krprofile._20190801.KnowledgeRepresentationLanguageProfile;
+import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
+import edu.mayo.ontology.taxonomies.lexicon._20190801.Lexicon;
 import edu.mayo.ontology.taxonomies.mimetype.MIMEType;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 public class VocabularyTest {
@@ -79,6 +85,7 @@ public class VocabularyTest {
     assertNotNull(PublishingRole.Contributor);
     assertNotNull(PublicationStatus.Draft);
     assertNotNull(MIMEType.Application_Pdf);
+    assertNotNull(AnnotationRelType.Defines);
   }
 
   @Test
@@ -94,6 +101,100 @@ public class VocabularyTest {
 
     assertEquals(366,Language.values().length);
   }
+
+
+  @Test
+  public void testKnownTags() {
+
+    assertEquals("ofn",
+        KnowledgeRepresentationLanguageSerialization.OWL_Functional_Syntax.getTag());
+
+    assertEquals("dmn-v12",
+        KnowledgeRepresentationLanguage.DMN_1_2.getTag());
+
+    assertEquals("lnc",
+        Lexicon.LOINC.getTag());
+
+    assertEquals("http://snomed.info/sct/900000000000207008/version/20180731",
+        Lexicon.SNOMED_CT.getRef().toString());
+
+    assertEquals("it",
+        Language.Italian.getTag());
+
+    assertEquals("fr",
+        Language.French.getTag());
+
+    assertEquals("fr",
+        edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20190201.Language.French.getTag());
+
+  }
+
+  @Test
+  public void testTagConsistency() {
+    int tagLen = Language.Italian.getTag().length();
+    // preferring Alpha2 Codes
+    assertEquals(2,tagLen);
+
+    Set<Language> alpha3Languages = Arrays.stream(Language.values())
+        .filter((lan) -> lan.getTag().length() != tagLen)
+        .collect(Collectors.toSet());
+    // some languages only have alpha3 codes
+    assertEquals(194,alpha3Languages.size());
+    assertTrue(alpha3Languages.contains(Language.Fanti));
+
+    assertEquals(new HashSet<>(Arrays.asList("fr","fra","fre")),
+        new HashSet<>(Language.French.getTags()));
+  }
+
+  @Test
+  public void testReferents() {
+    assertEquals("https://www.omg.org/spec/DMN/1.2/",
+        KnowledgeRepresentationLanguage.DMN_1_2.getRef().toString());
+
+    assertEquals("https://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/Italian",
+        Language.Italian.getRef().toString());
+
+  }
+
+  @Test
+  public void testKnownIdentifiers() {
+
+    assertEquals("https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#6047674c-0d9b-3c81-89a3-6943f3a7169b",
+        KnowledgeAssetType.Nursing_Protocol.getConceptId().toString());
+
+    assertEquals("https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916",
+        KnowledgeAssetType.Semantic_Decision_Model.getConceptId().toString());
+
+    assertEquals("https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetCategory#d4b0e868-60c8-387d-a139-e3c35427bfb6",
+        KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models.getConceptId().toString());
+
+    assertEquals("https://ontology.mayo.edu/taxonomies/KRLanguage#0bf050a2-fbd6-38c2-a4ce-323fd91c7b24",
+        KnowledgeRepresentationLanguage.DMN_1_2.getConceptId().toString());
+  }
+
+
+  @Test
+  public void testResolveTags() {
+    Optional<Language> l0 = Language.resolve("fr");
+    assertTrue(l0.isPresent());
+    assertSame(Language.French, l0.get());
+    
+    Optional<Language> l1 = Language.resolveTag("fr");
+    assertTrue(l1.isPresent());
+    assertSame(Language.French, l1.get());
+
+    Optional<Language> l2 = Language.resolveTag("fra");
+    assertTrue(l2.isPresent());
+    assertSame(Language.French, l2.get());
+
+    Optional<Language> l3 = Language.resolveTag("fre");
+    assertTrue(l3.isPresent());
+    assertSame(Language.French, l3.get());
+
+    
+  }
+
+
 
   @Test
   public void testGeneratedEnumsVersion() {

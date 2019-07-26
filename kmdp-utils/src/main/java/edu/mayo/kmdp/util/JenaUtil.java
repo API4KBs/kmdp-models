@@ -20,6 +20,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.apache.jena.rdf.model.ResourceFactory.createStringLiteral;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -149,6 +150,14 @@ public abstract class JenaUtil {
   public static Model toSystemOut(Model target) {
     // for testing purpose
     return iterateAndStreamModel(target, System.out, PrintUtil::print);
+  }
+
+  public static String asString(Model target) {
+    // for testing purpose
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    PrintStream ps = new PrintStream(baos);
+    iterateAndStreamModel(target, ps, PrintUtil::print);
+    return new String(baos.toByteArray());
   }
 
 

@@ -20,6 +20,7 @@ import static edu.mayo.kmdp.util.Util.isEmpty;
 
 import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Option;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.net.URL;
@@ -40,9 +41,9 @@ public class PlatformComponentHelper {
       return Optional.empty();
     }
     return Optional.of(new org.omg.spec.api4kp._1_0.services.repository.resources.KnowledgeArtifactRepository()
-        .withInstanceId(uri("uri:uuid:" + UUID.randomUUID()))
+        .withInstanceId(uri(Registry.BASE_UUID_URN + UUID.randomUUID()))
         .withId(uri(baseNamespace + "/repos/" + identifier))
-        .withAlias(uri("uri:uuid:" + identifier))
+        .withAlias(uri(Registry.BASE_UUID_URN + identifier))
         .withName(name)
         .withHref(URI.create(baseUrl + "/repos/" + identifier)));
   }

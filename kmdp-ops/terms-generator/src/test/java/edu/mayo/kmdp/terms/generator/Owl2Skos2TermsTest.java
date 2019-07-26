@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
@@ -74,7 +75,7 @@ public class Owl2Skos2TermsTest {
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, targetNS)
         .with(OWLtoSKOSTxParams.FLATTEN, false)
         .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME, "Cito")
-        .with(OWLtoSKOSTxParams.ADD_IMPORTS, false);
+        .with(OWLtoSKOSTxParams.ADD_IMPORTS, true);
 
     Optional<Model> skosModel = new MireotExtractor()
         .fetch(Owl2Skos2TermsTest.class.getResourceAsStream(owlPath),
@@ -100,11 +101,12 @@ public class Owl2Skos2TermsTest {
 
     SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
         .traverse(skosOntology.get(),new SkosAbstractionConfig()
-            .with(SkosAbstractionParameters.REASON,true));
+            .with(SkosAbstractionParameters.REASON,false));
 
     new JavaEnumTermsGenerator().generate(graph,
         new EnumGenerationConfig()
-            .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider),
+            .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider)
+            .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
         src);
 
     showDirContent(folder);

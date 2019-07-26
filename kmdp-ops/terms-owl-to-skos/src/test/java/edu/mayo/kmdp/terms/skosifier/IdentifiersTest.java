@@ -25,7 +25,7 @@ import edu.mayo.kmdp.util.JenaUtil;
 import java.util.UUID;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.PrintUtil;
-import org.apache.jena.vocabulary.DC_11;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.BeforeAll;
@@ -84,7 +84,7 @@ public class IdentifiersTest extends TestBase {
 
     assertTrue(m.contains(
         dat_a(NS + "#" + UUID.nameUUIDFromBytes("Klass".getBytes()),
-            DC_11.identifier,
+            DCTerms.identifier,
             UUID.nameUUIDFromBytes("Klass".getBytes()).toString())));
   }
 
@@ -100,7 +100,7 @@ public class IdentifiersTest extends TestBase {
 
     assertTrue(m.contains(
         dat_a(NS + "#" + UUID.nameUUIDFromBytes("klassID".getBytes()),
-            DC_11.identifier,
+            DCTerms.identifier,
             UUID.nameUUIDFromBytes("klassID".getBytes()).toString())));
   }
 

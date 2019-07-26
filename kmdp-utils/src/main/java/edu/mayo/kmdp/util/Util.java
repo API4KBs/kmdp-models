@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
@@ -281,6 +280,11 @@ public class Util {
 
   public static Optional<UUID> ensureUUID(String tag) {
     return ensureUUIDFormat(tag).map(UUID::fromString);
+  }
+
+  public static boolean isUUID(String tag) {
+    String id = tag.replaceAll("-", "");
+    return uuidPattern.matcher(id).matches();
   }
 
   public static UUID uuid(String from) {
