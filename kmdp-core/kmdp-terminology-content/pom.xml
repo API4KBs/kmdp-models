@@ -6,7 +6,7 @@
   <parent>
     <artifactId>kmdp-core</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -88,7 +88,7 @@
       <plugin>
         <groupId>edu.mayo.kmdp</groupId>
         <artifactId>terms-owl-to-skos-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.1</version>
         <configuration>
           <outputDirectory>${skosDir}</outputDirectory>
           <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
