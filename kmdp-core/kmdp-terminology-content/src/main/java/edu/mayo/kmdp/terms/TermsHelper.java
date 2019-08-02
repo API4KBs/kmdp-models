@@ -39,6 +39,7 @@ public class TermsHelper {
             "SNOMED-CT",
             "20130731"))
 
+        .withConceptId(URI.create("http://snomed.info/id/" + code))
         .withRef(URI.create("http://snomed.info/id/" + code));
   }
 
@@ -48,6 +49,7 @@ public class TermsHelper {
         .withTag(code)
         .withNamespace(new NamespaceIdentifier()
             .withId(URI.create("https://loinc.org/oids/1.3.6.1.4.1.12009.10.2.3")))
+        .withConceptId(URI.create("http://loinc.org/" + code))
         .withRef(URI.create("http://loinc.org/" + code));
   }
 
@@ -57,6 +59,7 @@ public class TermsHelper {
         .withTag(code)
         .withNamespace(new NamespaceIdentifier()
             .withId(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm")))
+        .withConceptId(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm/" + code))
         .withRef(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm/" + code));
   }
 
@@ -72,7 +75,8 @@ public class TermsHelper {
         .withLabel(label)
         .withTag(code)
         .withNamespace(
-            new NamespaceIdentifier().withId(URI.create("http://TODO/ontology.mayo.edu/TODO")))
-        .withRef(URI.create("http://ontology-or-terms.mayo.edu/TODO/" + code));
+            new NamespaceIdentifier().withId(URI.create("http://ontology.mayo.edu/taxonomies/TODO")))
+        .withConceptId(URI.create("http://ontology.mayo.edu/taxonomies/TODO#" + code))
+        .withRef(URI.create("http://ontology.mayo.edu/taxonomies/TODO#" + code));
   }
 }
