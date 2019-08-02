@@ -239,8 +239,7 @@ public class XMLUtil {
     XMLCatalogResolver cat = catalogResolver(
         Arrays.stream(langs)
             .map(Registry::getCatalog)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .flatMap(Util::trimStream)
             .map(XMLUtil.class::getResource)
             .toArray(URL[]::new));
 

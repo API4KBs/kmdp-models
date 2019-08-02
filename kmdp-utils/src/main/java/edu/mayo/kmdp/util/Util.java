@@ -32,6 +32,7 @@ import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Util {
 
@@ -282,6 +283,10 @@ public class Util {
     return ensureUUIDFormat(tag).map(UUID::fromString);
   }
 
+  public static UUID toUUID(String tag) {
+    return UUID.fromString(tag);
+  }
+
   public static boolean isUUID(String tag) {
     String id = tag.replaceAll("-", "");
     return uuidPattern.matcher(id).matches();
@@ -300,6 +305,10 @@ public class Util {
       return "";
     }
     return str.replaceAll("[^\\x20-\\x7e]", "");
+  }
+
+  public static <T> Stream<T> trimStream(Optional<T> opt) {
+    return opt.map(Stream::of).orElseGet(Stream::empty);
   }
 
 }

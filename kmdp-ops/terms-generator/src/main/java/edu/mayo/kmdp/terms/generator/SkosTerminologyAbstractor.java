@@ -444,8 +444,7 @@ public class SkosTerminologyAbstractor {
     return EntitySearcher.getAnnotationObjects(ind, model.importsClosure(), p)
         .map(OWLAnnotation::getValue)
         .map(OWLAnnotationValue::asLiteral)
-        .filter(Optional::isPresent)
-        .map(Optional::get)
+        .flatMap(Util::trimStream)
         .map(OWLLiteral::getLiteral);
   }
 

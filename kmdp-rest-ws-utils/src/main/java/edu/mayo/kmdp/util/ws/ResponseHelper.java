@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.util.ws;
 
+import edu.mayo.kmdp.util.Util;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -118,8 +119,7 @@ public class ResponseHelper {
     return delegates.stream()
         .map(mapper)
         .map(ResponseHelper::get)
-        .filter(Optional::isPresent)
-        .map(Optional::get)
+        .flatMap(Util::trimStream)
         .findAny();
   }
 
@@ -149,10 +149,9 @@ public class ResponseHelper {
       Stream<ResponseEntity<X>> responses) {
     return succeed(
         responses
-        .map(ResponseHelper::get)
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .collect(Collectors.toList()));
+            .map(ResponseHelper::get)
+            .flatMap(Util::trimStream)
+            .collect(Collectors.toList()));
   }
 
 
