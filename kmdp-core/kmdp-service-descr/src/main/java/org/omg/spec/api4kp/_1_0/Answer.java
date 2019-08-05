@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 
 /**
@@ -143,6 +144,17 @@ public class Answer<T> extends Explainer {
 
   public Optional<T> getOptionalValue() {
     return Optional.ofNullable(getValue());
+  }
+
+  public T orElse(T alt) {
+    return getOptionalValue().orElse(alt);
+  }
+
+  public static <T> Stream<T> trimStream(Answer<T> ans) {
+    if (ans == null) {
+      return Stream.empty();
+    }
+    return Util.trimStream(ans.getOptionalValue());
   }
 
   public ResponseCode getOutcomeType() {

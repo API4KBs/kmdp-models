@@ -81,8 +81,7 @@ public class MireotExtractor {
     return Optional.ofNullable(
         extract(source, rootEntityUri, baseUri, cfg).stream()
             .map((x) -> fetchResource(source, URI.create(x.getURI()), baseUri))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .flatMap(Util::trimStream)
             .reduce(ModelFactory.createDefaultModel(), Model::add));
   }
 

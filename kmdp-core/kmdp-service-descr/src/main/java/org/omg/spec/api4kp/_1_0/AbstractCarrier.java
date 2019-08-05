@@ -24,6 +24,7 @@ import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentation
 import edu.mayo.ontology.taxonomies.krprofile._20190801.KnowledgeRepresentationLanguageProfile;
 import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.function.Function;
 import org.jvnet.jaxb2_commons.lang.CopyStrategy;
 import org.jvnet.jaxb2_commons.locator.ObjectLocator;
@@ -207,6 +208,14 @@ public class AbstractCarrier {
   protected Object copyTo(ObjectLocator locator, Object target,
       CopyStrategy strategy) {
     return target;
+  }
+
+  public <T> Optional<T> as(Class<T> type) {
+    return
+        (this instanceof ASTCarrier
+            && type.isInstance(((ASTCarrier) this).getParsedExpression()))
+            ? Optional.ofNullable(type.cast(((ASTCarrier) this).getParsedExpression()))
+            : Optional.empty();
   }
 
 
