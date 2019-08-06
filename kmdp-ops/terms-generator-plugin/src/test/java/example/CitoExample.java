@@ -17,8 +17,11 @@ package example;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.Taxonomic;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
+import edu.mayo.kmdp.terms.example.Cito;
+import java.util.Arrays;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
@@ -116,22 +119,25 @@ public enum CitoExample implements Term, Taxonomic<CitoExample> {
     return edu.mayo.kmdp.id.helper.DatatypeHelper.toQualifiedIdentifier(this.ref);
   }
 
-
   public static Optional<CitoExample> resolve(final Term trm) {
-    return MockTermsDirectory.directory.resolve(trm, CitoExample.class);
-  }
-
-  public static Optional<CitoExample> resolve(final String tag) {
-    return MockTermsDirectory.directory.resolve(tag, CitoExample.class);
-  }
-
-  public static Optional<CitoExample> resolveRef(final String refUri) {
-    return MockTermsDirectory.directory.resolve(refUri, CitoExample.class);
+    return Arrays.stream(CitoExample.values())
+        .filter((x) -> trm.getRef().equals(x.getRef()))
+        .findAny();
   }
 
   public static class Adapter extends MockTermsXMLAdapter {
 
     public static final MockTermsXMLAdapter instance = new Adapter();
+
+    @Override
+    protected Term[] getValues() {
+      return values();
+    }
+  }
+
+  public static class JsonAdapter extends MockTermsJsonAdapter.Deserializer {
+
+    public static final MockTermsJsonAdapter.Deserializer instance = new JsonAdapter();
 
     @Override
     protected Term[] getValues() {

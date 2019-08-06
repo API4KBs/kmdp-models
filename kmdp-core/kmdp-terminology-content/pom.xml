@@ -637,7 +637,6 @@
           <jaxb>true</jaxb>
           <jsonld>true</jsonld>
           <json>true</json>
-          <termsProvider>edu.mayo.kmdp.terms.KMDPTerms.directory</termsProvider>
           <sourceCatalogPath>${ontologyDir}${s}catalog.xml</sourceCatalogPath>
           <catalogNamespace>https://ontology.mayo.edu/taxonomies</catalogNamespace>
         </configuration>

@@ -67,16 +67,16 @@ public class EnumGenerationConfig extends
         "Override package names from URI-driven defaults, provided as a comma-separated list of <defaultName>=<overriddenName>",
         String.class,
         false)),
-    TERMS_PROVIDER(Opt.of(
-        "termsProvider",
-        "",
-        "Java Terminology registry to register the Enumeration",
-        String.class,
-        false)),
     XML_ADAPTER(Opt.of(
         "baseXmlAdapter",
         "edu.mayo.kmdp.terms.TermsXMLAdapter",
         "Base class that controls the XML serialization of terminologies",
+        String.class,
+        false)),
+    JSON_ADAPTER(Opt.of(
+        "baseJsonAdapter",
+        "edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer",
+        "Base class that controls the JSON serialization of terminologies",
         String.class,
         false));
 
