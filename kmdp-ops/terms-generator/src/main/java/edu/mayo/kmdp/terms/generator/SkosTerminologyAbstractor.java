@@ -386,7 +386,7 @@ public class SkosTerminologyAbstractor {
       return UUID.nameUUIDFromBytes(conceptId.toString().getBytes());
     }
     return isUUID(id)
-        ? Util.ensureUUID(id).get()
+        ? Util.ensureUUID(id).orElseThrow(IllegalStateException::new)
         : UUID.nameUUIDFromBytes(id.getBytes());
   }
 

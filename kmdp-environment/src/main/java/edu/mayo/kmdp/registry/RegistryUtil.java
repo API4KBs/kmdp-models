@@ -15,13 +15,11 @@
  */
 package edu.mayo.kmdp.registry;
 
-import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Scanner;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -35,16 +33,18 @@ public class RegistryUtil {
 
   public static List<Map<String, String>> askQuery(String qryString, Model knowledgeBase) {
     Query query = QueryFactory.create(qryString);
-    QueryExecution qexec = QueryExecutionFactory.create(query, knowledgeBase);
-    ResultSet rs = qexec.execSelect();
-    List<Map<String, String>> result = new ArrayList<>();
-    while (rs.hasNext()) {
-      QuerySolution ans = rs.next();
-      Map<String, String> vals = new HashMap<>();
-      rs.getResultVars().forEach((k) -> vals.put(k, ans.contains(k) ? ans.get(k).toString() : ""));
-      result.add(vals);
+    try(QueryExecution qexec = QueryExecutionFactory.create(query, knowledgeBase)) {
+      ResultSet rs = qexec.execSelect();
+      List<Map<String, String>> result = new ArrayList<>();
+      while (rs.hasNext()) {
+        QuerySolution ans = rs.next();
+        Map<String, String> vals = new HashMap<>();
+        rs.getResultVars()
+            .forEach((k) -> vals.put(k, ans.contains(k) ? ans.get(k).toString() : ""));
+        result.add(vals);
+      }
+      return result;
     }
-    return result;
   }
 
   public static String read(String path) {

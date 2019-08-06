@@ -25,13 +25,19 @@ public class DateAdapter extends XmlAdapter<String, Date> {
 
   public static String PATTERN = "yyyy-MM-dd";
 
-  static SimpleDateFormat sdf = new SimpleDateFormat(PATTERN);
+  private static DateAdapter instance = new DateAdapter();
+
+  public static DateAdapter instance() {
+    return instance;
+  }
+
+  SimpleDateFormat sdf = new SimpleDateFormat(PATTERN);
 
   public Date unmarshal(String v) {
     return read(v);
   }
 
-  public static Date read(String v) {
+  public Date read(String v) {
     try {
       return sdf.parse(v);
     } catch (ParseException e) {
@@ -40,7 +46,7 @@ public class DateAdapter extends XmlAdapter<String, Date> {
     }
   }
 
-  public static String write(Date v) {
+  public String write(Date v) {
     return v != null ? sdf.format(v) : null;
   }
 
@@ -48,7 +54,7 @@ public class DateAdapter extends XmlAdapter<String, Date> {
     return write(v);
   }
 
-  public static boolean isDate(String s) {
+  public boolean isDate(String s) {
     try {
       sdf.parse(s);
       return true;

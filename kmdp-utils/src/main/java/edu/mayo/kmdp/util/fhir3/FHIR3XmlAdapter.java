@@ -51,7 +51,10 @@ public class FHIR3XmlAdapter extends XmlAdapter<Object, Resource> {
       return null;
     }
     byte[] bytes = xmlParser.encodeResourceToString(v).getBytes();
-    Document dox = XMLUtil.loadXMLDocument(bytes).get();
+    Document dox = XMLUtil.loadXMLDocument(bytes).orElse(XMLUtil.emptyDocument());
+    if (dox == null) {
+      return null;
+    }
     Element wrapper = dox.createElement("temp");
     wrapper.appendChild(dox.getDocumentElement());
     return wrapper;

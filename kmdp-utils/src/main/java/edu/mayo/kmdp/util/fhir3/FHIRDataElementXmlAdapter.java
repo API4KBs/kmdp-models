@@ -18,13 +18,12 @@ package edu.mayo.kmdp.util.fhir3;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import edu.mayo.kmdp.util.XMLUtil;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.hl7.fhir.dstu3.model.DataElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
 
 public class FHIRDataElementXmlAdapter extends XmlAdapter<Object, DataElement> {
 
@@ -48,7 +47,10 @@ public class FHIRDataElementXmlAdapter extends XmlAdapter<Object, DataElement> {
     }
     byte[] bytes = xmlParser.encodeResourceToString(v).getBytes();
     Document dox = XMLUtil.loadXMLDocument(bytes)
-        .get();
+        .orElse(XMLUtil.emptyDocument());
+    if (dox == null) {
+      return null;
+    }
     Element wrapper = dox.createElement("temp");
     wrapper.appendChild(dox.getDocumentElement());
     return wrapper;

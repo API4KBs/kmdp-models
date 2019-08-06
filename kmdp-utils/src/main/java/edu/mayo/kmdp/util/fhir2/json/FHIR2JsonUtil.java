@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.mayo.kmdp.util.JSonUtil;
 
@@ -70,7 +71,8 @@ public class FHIR2JsonUtil {
   private static JsonNode toJsonBasic(IResource res) {
     StringWriter sw = new StringWriter();
     sw.write(toJsonStringBasic(res));
-    return JSonUtil.readJson(new ByteArrayInputStream(sw.toString().getBytes())).get();
+    return JSonUtil.readJson(new ByteArrayInputStream(sw.toString().getBytes()))
+        .orElse(JsonNodeFactory.instance.nullNode());
   }
 
   public static <T extends IResource> T parse(byte[] data, Class<T> klass) {

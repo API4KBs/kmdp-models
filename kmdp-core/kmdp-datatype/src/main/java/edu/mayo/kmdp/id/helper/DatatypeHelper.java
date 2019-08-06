@@ -16,21 +16,27 @@
 package edu.mayo.kmdp.id.helper;
 
 
+import static edu.mayo.kmdp.util.Util.ensureUUIDFormat;
+
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.adapters.DateAdapter;
-import org.omg.spec.api4kp._1_0.identifiers.*;
-
-import javax.xml.namespace.QName;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static edu.mayo.kmdp.util.Util.ensureUUIDFormat;
+import javax.xml.namespace.QName;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.Pointer;
+import org.omg.spec.api4kp._1_0.identifiers.QualifiedIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.UUIDentifier;
+import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
 
 public class DatatypeHelper {
 
@@ -124,7 +130,7 @@ public class DatatypeHelper {
     if (tag.matches("\\d+")) {
       return VersionTagType.SEQUENTIAL;
     }
-    if (DateAdapter.isDate(tag)) {
+    if (DateAdapter.instance().isDate(tag)) {
       return VersionTagType.TIMESTAMP;
     }
     Matcher matcher = SEMVER_RX.matcher(tag);

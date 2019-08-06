@@ -19,6 +19,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.dstu2.resource.BaseResource;
 import ca.uhn.fhir.parser.IParser;
 import edu.mayo.kmdp.util.XMLUtil;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -52,7 +53,11 @@ public class FHIR2XmlAdapter extends XmlAdapter<Object, BaseResource> {
       return null;
     }
     byte[] bytes = xmlParser.encodeResourceToString(v).getBytes();
-    Document dox = XMLUtil.loadXMLDocument(bytes).get();
+    Document dox = XMLUtil.loadXMLDocument(bytes)
+        .orElse(XMLUtil.emptyDocument());
+    if (dox == null) {
+      return null;
+    }
     Element wrapper = dox.createElement("temp");
     wrapper.appendChild(dox.getDocumentElement());
     return wrapper;

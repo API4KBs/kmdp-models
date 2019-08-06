@@ -333,8 +333,7 @@ public final class NameUtils {
    * @return the Java identifier
    */
   public static String nameToIdentifier(String name, IdentifierType type) {
-
-    if (null == name || name.length() == 0) {
+    if (Util.isEmpty(name)) {
       return name;
     }
 
@@ -550,20 +549,6 @@ public final class NameUtils {
     return count;
   }
 
-  public static String compactUpperCase(final String name) {
-    String idName = nameToIdentifier(name, IdentifierType.CLASS);
-    StringTokenizer tok = new StringTokenizer(idName, "_");
-    String upName = tok.nextToken();
-    while (tok.hasMoreTokens()) {
-      String word = tok.nextToken();
-      upName += "_" + word.substring(0, 1).toUpperCase() + word.substring(1);
-    }
-    if (name.endsWith("_")) {
-      upName += trail(name);
-    }
-    return upName;
-  }
-
   public static String camelCase(final String name) {
     String idName = nameToIdentifier(name, IdentifierType.CLASS);
     StringTokenizer tok = new StringTokenizer(idName, " _-");
@@ -587,6 +572,9 @@ public final class NameUtils {
 
   public static String compactVariable(final String name) {
     String idName = nameToIdentifier(name, IdentifierType.VARIABLE);
+    if (Util.isEmpty(idName)) {
+      return "";
+    }
     StringTokenizer tok = new StringTokenizer(idName, "_");
     String upName = tok.nextToken();
     while (tok.hasMoreTokens()) {

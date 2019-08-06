@@ -15,21 +15,24 @@
  */
 package edu.mayo.kmdp.util;
 
-import net.sf.saxon.lib.RelativeURIResolver;
-import org.apache.xerces.util.XMLCatalogResolver;
+import static edu.mayo.kmdp.util.URIUtil.asURL;
+import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
-
-import static edu.mayo.kmdp.util.URIUtil.asURL;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamSource;
+import net.sf.saxon.lib.RelativeURIResolver;
+import org.apache.xerces.util.XMLCatalogResolver;
 
 public class CatalogBasedURIResolver implements RelativeURIResolver {
 
@@ -84,8 +87,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
       File f = new File(new URI(uri));
       assert f.exists();
       FileInputStream fis = new FileInputStream(f);
-      StreamSource src = new StreamSource(fis);
-      return src;
+      return new StreamSource(fis);
     } catch (URISyntaxException | FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -165,14 +167,15 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
     if ((url = asURL(path)) != null) {
       try {
         if (new File(url.toURI()).exists()) {
-          return Optional.ofNullable(url);
+          return Optional.of(url);
         } else {
           // try classpath (e.g. jars)
           url = CatalogBasedURIResolver.class.getResource(path.substring(5));
           if (url != null) {
-            InputStream stream = url.openStream();
-            if (stream != null && stream.available() > 0) {
-              return Optional.ofNullable(url);
+            try (InputStream stream = url.openStream()) {
+              if (stream != null && stream.available() > 0) {
+                return Optional.of(url);
+              }
             }
           }
         }

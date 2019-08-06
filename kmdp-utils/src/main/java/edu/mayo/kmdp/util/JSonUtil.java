@@ -203,7 +203,7 @@ public class JSonUtil {
 
   public static Optional<Date> jDate(String name, JsonNode parent) {
     return parent != null && parent.has(name) ? Optional
-        .ofNullable(DateAdapter.read(parent.get(name).asText())) : Optional.empty();
+        .ofNullable(DateAdapter.instance().read(parent.get(name).asText())) : Optional.empty();
   }
 
   public static Optional<JsonNode> jNode(String name, JsonNode parent) {

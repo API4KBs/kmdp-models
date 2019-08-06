@@ -319,7 +319,7 @@ public class SurrogateBuilder {
   }
 
   private static String validate(String uuid) {
-    return UUID.fromString(Util.ensureUUIDFormat(uuid).get()).toString();
+    return Util.ensureUUIDFormat(uuid).orElse("");
   }
 
 

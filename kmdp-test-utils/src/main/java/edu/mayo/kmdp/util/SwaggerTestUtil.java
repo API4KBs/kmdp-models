@@ -135,7 +135,7 @@ public class SwaggerTestUtil {
         String ref = reference.substring(0, reference.indexOf('#'));
         String path = base + '/' + ref;
         Swagger refModel = parseValidate(SwaggerTestUtil.class.getResourceAsStream(path));
-        assertTrue(refModel.getDefinitions().containsKey(type));
+        assertTrue(refModel != null && refModel.getDefinitions().containsKey(type));
       }
     }
   }

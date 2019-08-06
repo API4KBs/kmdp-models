@@ -165,8 +165,7 @@ public abstract class CodeGenTestBase {
 
 
   public static void printSourceFile(File f, PrintStream out) {
-    try {
-      FileInputStream inputStream = new FileInputStream(f);
+    try (FileInputStream inputStream = new FileInputStream(f)) {
       int n = inputStream.available();
       byte[] buf = new byte[n];
       if (n == inputStream.read(buf)) {
