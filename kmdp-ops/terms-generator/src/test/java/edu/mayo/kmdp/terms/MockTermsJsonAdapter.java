@@ -29,11 +29,10 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Optional;
 
-
-public abstract class TermsJsonAdapter {
+@Deprecated
+public abstract class MockTermsJsonAdapter {
 
   public static class Serializer extends JsonSerializer<Term> {
-
     @Override
     public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {

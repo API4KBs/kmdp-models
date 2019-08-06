@@ -21,13 +21,13 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.deployResource;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.printSourceFile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.plugin.TermsGeneratorPlugin;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
@@ -36,7 +36,6 @@ import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.FileUtil;
-import example.MockTermsDirectory;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -179,7 +178,7 @@ public class TerminologyGeneratorPluginTest {
 
     plugin.setReason(false);
     plugin.setJaxb(true);
-    plugin.setTermsProvider(MockTermsDirectory.provider);
+    plugin.setJsonAdapter(MockTermsJsonAdapter.class.getName());
     plugin.setXmlAdapter(MockTermsXMLAdapter.class.getName());
     plugin.setOutputDirectory(genSrc);
     plugin.setOwlFiles(Collections.singletonList(owlPath));
