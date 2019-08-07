@@ -495,4 +495,13 @@ public class XMLUtil {
       return Optional.of(pack + "." + name);
     }
   }
+
+  public static Document emptyDocument() {
+    try {
+      return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+    } catch (ParserConfigurationException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
 }

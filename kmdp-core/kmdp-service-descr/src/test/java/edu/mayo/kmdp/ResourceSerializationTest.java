@@ -81,7 +81,7 @@ public class ResourceSerializationTest {
     Optional<Document> optDox = XMLUtil.loadXMLDocument(optXML.get().getBytes());
     assertTrue(optDox.isPresent());
 
-    NodeList nodes = XPathUtil.xList(optDox.get(), "//api:parameterDefinitions/api:parameterDefinition/@name");
+    NodeList nodes = new XPathUtil().xList(optDox.get(), "//api:parameterDefinitions/api:parameterDefinition/@name");
     Set<String> paramNames = XMLUtil.asAttributeStream(nodes)
         .map(Node::getTextContent)
         .collect(Collectors.toSet());

@@ -22,6 +22,8 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.terms.TermsJsonAdapter;
+import edu.mayo.kmdp.terms.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.util.FileUtil;
@@ -91,8 +93,10 @@ public class BaseEnumGenerator {
     context.put("namespace", edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.getVersionId()));
     context.put("packageName", innerPackageName);
     context.put("overridePk", overridePk(defaultPackage,overrides));
-    context.put("baseJsonAdapter", options.get(EnumGenerationParams.JSON_ADAPTER).get());
-    context.put("baseXmlAdapter", options.get(EnumGenerationParams.XML_ADAPTER).get());
+    context.put("baseJsonAdapter", options.get(EnumGenerationParams.JSON_ADAPTER)
+        .orElse(TermsJsonAdapter.Deserializer.class.getName()));
+    context.put("baseXmlAdapter", options.get(EnumGenerationParams.XML_ADAPTER)
+        .orElse(TermsXMLAdapter.class.getName()));
     context.put("implClassName",
         edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme.class.getName());
     context.put("typeIntf", Term.class);

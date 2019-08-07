@@ -15,20 +15,30 @@
  */
 package edu.mayo.kmdp.util.fhir3.json;
 
+import static edu.mayo.kmdp.util.fhir3.json.FHIR3JsonUtil.toJsonString;
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.COLLECTION;
+
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.mayo.kmdp.util.JSonUtil;
-import org.hl7.fhir.dstu3.model.*;
-
 import java.io.IOException;
 import java.util.List;
-
-import static edu.mayo.kmdp.util.fhir3.json.FHIR3JsonUtil.toJsonString;
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.COLLECTION;
+import java.util.Optional;
+import org.hl7.fhir.dstu3.model.Base;
+import org.hl7.fhir.dstu3.model.BaseResource;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Parameters;
+import org.hl7.fhir.dstu3.model.Resource;
+import org.hl7.fhir.dstu3.model.Type;
 
 public class FHIR3JsonAdapter {
 
@@ -150,17 +160,25 @@ public class FHIR3JsonAdapter {
     Parameters paramShell = new Parameters();
     paramShell.addParameter().setName("value").setValue(null);
     String template = toJsonString(paramShell);
-    JsonNode parent = JSonUtil.readJson(template.getBytes()).get();
-    ((ObjectNode) parent.get("parameter").get(0)).set(jn.fieldNames().next(), jn.elements().next());
+    Optional<JsonNode> parent = JSonUtil.readJson(template.getBytes());
+    if (parent.isPresent()) {
+      ((ObjectNode) parent.get().get("parameter").get(0))
+          .set(jn.fieldNames().next(), jn.elements().next());
 
-    return jsonParser.parseResource(Parameters.class, parent.toString());
+      return jsonParser.parseResource(Parameters.class, parent.get().toString());
+    } else {
+      return new Parameters();
+    }
   }
 
   public static JsonNode trySerializeType(Type t) {
     // wrap in Parameters to serialize
     Parameters p = new Parameters();
     p.addParameter(new Parameters.ParametersParameterComponent().setValue(t));
-    return JSonUtil.readJson(toJsonString(p).getBytes()).get().get("parameter").get(0);
+    Optional<JsonNode> parent = JSonUtil.readJson(toJsonString(p).getBytes());
+    return parent
+        .map(jsonNode -> jsonNode.get("parameter").get(0))
+        .orElse(JsonNodeFactory.instance.nullNode());
   }
 
 

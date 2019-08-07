@@ -40,6 +40,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
+import java.util.stream.Stream;
 
 public class FileUtil {
 
@@ -202,9 +203,9 @@ public class FileUtil {
         return false;
       }
 
-      FileOutputStream fos = new FileOutputStream(targetFile);
-      fos.write(out.toString().getBytes());
-      fos.close();
+      try(FileOutputStream fos = new FileOutputStream(targetFile)) {
+        fos.write(out.toString().getBytes());
+      }
 
       return true;
     } catch (IOException e) {
@@ -216,8 +217,8 @@ public class FileUtil {
   public static void delete(File root) {
     Path pathToBeDeleted = root.toPath();
 
-    try {
-      Files.walk(pathToBeDeleted)
+    try (Stream<Path> pathStream = Files.walk(pathToBeDeleted)) {
+      pathStream
           .sorted(Comparator.reverseOrder())
           .map(Path::toFile)
           .forEach(File::delete);

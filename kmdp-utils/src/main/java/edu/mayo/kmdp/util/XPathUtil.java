@@ -51,9 +51,9 @@ public class XPathUtil {
     }
   };
 
-  private static XPath defaultXPath;
+  private XPath defaultXPath;
 
-  static {
+  public XPathUtil() {
     XPathFactory factory = XPathFactory.newInstance();
     defaultXPath = factory.newXPath();
     defaultXPath.setNamespaceContext(ctx);
@@ -72,52 +72,52 @@ public class XPathUtil {
     return null;
   }
 
-  public static Node xNode(XPath xpath, Document dox, String xpathExpression) {
+  public Node xNode(XPath xpath, Document dox, String xpathExpression) {
     return (Node) evaluateXPath(xpath, dox, xpathExpression, XPathConstants.NODE);
   }
 
-  public static Node xNode(Document dox, String xpathExpression) {
+  public Node xNode(Document dox, String xpathExpression) {
     return (Node) evaluateXPath(defaultXPath, dox, xpathExpression, XPathConstants.NODE);
   }
 
-  public static NodeList xList(XPath xpath, Document dox, String xpathExpression) {
+  public NodeList xList(XPath xpath, Document dox, String xpathExpression) {
     return (NodeList) evaluateXPath(xpath, dox, xpathExpression, XPathConstants.NODESET);
   }
 
-  public static NodeList xList(Document dox, String xpathExpression) {
+  public NodeList xList(Document dox, String xpathExpression) {
     return (NodeList) evaluateXPath(defaultXPath, dox, xpathExpression, XPathConstants.NODESET);
   }
 
-  public static String xString(XPath xpath, Document dox, String xpathExpression) {
+  public String xString(XPath xpath, Document dox, String xpathExpression) {
     return (String) evaluateXPath(xpath, dox, xpathExpression, XPathConstants.STRING);
   }
 
-  public static String xString(Document dox, String xpathExpression) {
+  public String xString(Document dox, String xpathExpression) {
     return (String) evaluateXPath(defaultXPath, dox, xpathExpression, XPathConstants.STRING);
   }
 
-  public static Double xNumber(XPath xpath, Document dox, String xpathExpression) {
+  public Double xNumber(XPath xpath, Document dox, String xpathExpression) {
     return (Double) evaluateXPath(xpath, dox, xpathExpression, XPathConstants.NUMBER);
   }
 
-  public static Double xNumber(Document dox, String xpathExpression) {
+  public Double xNumber(Document dox, String xpathExpression) {
     return (Double) evaluateXPath(defaultXPath, dox, xpathExpression, XPathConstants.NUMBER);
   }
 
-  public static Boolean xBool(XPath xpath, Document dox, String xpathExpression) {
+  public Boolean xBool(XPath xpath, Document dox, String xpathExpression) {
     return (Boolean) evaluateXPath(xpath, dox, xpathExpression, XPathConstants.BOOLEAN);
   }
 
-  public static Boolean xBool(Document dox, String xpathExpression) {
+  public Boolean xBool(Document dox, String xpathExpression) {
     return (Boolean) evaluateXPath(defaultXPath, dox, xpathExpression, XPathConstants.BOOLEAN);
   }
 
-  public static Object attr(Node n, String attribName) {
+  public Object attr(Node n, String attribName) {
     Node att = n.getAttributes().getNamedItem(attribName);
     return att != null ? att.getNodeValue() : null;
   }
 
-  public static List<Node> children(Node node, String elName) {
+  public List<Node> children(Node node, String elName) {
     return XMLUtil.asElementStream(node.getChildNodes())
         .filter((el) -> elName.equals(el.getNodeName()))
         .collect(Collectors.toList());

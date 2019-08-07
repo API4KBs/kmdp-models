@@ -59,7 +59,10 @@ public class CatalogGenerator extends BaseEnumGenerator {
     File catalogFile = new File(outputDir, catalogName);
     //System.out.println( mainText );
     if (catalogFile.exists()) {
-      mainText = mergeCatalogs(FileUtil.read(catalogFile).orElse(null), mainText);
+      mainText = mergeCatalogs(
+          FileUtil.read(catalogFile)
+              .orElse("<catalog/>"),
+          mainText);
     }
     this.writeToFile(mainText,catalogFile);
   }

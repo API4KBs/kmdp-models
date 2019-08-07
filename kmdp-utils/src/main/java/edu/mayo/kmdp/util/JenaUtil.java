@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -42,10 +43,8 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.rdf.model.impl.StatementImpl;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.PrintUtil;
 import org.apache.jena.vocabulary.OWL;
@@ -70,37 +69,40 @@ public abstract class JenaUtil {
 
   public static <T> Set<Map<String, T>> askQuery(Model model, String query,
       Function<RDFNode, T> mapper) {
-    ResultSet results = QueryExecutionFactory.create(query,
-        model).execSelect();
-    Set<Map<String, T>> answers = new HashSet<>();
-    while (results.hasNext()) {
-      QuerySolution sol = results.next();
-      answers.add(results.getResultVars().stream()
-          .collect(Collectors.toMap(Function.identity(), (k) -> mapper.apply(sol.get(k)))));
+    try (QueryExecution queryExec = QueryExecutionFactory.create(query, model)) {
+      ResultSet results = queryExec.execSelect();
+      Set<Map<String, T>> answers = new HashSet<>();
+      while (results.hasNext()) {
+        QuerySolution sol = results.next();
+        answers.add(results.getResultVars().stream()
+            .collect(Collectors.toMap(Function.identity(), (k) -> mapper.apply(sol.get(k)))));
+      }
+      return answers;
     }
-    return answers;
   }
 
   public static Model construct(Model model, Query query) {
-    return QueryExecutionFactory.create(query,
-        model).execConstruct();
+    try (QueryExecution queryExec = QueryExecutionFactory.create(query, model)) {
+      return queryExec.execConstruct();
+    }
   }
 
   public static Set<Resource> askQuery(Model model, Query selectQuery) {
-    org.apache.jena.query.ResultSet results = QueryExecutionFactory.create(selectQuery,
-        model).execSelect();
+    try (QueryExecution queryExec = QueryExecutionFactory.create(selectQuery, model)) {
+      org.apache.jena.query.ResultSet results = queryExec.execSelect();
 
-    Set<Resource> answers = new HashSet<>();
-    if (results.hasNext()) {
-      results.forEachRemaining((sol) -> {
-        if (sol.varNames().hasNext()) {
-          answers.add(sol.getResource(sol.varNames().next()));
-        }
-      });
-    } else {
-      System.err.println("WARNING :: empty query ");
+      Set<Resource> answers = new HashSet<>();
+      if (results.hasNext()) {
+        results.forEachRemaining((sol) -> {
+          if (sol.varNames().hasNext()) {
+            answers.add(sol.getResource(sol.varNames().next()));
+          }
+        });
+      } else {
+        System.err.println("WARNING :: empty query ");
+      }
+      return answers;
     }
-    return answers;
   }
 
 
