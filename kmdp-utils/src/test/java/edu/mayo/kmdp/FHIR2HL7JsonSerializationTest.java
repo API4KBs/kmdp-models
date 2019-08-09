@@ -15,39 +15,48 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.util.JSonUtil.asMapOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.kmdp.util.fhir.fhir3.FHIR3JacksonModule;
-import edu.mayo.kmdp.util.fhir.fhir3.FHIR3JsonAdapter;
-import org.hl7.fhir.dstu3.model.*;
-import org.junit.jupiter.api.Test;
-
-import java.util.Collections;
+import edu.mayo.kmdp.util.fhir.fhir2_hl7.FHIR2HL7JacksonModule;
+import edu.mayo.kmdp.util.fhir.fhir2_hl7.FHIR2HL7JsonAdapter;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.hl7.fhir.instance.model.Age;
+import org.hl7.fhir.instance.model.Base;
+import org.hl7.fhir.instance.model.BaseResource;
+import org.hl7.fhir.instance.model.Enumerations.AdministrativeGender;
+import org.hl7.fhir.instance.model.HumanName;
+import org.hl7.fhir.instance.model.Identifier;
+import org.hl7.fhir.instance.model.Patient;
+import org.hl7.fhir.instance.model.Quantity;
+import org.hl7.fhir.instance.model.api.IBase;
+import org.junit.jupiter.api.Test;
 
-import static edu.mayo.kmdp.util.JSonUtil.asMapOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+public class FHIR2HL7JsonSerializationTest {
 
-public class FHIR3JsonSerializationTest {
-
-  private Patient res = new Patient()
-      .setIdentifier(Collections.singletonList(new Identifier().setValue("p123")))
-      .setName(Collections.singletonList(new HumanName().addGiven("John").setFamily("Hurt")))
-      .setGender(Enumerations.AdministrativeGender.OTHER);
+  private Patient res = (Patient) new Patient()
+      .addName(new HumanName().addGiven("John").addFamily("Hurt"))
+      .addIdentifier(new Identifier().setValue("p123"))
+      .setGender(AdministrativeGender.OTHER)
+      .setId("p123");
 
   private Foo nonRes = new Foo();
 
-  private Module module = new FHIR3JacksonModule();
+  private Module module = new FHIR2HL7JacksonModule();
 
   @Test
   public void testSerializeFHIRResource() {
-    Optional<String> pat = JSonUtil.writeJson(res, module, JSonUtil.defaultProperties())
+    Optional<String> pat = JSonUtil
+        .writeJson(res, new FHIR2HL7JacksonModule(), JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(pat.isPresent());
 //    System.out.println(pat.get());
@@ -55,10 +64,15 @@ public class FHIR3JsonSerializationTest {
     Optional<Patient> p = JSonUtil.parseJson(pat.get(), module, Patient.class);
     assertTrue(p.isPresent());
     Patient reconstructed = p.get();
-    assertEquals(reconstructed.getName().get(0).getFamily(), res.getName().get(0).getFamily());
-    assertEquals(reconstructed.getIdentifier().get(0).getValue(),
-        res.getIdentifier().get(0).getValue());
-    assertEquals(reconstructed.getGender(), res.getGender());
+    assertEquals(
+        res.getName().get(0).getFamily().get(0).getValue(),
+        reconstructed.getName().get(0).getFamily().get(0).getValue());
+    assertEquals(
+        res.getIdentifier().get(0).getValue(),
+        reconstructed.getIdentifier().get(0).getValue());
+    assertEquals(
+        res.getGender(),
+        reconstructed.getGender());
   }
 
   @Test
@@ -72,7 +86,9 @@ public class FHIR3JsonSerializationTest {
     assertTrue(p.isPresent());
     assertTrue(p.get() instanceof Patient);
     Patient reconstructed = (Patient) p.get();
-    assertEquals(reconstructed.getName().get(0).getFamily(), res.getName().get(0).getFamily());
+    assertEquals(
+        res.getName().get(0).getFamily().get(0).getValue(),
+        reconstructed.getName().get(0).getFamily().get(0).getValue());
     assertEquals(reconstructed.getIdentifier().get(0).getValue(),
         res.getIdentifier().get(0).getValue());
     assertEquals(reconstructed.getGender(), res.getGender());
@@ -113,7 +129,7 @@ public class FHIR3JsonSerializationTest {
   public void testInnerFHIRResource() {
     Boo boo = new Boo();
     boo.setPat(res);
-    boo.setAge((Age) new Age().setValue(42));
+    boo.setAge((Age) new Age().setValue(BigDecimal.valueOf(42)));
 
     Optional<String> booStr = JSonUtil.writeJson(boo, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
@@ -148,7 +164,7 @@ public class FHIR3JsonSerializationTest {
 
   @Test
   public void testFHIRDatatype() {
-    Quantity q = new Quantity().setValue(42).setCode("a").setUnit("yr");
+    Quantity q = new Quantity().setValue(BigDecimal.valueOf(42)).setCode("a").setUnit("yr");
 
     Optional<String> qStr = JSonUtil.writeJson(q, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
@@ -163,9 +179,9 @@ public class FHIR3JsonSerializationTest {
 
   @Test
   public void testFHIRinMap() {
-    Map<String, Base> map = new HashMap<>();
+    Map<String, IBase> map = new HashMap<>();
     map.put("a", res);
-    map.put("c", new Quantity().setValue(42).setCode("a").setUnit("yr"));
+    map.put("c", new Quantity().setValue(BigDecimal.valueOf(42)).setCode("a").setUnit("yr"));
 
     Optional<String> mapStr = JSonUtil.writeJson(map, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
@@ -184,7 +200,7 @@ public class FHIR3JsonSerializationTest {
   public void testFHIRinMapField() {
     Map<String, Base> map = new HashMap<>();
     map.put("a", res);
-    map.put("b", new Quantity().setValue(42).setCode("a").setUnit("yr"));
+    map.put("b", new Quantity().setValue(BigDecimal.valueOf(42)).setCode("a").setUnit("yr"));
     Noo noo = new Noo();
     noo.setAtts(map);
 
@@ -216,7 +232,7 @@ public class FHIR3JsonSerializationTest {
   private static class Boo extends Foo {
 
     private Patient pat;
-    private Age age;
+    private Quantity age;
 
     public Patient getPat() {
       return pat;
@@ -226,19 +242,19 @@ public class FHIR3JsonSerializationTest {
       this.pat = pat;
     }
 
-    public Age getAge() {
+    public Quantity getAge() {
       return age;
     }
 
-    public void setAge(Age age) {
+    public void setAge(Quantity age) {
       this.age = age;
     }
   }
 
   private static class Zoo extends Foo {
 
-    @JsonSerialize(using = FHIR3JsonAdapter.FHIRSerializer.class)
-    @JsonDeserialize(using = FHIR3JsonAdapter.FHIRDeserializer.class)
+    @JsonSerialize(using = FHIR2HL7JsonAdapter.FHIRSerializer.class)
+    @JsonDeserialize(using = FHIR2HL7JsonAdapter.FHIRDeserializer.class)
     private Patient pat;
 
     public Patient getPat() {

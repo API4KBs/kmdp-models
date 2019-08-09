@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.util.fhir2;
+package edu.mayo.kmdp.util.fhir.fhir2;
 
 
 import ca.uhn.fhir.model.api.IDatatype;

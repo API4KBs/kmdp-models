@@ -13,46 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.util.fhir2;
+package edu.mayo.kmdp.util.fhir;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.dstu2.resource.BaseResource;
-import ca.uhn.fhir.parser.IParser;
 import edu.mayo.kmdp.util.XMLUtil;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-
-public class FHIR2XmlAdapter extends XmlAdapter<Object, BaseResource> {
-
-  private static IParser xmlParser = FhirContext.forDstu2().newXmlParser();
+public abstract class AbstractFHIRXmlAdapter<R> extends XmlAdapter<Object, R> {
 
   @Override
-  public BaseResource unmarshal(Object v) {
+  public R unmarshal(Object v) {
     if (!(v instanceof Element)) {
       return null;
     }
     byte[] b = XMLUtil.asElementStream(((Element) v).getChildNodes())
-        .filter((n) -> n.getNodeType() == Node.ELEMENT_NODE)
+        .filter(n -> n.getNodeType() == Node.ELEMENT_NODE)
         .findAny()
         .map(XMLUtil::toByteArray).orElse(null);
 
-    IBaseResource br = xmlParser.parseResource(new InputStreamReader(new ByteArrayInputStream(b)));
-    return (BaseResource) br;
+    IBaseResource br = parseResource(new InputStreamReader(new ByteArrayInputStream(b)));
+    return (R) br;
   }
 
+  protected abstract IBaseResource parseResource(InputStreamReader inputStreamReader);
+
   @Override
-  public Object marshal(BaseResource v) {
+  public Object marshal(R v) {
     if (v == null) {
       return null;
     }
-    byte[] bytes = xmlParser.encodeResourceToString(v).getBytes();
+    byte[] bytes = encodeResource(v).getBytes();
     Document dox = XMLUtil.loadXMLDocument(bytes)
         .orElse(XMLUtil.emptyDocument());
     if (dox == null) {
@@ -62,5 +57,7 @@ public class FHIR2XmlAdapter extends XmlAdapter<Object, BaseResource> {
     wrapper.appendChild(dox.getDocumentElement());
     return wrapper;
   }
+
+  protected abstract String encodeResource(R v);
 
 }
