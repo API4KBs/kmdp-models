@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.util.fhir2.json;
+package edu.mayo.kmdp.util.fhir;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.api.IResource;
 import ca.uhn.fhir.parser.IParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,41 +23,39 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.mayo.kmdp.util.JSonUtil;
-
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 
-public class FHIR2JsonUtil {
+public abstract class AbstractFHIRJsonUtil<R extends IBaseResource, I extends IBaseResource> {
 
-  private static IParser jsonParser = FhirContext.forDstu2().newJsonParser();
-
-  public static String toJsonString(IResource res) {
-    return toJsonStringContained(res, true);
+  protected String toJsonString(IBaseResource res, Class<R> domainResourceClass) {
+    return domainResourceClass.isInstance(res)
+        ? abstractToJsonStringContained((R) res)
+        : abstractToJsonStringBasic(res);
   }
 
-  private static String toJsonStringBasic(IResource res) {
-    return jsonParser.setPrettyPrint(true).encodeResourceToString(res);
+  protected String abstractToJsonStringBasic(IBaseResource res) {
+    return getParser().encodeResourceToString(res);
   }
 
-  private static String toJsonStringContained(IResource r, boolean pretty) {
+  protected String abstractToJsonStringContained(R r) {
     try {
-      return pretty
-          ? new ObjectMapper().writerWithDefaultPrettyPrinter()
-          .writeValueAsString(toJsonContained(r))
-          : toJsonContained(r).toString();
+      return new ObjectMapper().writerWithDefaultPrettyPrinter()
+          .writeValueAsString(abstractToJsonContained(r));
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     }
-    return toJsonContained(r).toString();
+    return abstractToJsonContained(r).toString();
   }
 
-  private static JsonNode toJsonContained(IResource r) {
-    // FIXME Workaround for issue possibly related to https://github.com/jamesagnew/hapi-fhir/issues/505
-    JsonNode qNode = toJsonBasic(r);
-    List<JsonNode> jns = r.getContained().getContainedResources().stream()
-        .map(FHIR2JsonUtil::toJsonBasic)
+  protected JsonNode abstractToJsonContained(R r) {
+    //Workaround for issue possibly related to https://github.com/jamesagnew/hapi-fhir/issues/505
+    JsonNode qNode = abstractToJsonBasic(r);
+    List<JsonNode> jns = getContained(r).stream()
+        .map(this::abstractToJsonBasic)
         .collect(Collectors.toList());
     if (!jns.isEmpty()) {
       ArrayNode an = ((ObjectNode) qNode).putArray("contained");
@@ -68,14 +64,17 @@ public class FHIR2JsonUtil {
     return qNode;
   }
 
-  private static JsonNode toJsonBasic(IResource res) {
+  protected JsonNode abstractToJsonBasic(IBaseResource res) {
     StringWriter sw = new StringWriter();
-    sw.write(toJsonStringBasic(res));
+    sw.write(abstractToJsonStringBasic(res));
     return JSonUtil.readJson(new ByteArrayInputStream(sw.toString().getBytes()))
         .orElse(JsonNodeFactory.instance.nullNode());
   }
 
-  public static <T extends IResource> T parse(byte[] data, Class<T> klass) {
-    return jsonParser.parseResource(klass, new String(data));
-  }
+  protected abstract IParser getParser();
+
+  public abstract String toJsonString(IBaseResource res);
+
+  protected abstract List<I> getContained(R r);
+
 }

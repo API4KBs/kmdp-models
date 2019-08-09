@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.util.fhir3;
+package edu.mayo.kmdp.util.fhir.fhir3;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.BooleanType;
 import org.hl7.fhir.dstu3.model.CodeType;
@@ -30,11 +34,6 @@ import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.dstu3.model.TimeType;
 import org.hl7.fhir.dstu3.model.Type;
 import org.hl7.fhir.exceptions.FHIRException;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
 
 public class FHIRDataTypeConstructor {
 

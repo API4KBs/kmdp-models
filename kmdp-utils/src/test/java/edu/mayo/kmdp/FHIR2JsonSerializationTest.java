@@ -16,7 +16,6 @@
 package edu.mayo.kmdp;
 
 import ca.uhn.fhir.model.api.BaseElement;
-import ca.uhn.fhir.model.api.IResource;
 import ca.uhn.fhir.model.dstu2.composite.AgeDt;
 import ca.uhn.fhir.model.dstu2.composite.HumanNameDt;
 import ca.uhn.fhir.model.dstu2.composite.IdentifierDt;
@@ -29,8 +28,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.kmdp.util.fhir2.json.FHIR2JacksonModule;
-import edu.mayo.kmdp.util.fhir2.json.FHIR2JsonAdapter;
+import edu.mayo.kmdp.util.fhir.fhir2.FHIR2JacksonModule;
+import edu.mayo.kmdp.util.fhir.fhir2.FHIR2JsonAdapter;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.junit.jupiter.api.Test;
 
@@ -247,8 +246,8 @@ public class FHIR2JsonSerializationTest {
 
   private static class Zoo extends Foo {
 
-    @JsonSerialize(using = FHIR2JsonAdapter.FHIRResourceSerializer.class)
-    @JsonDeserialize(using = FHIR2JsonAdapter.FHIRResourceDeserializer.class)
+    @JsonSerialize(using = FHIR2JsonAdapter.FHIRSerializer.class)
+    @JsonDeserialize(using = FHIR2JsonAdapter.FHIRDeserializer.class)
     private Patient pat;
 
     public Patient getPat() {
