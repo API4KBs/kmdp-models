@@ -75,8 +75,6 @@ public class TerminologyGeneratorPluginTest {
 
   @Test
   public void testPlugin() {
-    File folder = tmp.toFile();
-
     TermsGeneratorPlugin plugin = initPlugin(new File(genSource.getAbsolutePath() + "/xsd"));
     try {
       plugin.execute();
@@ -86,11 +84,6 @@ public class TerminologyGeneratorPluginTest {
     }
 
     testWithJaxb();
-
-//    showDirContent(folder,true);
-
-//    printSourceFile(new File(genSource.getAbsolutePath() + "/xsd/terms/test/org/cito/Cito.java"),
-//        System.out);
 
     ensureSuccessCompile(genSource, genSource, target);
 

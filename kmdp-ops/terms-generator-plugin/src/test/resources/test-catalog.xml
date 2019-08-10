@@ -21,4 +21,8 @@
     uri="skos.rdf"
     name="http://www.w3.org/2004/02/skos/core"/>
 
+  <uri id="DCT"
+    uri="dcterms.rdf"
+    name="http://purl.org/dc/terms/"/>
+
 </catalog>
