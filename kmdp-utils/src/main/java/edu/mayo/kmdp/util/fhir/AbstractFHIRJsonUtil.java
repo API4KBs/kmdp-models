@@ -75,6 +75,10 @@ public abstract class AbstractFHIRJsonUtil<R extends IBaseResource, I extends IB
 
   public abstract String toJsonString(IBaseResource res);
 
+  public <T extends R> T parse(byte[] data, Class<T> type) {
+    return getParser().parseResource(type,new ByteArrayInputStream(data));
+  }
+
   protected abstract List<I> getContained(R r);
 
 }
