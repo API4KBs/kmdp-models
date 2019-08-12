@@ -21,6 +21,7 @@ import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._20190801.Know
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.annotations.SimpleApplicability;
 import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.surrogate.InlinedRepresentation;
@@ -124,6 +125,14 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder aaS() {
     get().withProcessingMethod(KnowledgeProcessingTechnique.Service_Based_Technique);
+    return this;
+  }
+
+  public SurrogateBuilder withApplicability(Term t) {
+    if (t == null) {
+      return this;
+    }
+    get().withApplicableIn(new SimpleApplicability().withSituation(t.asConcept()));
     return this;
   }
 
