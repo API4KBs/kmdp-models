@@ -35,6 +35,10 @@ import org.omg.spec.api4kp._1_0.services.resources.ParameterDefinitions;
 
 public class PlatformComponentHelper {
 
+  private PlatformComponentHelper() {
+    // static methods only
+  }
+
   public static Optional<KnowledgeArtifactRepository> repositoryDescr(String baseNamespace, String identifier,
       String name, URL baseUrl) {
     if (isEmpty(identifier) || isEmpty(baseNamespace) || baseUrl == null) {
@@ -53,7 +57,7 @@ public class PlatformComponentHelper {
     ParameterDefinitions defs = new ParameterDefinitions();
 
     Arrays.stream(config.properties()).forEach(
-        (opt) -> defs.withParameterDefinition(
+        opt -> defs.withParameterDefinition(
             new ParameterDefinition()
                 .withName(opt.getName())
                 .withDefinition(opt.getDefinition())
@@ -68,7 +72,7 @@ public class PlatformComponentHelper {
   public static Properties defaults(
       org.omg.spec.api4kp._1_0.services.ParameterDefinitions acceptableParams) {
     Properties prop = new Properties();
-    acceptableParams.getParameterDefinition().forEach((p) -> {
+    acceptableParams.getParameterDefinition().forEach(p -> {
       if ( !Util.isEmpty(p.getDefaultValue())) {
         prop.put(p.getName(), p.getDefaultValue());
       }

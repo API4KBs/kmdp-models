@@ -21,7 +21,6 @@ import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +55,14 @@ public class Answer<T> extends Explainer {
 
   public static <X> Answer<X> unsupported() {
     return failed(new UnsupportedOperationException("Not Implemented"));
+  }
+
+  public static <X> Answer<X> failed(ServerSideException t) {
+    return new Answer<X>()
+        .withCodedOutcome(t.getCode())
+        .withMeta(t.getHeaders())
+        .withValue(null)
+        .withExplanation(t.getError().getMessage());
   }
 
   public static <X> Answer<X> failed(Throwable t) {
