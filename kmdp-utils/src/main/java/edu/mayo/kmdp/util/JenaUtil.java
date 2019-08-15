@@ -28,11 +28,14 @@ import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -102,6 +105,26 @@ public abstract class JenaUtil {
         System.err.println("WARNING :: empty query ");
       }
       return answers;
+    }
+  }
+
+  public static Set<Pair<RDFNode, RDFNode>> askBinaryQuery(Model model, Query selectQuery) {
+    final Set<Pair<RDFNode, RDFNode>> total = new HashSet<>();
+    try (QueryExecution queryExec = QueryExecutionFactory.create(selectQuery, model)) {
+      org.apache.jena.query.ResultSet results = queryExec.execSelect();
+      if (results.getResultVars().size() != 2) {
+        throw new IllegalStateException(
+            "Binary query expected, but found # of vars = " + results.getResultVars().size());
+      }
+      if (results.hasNext()) {
+        results.forEachRemaining(sol -> {
+          Iterator<String> vars = sol.varNames();
+          Pair<RDFNode, RDFNode> pair =
+              new ImmutablePair<>(sol.get(vars.next()),sol.get(vars.next()));
+          total.add(pair);
+        });
+      }
+      return total;
     }
   }
 

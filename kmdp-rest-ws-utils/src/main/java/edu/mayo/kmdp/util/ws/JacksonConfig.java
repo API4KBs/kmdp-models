@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.util.ws;
 
+import edu.mayo.kmdp.util.ws.JsonRestWSUtils.WithFHIR;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -24,7 +25,7 @@ public class JacksonConfig {
 
   @Bean
   public MappingJackson2HttpMessageConverter customJson() {
-    return JsonRestWSUtils.jacksonFHIRAdapter(JsonRestWSUtils.WithFHIR.DSTU2);
+    return JsonRestWSUtils.jacksonFHIRAdapter(WithFHIR.DSTU2HL7);
   }
 
 }

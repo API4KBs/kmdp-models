@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.util.ws;
 
 import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ca.uhn.fhir.model.dstu2.composite.HumanNameDt;
@@ -23,6 +24,9 @@ import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.primitive.StringDt;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.mayo.kmdp.util.fhir.fhir2.FHIR2JsonUtil;
+import edu.mayo.kmdp.util.fhir.fhir2_hl7.FHIR2HL7JsonUtil;
+import edu.mayo.kmdp.util.fhir.fhir3.FHIR3JsonUtil;
 import edu.mayo.kmdp.util.ws.JsonRestWSUtils.WithFHIR;
 import java.io.ByteArrayOutputStream;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
@@ -64,6 +68,10 @@ public class FHIRSerializationTest {
         () -> mapper.writer().writeValue(baos, patient));
     String jsonStr = new String(baos.toByteArray());
     assertTrue(jsonStr.contains(patient.getNameFirstRep().getGivenFirstRep().getValue()));
+
+    Patient reconstructed = FHIR2JsonUtil.instance.parse(baos.toByteArray(),Patient.class);
+    assertEquals(patient.getName().get(0).getFamily(),
+        reconstructed.getName().get(0).getFamily());
   }
 
 
@@ -97,6 +105,11 @@ public class FHIRSerializationTest {
         () -> mapper.writer().writeValue(baos, med));
     String jsonStr = new String(baos.toByteArray());
     assertTrue(jsonStr.contains(med.getDosage().get(0).getText()));
+
+    MedicationStatement reconstructed = FHIR2HL7JsonUtil.instance.parse(baos.toByteArray(),MedicationStatement.class);
+    assertEquals(med.getDosage().get(0).getText(),
+        reconstructed.getDosage().get(0).getText());
+
   }
 
 
@@ -131,6 +144,11 @@ public class FHIRSerializationTest {
 
     String jsonStr = new String(baos.toByteArray());
     assertTrue(jsonStr.contains(obs.getCode().getCodingFirstRep().getCode()));
+
+    Observation reconstructed = FHIR3JsonUtil.instance.parse(baos.toByteArray(),Observation.class);
+    assertEquals(obs.getCode().getCodingFirstRep().getCode(),
+        reconstructed.getCode().getCodingFirstRep().getCode());
+
   }
 
 }

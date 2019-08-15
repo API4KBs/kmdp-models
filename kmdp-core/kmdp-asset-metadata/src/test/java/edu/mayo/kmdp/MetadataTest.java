@@ -20,7 +20,9 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.metadata.annotations.ComplexApplicability;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.annotations.SimpleApplicability;
 import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.Derivative;
 import edu.mayo.kmdp.metadata.surrogate.InlinedRepresentation;
@@ -136,5 +138,25 @@ public class MetadataTest {
         JaxbUtil.defaultProperties()).get();
     assertEquals(ks, rec);
     return rec;
+  }
+
+  @Test
+  public void testSimpleApplicability() {
+    KnowledgeAsset asset = new KnowledgeAsset();
+    asset.withApplicableIn(new SimpleApplicability()
+        .withSituation(TermsHelper.mayo("test","123")));
+
+    assertTrue(asset.getApplicableIn() instanceof SimpleApplicability);
+  }
+
+  @Test
+  public void testComplexApplicability() {
+    KnowledgeAsset asset = new KnowledgeAsset();
+    asset.withApplicableIn(new ComplexApplicability()
+        .withSituation(new InlinedRepresentation()
+            .withExpr("A or B")
+        .withCodedRepresentationType("plain/txt")));
+
+    assertTrue(asset.getApplicableIn() instanceof ComplexApplicability);
   }
 }

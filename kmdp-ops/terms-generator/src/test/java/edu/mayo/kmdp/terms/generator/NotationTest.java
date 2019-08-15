@@ -34,14 +34,18 @@ import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import java.net.URI;
+import java.net.URL;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
 import ru.avicomp.ontapi.OntManagers;
 import ru.avicomp.ontapi.OntologyManager;
 
@@ -90,7 +94,8 @@ public class NotationTest {
     ConceptGraph schemes = new SkosTerminologyAbstractor()
         .traverse(onto,
             new SkosAbstractionConfig()
-                .with(SkosAbstractionParameters.TAG_TYPE, type));
+                .with(SkosAbstractionParameters.TAG_TYPE, type)
+                .with(SkosAbstractionParameters.REASON, false));
 
     return schemes;
   }
@@ -100,6 +105,13 @@ public class NotationTest {
     try {
 
       OntologyManager manager = OntManagers.createONT();
+      manager.getIRIMappers().add((OWLOntologyIRIMapper) iri -> {
+        if (DCTerms.getURI().equals(iri.toString())) {
+          URL cached = NotationTest.class.getResource("/dcterms.rdf");
+          return cached != null ? IRI.create(cached) : null;
+        }
+        return null;
+      });
 
       Optional<Model> skosModel = new MireotExtractor()
           .fetch(NotationTest.class.getResourceAsStream("/multipleNotation.rdf"),
