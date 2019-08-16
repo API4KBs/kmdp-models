@@ -18,16 +18,13 @@ package edu.mayo.kmdp.terms.impl.model;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.util.Util;
+import java.net.URI;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
-
-import java.net.URI;
 
 public class InternalTerm extends ConceptIdentifier {
 
   protected ConceptScheme<Term> scheme;
-  protected String tag;
   protected String comment;
 
   public InternalTerm(URI conceptURI, String code, String label, String comment, URI refUri,
@@ -49,31 +46,10 @@ public class InternalTerm extends ConceptIdentifier {
     return scheme;
   }
 
-  @Override
-  public boolean equals(Object object) {
-    boolean e = super.equals(object);
-    return e;
-  }
-
-  @Override
-  public int hashCode() {
-    int x = super.hashCode();
-    return x;
-  }
-
   public String toString() {
     return getRef().toString();
   }
-
-  @Override
-  public String getTag() {
-    return tag;
-  }
-
-  public void setTag(String tag) {
-    this.tag = tag;
-  }
-
+  
   public String getComment() {
     return comment;
   }

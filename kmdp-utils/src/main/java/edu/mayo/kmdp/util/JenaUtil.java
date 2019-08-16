@@ -53,8 +53,12 @@ import org.apache.jena.util.PrintUtil;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class JenaUtil {
+  
+  private static Logger logger = LogManager.getLogger(JenaUtil.class);
 
   static {
     FileManager.get().addLocatorClassLoader(JenaUtil.class.getClassLoader());
@@ -78,7 +82,7 @@ public abstract class JenaUtil {
       while (results.hasNext()) {
         QuerySolution sol = results.next();
         answers.add(results.getResultVars().stream()
-            .collect(Collectors.toMap(Function.identity(), (k) -> mapper.apply(sol.get(k)))));
+            .collect(Collectors.toMap(Function.identity(), k -> mapper.apply(sol.get(k)))));
       }
       return answers;
     }
@@ -96,13 +100,13 @@ public abstract class JenaUtil {
 
       Set<Resource> answers = new HashSet<>();
       if (results.hasNext()) {
-        results.forEachRemaining((sol) -> {
+        results.forEachRemaining(sol -> {
           if (sol.varNames().hasNext()) {
             answers.add(sol.getResource(sol.varNames().next()));
           }
         });
       } else {
-        System.err.println("WARNING :: empty query ");
+        logger.error("WARNING :: empty query ");
       }
       return answers;
     }
@@ -146,7 +150,7 @@ public abstract class JenaUtil {
     try {
       return FileManager.get().loadModel(url.toURI().toString());
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
     return ModelFactory.createDefaultModel();
   }
@@ -171,12 +175,6 @@ public abstract class JenaUtil {
     return target;
   }
 
-
-  public static Model toSystemOut(Model target) {
-    // for testing purpose
-    return iterateAndStreamModel(target, System.out, PrintUtil::print);
-  }
-
   public static String asString(Model target) {
     // for testing purpose
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -194,7 +192,7 @@ public abstract class JenaUtil {
       }
       return Optional.of(m);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -204,46 +202,46 @@ public abstract class JenaUtil {
     return JSonUtil.writeJson(obj, JSonLDUtil.initLDModule(), JSonUtil.defaultProperties())
         .flatMap(Util::asString)
         .map(StringReader::new)
-        .map((json) -> m.read(json, null, "JSON-LD"));
+        .map(json -> m.read(json, null, "JSON-LD"));
   }
 
-  public static Statement obj_a(String subjURI, String propURI, String objURI) {
+  public static Statement objA(String subjURI, String propURI, String objURI) {
     return createStatement(createResource(subjURI),
         createProperty(propURI),
         createResource(objURI));
   }
 
-  public static Statement obj_a(String subjURI, Property prop, Resource obj) {
+  public static Statement objA(String subjURI, Property prop, Resource obj) {
     return createStatement(createResource(subjURI), prop, obj);
   }
 
-  public static Statement obj_a(String subjURI, Property prop, String obj) {
+  public static Statement objA(String subjURI, Property prop, String obj) {
     return createStatement(createResource(subjURI), prop, createResource(obj));
   }
 
-  public static Statement dat_a(String subjURI, String propURI, String val) {
+  public static Statement datA(String subjURI, String propURI, String val) {
     return createStatement(createResource(subjURI),
         createProperty(propURI),
         createStringLiteral(val));
   }
-  public static Statement dat_a(String subjURI, Property prop, String val) {
+  public static Statement datA(String subjURI, Property prop, String val) {
     return createStatement(createResource(subjURI),
         prop,
         createStringLiteral(val));
   }
 
-  public static Statement obj_a(Resource subj, Property prop, String val) {
+  public static Statement objA(Resource subj, Property prop, String val) {
     return createStatement(subj,
         prop,
         createResource(val));
   }
-  public static Statement obj_a(Resource subj, Property prop, Resource obj) {
+  public static Statement objA(Resource subj, Property prop, Resource obj) {
     return createStatement(subj,
         prop,
         obj);
   }
 
-  public static Statement dat_a(Resource subj, Property prop, String val) {
+  public static Statement datA(Resource subj, Property prop, String val) {
     return createStatement(subj,
         prop,
         createStringLiteral(val));

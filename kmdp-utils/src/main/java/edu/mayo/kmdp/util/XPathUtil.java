@@ -16,6 +16,8 @@
 package edu.mayo.kmdp.util;
 
 import edu.mayo.kmdp.registry.Registry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -31,6 +33,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class XPathUtil {
+
+  private static Logger logger = LogManager.getLogger(XPathUtil.class);
 
   private static NamespaceContext ctx = new NamespaceContext() {
     @Override
@@ -67,7 +71,7 @@ public class XPathUtil {
 
       return result;
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
     return null;
   }
@@ -119,7 +123,7 @@ public class XPathUtil {
 
   public List<Node> children(Node node, String elName) {
     return XMLUtil.asElementStream(node.getChildNodes())
-        .filter((el) -> elName.equals(el.getNodeName()))
+        .filter(el -> elName.equals(el.getNodeName()))
         .collect(Collectors.toList());
   }
 }

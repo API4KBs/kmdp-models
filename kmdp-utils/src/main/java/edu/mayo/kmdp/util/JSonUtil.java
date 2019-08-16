@@ -41,17 +41,23 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class JSonUtil {
+  
+  private static Logger logger = LogManager.getLogger(JSonUtil.class);
+  
+  private JSonUtil() {}
 
-  public static String PRETTY_PRINT = DefaultPrettyPrinter.class.getName();
-  public static String INCLUDES = JsonInclude.class.getName();
-  public static String DATEFORMAT = DateAdapter.class.getName();
+  private static final String PRETTYPRINT = DefaultPrettyPrinter.class.getName();
+  private static final String INCLUDES = JsonInclude.class.getName();
+  private static final String DATEFORMAT = DateAdapter.class.getName();
 
   public static Properties defaultProperties() {
     return props()
         .set(INCLUDES, JsonInclude.Include.NON_EMPTY)
-        .set(PRETTY_PRINT, true)
+        .set(PRETTYPRINT, true)
         .set(DATEFORMAT, DateAdapter.PATTERN).get();
   }
 
@@ -60,7 +66,7 @@ public class JSonUtil {
     try {
       return Optional.ofNullable(objectMapper.readTree(data));
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -78,7 +84,7 @@ public class JSonUtil {
     try {
       return Optional.ofNullable(objectMapper.readValue(data, klass));
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -117,7 +123,7 @@ public class JSonUtil {
     writeJson(root, null, defaultProperties())
         .map(ByteArrayOutputStream::toByteArray)
         .map(String::new)
-        .ifPresent(System.out::println);
+        .ifPresent(logger::trace);
   }
 
   public static Optional<ByteArrayOutputStream> writeJson(Object root, Properties p) {
@@ -143,14 +149,14 @@ public class JSonUtil {
     try {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-      if (Boolean.valueOf(p.getProperty(PRETTY_PRINT, "true"))) {
+      if (Boolean.TRUE.equals(Boolean.valueOf(p.getProperty(PRETTYPRINT, Boolean.TRUE.toString())))) {
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(baos, root);
       } else {
         objectMapper.writeValue(baos, root);
       }
       return Optional.of(baos);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -162,7 +168,7 @@ public class JSonUtil {
           .writeValueAsString(mapper.readValue(jsonNode.toString(),
               Object.class));
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return "";
     }
   }
@@ -219,7 +225,7 @@ public class JSonUtil {
       try {
         return Optional.of(new ObjectMapper().readValue(jsonTxt.get(), type));
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.error(e.getMessage(),e);
         return Optional.empty();
       }
     }
@@ -232,7 +238,7 @@ public class JSonUtil {
       return Optional
           .of(new ObjectMapper().readValue(JSonUtil.printJson(jsonNode).orElse(""), type));
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -252,12 +258,11 @@ public class JSonUtil {
     try {
       return Optional.of(new ObjectMapper().readValue(json, type));
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
 
-  // TODO This should use Try rather than Optional
   public static <T> Optional<T> tryParseJson(String json,
       Class<T> type) {
     try {
@@ -268,11 +273,11 @@ public class JSonUtil {
   }
 
 
-  public static Optional<?> parseJson(String json) {
+  public static Optional<Object> parseJson(String json) {
     try {
       return Optional.of(new ObjectMapper().readValue(json, Object.class));
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -284,7 +289,7 @@ public class JSonUtil {
       Object x = mapper.readValue(json, klass);
       return klass.isInstance(x) ? Optional.of(klass.cast(x)) : Optional.empty();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -300,13 +305,13 @@ public class JSonUtil {
         return Optional.of(mapper.readValue(json, type));
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
 
 
-  public static Optional<?> parseJson(String json, Module mod) {
+  public static Optional<Object> parseJson(String json, Module mod) {
     return parseJson(json, mod, Object.class);
   }
 
@@ -315,8 +320,7 @@ public class JSonUtil {
   }
 
   public static Optional<JsonNode> toJsonNode(Object root, Module module, Properties p) {
-    // TODO FIXME Is there a more direct way to just serialize into JSonNode?
-    return writeJson(root, module, p)
+   return writeJson(root, module, p)
         .map(ByteArrayOutputStream::toByteArray)
         .flatMap(JSonUtil::readJson);
   }

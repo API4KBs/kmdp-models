@@ -31,6 +31,8 @@ import org.apache.jena.rdf.model.Model;
 
 public class RegistryUtil {
 
+  private RegistryUtil() {}
+
   public static List<Map<String, String>> askQuery(String qryString, Model knowledgeBase) {
     Query query = QueryFactory.create(qryString);
     try(QueryExecution qexec = QueryExecutionFactory.create(query, knowledgeBase)) {
@@ -40,7 +42,7 @@ public class RegistryUtil {
         QuerySolution ans = rs.next();
         Map<String, String> vals = new HashMap<>();
         rs.getResultVars()
-            .forEach((k) -> vals.put(k, ans.contains(k) ? ans.get(k).toString() : ""));
+            .forEach(k -> vals.put(k, ans.contains(k) ? ans.get(k).toString() : ""));
         result.add(vals);
       }
       return result;

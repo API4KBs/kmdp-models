@@ -15,17 +15,16 @@
  */
 package edu.mayo.kmdp.terms;
 
-import edu.mayo.kmdp.id.IDFormats;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.util.NameUtils;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
-public interface ConceptScheme<T extends Term> extends VersionedIdentifier {
+public interface ConceptScheme<T extends Term> extends VersionedIdentifier, Serializable {
 
   String getLabel();
 

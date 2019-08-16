@@ -15,33 +15,18 @@
  */
 package edu.mayo.kmdp;
 
-import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-import edu.mayo.kmdp.util.JSonLDUtil;
-import edu.mayo.kmdp.util.JSonUtil;
+import static edu.mayo.kmdp.util.JenaUtil.objA;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.mayo.kmdp.util.JenaUtil;
-import edu.mayo.kmdp.util.Util;
+import java.net.URI;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.Pointer;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.util.Arrays;
-
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.vuri;
-import static edu.mayo.kmdp.util.JenaUtil.obj_a;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class DatatypeJsonLDTest {
 
@@ -61,10 +46,10 @@ public class DatatypeJsonLDTest {
         .orElse(null);
 
     assertNotNull(m);
-    assertTrue(m.contains(obj_a("http://foo.com/skos/concept-001", RDF.type, SKOS.Concept)));
-    assertTrue(m.contains(obj_a("http://foo.com/skos/concept-001", SKOS.inScheme.getURI(),
+    assertTrue(m.contains(objA("http://foo.com/skos/concept-001", RDF.type, SKOS.Concept)));
+    assertTrue(m.contains(objA("http://foo.com/skos/concept-001", SKOS.inScheme.getURI(),
         "http://foo.com/skos/scheme1")));
-    assertTrue(m.contains(obj_a("http://foo.com/skos/scheme1", RDF.type, SKOS.ConceptScheme)));
+    assertTrue(m.contains(objA("http://foo.com/skos/scheme1", RDF.type, SKOS.ConceptScheme)));
 
   }
 

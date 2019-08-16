@@ -23,10 +23,10 @@ import java.util.Properties;
 
 public class MireotConfig extends ConfigProperties<MireotConfig, MireotParameters> {
 
-  private static final Properties defaults = defaulted( MireotParameters.class );
+  private static final Properties DEFAULTS = defaulted( MireotParameters.class );
 
   public MireotConfig() {
-    super( defaults );
+    super( DEFAULTS );
   }
 
   public MireotConfig(Properties defaults) {

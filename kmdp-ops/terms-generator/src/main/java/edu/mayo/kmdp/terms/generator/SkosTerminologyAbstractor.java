@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import static edu.mayo.kmdp.util.NameUtils.namespaceURIToPackage;
+import static edu.mayo.kmdp.util.NameUtils.namespaceURIStringToPackage;
 import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 import static edu.mayo.kmdp.util.Util.ensureUTF8;
 import static edu.mayo.kmdp.util.Util.isUUID;
@@ -31,6 +31,7 @@ import edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme;
 import edu.mayo.kmdp.terms.impl.model.InternalTerm;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -582,6 +583,14 @@ public class SkosTerminologyAbstractor {
           .findFirst()
           .orElseThrow(IllegalStateException::new);
     }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+      throw new UnsupportedOperationException("MutableConceptSchemes should only be used at compile time");
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+      throw new UnsupportedOperationException("MutableConceptSchemes should only be used at compile time");
+    }
   }
 
   public static class ConceptGraph {
@@ -662,7 +671,7 @@ public class SkosTerminologyAbstractor {
     }
 
     public String getTermConceptPackage() {
-      return namespaceURIToPackage(removeTrailingPart(getScheme().getVersionId().toString()));
+      return namespaceURIStringToPackage(removeTrailingPart(getScheme().getVersionId().toString()));
     }
 
     public String getTermConceptScheme() {

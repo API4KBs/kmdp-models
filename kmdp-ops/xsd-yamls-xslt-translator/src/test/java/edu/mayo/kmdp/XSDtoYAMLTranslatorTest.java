@@ -45,14 +45,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class XSDtoYAMLTranslatorTest {
 
   @Test
-  public void testComplexXSLT() throws IOException {
+  public void testComplexXSLT() {
     String source = "/xsd/metadata/surrogate/surrogate.xsd";
 
     URL xslt = XSDtoYAMLTranslatorTest.class.getResource("/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl");
     URL catalog = XSDtoYAMLTranslatorTest.class.getResource("/catalog-yaml.xml");
     URL sourceUrl = XSDtoYAMLTranslatorTest.class.getResource(source);
-
-    String base = sourceUrl.toString().substring(0, sourceUrl.toString().lastIndexOf("/") + 1);
 
     String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl,
         xslt,
@@ -61,12 +59,12 @@ public class XSDtoYAMLTranslatorTest {
     //System.out.println(out);
 
     Swagger model = parseValidate(out);
-
+    assertNotNull(model);
   }
 
 
   @Test
-  public void testWithXSDDynamicallyResolved() throws URISyntaxException, IOException {
+  public void testWithXSDDynamicallyResolved() {
     String source = "/xsd/withDynamicEnum.xsd";
 
     URL xslt = XSDtoYAMLTranslatorTest.class.getResource("/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl");
@@ -214,7 +212,6 @@ public class XSDtoYAMLTranslatorTest {
     String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl,
         xslt,
         new XSLTConfig()));
-    //System.out.println(out);
 
     Swagger model = parseValidate(out);
     assertNotNull(model.getDefinitions());

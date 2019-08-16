@@ -28,16 +28,14 @@ import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
 
-public abstract class JenaUtil {
+public class JenaUtil {
 
   static {
     FileManager.get().addLocatorClassLoader(edu.mayo.kmdp.util.JenaUtil.class.getClassLoader());
     FileManager.get().addLocatorClassLoader(Thread.currentThread().getContextClassLoader());
   }
 
-  private JenaUtil() {
-
-  }
+  private JenaUtil() { }
 
   public static EntityTypes detectType(String targetURI, Model source) {
     if (source.contains(source.createResource(targetURI),
@@ -65,7 +63,7 @@ public abstract class JenaUtil {
     Set<String> versions = source
         .listStatements(ResourceFactory.createResource(ontologyURI), OWL2.versionIRI,
             (RDFNode) null)
-        .mapWith((s) -> s.getObject().toString())
+        .mapWith(s -> s.getObject().toString())
         .toSet();
     if (versions.size() > 1) {
       throw new UnsupportedOperationException(
@@ -96,7 +94,7 @@ public abstract class JenaUtil {
   public static Optional<String> detectOntologyIRI(Model source, String baseURIHint) {
     String baseURI;
     Set<String> uris = source.listStatements(null, RDF.type, OWL.Ontology)
-        .mapWith((s) -> s.getSubject().toString())
+        .mapWith(s -> s.getSubject().toString())
         .toSet();
 
     if (uris.size() > 1) {

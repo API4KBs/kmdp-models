@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
-import edu.mayo.kmdp.util.JenaUtil;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;

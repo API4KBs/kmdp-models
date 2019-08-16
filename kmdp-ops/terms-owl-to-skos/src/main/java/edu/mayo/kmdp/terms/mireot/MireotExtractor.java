@@ -38,14 +38,17 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class MireotExtractor {
 
+  private static final Logger logger = LogManager.getLogger(MireotExtractor.class);
 
-  private final static String mireotPath = "/query/mireot/mireot.sparql";
-  private final static ParameterizedSparqlString mireot = new ParameterizedSparqlString(
-      JenaUtil.read(mireotPath));
+  private static final String MIREOT_PATH = "/query/mireot/mireot.sparql";
+  private static final ParameterizedSparqlString MIREOT = new ParameterizedSparqlString(
+      JenaUtil.read(MIREOT_PATH));
 
 
   public Optional<Model> fetch(InputStream in, URI targetUri, MireotConfig cfg) {
@@ -80,13 +83,13 @@ public class MireotExtractor {
 
     return Optional.ofNullable(
         extract(source, rootEntityUri, baseUri, cfg).stream()
-            .map((x) -> fetchResource(source, URI.create(x.getURI()), baseUri))
+            .map(x -> fetchResource(source, URI.create(x.getURI()), baseUri))
             .flatMap(Util::trimStream)
             .reduce(ModelFactory.createDefaultModel(), Model::add));
   }
 
   Optional<Model> fetchResource(Model source, URI entityURI, URI baseUri) {
-    ParameterizedSparqlString pss = mireot.copy();
+    ParameterizedSparqlString pss = MIREOT.copy();
 
     pss.setParam("?X", NodeFactory.createURI(entityURI.toString()));
     pss.setParam("?baseUri", NodeFactory.createURI(baseUri.toString()));
@@ -100,7 +103,7 @@ public class MireotExtractor {
     if (type == null || type == EntityTypes.UNKNOWN) {
       type = detectType(rootEntityUri.toString(),source);
       if (type == null || type == EntityTypes.UNKNOWN) {
-        System.err.println("WARNING: Cannot Determine Entity Type during MIREOT-ing, URI is likely incorrect");
+        logger.warn("WARNING: Cannot Determine Entity Type during MIREOT-ing, URI is likely incorrect");
         return new HashSet<>();
       }
     }

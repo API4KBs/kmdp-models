@@ -32,6 +32,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -41,9 +42,16 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FileUtil {
 
+  private static Logger logger = LogManager.getLogger(FileUtil.class);
+
+  protected FileUtil() {
+
+  }
 
   public static Optional<String> read(String file) {
     try {
@@ -73,7 +81,7 @@ public class FileUtil {
 
       return Optional.of(new String(data));
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -87,7 +95,7 @@ public class FileUtil {
       }
       return read(f);
     } catch (URISyntaxException | IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -96,7 +104,7 @@ public class FileUtil {
     try {
       return read(uri.toURL());
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -111,7 +119,7 @@ public class FileUtil {
 
       return Optional.of(data);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -120,7 +128,7 @@ public class FileUtil {
     try {
       return readBytes(url.openStream());
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -129,7 +137,7 @@ public class FileUtil {
     try {
       return readBytes(uri.toURL());
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -155,7 +163,7 @@ public class FileUtil {
         return Collections.emptyList();
       }
     } catch (URISyntaxException | MalformedURLException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
       return Collections.emptyList();
     }
   }
@@ -180,7 +188,7 @@ public class FileUtil {
     try {
       return copyTo(source.openStream(), targetFile);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
       return false;
     }
   }
@@ -203,13 +211,13 @@ public class FileUtil {
         return false;
       }
 
-      try(FileOutputStream fos = new FileOutputStream(targetFile)) {
+      try (FileOutputStream fos = new FileOutputStream(targetFile)) {
         fos.write(out.toString().getBytes());
       }
 
       return true;
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
       return false;
     }
   }
@@ -223,7 +231,7 @@ public class FileUtil {
           .map(Path::toFile)
           .forEach(File::delete);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
   }
 
@@ -234,40 +242,30 @@ public class FileUtil {
 
   public static String asPlatformSpecific(String path) {
     return path.contains("/")
-        ? path.replaceAll("/", Matcher.quoteReplacement(File.separator))
+        ? path.replace("/", Matcher.quoteReplacement(File.separator))
         : path;
   }
 
   public static void write(byte[] content, File file) {
-    FileOutputStream fos = null;
-    try {
-      fos = new FileOutputStream(file);
+    try (FileOutputStream fos = new FileOutputStream(file);) {
       fos.write(content);
       fos.flush();
     } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (fos != null) {
-        try {
-          fos.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
+      logger.error(e.getMessage(), e);
     }
   }
+
   public static void write(String content, File file) {
-    PrintWriter wr = null;
-    try {
-      wr = new PrintWriter(file);
+    try (PrintWriter wr = new PrintWriter(file)) {
       wr.write(content);
       wr.flush();
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } finally {
-      if (wr != null) {
-        wr.close();
-      }
+      logger.error(e.getMessage(), e);
     }
+  }
+
+  public static Stream<File> streamChildFiles(File f) {
+    File[] children = f.listFiles();
+    return Arrays.stream(children != null ? children : new File[0]);
   }
 }

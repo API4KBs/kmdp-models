@@ -15,17 +15,17 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.mayo.kmdp.terms.example.SCH1;
 import edu.mayo.kmdp.terms.example.SomeBean;
 import edu.mayo.kmdp.util.JaxbUtil;
-import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ObjectFactory;
-
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.identifiers.ObjectFactory;
 
 public class AdapterTest {
 
@@ -37,7 +37,8 @@ public class AdapterTest {
 
     ByteArrayOutputStream baos = JaxbUtil.marshall(Collections.singleton(ObjectFactory.class),
         bean,
-        JaxbUtil.defaultProperties()).get();
+        JaxbUtil.defaultProperties())
+        .orElse(new ByteArrayOutputStream());
     String xml = baos.toString();
 
     //System.out.println("\nXML-IZED : \n" + xml);
@@ -45,9 +46,9 @@ public class AdapterTest {
     assertTrue(xml.contains("ref=\"http://test/generator#sub_sub_concept\""));
 
     SomeBean b2 = JaxbUtil
-        .unmarshall(SomeBean.class, SomeBean.class, xml, JaxbUtil.defaultProperties()).get();
-    //System.out.println("REHYDRAT : " + b2);
-
+        .unmarshall(SomeBean.class, SomeBean.class, xml)
+        .orElse(null);
+    assertNotNull(b2);
     assertEquals(bean.getSchone(), b2.getSchone());
   }
 }

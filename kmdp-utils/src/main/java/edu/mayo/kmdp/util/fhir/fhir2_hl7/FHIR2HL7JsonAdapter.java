@@ -40,7 +40,7 @@ import org.hl7.fhir.instance.model.Type;
 import org.hl7.fhir.instance.model.api.IBase;
 
 public class FHIR2HL7JsonAdapter extends
-    AbstractFHIRJsonAdapter<DomainResource, Resource, Parameters, Bundle, Type> {
+    AbstractFHIRJsonAdapter<DomainResource, Resource, Parameters, Type> {
 
   private static IParser jsonParser = FhirContext.forDstu2Hl7Org().newJsonParser();
   protected static FHIR2HL7JsonAdapter instance = new FHIR2HL7JsonAdapter();

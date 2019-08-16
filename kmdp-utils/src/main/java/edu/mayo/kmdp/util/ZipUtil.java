@@ -21,14 +21,20 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ZipUtil {
+
+  private static Logger logger = LogManager.getLogger(ZipUtil.class);
+
+  private ZipUtil() {}
 
   public static Optional<byte[]> readZipEntry(String id, InputStream stream) {
     Optional<InputStream> entryStream = getZipEntry(id, stream);
 
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    return entryStream.flatMap((zis) -> {
+    return entryStream.flatMap(zis -> {
       try {
 
         byte[] byteBuff = new byte[1024];
@@ -38,13 +44,12 @@ public class ZipUtil {
         }
         return Optional.of(out.toByteArray());
       } catch (Exception e) {
-        e.printStackTrace();
+        logger.error(e.getMessage(),e);
         return Optional.empty();
       }
     });
 
   }
-
 
   public static Optional<InputStream> getZipEntry(String id, InputStream source) {
     ZipInputStream zis = new ZipInputStream(source);
@@ -57,7 +62,7 @@ public class ZipUtil {
       }
       return Optional.empty();
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -73,7 +78,7 @@ public class ZipUtil {
       }
       return Optional.empty();
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }

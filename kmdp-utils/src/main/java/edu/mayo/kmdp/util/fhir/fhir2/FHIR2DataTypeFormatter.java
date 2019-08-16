@@ -23,6 +23,8 @@ import ca.uhn.fhir.model.primitive.CodeDt;
 
 public class FHIR2DataTypeFormatter {
 
+  private FHIR2DataTypeFormatter() {}
+
   public static String format(IDatatype dt) {
     if (dt instanceof QuantityDt) {
       return formatQuantity((QuantityDt) dt);

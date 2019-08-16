@@ -22,6 +22,8 @@ import org.hl7.fhir.dstu3.model.Type;
 
 public class FHIR3DataTypeFormatter {
 
+  private FHIR3DataTypeFormatter() {}
+
   public static String format(Type dt) {
     if (dt instanceof Quantity) {
       return formatQuantity((Quantity) dt);

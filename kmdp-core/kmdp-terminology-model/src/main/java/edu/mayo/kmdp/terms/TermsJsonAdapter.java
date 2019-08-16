@@ -25,14 +25,12 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Arrays;
-import java.util.Optional;
 
 
-public abstract class TermsJsonAdapter {
+public interface TermsJsonAdapter {
 
-  public static class Serializer extends JsonSerializer<Term> {
+  class Serializer extends JsonSerializer<Term> {
 
     @Override
     public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
@@ -41,7 +39,7 @@ public abstract class TermsJsonAdapter {
     }
   }
 
-  public abstract static class Deserializer extends JsonDeserializer<Term> {
+  abstract class Deserializer extends JsonDeserializer<Term> {
 
     @Override
     public Term deserialize(JsonParser jp, DeserializationContext ctxt)
@@ -57,7 +55,7 @@ public abstract class TermsJsonAdapter {
         return null;
       }
       return Arrays.stream(getValues())
-          .filter((trm) -> trm.getTag().equals(tagNode.asText()))
+          .filter(trm -> trm.getTag().equals(tagNode.asText()))
           .findAny()
           .orElse(null);
     }

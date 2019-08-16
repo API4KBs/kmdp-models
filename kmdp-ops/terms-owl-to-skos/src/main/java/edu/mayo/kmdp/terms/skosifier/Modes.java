@@ -19,21 +19,24 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum Modes {
-  LEX(false, true, false, "/query/skosify/entities2ontolex.sparql"),
-  CON(true, false, false, "/query/skosify/entities2concept.sparql"),
-  ANN(true, false, true, "/query/skosify/entities2skosMeta.sparql"),
 
-  SKOS(true, false, true, "/query/skosify/entities2concept.sparql",
-      "/query/skosify/entities2skosMeta.sparql"),
-  SKOS_RDF(true, false, true, "/query/skosify/entities2concept.sparql",
-      "/query/skosify/entities2skosMeta.sparql"),
-  LEX_CON(true,true, false, "/query/skosify/entities2ontolex.sparql",
-      "/query/skosify/entities2concept.sparql" ),
+  LEX(false, true, false, Paths.OLEX),
+  CON(true, false, false, Paths.SKOS),
+  ANN(true, false, true, Paths.ANNO),
 
-  FULL(true, true, true, "/query/skosify/entities2concept.sparql",
-      "/query/skosify/entities2skosMeta.sparql", "/query/skosify/entities2ontolex.sparql");
+  SKOS(true, false, true, Paths.SKOS, Paths.ANNO),
+  SKOS_RDF(true, false, true, Paths.SKOS, Paths.ANNO),
+  LEX_CON(true,true, false, Paths.OLEX, Paths.SKOS),
 
-  public final List<String> queries;
+  FULL(true, true, true, Paths.ANNO, Paths.SKOS, Paths.OLEX);
+
+  private static class Paths {
+    private static final String OLEX = "/query/skosify/entities2ontolex.sparql";
+    private static final String SKOS = "/query/skosify/entities2concept.sparql";
+    private static final String ANNO = "/query/skosify/entities2skosMeta.sparql";
+  }
+
+  protected final List<String> queries;
   public final boolean skos;
   public final boolean usesOlex;
   public final boolean usedDC;

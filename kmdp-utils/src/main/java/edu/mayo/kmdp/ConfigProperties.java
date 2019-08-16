@@ -20,12 +20,15 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     O extends Option<?>> extends Properties {
+
+  private static Logger logger = LogManager.getLogger(ConfigProperties.class);
 
   protected static <O extends Option> Properties defaulted(Class<O> barOptsClass) {
     Properties defaults = new Properties();
@@ -68,7 +71,7 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
         return type.getConstructor(String.class).newInstance(s);
       }
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return null;
     }
   }
@@ -95,7 +98,7 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
   public void consume(BiConsumer<String, String> consumer) {
     for (O o : listProperties()) {
       String key = asKey(o);
-      get(o).ifPresent((value) ->
+      get(o).ifPresent(value ->
           consumer.accept(key, value));
     }
   }
@@ -124,6 +127,6 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
   public Map<String,Object> toMap() {
     return Arrays.stream(properties())
         .collect(Collectors.toMap(Object::toString,
-            (prop)-> getTyped(prop,String.class)));
+            prop -> getTyped(prop,String.class)));
   }
 }

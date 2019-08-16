@@ -23,7 +23,6 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initGenSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.printSourceFile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
@@ -49,7 +48,6 @@ public class CompilationTest {
 
   @TempDir
   public Path tmp;
-
 
   @Test
   public void testJaxbGeneration() {
@@ -80,20 +78,18 @@ public class CompilationTest {
       XMLUtil.validate(xml, schema.get());
 
       Optional<Pointer> asPtr = JaxbUtil
-          .unmarshall(ptrClass, Pointer.class, xml, JaxbUtil.defaultProperties());
+          .unmarshall(ptrClass, Pointer.class, xml);
       assertTrue(asPtr.isPresent());
-      Object p2 = asPtr.get();
+      Pointer p2 = asPtr.get();
 
-      assertEquals("Test", ((Pointer) p2).getName());
-      assertNotNull(((Pointer) p2).getEntityRef());
-      assertNotNull(((Pointer) p2).getType());
-
-      assertTrue(Pointer.class.isInstance(p2));
+      assertEquals("Test", p2.getName());
+      assertNotNull(p2.getEntityRef());
+      assertNotNull(p2.getType());
 
       Pointer p3 = new Pointer();
-      ((Pointer) p2).copyTo(p3);
+      p2.copyTo(p3);
 
-      assertEquals(((Pointer) p2).getType(), p3.getType());
+      assertEquals(p2.getType(), p3.getType());
 
       Object x = ptrClass.newInstance();
 

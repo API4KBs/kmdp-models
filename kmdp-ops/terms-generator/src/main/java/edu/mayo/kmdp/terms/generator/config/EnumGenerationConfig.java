@@ -18,16 +18,15 @@ package edu.mayo.kmdp.terms.generator.config;
 import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
-import java.util.Map;
 import java.util.Properties;
 
 public class EnumGenerationConfig extends
     ConfigProperties<EnumGenerationConfig, EnumGenerationConfig.EnumGenerationParams> {
 
-  private static final Properties defaults = defaulted(EnumGenerationParams.class);
+  private static final Properties DEFAULTS = defaulted(EnumGenerationParams.class);
 
   public EnumGenerationConfig() {
-    super(defaults);
+    super(DEFAULTS);
   }
 
   @Override
@@ -39,19 +38,19 @@ public class EnumGenerationConfig extends
 
     WITH_JAXB(Opt.of(
         "withJaxb",
-        "false",
+        Boolean.FALSE.toString(),
         "Enable Jaxb support",
         Boolean.class,
         false)),
     WITH_JSONLD(Opt.of(
         "withJsonLD",
-        "false",
+        Boolean.FALSE.toString(),
         "Enable JSON-LD support",
         Boolean.class,
         false)),
     WITH_JSON(Opt.of(
         "withJson",
-        "false",
+        Boolean.FALSE.toString(),
         "Enable JSON support",
         Boolean.class,
         false)),

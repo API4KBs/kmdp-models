@@ -20,66 +20,38 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class HierarchySorter<K> {
 
-  private Map<K, Collection<K>> hierarchy;
-
   public List<K> linearize(Collection<K> sortables, Map<K, Set<K>> graph) {
-    hierarchy = new HashMap<>(sortables.size());
-    sortables.stream().forEach((x) -> {
-      hierarchy.put(x,
-          sortables.stream().filter((y) -> hasAncestor(x, y, graph)).collect(Collectors.toList()));
-    });
+    Map<K, Collection<K>> hierarchy = new HashMap<>(sortables.size());
+    sortables.forEach(x ->
+        hierarchy.put(x, sortables.stream()
+            .filter(y -> hasAncestor(x, y, graph))
+            .collect(Collectors.toList())));
     return sortFullHierarchy(hierarchy);
   }
-
 
   private boolean hasAncestor(K x, K y, Map<K, Set<K>> graph) {
     Set<K> parents = graph.getOrDefault(x, Collections.emptySet());
     return parents.contains(y)
-        || parents.stream().anyMatch((p) -> hasAncestor(p, y, graph));
+        || parents.stream().anyMatch(p -> hasAncestor(p, y, graph));
   }
 
   private List<K> sortFullHierarchy(Map<K, Collection<K>> hierarchy) {
 
-    Node<K, K> root = new Node<K, K>(null);
-    Map<K, Node<K, K>> map = new HashMap<K, Node<K, K>>();
-    for (K element : hierarchy.keySet()) {
-      K key = element;
+    Node<K, K> root = new Node<>(null);
+    Map<K, Node<K, K>> map = new HashMap<>();
+    for (Entry<K, Collection<K>> pair : hierarchy.entrySet()) {
 
-      Node<K, K> node = map.get(key);
-      if (node == null) {
-        node = new Node(key,
-            element);
-        map.put(key,
-            node);
-      } else if (node.getData() == null) {
-        node.setData(element);
-      }
-      Collection<K> px = hierarchy.get(key);
-      if (px.isEmpty()) {
-        root.addChild(node);
-      } else {
-        for (K parentElement : px) {
+      K element = pair.getKey();
+      Node<K, K> node = configNode(element,map);
 
-          K superKey = parentElement;
-
-          Node<K, K> superNode = map.get(superKey);
-          if (superNode == null) {
-            superNode = new Node<K, K>(superKey);
-            map.put(superKey,
-                superNode);
-          }
-          if (!superNode.children.contains(node)) {
-            superNode.addChild(node);
-          }
-        }
-
-      }
-
+      Collection<K> px = hierarchy.get(element);
+      configParents(node,px,root,map);
     }
 
     java.util.Iterator<Node<K, K>> iter = map.values().iterator();
@@ -88,13 +60,38 @@ public class HierarchySorter<K> {
       if (n.getData() == null) {
         root.addChild(n);
       }
-
     }
 
-    List<K> sortedList = new java.util.LinkedList<K>();
+    List<K> sortedList = new java.util.LinkedList<>();
     root.accept(sortedList);
 
     return sortedList;
+  }
+
+  private void configParents(Node<K, K> node, Collection<K> px,
+      Node<K, K> root,
+      Map<K, Node<K, K>> map) {
+    if (px.isEmpty()) {
+      root.addChild(node);
+    } else {
+      for (K parentElement : px) {
+        Node<K, K> superNode = map.computeIfAbsent(parentElement, Node::new);
+        if (!superNode.children.contains(node)) {
+          superNode.addChild(node);
+        }
+      }
+    }
+  }
+
+  private Node<K,K> configNode(K element, Map<K, Node<K, K>> map) {
+    Node<K,K> node = map.get(element);
+    if (node == null) {
+      node = new Node<>(element, element);
+      map.put(element, node);
+    } else if (node.getData() == null) {
+      node.setData(element);
+    }
+    return node;
   }
 
   /**
@@ -110,7 +107,7 @@ public class HierarchySorter<K> {
 
     public Node(K key) {
       this.key = key;
-      this.children = new java.util.LinkedList<Node<K, T>>();
+      this.children = new java.util.LinkedList<>();
     }
 
     public Node(K key,
@@ -169,12 +166,7 @@ public class HierarchySorter<K> {
       }
 
       Node node = (Node) o;
-
-      if (!key.equals(node.key)) {
-        return false;
-      }
-
-      return true;
+      return key.equals(node.key);
     }
 
     @Override

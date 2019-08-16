@@ -32,9 +32,13 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.lib.RelativeURIResolver;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xerces.util.XMLCatalogResolver;
 
 public class CatalogBasedURIResolver implements RelativeURIResolver {
+
+  private static Logger logger = LogManager.getLogger(CatalogBasedURIResolver.class);
 
   private String loc;
 
@@ -70,12 +74,11 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
         return href;
       }
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
 
     try {
-      String abs = xcat.resolvePublic(href, href);
-      return abs;
+      return xcat.resolvePublic(href, href);
     } catch (IOException e) {
       return null;
     }
@@ -89,7 +92,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
       FileInputStream fis = new FileInputStream(f);
       return new StreamSource(fis);
     } catch (URISyntaxException | FileNotFoundException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
     return null;
   }
@@ -106,7 +109,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
       src.setPublicId(resolved);
       return src;
     } catch (IOException | URISyntaxException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return null;
     }
   }
@@ -115,7 +118,6 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
   /**
    * Handle the case of undistinguished file paths, urls and jar resources
    * Leverages an XML Catalog for customizations
-   * TODO everything should be consolidated into URLs
    * @param path
    * @param catalogURL
    * @return
@@ -128,7 +130,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
     try {
       return Optional.ofNullable(url.openStream());
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -136,56 +138,80 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
   /**
    * Handle the case of undistinguished file paths, urls and jar resources
    * Leverages an XML Catalog for customizations
-   * TODO everything should be consolidated into URLs
    * @param path
    * @param catalogURL
    * @return
    */
   public static Optional<URL> resolveFilePathToURL(String path, URL catalogURL) {
     File f = new File(FileUtil.asPlatformSpecific(path));
+    Optional<URL> resolved;
+
     if (f.exists()) {
-      try {
-        return Optional.of(f.toURI().toURL());
-      } catch (MalformedURLException e) {
-        e.printStackTrace();
+      resolved = tryResolveFromFile(f);
+      if (resolved.isPresent()) {
+        return resolved;
       }
     }
 
     if (catalogURL != null) {
-      XMLCatalogResolver resolver = XMLUtil.catalogResolver(catalogURL);
-      try {
-        String resolved = resolver.resolveURI(path);
-        if (resolved != null) {
-          return resolveFilePathToURL(resolved, catalogURL);
-        }
-      } catch (IOException e) {
-        throw new RuntimeException(e);
+      resolved = tryResolveFromCatalog(path, catalogURL);
+      if (resolved.isPresent()) {
+        return resolved;
       }
     }
 
+    return tryResolveUsingPathAsURL(path);
+  }
+
+  private static Optional<URL> tryResolveUsingPathAsURL(String path) {
     URL url;
-    if ((url = asURL(path)) != null) {
-      try {
-        if (new File(url.toURI()).exists()) {
-          return Optional.of(url);
-        } else {
-          // try classpath (e.g. jars)
-          url = CatalogBasedURIResolver.class.getResource(path.substring(5));
-          if (url != null) {
-            try (InputStream stream = url.openStream()) {
-              if (stream != null && stream.available() > 0) {
-                return Optional.of(url);
-              }
-            }
+    if ((url = asURL(path)) == null) {
+      return Optional.empty();
+    }
+    try {
+      if (new File(url.toURI()).exists()) {
+        return Optional.of(url);
+      }
+    } catch (URISyntaxException e) {
+      // do nothing
+    }
+
+    try {
+      // try classpath (e.g. jars)
+      url = CatalogBasedURIResolver.class.getResource(path.substring(5));
+      if (url != null) {
+        try (InputStream stream = url.openStream()) {
+          if (stream != null && stream.available() > 0) {
+            return Optional.of(url);
           }
         }
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      } catch (URISyntaxException e) {
-        // do nothing
       }
+    } catch (IOException e) {
+      throw new CatalogResolutionErrorException(e);
     }
     return Optional.empty();
+  }
+
+  private static Optional<URL> tryResolveFromCatalog(String path, URL catalogURL) {
+    XMLCatalogResolver resolver = XMLUtil.catalogResolver(catalogURL);
+    try {
+      String resolved = resolver.resolveURI(path);
+      if (resolved != null) {
+        return resolveFilePathToURL(resolved, catalogURL);
+      }
+    } catch (IOException e) {
+      throw new CatalogResolutionErrorException(e);
+    }
+    return Optional.empty();
+  }
+
+  private static Optional<URL> tryResolveFromFile(File f) {
+    try {
+      return Optional.of(f.toURI().toURL());
+    } catch (MalformedURLException e) {
+      logger.error(e.getMessage(),e);
+      return Optional.empty();
+    }
   }
 
   /**
@@ -195,6 +221,12 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
    */
   public static Optional<URL> resolveFilePathToURL(String path) {
     return resolveFilePathToURL(path, null);
+  }
+
+  public static class CatalogResolutionErrorException extends RuntimeException {
+    public CatalogResolutionErrorException(Exception e) {
+      super(e);
+    }
   }
 
 }

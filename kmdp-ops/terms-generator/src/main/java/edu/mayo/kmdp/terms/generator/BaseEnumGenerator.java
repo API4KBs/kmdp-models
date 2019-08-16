@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import static edu.mayo.kmdp.util.NameUtils.namespaceURIToPackage;
+import static edu.mayo.kmdp.util.NameUtils.namespaceURIStringToPackage;
 import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 
 import com.samskivert.mustache.Mustache;
@@ -34,15 +34,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-public class BaseEnumGenerator {
+public abstract class BaseEnumGenerator {
 
   protected static Map<String, Template> registry = new HashMap<>();
 
@@ -50,7 +46,7 @@ public class BaseEnumGenerator {
     prepareTemplates();
   }
 
-  public BaseEnumGenerator() {
+  protected BaseEnumGenerator() {
   }
 
   private static void prepareTemplates() {
@@ -116,7 +112,7 @@ public class BaseEnumGenerator {
   }
 
   protected String getPackageName(ConceptScheme<Term> conceptScheme, String defaultPackage, Properties packageNameOverrides) {
-    String packageName = namespaceURIToPackage(removeTrailingPart(conceptScheme.getVersionId().toString()));
+    String packageName = namespaceURIStringToPackage(removeTrailingPart(conceptScheme.getVersionId().toString()));
     return getPackageName(packageName,defaultPackage,packageNameOverrides);
   }
 
@@ -156,23 +152,17 @@ public class BaseEnumGenerator {
       String content,
       File outputFile) {
 
-    //System.out.println( content );
-    FileWriter writer = null;
-    try {
-      writer = new FileWriter(outputFile);
+    try(FileWriter writer = new FileWriter(outputFile)) {
       writer.write(content);
       writer.flush();
     } catch (IOException e) {
-      throw new RuntimeException(e);
-    } finally {
-      if (writer != null) {
-        try {
-          writer.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
+      throw new EnumGenerationException(e);
     }
   }
 
+  protected class EnumGenerationException extends RuntimeException {
+    public EnumGenerationException(Exception e) {
+      super(e);
+    }
+  }
 }

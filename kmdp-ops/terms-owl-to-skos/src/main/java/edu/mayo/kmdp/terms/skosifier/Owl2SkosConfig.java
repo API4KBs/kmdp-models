@@ -19,15 +19,14 @@ import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
-import java.net.URI;
 import java.util.Properties;
 
 public class Owl2SkosConfig extends ConfigProperties<Owl2SkosConfig, OWLtoSKOSTxParams> {
 
-  private static final Properties defaults = defaulted( OWLtoSKOSTxParams.class );
+  private static final Properties DEFAULTS = defaulted( OWLtoSKOSTxParams.class );
 
   public Owl2SkosConfig() {
-    super( defaults );
+    super( DEFAULTS );
   }
 
   public Owl2SkosConfig(Properties defaults) {

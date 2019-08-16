@@ -38,7 +38,7 @@ import org.hl7.fhir.dstu3.model.Type;
 import org.hl7.fhir.instance.model.api.IBase;
 
 public class FHIR3JsonAdapter extends
-    AbstractFHIRJsonAdapter<DomainResource, Resource, Parameters, Bundle, Type> {
+    AbstractFHIRJsonAdapter<DomainResource, Resource, Parameters, Type> {
 
   private static IParser jsonParser = FhirContext.forDstu3().newJsonParser();
   protected static FHIR3JsonAdapter instance = new FHIR3JsonAdapter();

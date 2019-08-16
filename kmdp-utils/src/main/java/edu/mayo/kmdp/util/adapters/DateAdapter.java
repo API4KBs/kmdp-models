@@ -15,15 +15,19 @@
  */
 package edu.mayo.kmdp.util.adapters;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class DateAdapter extends XmlAdapter<String, Date> {
 
-  public static String PATTERN = "yyyy-MM-dd";
+  private static final Logger logger = LogManager.getLogger(DateAdapter.class);
+
+  public static final String PATTERN = "yyyy-MM-dd";
 
   private static DateAdapter instance = new DateAdapter();
 
@@ -41,7 +45,7 @@ public class DateAdapter extends XmlAdapter<String, Date> {
     try {
       return sdf.parse(v);
     } catch (ParseException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return null;
     }
   }

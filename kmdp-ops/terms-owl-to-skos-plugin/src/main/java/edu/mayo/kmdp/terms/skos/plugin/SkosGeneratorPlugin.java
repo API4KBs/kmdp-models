@@ -35,6 +35,8 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.protege.xmlcatalog.CatalogUtilities;
@@ -67,6 +69,7 @@ import org.semanticweb.owlapi.util.OWLOntologyMerger;
  */
 public class SkosGeneratorPlugin extends AbstractMojo {
 
+  private Logger logger = LogManager.getLogger(SkosGeneratorPlugin.class);
 
   /**
    * @parameter default-value="false"
@@ -266,22 +269,20 @@ public class SkosGeneratorPlugin extends AbstractMojo {
   }
 
   public void execute() throws MojoExecutionException {
-    InputStream is = null;
-    try {
-      if (owlFile == null) {
-        getLog().info("No ontology file to process, exiting...");
-        return;
-      }
+    if (owlFile == null) {
+      getLog().info("No ontology file to process, exiting...");
+      return;
+    }
 
-      if (targetURI == null) {
-        getLog().info("No entity selected, exiting...");
-        return;
-      }
-      if (skosOutputFile == null) {
-        skosOutputFile = generateDefaultOutputFile(owlFile);
-      }
+    if (targetURI == null) {
+      getLog().info("No entity selected, exiting...");
+      return;
+    }
+    if (skosOutputFile == null) {
+      skosOutputFile = generateDefaultOutputFile(owlFile);
+    }
 
-      is = resolve(owlFile);
+    try(InputStream is = resolve(owlFile)) {
 
       MireotConfig mfg = new MireotConfig()
           .with(MireotParameters.BASE_URI,targetNamespace)
@@ -306,7 +307,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
               mfg);
 
       Optional<Model> skosModel = mireotedModel
-          .flatMap((ext) -> new Owl2SkosConverter().apply(ext, cfg));
+          .flatMap(ext -> new Owl2SkosConverter().apply(ext, cfg));
 
       if (skosModel.isPresent()) {
         if (!getOutputDirectory().exists()) {
@@ -315,28 +316,16 @@ public class SkosGeneratorPlugin extends AbstractMojo {
         File f = new File(getOutputDirectory()
             + File.separator
             + getSkosOutputFile());
-        FileOutputStream fos = new FileOutputStream(f);
-        try {
+        try (FileOutputStream fos = new FileOutputStream(f)) {
           skosModel.get().write(fos);
-        } finally {
-          fos.close();
         }
       } else {
         getLog().error("Unable to generate a SKOS model");
       }
 
     } catch (Exception e) {
-      System.err.println(e.getMessage());
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       throw new MojoExecutionException(e.getMessage(), e);
-    } finally {
-      if (is != null) {
-        try {
-          is.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
     }
 
   }
@@ -375,11 +364,10 @@ public class SkosGeneratorPlugin extends AbstractMojo {
       onto.getOWLOntologyManager().applyChange(new SetOntologyID(onto, originalId));
       onto.saveOntology(fmt, baos);
 
-      //onto.saveOntology(System.out);
       return new ByteArrayInputStream(baos.toByteArray());
 
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return is;
     }
   }
@@ -399,7 +387,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
                 preloadImports(manager,importedOntology);
               }
             } catch (OWLOntologyCreationException e) {
-              e.printStackTrace();
+              logger.error(e.getMessage(),e);
             }
           }
         }

@@ -27,9 +27,13 @@ import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 public abstract class AbstractFHIRJsonUtil<R extends IBaseResource, I extends IBaseResource> {
+
+  private static final Logger logger = LogManager.getLogger(AbstractFHIRJsonUtil.class);
 
   protected String toJsonString(IBaseResource res, Class<R> domainResourceClass) {
     return domainResourceClass.isInstance(res)
@@ -46,7 +50,7 @@ public abstract class AbstractFHIRJsonUtil<R extends IBaseResource, I extends IB
       return new ObjectMapper().writerWithDefaultPrettyPrinter()
           .writeValueAsString(abstractToJsonContained(r));
     } catch (JsonProcessingException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
     return abstractToJsonContained(r).toString();
   }

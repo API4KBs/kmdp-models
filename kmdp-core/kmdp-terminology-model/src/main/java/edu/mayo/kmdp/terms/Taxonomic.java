@@ -16,11 +16,16 @@
 package edu.mayo.kmdp.terms;
 
 import edu.mayo.kmdp.id.Term;
+import java.util.Optional;
 
 public interface Taxonomic<T extends Term> {
 
   Term[] getAncestors();
 
   Term[] getClosure();
+
+  default Optional<T> getPivotalConcept() {
+    return Optional.empty();
+  }
 
 }

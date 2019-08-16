@@ -23,10 +23,10 @@ import javax.xml.bind.Marshaller;
 
 public class JaxbConfig extends ConfigProperties<JaxbConfig, JaxbConfig.JaxbOptions> {
 
-  private static final Properties defaults = defaulted(JaxbOptions.class);
+  private static final Properties DEFAULTS = defaulted(JaxbOptions.class);
 
   public JaxbConfig() {
-    super(defaults);
+    super(DEFAULTS);
   }
 
   @Override

@@ -41,7 +41,7 @@ public abstract class ConverterInitBase {
   protected List<Query> getQueriesForModes(Modes modes, Owl2SkosConfig cfg) {
     return modes.queries.stream()
         .map(JenaUtil::read)
-        .map((qryStr) -> createParamQueryString(qryStr,cfg))
+        .map(qryStr -> createParamQueryString(qryStr,cfg))
         .map(ParameterizedSparqlString::toString)
         .map(QueryFactory::create)
         .collect(Collectors.toList());
@@ -69,6 +69,7 @@ public abstract class ConverterInitBase {
   public static class UuidFrom extends FunctionBase2 {
 
     public UuidFrom() {
+      // Need explicit empty constructor
     }
 
     @Override
@@ -85,6 +86,7 @@ public abstract class ConverterInitBase {
   public static class LocalName extends FunctionBase1 {
 
     public LocalName() {
+      // Need explicit empty constructor
     }
 
     @Override
