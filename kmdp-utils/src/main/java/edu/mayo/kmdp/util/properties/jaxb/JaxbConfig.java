@@ -53,6 +53,12 @@ public class JaxbConfig extends ConfigProperties<JaxbConfig, JaxbConfig.JaxbOpti
         null,
         "URL of the XSD schema to validate",
         String.class,
+        false)),
+    LOG_EXCEPTIONS(Opt.of(
+        "silent",
+        "true",
+        "URL of the XSD schema to validate",
+        Boolean.class,
         false));
 
     private Opt<JaxbOptions> opt;

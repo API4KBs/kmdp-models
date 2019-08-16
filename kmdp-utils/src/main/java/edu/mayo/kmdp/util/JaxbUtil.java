@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.util;
 
 import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig;
+import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -65,7 +66,9 @@ public class JaxbUtil {
     }
     p.consumeTyped((k,v) -> {
       try {
-        marshaller.setProperty(k,v);
+        if (k.startsWith("com") || k.startsWith("sun")) {
+          marshaller.setProperty(k, v);
+        }
       } catch (PropertyException e) {
         logger.error(e.getMessage(),e);
       }
@@ -129,7 +132,9 @@ public class JaxbUtil {
       marshaller.marshal(root, baos);
       return Optional.of(baos);
     } catch (JAXBException e) {
-      logger.error(e.getMessage(),e);
+      if (p.getTyped(JaxbOptions.LOG_EXCEPTIONS)) {
+        logger.error(e.getMessage(), e);
+      }
       return Optional.empty();
     }
   }
