@@ -47,6 +47,7 @@ public class Owl2SkosConverter extends ConverterInitBase implements
     BiFunction<Model, Owl2SkosConfig, Optional<Model>> {
 
   public static final String SKOS_NAMESPACE = SKOS.getURI();
+  public static final String DC_NAMESPACE = DCTerms.getURI();
   public static final String OLEX = "http://www.w3.org/ns/lemon/ontolex#";
 
   private static Logger logger = LogManager.getLogger(Owl2SkosConverter.class);
@@ -110,15 +111,15 @@ public class Owl2SkosConverter extends ConverterInitBase implements
       }
       ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
       if (modes.usedDC) {
-        ont.addImport(ontModel.createResource(DCTerms.getURI()));
+        ont.addImport(ontModel.createResource(DC_NAMESPACE));
       }
     } else {
       ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
     }
 
-    if (cfg.getTyped(OWLtoSKOSTxParams.FLATTEN)) {
-      prefetch(ontModel, modes.usesOlex);
-    } else if (cfg.getTyped(OWLtoSKOSTxParams.ADD_IMPORTS)) {
+    prefetch(ontModel, modes.usesOlex);
+
+    if (cfg.getTyped(OWLtoSKOSTxParams.ADD_IMPORTS)) {
       ontModel.loadImports();
     }
 
@@ -132,6 +133,7 @@ public class Owl2SkosConverter extends ConverterInitBase implements
 
   private static void prefetch(OntModel ontModel, boolean olex) {
     prefetchFromLocal(ontModel, SKOS_NAMESPACE, "/ontology/skos.rdf");
+    prefetchFromLocal(ontModel, DC_NAMESPACE, "/ontology/dcterms.rdf");
     if (olex) {
       prefetchFromLocal(ontModel, OLEX, "/ontology/ontolex.owl");
     }
@@ -142,9 +144,7 @@ public class Owl2SkosConverter extends ConverterInitBase implements
     InputStream is = Owl2SkosConverter.class.getResourceAsStream(path);
     try {
       if (is != null && is.available() > 0) {
-        OntModel extraModel = ModelFactory.createOntologyModel();
-        extraModel.read(is, namespace);
-        ontModel.add(extraModel);
+        ontModel.read(is, namespace);
       }
     } catch (IOException e) {
       // do nothing
