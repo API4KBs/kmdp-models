@@ -89,7 +89,7 @@ public class RegistryGenerator {
       .createProperty("http://www.omg.org/spec/DOL/DOL-terms/supportsSerialization");
 
   private static final String REGISTRY_DB = "/home/davide/Projects/API4KB/api4kbs/src/main/resources/API4KP-Registry.xlsx";
-  private static final String REGISTRY_ONTO = "api4kp-registry.owl";
+  private static final String REGISTRY_ONTO = "/home/davide/Projects/API4KB/api4kbs/ontologies/API4KP/informative/api4kp-registry.rdf";
 
   public static void main(String... args) {
     try (
