@@ -212,6 +212,8 @@ public class VocabularyTest {
         Registry.getValidationSchema(KnowledgeRepresentationLanguage.DMN_1_2.getRef())
             .flatMap(KnowledgeRepresentationLanguageSerialization::resolveRef)
             .orElse(null));
+
+    assertNotNull(KnowledgeRepresentationLanguageProfile.CQL_Essentials);
   }
 
 }
