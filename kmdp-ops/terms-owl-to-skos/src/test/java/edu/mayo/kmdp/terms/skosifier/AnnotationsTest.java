@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
-import static edu.mayo.kmdp.util.JenaUtil.dat_a;
+import static edu.mayo.kmdp.util.JenaUtil.datA;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -53,19 +53,19 @@ public class AnnotationsTest extends TestBase {
     String subj = NS + "#" + id;
 
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             DCTerms.identifier,
             id)));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             SKOS.prefLabel,
             "Pref Way to name My Class")));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             RDFS.label,
             "My Class")));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             SKOS.notation,
             "Klass")));
 
@@ -84,39 +84,39 @@ public class AnnotationsTest extends TestBase {
     String subj = NS + "#" + id;
 
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             RDFS.comment,
             "comment")));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             SKOS.definition,
             "definition")));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             SKOS.example,
             "example")));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             SKOS.note,
             "note")));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             SKOS.hiddenLabel,
             "hidden")));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             SKOS.altLabel,
             "alternative")));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             SKOS.notation,
             "my-not")));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             DCTerms.identifier,
             id)));
     assertTrue(m.contains(
-        dat_a(subj,
+        datA(subj,
             OWL2.versionInfo,
             "v0042")));
 

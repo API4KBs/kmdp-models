@@ -25,10 +25,10 @@ import java.util.Properties;
 public class SkosAbstractionConfig extends
     ConfigProperties<SkosAbstractionConfig, SkosAbstractionParameters> {
 
-  private static final Properties defaults = defaulted(SkosAbstractionParameters.class);
+  private static final Properties DEFAULTS = defaulted(SkosAbstractionParameters.class);
 
   public SkosAbstractionConfig() {
-    super(defaults);
+    super(DEFAULTS);
   }
 
   public enum CLOSURE_MODE {

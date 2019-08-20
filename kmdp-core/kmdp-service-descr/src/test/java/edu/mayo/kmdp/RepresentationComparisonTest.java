@@ -17,7 +17,7 @@ package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
-import static org.omg.spec.api4kp._1_0.contrastors.SyntacticRepresentationContrastor.repContrastor;
+import static org.omg.spec.api4kp._1_0.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
 
 import edu.mayo.kmdp.comparator.Contrastor.Comparison;
 import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
@@ -34,9 +34,9 @@ public class RepresentationComparisonTest {
     SyntacticRepresentation r3 = rep(KnowledgeRepresentationLanguage.DMN_1_1);
     SyntacticRepresentation r4 = rep(KnowledgeRepresentationLanguage.OWL_2);
 
-    assertEquals(Comparison.INCOMPARABLE,repContrastor.contrast(r1,r2));
-    assertEquals(Comparison.INCOMPARABLE,repContrastor.contrast(r1,r3));
-    assertEquals(Comparison.NARROWER,repContrastor.contrast(r1,r4));
+    assertEquals(Comparison.INCOMPARABLE,theRepContrastor.contrast(r1,r2));
+    assertEquals(Comparison.INCOMPARABLE,theRepContrastor.contrast(r1,r3));
+    assertEquals(Comparison.NARROWER,theRepContrastor.contrast(r1,r4));
   }
 
 }

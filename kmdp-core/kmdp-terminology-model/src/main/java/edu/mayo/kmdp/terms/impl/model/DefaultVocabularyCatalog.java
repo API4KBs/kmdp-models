@@ -40,7 +40,7 @@ public class DefaultVocabularyCatalog implements VocabularyCatalog {
   @Override
   public Optional<ConceptScheme> resolve(String schemeID) {
     return entries.values().stream()
-        .filter((s) -> schemeID.equals(s.getId().toString()))
+        .filter(s -> schemeID.equals(s.getId().toString()))
         .findAny();
   }
 

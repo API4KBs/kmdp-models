@@ -20,7 +20,7 @@ import edu.mayo.ontology.taxonomies.krprofile._20190801.KnowledgeRepresentationL
 
 public class ProfileContrastor extends Contrastor<KnowledgeRepresentationLanguageProfile> {
 
-  public static ProfileContrastor profileContrastor = new ProfileContrastor();
+  public static final ProfileContrastor theProfileContrastor = new ProfileContrastor();
 
   protected ProfileContrastor() {
   }

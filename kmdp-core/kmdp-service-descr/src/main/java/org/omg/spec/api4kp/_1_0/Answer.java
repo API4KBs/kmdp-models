@@ -31,6 +31,8 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 
 /**
@@ -51,13 +53,15 @@ public class Answer<T> extends Explainer {
 
   protected Map<String, List<String>> meta;
 
+  private static Logger logger = LogManager.getLogger(Answer.class);
+
   /* Constructors (lifters) */
 
   public static <X> Answer<X> unsupported() {
     return failed(new UnsupportedOperationException("Not Implemented"));
   }
 
-  public static <X> Answer<X> failed(ServerSideException t) {
+  public static <X> Answer<X> failedOnServer(ServerSideException t) {
     return new Answer<X>()
         .withCodedOutcome(t.getCode())
         .withMeta(t.getHeaders())
@@ -223,6 +227,7 @@ public class Answer<T> extends Explainer {
     return this;
   }
 
+  @Override
   public Answer<T> withExplanation(String msg) {
     super.addExplanation(msg);
 
@@ -308,23 +313,25 @@ public class Answer<T> extends Explainer {
   protected OutcomeStrategy<T> selectHandler(ResponseCode code) {
     if (isSuccess()) {
       return SuccessOutcomeStrategy.getInstance();
-    } else {
+    } else if (Integer.valueOf(code.getTag()) >= 300) {
       return FailureOutcomeStrategy.getInstance();
+    } else {
+      return SuccessOutcomeStrategy.getInstance();
     }
   }
 
 
-  public static abstract class OutcomeStrategy<T> {
+  public interface OutcomeStrategy<T> {
 
-    public abstract <U> Answer<U> map(Answer<T> tAnswer, Function<? super T, ? extends U> mapper);
+    <U> Answer<U> map(Answer<T> tAnswer, Function<? super T, ? extends U> mapper);
 
-    public abstract <U> Answer<U> flatMap(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper);
+    <U> Answer<U> flatMap(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper);
 
   }
 
-  public static class SuccessOutcomeStrategy<T> extends OutcomeStrategy<T> {
+  public static class SuccessOutcomeStrategy<T> implements OutcomeStrategy<T> {
 
-    protected final static SuccessOutcomeStrategy<?> instance = new SuccessOutcomeStrategy<>();
+    protected static final SuccessOutcomeStrategy<?> instance = new SuccessOutcomeStrategy<>();
 
     public static <T> SuccessOutcomeStrategy<T> getInstance() {
       return (SuccessOutcomeStrategy<T>) instance;
@@ -338,8 +345,8 @@ public class Answer<T> extends Explainer {
             .withCodedOutcome(srcAnswer.getCodedOutcome())
             .withExplanation(srcAnswer.explanation)
             .withMeta(srcAnswer.meta);
-      } catch (Throwable t) {
-        return Answer.<U>failed(t)
+      } catch (Exception e) {
+        return Answer.<U>failed(e)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
       }
@@ -351,18 +358,18 @@ public class Answer<T> extends Explainer {
         return mapper.apply(srcAnswer.value)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
-      } catch (Throwable t) {
-        t.printStackTrace();
-        return Answer.<U>failed(t)
+      } catch (Exception e) {
+        logger.error(e.getMessage(),e);
+        return Answer.<U>failed(e)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
       }
     }
   }
 
-  public static class FailureOutcomeStrategy<T> extends OutcomeStrategy<T> {
+  public static class FailureOutcomeStrategy<T> implements OutcomeStrategy<T> {
 
-    protected final static FailureOutcomeStrategy<?> instance = new FailureOutcomeStrategy<>();
+    protected static final FailureOutcomeStrategy<?> instance = new FailureOutcomeStrategy<>();
 
     public static <T> FailureOutcomeStrategy<T> getInstance() {
       return (FailureOutcomeStrategy<T>) instance;

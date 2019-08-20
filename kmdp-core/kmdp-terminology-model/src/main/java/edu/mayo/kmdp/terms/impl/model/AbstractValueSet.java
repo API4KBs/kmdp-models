@@ -18,13 +18,10 @@ package edu.mayo.kmdp.terms.impl.model;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
-import edu.mayo.kmdp.id.adapter.URIId;
 import edu.mayo.kmdp.terms.ValueSet;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
-
 import java.net.URI;
 import java.util.Optional;
+import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
 public abstract class AbstractValueSet<T extends Term> implements ValueSet {
 

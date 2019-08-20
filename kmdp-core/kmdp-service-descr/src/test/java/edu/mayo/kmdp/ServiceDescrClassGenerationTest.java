@@ -16,10 +16,12 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
+import static edu.mayo.kmdp.util.FileUtil.streamChildFiles;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -55,10 +57,13 @@ public class ServiceDescrClassGenerationTest {
   @Test
   public void testClassExists() {
     KnowledgeArtifactRepository repository = new KnowledgeArtifactRepository();
+    assertNotNull(repository);
 
     TransrepresentationOperator op = new TransrepresentationOperator();
+    assertNotNull(op);
 
     KnowledgePlatformComponent component = new Transrepresentator();
+    assertNotNull(component);
   }
 
 
@@ -109,7 +114,7 @@ public class ServiceDescrClassGenerationTest {
       assertTrue(f.exists());
       assertTrue(f.isDirectory());
 
-      List<String> files = Arrays.stream(f.listFiles())
+      List<String> files = streamChildFiles(f)
           .map(File::getPath)
           .map((s) -> s.replace(genPath, ""))
           .map((s) -> s.replace(File.separator, "."))

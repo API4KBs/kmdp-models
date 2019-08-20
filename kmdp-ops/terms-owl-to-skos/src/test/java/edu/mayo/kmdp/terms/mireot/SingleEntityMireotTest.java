@@ -15,8 +15,8 @@
  */
 package edu.mayo.kmdp.terms.mireot;
 
-import static edu.mayo.kmdp.util.JenaUtil.dat_a;
-import static edu.mayo.kmdp.util.JenaUtil.obj_a;
+import static edu.mayo.kmdp.util.JenaUtil.datA;
+import static edu.mayo.kmdp.util.JenaUtil.objA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -84,19 +84,19 @@ public class SingleEntityMireotTest extends BaseMireotTest {
     assertTrue(chunk.isPresent());
     Model m = chunk.get();
 
-    assertTrue(m.contains(obj_a(klass, RDF.type, OWL2.Class)));
-    assertTrue(m.contains(dat_a(klass, RDFS.label, "My Class")));
-    assertTrue(m.contains(dat_a(klass, RDFS.comment, "comment")));
-    assertTrue(m.contains(dat_a(klass, RDFS.comment, "comment")));
-    assertTrue(m.contains(dat_a(klass, RDFS.isDefinedBy, base)));
-    assertTrue(m.contains(dat_a(klass, SKOS.prefLabel, "Pref Way to name My Class")));
-    assertTrue(m.contains(dat_a(klass, SKOS.altLabel, "alternative")));
-    assertTrue(m.contains(dat_a(klass, SKOS.hiddenLabel, "hidden")));
-    assertTrue(m.contains(dat_a(klass, SKOS.example, "example")));
-    assertTrue(m.contains(dat_a(klass, SKOS.note, "note")));
-    assertTrue(m.contains(dat_a(klass, SKOS.definition, "definition")));
-    assertTrue(m.contains(dat_a(klass, DCTerms.identifier, "id0001")));
-    assertTrue(m.contains(dat_a(klass, OWL2.versionInfo, "v0042")));
+    assertTrue(m.contains(objA(klass, RDF.type, OWL2.Class)));
+    assertTrue(m.contains(datA(klass, RDFS.label, "My Class")));
+    assertTrue(m.contains(datA(klass, RDFS.comment, "comment")));
+    assertTrue(m.contains(datA(klass, RDFS.comment, "comment")));
+    assertTrue(m.contains(datA(klass, RDFS.isDefinedBy, base)));
+    assertTrue(m.contains(datA(klass, SKOS.prefLabel, "Pref Way to name My Class")));
+    assertTrue(m.contains(datA(klass, SKOS.altLabel, "alternative")));
+    assertTrue(m.contains(datA(klass, SKOS.hiddenLabel, "hidden")));
+    assertTrue(m.contains(datA(klass, SKOS.example, "example")));
+    assertTrue(m.contains(datA(klass, SKOS.note, "note")));
+    assertTrue(m.contains(datA(klass, SKOS.definition, "definition")));
+    assertTrue(m.contains(datA(klass, DCTerms.identifier, "id0001")));
+    assertTrue(m.contains(datA(klass, OWL2.versionInfo, "v0042")));
 
   }
 

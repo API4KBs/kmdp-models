@@ -15,8 +15,8 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
-import static edu.mayo.kmdp.util.JenaUtil.dat_a;
-import static edu.mayo.kmdp.util.JenaUtil.obj_a;
+import static edu.mayo.kmdp.util.JenaUtil.datA;
+import static edu.mayo.kmdp.util.JenaUtil.objA;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -51,7 +51,7 @@ public class IdentifiersTest extends TestBase {
     Model m = run(singletonList("/ontology/singleClass.owl"), cfg);
 
     assertTrue(m.contains(
-        obj_a(NS + "#" + UUID.nameUUIDFromBytes("Klass".getBytes()),
+        objA(NS + "#" + UUID.nameUUIDFromBytes("Klass".getBytes()),
         RDF.type,
         SKOS.Concept)));
   }
@@ -67,7 +67,7 @@ public class IdentifiersTest extends TestBase {
     Model m = run(singletonList("/ontology/singleClassWithDCIdentifier.owl"), cfg);
 
     assertTrue(m.contains(
-        obj_a(NS + "#" + UUID.nameUUIDFromBytes("klassID".getBytes()),
+        objA(NS + "#" + UUID.nameUUIDFromBytes("klassID".getBytes()),
             RDF.type,
             SKOS.Concept)));
   }
@@ -83,7 +83,7 @@ public class IdentifiersTest extends TestBase {
     Model m = run(singletonList("/ontology/singleClass.owl"), cfg);
 
     assertTrue(m.contains(
-        dat_a(NS + "#" + UUID.nameUUIDFromBytes("Klass".getBytes()),
+        datA(NS + "#" + UUID.nameUUIDFromBytes("Klass".getBytes()),
             DCTerms.identifier,
             UUID.nameUUIDFromBytes("Klass".getBytes()).toString())));
   }
@@ -99,7 +99,7 @@ public class IdentifiersTest extends TestBase {
     Model m = run(singletonList("/ontology/singleClassWithDCIdentifier.owl"), cfg);
 
     assertTrue(m.contains(
-        dat_a(NS + "#" + UUID.nameUUIDFromBytes("klassID".getBytes()),
+        datA(NS + "#" + UUID.nameUUIDFromBytes("klassID".getBytes()),
             DCTerms.identifier,
             UUID.nameUUIDFromBytes("klassID".getBytes()).toString())));
   }
@@ -115,7 +115,7 @@ public class IdentifiersTest extends TestBase {
     Model m = run(singletonList("/ontology/singleClass.owl"), cfg);
 
     assertTrue(m.contains(
-        dat_a(NS + "#" + UUID.nameUUIDFromBytes("Klass".getBytes()),
+        datA(NS + "#" + UUID.nameUUIDFromBytes("Klass".getBytes()),
             SKOS.notation,
             "Klass")));
   }
@@ -131,7 +131,7 @@ public class IdentifiersTest extends TestBase {
     Model m = run(singletonList("/ontology/singleClassWithDCIdentifier.owl"), cfg);
 
     assertTrue(m.contains(
-        dat_a(NS + "#" + UUID.nameUUIDFromBytes("klassID".getBytes()),
+        datA(NS + "#" + UUID.nameUUIDFromBytes("klassID".getBytes()),
             SKOS.notation,
             "klassID")));
   }

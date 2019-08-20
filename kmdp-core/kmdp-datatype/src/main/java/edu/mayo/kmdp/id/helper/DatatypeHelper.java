@@ -40,8 +40,12 @@ import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
 
 public class DatatypeHelper {
 
-  private final static Pattern VERSIONS_RX = Pattern.compile("^(.*/)?(.*)/versions/(.+)$");
-  private final static Pattern SEMVER_RX = Pattern.compile("^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$");
+  protected DatatypeHelper() {
+
+  }
+
+  private static final Pattern VERSIONS_RX = Pattern.compile("^(.*/)?(.*)/versions/(.+)$");
+  private static final Pattern SEMVER_RX = Pattern.compile("^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$");
 
 
   public static NamespaceIdentifier ns(final String nsUri) {
@@ -88,10 +92,10 @@ public class DatatypeHelper {
   private static URI ensureResolved(String termUri) {
     String uri = termUri;
     if (uri.matches("\\w+:.+")) {
-      String candidatePfx = uri.substring(0, uri.indexOf(":"));
+      String candidatePfx = uri.substring(0, uri.indexOf(':'));
       String base = Registry.getNamespaceURIForPrefix(candidatePfx).orElse(null);
       if (base != null) {
-        uri = base + "#" + termUri.substring(termUri.lastIndexOf(":") + 1);
+        uri = base + "#" + termUri.substring(termUri.lastIndexOf(':') + 1);
       }
     }
     return URI.create(uri);
@@ -142,7 +146,7 @@ public class DatatypeHelper {
   }
 
   public static QualifiedIdentifier name(final String n) {
-    String pfx = n.substring(0, n.indexOf(":"));
+    String pfx = n.substring(0, n.indexOf(':'));
     String name = n.substring(n.indexOf(':') + 1);
     String uri = Registry.getNamespaceURIForPrefix(pfx).orElse("");
 
@@ -153,15 +157,19 @@ public class DatatypeHelper {
     if (versionedIdentifier == null) {
       return null;
     }
-    // TODO Can probably be refactored to be more efficient...
+    // Can probably be refactored to be more efficient...
     return toVersionIdentifier(versionedIdentifier).getVersion();
   }
 
 
   public static VersionIdentifier toVersionIdentifier(URIIdentifier uri) {
     return uri != null
-        ? toVersionIdentifier(uri.getVersionId() != null ? uri.getVersionId() : uri.getUri())
+        ? toVersionIdentifier(tryGetVersionedUri(uri))
         : null;
+  }
+
+  public static URI tryGetVersionedUri(URIIdentifier uri) {
+    return uri.getVersionId() != null ? uri.getVersionId() : uri.getUri();
   }
 
   public static VersionIdentifier toVersionIdentifier(URI versionId) {
@@ -216,7 +224,7 @@ public class DatatypeHelper {
 
   public static Optional<UUIDentifier> toUUIDentifier(ConceptIdentifier cid) {
     return ensureUUIDFormat(cid.getTag())
-        .map((uuidStr) -> new UUIDentifier().withTag(uuidStr));
+        .map(uuidStr -> new UUIDentifier().withTag(uuidStr));
   }
 
   public static Optional<URIIdentifier> toURIIDentifier(UUIDentifier uid) {

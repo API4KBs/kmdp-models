@@ -19,6 +19,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.BooleanType;
 import org.hl7.fhir.dstu3.model.CodeType;
@@ -37,6 +39,14 @@ import org.hl7.fhir.exceptions.FHIRException;
 
 public class FHIRDataTypeConstructor {
 
+  private static final Logger logger = LogManager.getLogger(FHIRDataTypeConstructor.class);
+
+  private FHIRDataTypeConstructor() {}
+
+  // Used so often it deserves a constant
+  private static final String VALUE = "value";
+
+
   public static Optional<Type> construct(DataElement schema, Object data) {
     return data instanceof Map
         ? constructFromMap(schema, (Map<String, Object>) data)
@@ -50,44 +60,44 @@ public class FHIRDataTypeConstructor {
       Type t;
       switch (dt) {
         case DATETIME:
-          t = buildDateTime(schema, data);
+          t = buildDateTime(data);
           break;
         case TIME:
-          t = buildTime(schema, data);
+          t = buildTime(data);
           break;
         case DATE:
-          t = buildDate(schema, data);
+          t = buildDate(data);
           break;
         case INTEGER:
-          t = buildInteger(schema, data);
+          t = buildInteger(data);
           break;
         case QUANTITY:
           t = buildQuantity(schema, data);
           break;
         case DECIMAL:
-          t = buildDecimal(schema, data);
+          t = buildDecimal(data);
           break;
         case CODING:
           t = buildCoding(schema, data);
           break;
         case CODE:
-          t = buildCode(schema, data);
+          t = buildCode(data);
           break;
         case BOOLEAN:
-          t = buildBoolean(schema, data);
+          t = buildBoolean(data);
           break;
         case STRING:
-          t = buildString(schema, data);
+          t = buildString(data);
           break;
         case ATTACHMENT:
-          t = buildAttachment(schema, data);
+          t = buildAttachment(data);
           break;
         default:
           throw new UnsupportedOperationException("Unable construct an instance of Type " + dt);
       }
       return Optional.ofNullable(t);
     } catch (FHIRException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
     return Optional.empty();
   }
@@ -99,62 +109,62 @@ public class FHIRDataTypeConstructor {
       Type t;
       switch (dt) {
         case DATETIME:
-          t = buildDateTimeSimple(schema, data);
+          t = buildDateTimeSimple(data);
           break;
         case TIME:
-          t = buildTimeSimple(schema, data);
+          t = buildTimeSimple(data);
           break;
         case DATE:
-          t = buildDateSimple(schema, data);
+          t = buildDateSimple(data);
           break;
         case INTEGER:
-          t = buildIntegerSimple(schema, data);
+          t = buildIntegerSimple(data);
           break;
         case QUANTITY:
           t = buildQuantitySimple(schema, data);
           break;
         case DECIMAL:
-          t = buildDecimalSimple(schema, data);
+          t = buildDecimalSimple(data);
           break;
         case CODING:
           t = buildCodingSimple(schema, data);
           break;
         case CODE:
-          t = buildCodeSimple(schema, data);
+          t = buildCodeSimple(data);
           break;
         case BOOLEAN:
-          t = buildBooleanSimple(schema, data);
+          t = buildBooleanSimple(data);
           break;
         case STRING:
-          t = buildStringSimple(schema, data);
+          t = buildStringSimple(data);
           break;
         case ATTACHMENT:
-          t = buildAttachmentSimple(schema, data);
+          t = buildAttachmentSimple(data);
           break;
         default:
           throw new UnsupportedOperationException("Unable construct an instance of Type " + dt);
       }
       return Optional.ofNullable(t);
     } catch (FHIRException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
     return Optional.empty();
   }
 
 
-  private static IntegerType buildInteger(DataElement schema, Map<String, Object> data) {
-    return data.containsKey("value")
-        ? (IntegerType) new IntegerType().setValue((Integer) data.get("value"))
+  private static IntegerType buildInteger(Map<String, Object> data) {
+    return data.containsKey(VALUE)
+        ? (IntegerType) new IntegerType().setValue((Integer) data.get(VALUE))
         : null;
   }
 
-  private static IntegerType buildIntegerSimple(DataElement schema, Object data) {
+  private static IntegerType buildIntegerSimple(Object data) {
     return data instanceof Integer
         ? (IntegerType) new IntegerType().setValue((Integer) data)
         : null;
   }
 
-  private static DateTimeType buildDateTime(DataElement schema, Map<String, Object> data) {
+  private static DateTimeType buildDateTime(Map<String, Object> data) {
     return data.containsKey("year")
         ? (DateTimeType) new DateTimeType().setYear((Integer) data.getOrDefault("year", 1900))
         .setMonth((Integer) data.getOrDefault("month", 1))
@@ -167,13 +177,13 @@ public class FHIRDataTypeConstructor {
         : null;
   }
 
-  private static DateTimeType buildDateTimeSimple(DataElement schema, Object data) {
+  private static DateTimeType buildDateTimeSimple(Object data) {
     return data instanceof Date
         ? (DateTimeType) new DateTimeType().setValue((Date) data)
         : null;
   }
 
-  private static DateType buildDate(DataElement schema, Map<String, Object> data) {
+  private static DateType buildDate(Map<String, Object> data) {
     return data.containsKey("year")
         ? (DateType) new DateType().setYear((Integer) data.getOrDefault("year", 1900))
         .setMonth((Integer) data.getOrDefault("month", 1))
@@ -186,34 +196,34 @@ public class FHIRDataTypeConstructor {
         : null;
   }
 
-  private static DateType buildDateSimple(DataElement schema, Object data) {
+  private static DateType buildDateSimple(Object data) {
     return data instanceof Date
         ? (DateType) new DateType().setValue((Date) data)
         : null;
   }
 
 
-  private static TimeType buildTime(DataElement schema, Map<String, Object> data) {
-    return data.containsKey("value")
-        ? (TimeType) new TimeType().setValue((String) data.get("value"))
+  private static TimeType buildTime(Map<String, Object> data) {
+    return data.containsKey(VALUE)
+        ? (TimeType) new TimeType().setValue((String) data.get(VALUE))
         : null;
   }
 
-  private static TimeType buildTimeSimple(DataElement schema, Object data) {
+  private static TimeType buildTimeSimple(Object data) {
     return data instanceof String
         ? (TimeType) new TimeType().setValue((String) data)
         : null;
   }
 
 
-  private static DecimalType buildDecimal(DataElement schema, Map<String, Object> data) {
-    return data.containsKey("value")
-        ? (DecimalType) new DecimalType().setValue((BigDecimal) data.get("value"))
+  private static DecimalType buildDecimal(Map<String, Object> data) {
+    return data.containsKey(VALUE)
+        ? (DecimalType) new DecimalType().setValue((BigDecimal) data.get(VALUE))
         : null;
   }
 
 
-  private static DecimalType buildDecimalSimple(DataElement schema, Object data) {
+  private static DecimalType buildDecimalSimple(Object data) {
     return data instanceof BigDecimal
         ? (DecimalType) new DecimalType().setValue((BigDecimal) data)
         : null;
@@ -221,8 +231,8 @@ public class FHIRDataTypeConstructor {
 
 
   private static Quantity buildQuantity(DataElement schema, Map<String, Object> data) {
-    Quantity q = data.containsKey("value")
-        ? new Quantity().setValue((BigDecimal) data.get("value"))
+    Quantity q = data.containsKey(VALUE)
+        ? new Quantity().setValue((BigDecimal) data.get(VALUE))
         .setUnit((String) data.get("unit"))
         .setCode((String) data.get("code"))
         .setSystem((String) data.get("unit"))
@@ -262,13 +272,13 @@ public class FHIRDataTypeConstructor {
   }
 
 
-  private static CodeType buildCode(DataElement schema, Map<String, Object> data) {
-    return data.containsKey("value")
-        ? (CodeType) new CodeType().setValue((String) data.get("value"))
+  private static CodeType buildCode(Map<String, Object> data) {
+    return data.containsKey(VALUE)
+        ? (CodeType) new CodeType().setValue((String) data.get(VALUE))
         : null;
   }
 
-  private static CodeType buildCodeSimple(DataElement schema, Object data) {
+  private static CodeType buildCodeSimple(Object data) {
     return data instanceof String
         ? (CodeType) new CodeType().setValue((String) data)
         : null;
@@ -276,7 +286,7 @@ public class FHIRDataTypeConstructor {
 
 
   private static Coding buildCoding(DataElement schema, Map<String, Object> data) {
-    Coding c = data.containsKey("value")
+    Coding c = data.containsKey(VALUE)
         ? new Coding().setCode((String) data.get("code"))
         .setSystem((String) data.get("system"))
         .setVersion((String) data.get("version"))
@@ -313,32 +323,32 @@ public class FHIRDataTypeConstructor {
   }
 
 
-  private static StringType buildString(DataElement schema, Map<String, Object> data) {
-    return data.containsKey("value")
-        ? (StringType) new StringType().setValue((String) data.get("value"))
+  private static StringType buildString(Map<String, Object> data) {
+    return data.containsKey(VALUE)
+        ? (StringType) new StringType().setValue((String) data.get(VALUE))
         : null;
   }
 
-  private static StringType buildStringSimple(DataElement schema, Object data) {
+  private static StringType buildStringSimple(Object data) {
     return data instanceof String
         ? (StringType) new StringType().setValue((String) data)
         : null;
   }
 
-  private static BooleanType buildBoolean(DataElement schema, Map<String, Object> data) {
-    return data.containsKey("value")
-        ? (BooleanType) new BooleanType().setValue((Boolean) data.get("value"))
+  private static BooleanType buildBoolean(Map<String, Object> data) {
+    return data.containsKey(VALUE)
+        ? (BooleanType) new BooleanType().setValue((Boolean) data.get(VALUE))
         : null;
   }
 
-  private static BooleanType buildBooleanSimple(DataElement schema, Object data) {
+  private static BooleanType buildBooleanSimple(Object data) {
     return data instanceof Boolean
         ? (BooleanType) new BooleanType().setValue((Boolean) data)
         : null;
   }
 
 
-  private static Attachment buildAttachment(DataElement schema, Map<String, Object> data) {
+  private static Attachment buildAttachment(Map<String, Object> data) {
     return data.containsKey("url")
         ? new Attachment().setTitle((String) data.get("title"))
         .setUrl((String) data.get("url"))
@@ -347,7 +357,7 @@ public class FHIRDataTypeConstructor {
         : null;
   }
 
-  private static Attachment buildAttachmentSimple(DataElement schema, Object data) {
+  private static Attachment buildAttachmentSimple(Object data) {
     return data instanceof String
         ? new Attachment().setUrl((String) data)
         : null;

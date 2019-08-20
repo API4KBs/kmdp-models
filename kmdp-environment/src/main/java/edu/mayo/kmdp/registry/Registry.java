@@ -26,23 +26,29 @@ import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.reasoner.ReasonerRegistry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xerces.util.XMLCatalogResolver;
 
 public class Registry {
 
-  public static final String path = "/ontologies/API4KP/informative/api4kp-registry.rdf";
+  public static final String PATH = "/ontologies/API4KP/informative/api4kp-registry.rdf";
 
   public static final String MAYO_ASSETS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/assets/";
   public static final String BASE_UUID_URN = "urn:uuid:";
 
   private static XMLCatalogResolver xcat;
 
-  private static Model registry;
+  private static Model registryGraph;
 
+  private static Logger logger = LogManager.getLogger(Registry.class);
 
   private static BiMap<String, String> prefixToNamespaceMap = HashBiMap.create();
   private static Map<String, String> languagSchemas = new HashMap<>();
 
+  protected Registry() {
+
+  }
 
   static {
     xcat = new XMLCatalogResolver(new String[] {Registry.class.getResource("/meta-catalog.xml").toString()});
@@ -50,20 +56,16 @@ public class Registry {
     String xmlPrefixesQry = RegistryUtil.read("/xmlNSprefixes.sparql");
     String xmlSchemasQry = RegistryUtil.read("/xmlSchemas.sparql");
 
-    registry = ModelFactory.createOntologyModel()
-        .read(Registry.class.getResourceAsStream(path),null);
-    registry = ModelFactory.createInfModel(ReasonerRegistry.getOWLMicroReasoner(),registry);
+    registryGraph = ModelFactory.createOntologyModel()
+        .read(Registry.class.getResourceAsStream(PATH),null);
+    registryGraph = ModelFactory.createInfModel(ReasonerRegistry.getOWLMicroReasoner(),registryGraph);
 
-    RegistryUtil.askQuery(xmlPrefixesQry, registry).forEach(
-        (m) -> {
-          prefixToNamespaceMap.put(m.get("P"), m.get("NS"));
-        }
+    RegistryUtil.askQuery(xmlPrefixesQry, registryGraph).forEach(
+        m -> prefixToNamespaceMap.put(m.get("P"), m.get("NS"))
     );
 
-    RegistryUtil.askQuery(xmlSchemasQry, registry).forEach(
-        (m) -> {
-          languagSchemas.put(m.get("L"), m.get("NS"));
-        }
+    RegistryUtil.askQuery(xmlSchemasQry, registryGraph).forEach(
+        m-> languagSchemas.put(m.get("L"), m.get("NS"))
     );
 
  }
@@ -85,7 +87,7 @@ public class Registry {
           null,
           null).toString());
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -95,9 +97,9 @@ public class Registry {
       return Optional.ofNullable(xcat.resolvePublic(lang.toString(),null))
           .map(URI::create)
           .map(URI::getPath)
-          .map((path)->"/xsd"+path);
+          .map(path -> "/xsd"+path);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }

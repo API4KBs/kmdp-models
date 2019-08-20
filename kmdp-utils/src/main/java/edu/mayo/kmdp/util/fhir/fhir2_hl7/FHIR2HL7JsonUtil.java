@@ -25,9 +25,9 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 
 public class FHIR2HL7JsonUtil extends AbstractFHIRJsonUtil<DomainResource, Resource> {
 
-  private static IParser jsonParser = FhirContext.forDstu2Hl7Org().newJsonParser();
+  private static final IParser jsonParser = FhirContext.forDstu2Hl7Org().newJsonParser();
 
-  public static FHIR2HL7JsonUtil instance = new FHIR2HL7JsonUtil();
+  public static final FHIR2HL7JsonUtil instance = new FHIR2HL7JsonUtil();
 
   @Override
   protected IParser getParser() {

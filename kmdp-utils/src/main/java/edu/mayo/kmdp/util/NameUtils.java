@@ -15,27 +15,27 @@
  */
 package edu.mayo.kmdp.util;
 
-import org.apache.xerces.util.XMLChar;
-
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+import org.apache.xerces.util.XMLChar;
 
 
 public final class NameUtils {
-
-
-  public final static Pattern URN_PATTERN = Pattern.compile(
-      "^urn:[a-z0-9][a-z0-9-]{0,31}:([a-z0-9()+,\\-.:=@;$_!*']|%[0-9a-f]{2})+$",
-      Pattern.CASE_INSENSITIVE);
 
 
   public enum IdentifierType {
@@ -46,8 +46,6 @@ public final class NameUtils {
     VARIABLE,
     CONSTANT
   }
-
-  ;
 
   public static final String JAXB_URI = "http://java.sun.com/xml/ns/jaxb";
 
@@ -72,46 +70,46 @@ public final class NameUtils {
 
 
   static {
-    BUILTIN_DATATYPES_MAP = new HashMap<String, String>();
-    BUILTIN_DATATYPES_MAP.put("string", "java.lang.String");
-    BUILTIN_DATATYPES_MAP.put("integer", "java.math.BigInteger");
-    BUILTIN_DATATYPES_MAP.put("int", "int");
-    BUILTIN_DATATYPES_MAP.put("long", "long");
-    BUILTIN_DATATYPES_MAP.put("short", "short");
-    BUILTIN_DATATYPES_MAP.put("decimal", "java.math.BigDecimal");
-    BUILTIN_DATATYPES_MAP.put("float", "float");
-    BUILTIN_DATATYPES_MAP.put("double", "double");
-    BUILTIN_DATATYPES_MAP.put("boolean", "boolean");
-    BUILTIN_DATATYPES_MAP.put("byte", "byte");
-    BUILTIN_DATATYPES_MAP.put("QName", "javax.xml.namespace.QName");
-    BUILTIN_DATATYPES_MAP.put("dateTime", "java.util.Date");
-    BUILTIN_DATATYPES_MAP.put("base64Binary", "byte[]");
-    BUILTIN_DATATYPES_MAP.put("hexBinary", "byte[]");
-    BUILTIN_DATATYPES_MAP.put("unsignedInt", "long");
-    BUILTIN_DATATYPES_MAP.put("unsignedShort", "short");
-    BUILTIN_DATATYPES_MAP.put("unsignedByte", "byte");
-    BUILTIN_DATATYPES_MAP.put("time", "javax.xml.datatype.XMLGregorianCalendar");
-    BUILTIN_DATATYPES_MAP.put("date", "javax.xml.datatype.XMLGregorianCalendar");
-    BUILTIN_DATATYPES_MAP.put("gYear", "javax.xml.datatype.XMLGregorianCalendar");
-    BUILTIN_DATATYPES_MAP.put("gYearMonth", "javax.xml.datatype.XMLGregorianCalendar");
-    BUILTIN_DATATYPES_MAP.put("gMonth", "javax.xml.datatype.XMLGregorianCalendar");
-    BUILTIN_DATATYPES_MAP.put("gMonthDay", "javax.xml.datatype.XMLGregorianCalendar");
-    BUILTIN_DATATYPES_MAP.put("gDay", "javax.xml.datatype.XMLGregorianCalendar");
-    BUILTIN_DATATYPES_MAP.put("duration", "javax.xml.datatype.Duration");
-    BUILTIN_DATATYPES_MAP.put("NOTATION", "javax.xml.namespace.QName");
+    BUILTIN_DATATYPES_MAP = new HashMap<>();
+    BUILTIN_DATATYPES_MAP.put("string", String.class.getName());
+    BUILTIN_DATATYPES_MAP.put("integer", BigInteger.class.getName());
+    BUILTIN_DATATYPES_MAP.put("int", int.class.getName());
+    BUILTIN_DATATYPES_MAP.put("long", long.class.getName());
+    BUILTIN_DATATYPES_MAP.put("short", short.class.getName());
+    BUILTIN_DATATYPES_MAP.put("decimal", BigDecimal.class.getName());
+    BUILTIN_DATATYPES_MAP.put("float", float.class.getName());
+    BUILTIN_DATATYPES_MAP.put("double", double.class.getName());
+    BUILTIN_DATATYPES_MAP.put("boolean", boolean.class.getName());
+    BUILTIN_DATATYPES_MAP.put("byte", byte.class.getName());
+    BUILTIN_DATATYPES_MAP.put("QName", QName.class.getName());
+    BUILTIN_DATATYPES_MAP.put("dateTime", Date.class.getName());
+    BUILTIN_DATATYPES_MAP.put("base64Binary", byte.class.getName() + "[]");
+    BUILTIN_DATATYPES_MAP.put("hexBinary", byte.class.getName() + "[]");
+    BUILTIN_DATATYPES_MAP.put("unsignedInt", long.class.getName());
+    BUILTIN_DATATYPES_MAP.put("unsignedShort", short.class.getName());
+    BUILTIN_DATATYPES_MAP.put("unsignedByte", byte.class.getName());
+    BUILTIN_DATATYPES_MAP.put("time", XMLGregorianCalendar.class.getName());
+    BUILTIN_DATATYPES_MAP.put("date", XMLGregorianCalendar.class.getName());
+    BUILTIN_DATATYPES_MAP.put("gYear", XMLGregorianCalendar.class.getName());
+    BUILTIN_DATATYPES_MAP.put("gYearMonth", XMLGregorianCalendar.class.getName());
+    BUILTIN_DATATYPES_MAP.put("gMonth", XMLGregorianCalendar.class.getName());
+    BUILTIN_DATATYPES_MAP.put("gMonthDay", XMLGregorianCalendar.class.getName());
+    BUILTIN_DATATYPES_MAP.put("gDay", XMLGregorianCalendar.class.getName());
+    BUILTIN_DATATYPES_MAP.put("duration", Duration.class.getName());
+    BUILTIN_DATATYPES_MAP.put("NOTATION", QName.class.getName());
 
-    HOLDER_TYPES_MAP = new HashMap<String, Class<?>>();
-    HOLDER_TYPES_MAP.put("int", Integer.class);
-    HOLDER_TYPES_MAP.put("long", Long.class);
-    HOLDER_TYPES_MAP.put("short", Short.class);
-    HOLDER_TYPES_MAP.put("float", Float.class);
-    HOLDER_TYPES_MAP.put("double", Double.class);
-    HOLDER_TYPES_MAP.put("boolean", Boolean.class);
-    HOLDER_TYPES_MAP.put("byte", Byte.class);
+    HOLDER_TYPES_MAP = new HashMap<>();
+    HOLDER_TYPES_MAP.put(int.class.getName(), Integer.class);
+    HOLDER_TYPES_MAP.put(long.class.getName(), Long.class);
+    HOLDER_TYPES_MAP.put(short.class.getName(), Short.class);
+    HOLDER_TYPES_MAP.put(float.class.getName(), Float.class);
+    HOLDER_TYPES_MAP.put(double.class.getName(), Double.class);
+    HOLDER_TYPES_MAP.put(boolean.class.getName(), Boolean.class);
+    HOLDER_TYPES_MAP.put(byte.class.getName(), Byte.class);
   }
 
   /** Use this character as suffix */
-  static final char KEYWORD_PREFIX = '_';
+  private static final char KEYWORD_PREFIX = '_';
 
   /**
    * These are java keywords as specified at the following URL.
@@ -120,7 +118,7 @@ public final class NameUtils {
    * literal values, but for the purposes of this array, they can be treated
    * as literals.
    */
-  private static final Set<String> KEYWORDS = new HashSet<String>(Arrays.asList(
+  private static final Set<String> KEYWORDS = new HashSet<>(Arrays.asList(
       "abstract", "assert", "boolean", "break", "byte", "case", "catch",
       "char", "class", "const", "continue", "default", "do", "double",
       "else", "enum", "extends", "false", "final", "finally", "float", "for", "goto",
@@ -169,7 +167,7 @@ public final class NameUtils {
   }
 
   public static String builtInTypeToWrappingJavaType(String type) {
-    type = type.replaceAll("xsd:", "");
+    type = type.replace("xsd:", "");
     String klass = BUILTIN_DATATYPES_MAP.get(type);
     if (HOLDER_TYPES_MAP.containsKey(klass)) {
       return HOLDER_TYPES_MAP.get(klass).getName();
@@ -213,11 +211,11 @@ public final class NameUtils {
    * @param namespaceURI the namespace URI.
    * @return the package name.
    */
-  public static String namespaceURIToPackage(String namespaceURI) {
+  public static String namespaceURIStringToPackage(String namespaceURI) {
     try {
       return nameSpaceURIToPackage(new URI(namespaceURI));
     } catch (URISyntaxException ex) {
-      return null;
+      return "INVALID";
     }
   }
 
@@ -230,7 +228,7 @@ public final class NameUtils {
    */
   public static String nameSpaceURIToPackage(URI uri) {
 
-    StringBuffer packageName = new StringBuffer();
+    StringBuilder packageName = new StringBuilder();
     String authority = uri.getAuthority();
     if (authority == null && "urn".equals(uri.getScheme())) {
       authority = uri.getSchemeSpecificPart();
@@ -284,11 +282,6 @@ public final class NameUtils {
     if (path == null) {
       path = "";
     }
-//        int index = path.lastIndexOf( '.' );
-//        if ( index < 0 ) {
-//            index = path.length();
-//        }
-//        StringTokenizer st = new StringTokenizer(path.substring( 0, index ), "/" );
     StringTokenizer st = new StringTokenizer(path, "/");
     while (st.hasMoreTokens()) {
       String token = st.nextToken();
@@ -301,7 +294,7 @@ public final class NameUtils {
   }
 
   private static String normalizePackageNamePart(String name) {
-    StringBuffer sname = new StringBuffer(name.toLowerCase());
+    StringBuilder sname = new StringBuilder(name.toLowerCase());
 
     for (int i = 0; i < sname.length(); i++) {
       sname.setCharAt(i, Character.toLowerCase(sname.charAt(i)));
@@ -341,24 +334,24 @@ public final class NameUtils {
     // conventional (!) Java class, method, or constant identifier
 
     boolean legalIdentifier = false;
-    StringBuffer buf = new StringBuffer(name);
+    StringBuilder buf = new StringBuilder(name);
     legalIdentifier = Character.isJavaIdentifierStart(buf.charAt(0));
 
     for (int i = 1; i < name.length() && legalIdentifier; i++) {
-      legalIdentifier = legalIdentifier && Character.isJavaIdentifierPart(buf.charAt(i));
+      legalIdentifier = Character.isJavaIdentifierPart(buf.charAt(i));
     }
 
-    boolean conventionalIdentifier = isConventionalIdentifier(buf, type);
+    boolean conventionalIdentifier = isConventionalIdentifier(buf.toString(), type);
     if (legalIdentifier && conventionalIdentifier) {
       if (NameUtils.isJavaKeyword(name) && type == IdentifierType.VARIABLE) {
-        name = normalizePackageNamePart(name.toString());
+        name = normalizePackageNamePart(name);
       }
       return name;
     }
 
     // split into words
 
-    List<String> words = new ArrayList<String>();
+    List<String> words = new ArrayList<>();
 
     StringTokenizer st = new StringTokenizer(name, XML_NAME_PUNCTUATION_STRING);
     while (st.hasMoreTokens()) {
@@ -387,7 +380,8 @@ public final class NameUtils {
       return;
     }
     int index = listIndex + 1;
-    StringBuffer sword = new StringBuffer(word);
+
+    StringBuilder sword = new StringBuilder(word);
     int first = 0;
     char firstChar = sword.charAt(first);
     if (Character.isLowerCase(firstChar)) {
@@ -445,97 +439,108 @@ public final class NameUtils {
     return Character.isUpperCase(c) || Character.isLowerCase(c);
   }
 
-  private static boolean isConventionalIdentifier(StringBuffer buf, IdentifierType type) {
+  private static boolean isConventionalIdentifier(String buf, IdentifierType type) {
     if (null == buf || buf.length() == 0) {
       return false;
     }
-    boolean result = false;
-    if (IdentifierType.CONSTANT == type) {
-      for (int i = 0; i < buf.length(); i++) {
-        if (Character.isLowerCase(buf.charAt(i))) {
-          return false;
+    switch (type) {
+      case CONSTANT:
+        for (int i = 0; i < buf.length(); i++) {
+          if (Character.isLowerCase(buf.charAt(i))) {
+            return false;
+          }
         }
-      }
-      result = true;
-    } else if (IdentifierType.VARIABLE == type) {
-      result = Character.isLowerCase(buf.charAt(0));
-    } else {
-      int pos = 3;
-      if (IdentifierType.GETTER == type
-          && !(buf.length() >= pos
-          && "get".equals(buf.subSequence(0, 3)))) {
-        return false;
-      } else if (IdentifierType.SETTER == type
-          && !(buf.length() >= pos && "set".equals(buf.subSequence(0, 3)))) {
-        return false;
-      } else {
-        pos = 0;
-      }
-      result = Character.isUpperCase(buf.charAt(pos));
+        return true;
+      case VARIABLE:
+        return Character.isLowerCase(buf.charAt(0));
+      case GETTER:
+        return buf.length() >= 3
+            && "get".contentEquals(buf.subSequence(0, 3))
+            && Character.isUpperCase(buf.charAt(3));
+      case SETTER:
+        return buf.length() >= 3
+            && "set".contentEquals(buf.subSequence(0, 3))
+            && Character.isUpperCase(buf.charAt(3));
+      default:
+        return Character.isUpperCase(buf.charAt(0));
     }
-    return result;
   }
 
   private static String makeConventionalIdentifier(List<String> words, IdentifierType type) {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     boolean firstWord = true;
-    if (IdentifierType.GETTER == type) {
-      buf.append("get");
-    } else if (IdentifierType.SETTER == type) {
-      buf.append("set");
+
+    switch (type) {
+      case GETTER:
+        buf.append("get");
+        break;
+      case SETTER:
+        buf.append("set");
+        break;
+      default:
     }
+
     for (String w : words) {
       int l = buf.length();
       if (l > 0 && IdentifierType.CONSTANT == type) {
         buf.append('_');
         l++;
       }
+
       buf.append(w);
-      if (IdentifierType.CONSTANT == type) {
-        for (int i = l; i < buf.length(); i++) {
-          if (Character.isLowerCase(buf.charAt(i))) {
-            buf.setCharAt(i, Character.toUpperCase(buf.charAt(i)));
-          }
-        }
-      } else if (IdentifierType.VARIABLE == type) {
-        if (firstWord && Character.isUpperCase(buf.charAt(l))) {
-          buf.setCharAt(l, Character.toLowerCase(buf.charAt(l)));
-        }
-      } else {
-        if (firstWord && Character.isLowerCase(buf.charAt(l))) {
-          buf.setCharAt(l, Character.toUpperCase(buf.charAt(l)));
-        }
-      }
+      capitalizeBuffer(buf, type, l, firstWord);
       firstWord = false;
     }
     return buf.toString();
   }
 
+  private static void capitalizeBuffer(StringBuilder buf, IdentifierType type, int l, boolean firstWord) {
+    switch (type) {
+      case CONSTANT:
+        for (int i = l; i < buf.length(); i++) {
+          if (Character.isLowerCase(buf.charAt(i))) {
+            buf.setCharAt(i, Character.toUpperCase(buf.charAt(i)));
+          }
+        }
+        break;
+      case VARIABLE:
+        if (firstWord && Character.isUpperCase(buf.charAt(l))) {
+          buf.setCharAt(l, Character.toLowerCase(buf.charAt(l)));
+        }
+        break;
+      default:
+        if (firstWord && Character.isLowerCase(buf.charAt(l))) {
+          buf.setCharAt(l, Character.toUpperCase(buf.charAt(l)));
+        }
+    }
+  }
+
+
   public static String reverse(String aPackage) {
 
     StringTokenizer tok = new StringTokenizer(aPackage, ".");
-    String ans = tok.nextToken();
+    StringBuilder ans = Optional.ofNullable(tok.nextToken()).map(StringBuilder::new).orElse(null);
 
     while (tok.hasMoreTokens()) {
-      ans = tok.nextToken() + "." + ans;
+      ans = (ans == null ? new StringBuilder("null") : ans).insert(0, tok.nextToken() + ".");
     }
 
-    return ans;
+    return ans == null ? null : ans.toString();
   }
 
   public static String capitalize(final String s) {
     StringTokenizer tok = new StringTokenizer(s, "_");
-    String upName = tok.nextToken();
-    upName = upName.substring(0, 1).toUpperCase() + upName.substring(1);
+    StringBuilder upName = new StringBuilder(tok.nextToken());
+    upName = new StringBuilder(upName.substring(0, 1).toUpperCase() + upName.substring(1));
     while (tok.hasMoreTokens()) {
       String word = tok.nextToken();
-      upName += "_" + word.substring(0, 1).toUpperCase() + word.substring(1);
+      upName.append("_").append(word.substring(0, 1).toUpperCase()).append(word.substring(1));
     }
-    upName = s.startsWith("_") ? "_" + upName : upName;
+    upName = new StringBuilder(s.startsWith("_") ? "_" + upName : upName.toString());
     if (s.endsWith("_")) {
-      upName += trail(s);
+      upName.append(trail(s));
     }
-    return upName;
+    return upName.toString();
   }
 
   private static int trail(String s) {
@@ -545,26 +550,27 @@ public final class NameUtils {
       start--;
       count++;
     }
-    //return s.substring( start + 1 );
     return count;
   }
 
   public static String camelCase(final String name) {
     String idName = nameToIdentifier(name, IdentifierType.CLASS);
     StringTokenizer tok = new StringTokenizer(idName, " _-");
-    String upName = tok.nextToken();
-    upName = upName.substring(0, 1).toLowerCase() + upName.substring(1).toLowerCase();
+    StringBuilder upName = Optional.ofNullable(tok.nextToken()).map(StringBuilder::new)
+        .orElse(new StringBuilder());
+    upName = new StringBuilder(
+        upName.substring(0, 1).toLowerCase() + upName.substring(1).toLowerCase());
     while (tok.hasMoreTokens()) {
       String word = tok.nextToken();
-      upName += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+      upName.append(word.substring(0, 1).toUpperCase()).append(word.substring(1).toLowerCase());
     }
-    return upName;
+    return upName.toString();
   }
 
   public static String fixTrail(String name) {
     if (name.endsWith("_")) {
-      int N = trail(name);
-      return name.substring(0, name.length() - N) + N;
+      int numChars = trail(name);
+      return name.substring(0, name.length() - numChars) + numChars;
     } else {
       return name;
     }
@@ -572,26 +578,17 @@ public final class NameUtils {
 
   public static String compactVariable(final String name) {
     String idName = nameToIdentifier(name, IdentifierType.VARIABLE);
-    if (Util.isEmpty(idName)) {
-      return "";
-    }
     StringTokenizer tok = new StringTokenizer(idName, "_");
-    String upName = tok.nextToken();
+    StringBuilder upName = new StringBuilder(tok.nextToken());
     while (tok.hasMoreTokens()) {
       String word = tok.nextToken();
-      upName += word.substring(0, 1).toUpperCase() + word.substring(1);
+      upName.append(word.substring(0, 1).toUpperCase()).append(word.substring(1));
     }
     if (name.endsWith("_")) {
-      upName += trail(name);
+      upName.append(trail(name));
     }
-    return upName;
+    return upName.toString();
   }
-
-
-  private static boolean isMultiple(Integer max) {
-    return max == null || max != 1;
-  }
-
 
   public static String negate(String expr) {
     if (expr.startsWith(NEG)) {
@@ -635,13 +632,14 @@ public final class NameUtils {
   }
 
   public static String getTermConceptName(String conceptCode, String conceptName) {
-    conceptName = fixSpecialCharacters(conceptName);
-    return NameUtils.capitalize(conceptName.replaceAll("[^a-zA-Z0-9]", "_"));
+    String term = Util.isEmpty(conceptName) ? conceptCode : conceptName;
+    term = fixSpecialCharacters(term);
+    return NameUtils.capitalize(term.replaceAll("[^a-zA-Z0-9]", "_"));
   }
 
   private static String fixSpecialCharacters(String s) {
-    s = s.replaceAll(">", "_GT_");
-    s = s.replaceAll("<", "_LT_");
+    s = s.replace(">", "_GT_");
+    s = s.replace("<", "_LT_");
     return s;
   }
 
@@ -664,7 +662,7 @@ public final class NameUtils {
       if (!Util.isEmpty(u.getFragment())) {
         return u.getFragment();
       }
-      return uri.substring(uri.lastIndexOf("/") + 1);
+      return uri.substring(uri.lastIndexOf('/') + 1);
     } catch (URISyntaxException e) {
       return uri;
     }
@@ -672,7 +670,7 @@ public final class NameUtils {
   }
 
   public static String removeTrailingPart(String uri) {
-    return uri.replace(getTrailingPart(uri),"");
+    return uri.replace(getTrailingPart(uri), "");
   }
 
 

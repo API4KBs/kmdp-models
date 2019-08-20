@@ -20,6 +20,7 @@ import edu.mayo.kmdp.test.mockdel.Trean;
 import edu.mayo.kmdp.test.mockdel.Vid;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JsonLDTest {
@@ -59,7 +61,6 @@ public class JsonLDTest {
         .map(String::new);
 
     assertTrue(json.isPresent());
-//    System.out.println(json.get());
     assertEquals(Util.clearLineSeparators(jsonBean), Util.clearLineSeparators(json.get()));
   }
 
@@ -69,7 +70,7 @@ public class JsonLDTest {
 
     Trean t = new Trean(new Vid("http://foo", "456"));
     t.setRel1(b);
-    t.setRel2(Arrays.asList(b));
+    t.setRel2(Collections.singletonList(b));
 
     b.setT(t);
 
@@ -77,7 +78,6 @@ public class JsonLDTest {
         .map(ByteArrayOutputStream::toByteArray)
         .map(String::new);
 
-//    System.out.println(json.get());
+    assertFalse(Util.isEmpty(json.orElse("")));
   }
-
 }

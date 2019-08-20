@@ -23,10 +23,10 @@ import javax.xml.bind.Marshaller;
 
 public class JaxbConfig extends ConfigProperties<JaxbConfig, JaxbConfig.JaxbOptions> {
 
-  private static final Properties defaults = defaulted(JaxbOptions.class);
+  private static final Properties DEFAULTS = defaulted(JaxbOptions.class);
 
   public JaxbConfig() {
-    super(defaults);
+    super(DEFAULTS);
   }
 
   @Override
@@ -53,6 +53,12 @@ public class JaxbConfig extends ConfigProperties<JaxbConfig, JaxbConfig.JaxbOpti
         null,
         "URL of the XSD schema to validate",
         String.class,
+        false)),
+    LOG_EXCEPTIONS(Opt.of(
+        "silent",
+        "true",
+        "URL of the XSD schema to validate",
+        Boolean.class,
         false));
 
     private Opt<JaxbOptions> opt;

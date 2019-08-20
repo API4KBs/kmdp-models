@@ -132,10 +132,10 @@ public class MetadataTest {
     assertTrue(XMLUtil.validate(new StreamSource(new ByteArrayInputStream(str.get().getBytes())),
         schema.get()));
 
-    KnowledgeAsset rec = JaxbUtil.unmarshall(of.getClass(),
-        KnowledgeAsset.class,
-        XMLUtil.loadXMLDocument(new ByteArrayInputStream(str.get().getBytes())).get(),
-        JaxbUtil.defaultProperties()).get();
+    KnowledgeAsset rec = XMLUtil.loadXMLDocument(new ByteArrayInputStream(str.get().getBytes()))
+        .flatMap(dox -> JaxbUtil.unmarshall(of.getClass(), KnowledgeAsset.class, dox))
+        .orElse(null);
+
     assertEquals(ks, rec);
     return rec;
   }

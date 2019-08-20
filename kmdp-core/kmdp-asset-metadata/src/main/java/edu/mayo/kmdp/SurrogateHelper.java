@@ -47,6 +47,10 @@ import org.w3c.dom.Node;
 
 public class SurrogateHelper {
 
+  protected SurrogateHelper() {
+
+  }
+
   public static Optional<Schema> getSchema() {
     return XMLUtil.getSchemas(
         SurrogateHelper.class.getResource("/xsd/metadata/surrogate/surrogate.xsd"),
@@ -75,12 +79,10 @@ public class SurrogateHelper {
       default:
         throw new IllegalStateException("Unrecognized Annotation " + node.getLocalName());
     }
-    Annotation ann = JaxbUtil.unmarshall(Annotation.class,
+    return JaxbUtil.unmarshall(Annotation.class,
         annoType,
-        node,
-        JaxbUtil.defaultProperties())
+        node)
         .orElseThrow(IllegalStateException::new);
-    return ann;
   }
 
   public static Annotation rootToFragment(Annotation anno) {
@@ -141,7 +143,7 @@ public class SurrogateHelper {
     return asset.getSubject().stream()
         .filter(SimpleAnnotation.class::isInstance)
         .map(SimpleAnnotation.class::cast)
-        .filter((ann) -> rel == null || rel.equals(ann.getRel()))
+        .filter(ann -> rel == null || rel.equals(ann.getRel()))
         .map(SimpleAnnotation::getExpr)
         .findAny();
   }

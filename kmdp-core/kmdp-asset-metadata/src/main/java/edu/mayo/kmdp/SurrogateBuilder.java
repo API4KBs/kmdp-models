@@ -149,7 +149,7 @@ public class SurrogateBuilder {
       this.withAnnotation(AnnotationRelType.Has_Subject.asConcept(), subject);
     }
 
-    Arrays.stream(inputs).forEach((input) ->
+    Arrays.stream(inputs).forEach(input ->
         this.withAnnotation(AnnotationRelType.In_Terms_Of.asConcept(), input.asConcept())
     );
 
@@ -285,7 +285,7 @@ public class SurrogateBuilder {
           .withLocator(loc);
       get().withCarriers(carrier);
     } else {
-      ((KnowledgeArtifact) get().getCarriers().get(0))
+      get().getCarriers().get(0)
           .withArtifactId(id)
           .withLocator(loc);
     }

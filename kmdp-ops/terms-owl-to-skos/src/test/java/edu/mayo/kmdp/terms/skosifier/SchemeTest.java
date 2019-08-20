@@ -15,8 +15,8 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
-import static edu.mayo.kmdp.util.JenaUtil.dat_a;
-import static edu.mayo.kmdp.util.JenaUtil.obj_a;
+import static edu.mayo.kmdp.util.JenaUtil.datA;
+import static edu.mayo.kmdp.util.JenaUtil.objA;
 import static edu.mayo.kmdp.util.Util.uuid;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -59,23 +59,23 @@ public class SchemeTest extends TestBase {
     String subj = NS + "#" + uuid(schemeName);
 
     assertTrue(result.contains(
-        dat_a(subj,
+        datA(subj,
             RDFS.label,
             schemeName)));
     assertTrue(result.contains(
-        dat_a(subj,
+        datA(subj,
             SKOS.prefLabel,
             schemeName)));
     assertTrue(result.contains(
-        obj_a(subj,
+        objA(subj,
             RDF.type,
             SKOS.ConceptScheme)));
     assertTrue(result.contains(
-        obj_a(subj,
+        objA(subj,
             SKOS.hasTopConcept,
             ResourceFactory.createResource(NS + "#" + uuid("MyScheme_Top")))));
     assertTrue(result.contains(
-        dat_a(NS + "#" + uuid("MyScheme_Top"),
+        datA(NS + "#" + uuid("MyScheme_Top"),
             RDFS.label,
             "MyScheme_Top")));
 
@@ -100,19 +100,19 @@ public class SchemeTest extends TestBase {
     String top = NS + "#" + uuid(topConcept);
 
     assertTrue(result.contains(
-        obj_a(scheme,
+        objA(scheme,
             SKOS.hasTopConcept,
             ResourceFactory.createResource(top))));
     assertTrue(result.contains(
-        dat_a(top,
+        datA(top,
             RDFS.label,
             topConcept)));
     assertTrue(result.contains(
-        obj_a(top,
+        objA(top,
             SKOS.broader,
             ResourceFactory.createResource(top))));
     assertTrue(result.contains(
-        obj_a(NS + "#" + uuid("Child"),
+        objA(NS + "#" + uuid("Child"),
             SKOS.broader,
             ResourceFactory.createResource(top))));
 

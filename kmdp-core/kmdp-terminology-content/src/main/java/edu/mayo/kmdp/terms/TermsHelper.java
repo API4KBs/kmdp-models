@@ -15,15 +15,17 @@
  */
 package edu.mayo.kmdp.terms;
 
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.ns;
+
+import java.net.URI;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
-import java.net.URI;
-import java.util.UUID;
-
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.ns;
-
 public class TermsHelper {
+
+  protected TermsHelper() {
+
+  }
 
   /**
    * Instantiates a SNOMED-CT term

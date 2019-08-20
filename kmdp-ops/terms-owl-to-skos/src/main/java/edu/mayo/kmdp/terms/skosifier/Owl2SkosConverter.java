@@ -39,16 +39,20 @@ import org.apache.jena.reasoner.ValidityReport;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.SKOS;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class Owl2SkosConverter extends ConverterInitBase implements
     BiFunction<Model, Owl2SkosConfig, Optional<Model>> {
 
   public static final String SKOS_NAMESPACE = SKOS.getURI();
+  public static final String DC_NAMESPACE = DCTerms.getURI();
   public static final String OLEX = "http://www.w3.org/ns/lemon/ontolex#";
 
+  private static Logger logger = LogManager.getLogger(Owl2SkosConverter.class);
+
   private static Model schema;
-  private static InfModel schemaInferred;
 
   @Override
   public Optional<Model> apply(Model source, Owl2SkosConfig cfg) {
@@ -64,7 +68,7 @@ public class Owl2SkosConverter extends ConverterInitBase implements
     Modes mode = cfg.get(OWLtoSKOSTxParams.MODE).map(Modes::valueOf).orElse(Modes.SKOS);
     Model result = sources.stream()
         .map(Owl2SkosConverter::createSourceModel)
-        .map((s) -> applyQueries(s, mode, cfg))
+        .map(s -> applyQueries(s, mode, cfg))
         .reduce(ModelFactory.createDefaultModel(), Model::add);
 
     return postProcess(result, detectVersionFragment(result).orElse(null), mode, cfg);
@@ -80,7 +84,7 @@ public class Owl2SkosConverter extends ConverterInitBase implements
       InfModel inf = infer(model, getSchema());
       ValidityReport report = inf.validate();
       if (!report.isValid()) {
-        debug(inf, report);
+        debug(report);
       }
       result = report.isValid() ? inf.getRawModel() : null;
     } else {
@@ -107,15 +111,15 @@ public class Owl2SkosConverter extends ConverterInitBase implements
       }
       ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
       if (modes.usedDC) {
-        ont.addImport(ontModel.createResource(DCTerms.getURI()));
+        ont.addImport(ontModel.createResource(DC_NAMESPACE));
       }
     } else {
       ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
     }
 
-    if (cfg.getTyped(OWLtoSKOSTxParams.FLATTEN)) {
-      prefetch(ontModel, modes.usesOlex);
-    } else if (cfg.getTyped(OWLtoSKOSTxParams.ADD_IMPORTS)) {
+    prefetch(ontModel, modes.usesOlex);
+
+    if (cfg.getTyped(OWLtoSKOSTxParams.ADD_IMPORTS)) {
       ontModel.loadImports();
     }
 
@@ -129,6 +133,7 @@ public class Owl2SkosConverter extends ConverterInitBase implements
 
   private static void prefetch(OntModel ontModel, boolean olex) {
     prefetchFromLocal(ontModel, SKOS_NAMESPACE, "/ontology/skos.rdf");
+    prefetchFromLocal(ontModel, DC_NAMESPACE, "/ontology/dcterms.rdf");
     if (olex) {
       prefetchFromLocal(ontModel, OLEX, "/ontology/ontolex.owl");
     }
@@ -139,9 +144,7 @@ public class Owl2SkosConverter extends ConverterInitBase implements
     InputStream is = Owl2SkosConverter.class.getResourceAsStream(path);
     try {
       if (is != null && is.available() > 0) {
-        OntModel extraModel = ModelFactory.createOntologyModel();
-        extraModel.read(is, namespace);
-        ontModel.add(extraModel);
+        ontModel.read(is, namespace);
       }
     } catch (IOException e) {
       // do nothing
@@ -149,10 +152,10 @@ public class Owl2SkosConverter extends ConverterInitBase implements
   }
 
 
-  private void debug(InfModel inf, ValidityReport report) {
-    report.getReports().forEachRemaining((rep) -> {
+  private void debug( ValidityReport report) {
+    report.getReports().forEachRemaining(rep -> {
       if (rep.isError()) {
-        System.err.println(rep.toString());
+        logger.error(rep);
       }
     });
   }
@@ -177,29 +180,15 @@ public class Owl2SkosConverter extends ConverterInitBase implements
     return schema;
   }
 
-
-  private static InfModel getSchemaInferred() {
-    if (schemaInferred == null) {
-      schemaInferred = ModelFactory.createInfModel(ReasonerRegistry.getOWLReasoner(), getSchema());
-    }
-    return schemaInferred;
-  }
-
   private static Model createSourceModel(String ref) {
     Model sourceOntology = ModelFactory.createDefaultModel();
     sourceOntology.add(JenaUtil.loadModel(ref));
     return sourceOntology;
   }
 
-  private Model loadSourceModel(InputStream ref, String base) {
-    Model sourceOntology = ModelFactory.createDefaultModel();
-    sourceOntology.add(JenaUtil.loadModel(ref, base));
-    return sourceOntology;
-  }
-
   private Model applyQueries(final Model ontModel, final Modes modes, final Owl2SkosConfig cfg) {
     return getQueriesForModes(modes, cfg).stream()
-        .map((q) -> QueryExecutionFactory.create(q, ontModel).execConstruct())
+        .map(q -> QueryExecutionFactory.create(q, ontModel).execConstruct())
         .reduce(Model::add)
         .orElse(ModelFactory.createDefaultModel());
   }

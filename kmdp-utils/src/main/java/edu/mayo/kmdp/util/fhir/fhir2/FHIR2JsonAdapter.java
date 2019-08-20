@@ -37,7 +37,7 @@ import java.util.List;
 import org.hl7.fhir.instance.model.api.IBase;
 
 public class FHIR2JsonAdapter extends
-    AbstractFHIRJsonAdapter<BaseResource, IResource, Parameters, Bundle, IDatatype> {
+    AbstractFHIRJsonAdapter<BaseResource, IResource, Parameters, IDatatype> {
 
   private static IParser jsonParser = FhirContext.forDstu2().newJsonParser();
   protected static FHIR2JsonAdapter instance = new FHIR2JsonAdapter();

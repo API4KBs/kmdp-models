@@ -31,7 +31,7 @@ public interface Option<T> {
     return getOption().getType();
   }
 
-  default String getDefinition() { return getOption().getDefinition(); };
+  default String getDefinition() { return getOption().getDefinition(); }
 
   default boolean isRequired() { return getOption().isRequired(); }
 

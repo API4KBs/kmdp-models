@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -35,7 +34,6 @@ public abstract class AbstractFHIRJsonAdapter<
     R extends IBaseResource, // Root class of Resources
     I extends IBaseResource, // Root class of Clinical Resources
     P extends IBaseParameters, // Root class of Parameters
-    B extends IBaseBundle, // Root class of Bundle
     D extends IBaseDatatype // Root class of Datatypes
     > {
 

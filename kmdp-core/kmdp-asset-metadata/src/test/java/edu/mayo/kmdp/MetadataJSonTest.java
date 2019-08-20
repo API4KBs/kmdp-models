@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
 public class MetadataJSonTest {
 
   @Test
-  public void testAssetCore() {
+  void testAssetCore() {
     KnowledgeAsset ks = new KnowledgeAsset()
         .withAssetId(uri("http://foo.bar", "234"));
 
@@ -57,7 +57,7 @@ public class MetadataJSonTest {
 
   @Test
   @Disabled("Role of HATEOAS not yet fully evaluated")
-  public void testSerializationWithHateoas() {
+  void testSerializationWithHateoas() {
     KnowledgeAsset ks = new KnowledgeAsset()
 
         .withAssetId(uri("http://foo.bar", "234"))
@@ -77,6 +77,7 @@ public class MetadataJSonTest {
         .withCitations(
             new Citation()
                 .withRel(BibliographicCitationType.Cites));
+    assertNotNull(ks);
 
 //    Resource<KnowledgeAsset> axx = new Resource<>(ks);
 //    axx.add(new Link("http://foo.bax").withRel("goto")

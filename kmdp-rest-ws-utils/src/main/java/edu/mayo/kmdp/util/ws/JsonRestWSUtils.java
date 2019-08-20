@@ -74,7 +74,7 @@ public class JsonRestWSUtils {
         default:
       }
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new FHIRConfigurationException(e);
     }
 
     return objectMapper;
@@ -139,4 +139,10 @@ public class JsonRestWSUtils {
   }
 
 
+  private static class FHIRConfigurationException extends RuntimeException {
+
+    public FHIRConfigurationException(Exception e) {
+      super(e);
+    }
+  }
 }

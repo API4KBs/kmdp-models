@@ -25,7 +25,11 @@ public enum EntityTypes {
   DATA_PROP("/query/select/selectDataRel.sparql"),
   UNKNOWN("");
 
-  public String query;
+  protected String query;
+
+  public String getQuery() {
+    return query;
+  }
 
   EntityTypes(String queryPath) {
     query = JenaUtil.read(queryPath);

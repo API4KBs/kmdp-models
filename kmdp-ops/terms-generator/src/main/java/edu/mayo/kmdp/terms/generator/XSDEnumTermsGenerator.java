@@ -43,7 +43,7 @@ public class XSDEnumTermsGenerator extends BaseEnumGenerator {
       Map<String, Object> context = getContext(conceptScheme, options, conceptGraph);
 
       generateXSD(context, outputDir);
-      if (options.getTyped(EnumGenerationParams.WITH_JAXB, Boolean.class)) {
+      if (Boolean.TRUE.equals(options.getTyped(EnumGenerationParams.WITH_JAXB, Boolean.class))) {
         generateXJB(context, outputDir);
       }
     }
@@ -52,7 +52,6 @@ public class XSDEnumTermsGenerator extends BaseEnumGenerator {
   private void generateXSD(Map<String, Object> context, File outputDir) {
     String mainText = fromTemplate("concepts-xsd", context);
 
-    //System.out.println( mainText );
     this.writeToFile(mainText,
         getFile(outputDir, context, ".xsd"));
   }
@@ -60,7 +59,6 @@ public class XSDEnumTermsGenerator extends BaseEnumGenerator {
   private void generateXJB(Map<String, Object> context, File outputDir) {
     String mainText = fromTemplate("concepts-xjb", context);
 
-    //System.out.println( mainText );
     this.writeToFile(mainText,
         getFile(outputDir, context, ".xjb"));
   }

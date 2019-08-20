@@ -15,7 +15,9 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.util.FileUtil.streamChildFiles;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -30,6 +32,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
@@ -72,7 +75,7 @@ public class MetadataIntegrityTest {
       assertTrue(f.exists());
       assertTrue(f.isDirectory());
 //      Arrays.stream(f.listFiles()).forEach(System.out::println);
-      Set<String> fileNames = Arrays.stream(f.listFiles()).map(File::getName)
+      Set<String> fileNames = streamChildFiles(f).map(File::getName)
           .collect(Collectors.toSet());
       assertTrue(fileNames.contains(KnowledgeAsset.class.getSimpleName() + ".java"));
     } catch (URISyntaxException e) {
@@ -95,7 +98,7 @@ public class MetadataIntegrityTest {
       assertTrue(f.exists());
       assertTrue(f.isDirectory());
 //      Arrays.stream(f.listFiles()).forEach(System.out::println);
-      Set<String> fileNames = Arrays.stream(f.listFiles()).map(File::getName)
+      Set<String> fileNames = streamChildFiles(f).map(File::getName)
           .collect(Collectors.toSet());
       assertTrue(fileNames.contains(SimpleAnnotation.class.getSimpleName() + ".java"));
     } catch (URISyntaxException e) {
@@ -104,10 +107,12 @@ public class MetadataIntegrityTest {
     }
   }
 
+
   @Test
   public void testEpisode() {
     // ConceptIdentifier should have not been regenerated (even more so without bindings!)
     Term t = new ConceptIdentifier();
+    assertNotNull(t);
   }
 
 

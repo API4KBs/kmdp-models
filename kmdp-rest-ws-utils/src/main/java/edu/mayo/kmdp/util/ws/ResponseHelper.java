@@ -31,6 +31,8 @@ import org.springframework.http.ResponseEntity;
 
 public class ResponseHelper {
 
+  private ResponseHelper() {}
+
   public static <T> List<T> getAll(ResponseEntity<List<T>> resp) {
     return isSuccess(resp) ? resp.getBody() : Collections.emptyList();
   }
@@ -98,8 +100,6 @@ public class ResponseHelper {
 
   public static <X, T> ResponseEntity<T> delegate(Optional<X> delegate,
       Function<X, ResponseEntity<T>> fun) {
-    ResponseEntity<T> x = delegate
-        .map(fun).orElse(null);
     return delegate
         .map(fun)
         .orElse(notSupported());

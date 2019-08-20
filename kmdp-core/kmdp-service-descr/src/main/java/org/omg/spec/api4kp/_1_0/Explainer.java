@@ -19,12 +19,9 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.ofNaturalLanguageRep;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
@@ -41,15 +38,15 @@ public abstract class Explainer {
 
   private static final Pattern REGEXP_PATTERN = Pattern.compile(PROV_REGEXP);
 
-  public final static String EXPL_HEADER = "Link";
-  public final static String PROV_KEY = "http://www.w3.org/ns/prov#has_provenance";
+  public static final String EXPL_HEADER = "Link";
+  public static final String PROV_KEY = "http://www.w3.org/ns/prov#has_provenance";
 
   protected KnowledgeCarrier explanation;
 
-  public static Optional<? extends KnowledgeCarrier> extractExplanation(
+  public static Optional<KnowledgeCarrier> extractExplanation(
       Map<String, List<String>> meta) {
     return Optional.ofNullable(meta.get(EXPL_HEADER))
-        .flatMap((links) -> resolveExplanation(links,meta));
+        .flatMap(links -> resolveExplanation(links,meta));
   }
 
   protected static Optional<KnowledgeCarrier> resolveExplanation(List<String> links, Map<String, List<String>> meta) {
@@ -63,7 +60,7 @@ public abstract class Explainer {
     String explKey = matcher.group(1);
     // TODO This should resolve a Provenance URI
     return Optional.ofNullable(meta.get(explKey))
-        .map((expl) -> ofNaturalLanguageRep(Util.concat(expl)));
+        .map(expl -> ofNaturalLanguageRep(Util.concat(expl)));
   }
 
   protected void mergeExplanation(KnowledgeCarrier other) {

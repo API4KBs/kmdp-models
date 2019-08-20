@@ -44,10 +44,10 @@ public class TermsSerializationTest {
     assertTrue(xml.contains(KnowledgeRepresentationLanguage.OWL_2.getLabel()));
     assertTrue(xml.contains(KnowledgeRepresentationLanguage.OWL_2.getRef().toString()));
 
-    Optional<Foo> f2 = JaxbUtil.unmarshall(Collections.singleton(Foo.class),
-        Foo.class,
-        XMLUtil.loadXMLDocument(xml.getBytes()).get(),
-        JaxbUtil.defaultProperties());
+    Optional<Foo> f2 = XMLUtil.loadXMLDocument(xml.getBytes())
+        .flatMap(dox ->
+            JaxbUtil.unmarshall(Collections.singleton(Foo.class), Foo.class, dox));
+
     assertTrue(f2.isPresent());
     assertEquals(KnowledgeAssetType.Cognitive_Process_Model, f2.get().getType());
     assertEquals(KnowledgeRepresentationLanguage.OWL_2, f2.get().getLang());

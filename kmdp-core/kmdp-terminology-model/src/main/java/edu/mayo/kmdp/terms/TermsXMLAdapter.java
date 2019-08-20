@@ -24,7 +24,7 @@ public abstract class TermsXMLAdapter extends
   @Override
   public Term unmarshal(org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier v) {
     return java.util.Arrays.stream(getValues())
-        .filter((x) -> x.getRef().equals(v.getRef()))
+        .filter(x -> x.getRef().equals(v.getRef()))
         .findFirst().orElse(null);
   }
 

@@ -18,7 +18,6 @@ package edu.mayo.kmdp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
@@ -41,13 +40,13 @@ public class RootElementTest {
 
   @Test
   public void testAnnotationRoundtrip() {
-    Term br = KnowledgeAssetCategory.Rules_Policies_And_Guidelines;
+    KnowledgeAssetCategory br = KnowledgeAssetCategory.Rules_Policies_And_Guidelines;
     SimpleAnnotation anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation().withExpr(
         new ConceptIdentifier()
             .withRef(br.getRef())
             .withTag("BusinessRuleAsset")
             .withLabel(br.getLabel())
-            .withNamespace(((KnowledgeAssetCategory) br).getNamespace()));
+            .withNamespace(br.getNamespace()));
 
     Annotation rec = checkRoundTrip(anno);
     String ann = JaxbUtil.marshallToString(Collections.singleton(rec.getClass()),
@@ -83,13 +82,13 @@ public class RootElementTest {
     Optional<Schema> schema = SurrogateHelper.getSchema();
     assertTrue(schema.isPresent());
 
+    assertTrue(str.isPresent());
     assertTrue(XMLUtil.validate(new StreamSource(new ByteArrayInputStream(str.get().getBytes())),
         schema.get()));
 
-    Annotation rec = JaxbUtil.unmarshall(of.getClass(),
-        anno.getClass(),
-        XMLUtil.loadXMLDocument(new ByteArrayInputStream(str.get().getBytes())).get(),
-        JaxbUtil.defaultProperties()).get();
+    Annotation rec = XMLUtil.loadXMLDocument(new ByteArrayInputStream(str.get().getBytes()))
+        .flatMap(dox -> JaxbUtil.unmarshall(of.getClass(), anno.getClass(), dox))
+        .orElse(null);
     assertEquals(anno, rec);
     return rec;
   }

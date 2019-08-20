@@ -31,36 +31,16 @@ public class TransitiveClosure {
   public static <T> Map<T, List<T>> closure(Map<T, Set<T>> hierarchy) {
     Set<T> allNodes = new HashSet<>(hierarchy.keySet());
     hierarchy.values().forEach(allNodes::addAll);
-    ArrayList<T> list = new ArrayList<T>(allNodes);
+    ArrayList<T> list = new ArrayList<>(allNodes);
 
-    int N = list.size();
-    boolean[][] closure = new boolean[N][N];
-
-    for (int i = 0; i < N; i++) {
-      for (int j = 0; j < N; j++) {
-        if (hierarchy.getOrDefault(list.get(i), Collections.emptySet()).contains(list.get(j))) {
-          closure[i][j] = true;
-        }
-        closure[i][i] = true;
-      }
-    }
-    for (int i = 0; i < N; i++) {
-      for (int j = 0; j < N; j++) {
-        if (closure[j][i]) {
-          for (int k = 0; k < N; k++) {
-            if (closure[j][i] && closure[i][k]) {
-              closure[j][k] = true;
-            }
-          }
-        }
-      }
-    }
+    int num = list.size();
+    boolean[][] closure = getClosure(hierarchy,list,num);
 
     Map<T, List<T>> closedHierarchy = new HashMap<>();
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < num; i++) {
       T t = list.get(i);
       List<T> ancestors = new ArrayList<>();
-      for (int k = 0; k < N; k++) {
+      for (int k = 0; k < num; k++) {
         if (closure[i][k] && i != k) {
           ancestors.add(list.get(k));
         }
@@ -68,6 +48,39 @@ public class TransitiveClosure {
       closedHierarchy.put(t, ancestors);
     }
     return closedHierarchy;
+  }
+
+  private static <T> boolean[][] getClosure(Map<T, Set<T>> hierarchy, ArrayList<T> list, int num) {
+    boolean[][] closure = new boolean[num][num];
+
+    initClosure(closure, list, hierarchy, num);
+
+    propagateClosure(closure, num);
+
+    return closure;
+  }
+
+  private static void propagateClosure(boolean[][] closure, int num) {
+    for (int i = 0; i < num; i++) {
+      for (int j = 0; j < num; j++) {
+        if (closure[j][i]) {
+          for (int k = 0; k < num; k++) {
+            closure[j][k] = closure[j][k] || closure[j][i] && closure[i][k];
+          }
+        }
+      }
+    }
+  }
+
+  private static <T> void initClosure(boolean[][] closure, ArrayList<T> list, Map<T, Set<T>> hierarchy, int num) {
+    for (int i = 0; i < num; i++) {
+      for (int j = 0; j < num; j++) {
+        if (hierarchy.getOrDefault(list.get(i), Collections.emptySet()).contains(list.get(j))) {
+          closure[i][j] = true;
+        }
+        closure[i][i] = true;
+      }
+    }
   }
 
 }

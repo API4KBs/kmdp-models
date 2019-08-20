@@ -15,14 +15,12 @@
  */
 package edu.mayo.kmdp.id.adapter;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.jvnet.jaxb2_commons.lang.CopyStrategy;
 import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.HashMap;
-import java.util.Map;
-
-// TODO FIXME May not be necessary if copyTo is not enabled
+// May not be necessary if copyTo is not enabled
 public class CopyableHashMap<K, V> extends HashMap<K, V> {
 
   public CopyableHashMap() {

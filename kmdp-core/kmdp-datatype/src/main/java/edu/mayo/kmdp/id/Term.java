@@ -15,17 +15,17 @@
  */
 package edu.mayo.kmdp.id;
 
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.toQualifiedIdentifier;
+
 import edu.mayo.kmdp.id.adapter.QualifiedId;
+import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 
-import java.net.URI;
-
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.toQualifiedIdentifier;
-
-public interface Term extends LexicalIdentifier {
+public interface Term extends LexicalIdentifier, Serializable {
 
   URI getRef();
 

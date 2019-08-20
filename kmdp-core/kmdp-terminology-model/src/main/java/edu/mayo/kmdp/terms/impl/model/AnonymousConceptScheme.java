@@ -19,13 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.ConceptScheme;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-
 import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
 public class AnonymousConceptScheme extends NamespaceIdentifier implements ConceptScheme<Term> {
+
+  private static final String NOT_SUPPORTED = "Unable to track Concepts in Anonymous Scheme";
 
   private URI versionId;
 
@@ -47,17 +48,40 @@ public class AnonymousConceptScheme extends NamespaceIdentifier implements Conce
         .withLabel(scheme.getFragment());
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof AnonymousConceptScheme)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    AnonymousConceptScheme that = (AnonymousConceptScheme) o;
+
+    return versionId != null ? versionId.equals(that.versionId) : that.versionId == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (versionId != null ? versionId.hashCode() : 0);
+    return result;
+  }
 
   @Override
   @JsonIgnore
   public Stream<Term> getConcepts() {
-    throw new UnsupportedOperationException("Unable to track Concepts in Anonymous Scheme");
+    throw new UnsupportedOperationException(NOT_SUPPORTED);
   }
 
   @Override
   @JsonIgnore
   public Optional<Term> getTopConcept() {
-    throw new UnsupportedOperationException("Unable to track Concepts in Anonymous Scheme");
+    throw new UnsupportedOperationException(NOT_SUPPORTED);
   }
 
   @Override
@@ -67,7 +91,7 @@ public class AnonymousConceptScheme extends NamespaceIdentifier implements Conce
 
   @Override
   public boolean subsumes(Term sup, Term sub) {
-    throw new UnsupportedOperationException("Unable to track Concepts in Anonymous Scheme");
+    throw new UnsupportedOperationException(NOT_SUPPORTED);
   }
 
   @Override

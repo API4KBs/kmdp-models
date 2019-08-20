@@ -40,7 +40,7 @@ public class AbstractCarrier {
         .withSerializedExpression(s)
         .withLevel(ParsingLevel.Concrete_Knowledge_Expression)
         .withRepresentation(
-            // TODO - ADD "Natural Language" to the list of languages
+            // ADD "Natural Language" to the list of languages
             rep(KnowledgeRepresentationLanguage.HTML,
                 SerializationFormat.TXT));
   }
@@ -136,7 +136,7 @@ public class AbstractCarrier {
     return rep(language, serialization, format, null, null);
   }
 
-  // TODO Should the object be unified?
+  // Should the object be unified?
   public static SyntacticRepresentation rep(Representation meta) {
     return rep(meta.getLanguage(), meta.getSerialization(), meta.getFormat(), null, null);
   }
@@ -205,9 +205,10 @@ public class AbstractCarrier {
     return rep(null, null, null, null, encoding);
   }
 
-  protected Object copyTo(ObjectLocator locator, Object target,
-      CopyStrategy strategy) {
-    return target;
+  protected Object copyTo(ObjectLocator locator, Object target, CopyStrategy strategy) {
+    return target != null && locator != null && strategy != null
+        ? target
+        : null ;
   }
 
   public <T> Optional<T> as(Class<T> type) {
@@ -220,13 +221,26 @@ public class AbstractCarrier {
 
 
 
-  //TODO Rewrite as proper map/flatMap
+
+  /**
+   * @deprecated until reworked
+   * @param mapper
+   * @param <U>
+   * @return
+   */
+  // Rewrite as proper map/flatMap
   @Deprecated
   public <U> U flatMap(Function<? super KnowledgeCarrier, U> mapper) {
     return mapper.apply((KnowledgeCarrier) this);
   }
 
-  //TODO Rewrite as proper map/flatMap
+  /**
+   * @deprecated until reworked
+   * @param mapper
+   * @param <U>
+   * @return
+   */
+  // Rewrite as proper map/flatMap
   @Deprecated
   public <U extends KnowledgeCarrier> U map(Function<? super AbstractCarrier, U> mapper) {
     return mapper.apply(this);

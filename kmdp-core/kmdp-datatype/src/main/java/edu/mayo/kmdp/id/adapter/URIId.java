@@ -19,8 +19,6 @@ package edu.mayo.kmdp.id.adapter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
-import edu.mayo.kmdp.util.NameUtils;
-
 import java.net.URI;
 
 public interface URIId extends VersionedIdentifier {

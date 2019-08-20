@@ -15,9 +15,6 @@
  */
 package org.omg.spec.api4kp._1_0.contrastors;
 
-import static org.omg.spec.api4kp._1_0.contrastors.ParsingLevelContrastor.parsingLevelContrastor;
-import static org.omg.spec.api4kp._1_0.contrastors.ProfileContrastor.profileContrastor;
-
 import edu.mayo.kmdp.comparator.Contrastor;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
 import java.util.HashSet;
@@ -25,7 +22,7 @@ import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
 public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepresentation> {
 
-  public static SyntacticRepresentationContrastor repContrastor = new SyntacticRepresentationContrastor();
+  public static final SyntacticRepresentationContrastor theRepContrastor = new SyntacticRepresentationContrastor();
 
   protected SyntacticRepresentationContrastor() {
   }
@@ -35,7 +32,8 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
     if (sr1.getLanguage() != sr2.getLanguage()) {
       return false;
     }
-    Comparison profileComparison = profileContrastor.contrast(sr1.getProfile(), sr2.getProfile());
+    Comparison profileComparison = ProfileContrastor.theProfileContrastor
+        .contrast(sr1.getProfile(), sr2.getProfile());
     if (profileComparison == Comparison.DISTINCT || profileComparison == Comparison.INCOMPARABLE) {
       return false;
     }
@@ -47,10 +45,7 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
         && sr1.getFormat() != sr2.getFormat()) {
       return false;
     }
-    if (! (new HashSet<>(sr1.getLexicon()).equals(new HashSet<>(sr2.getLexicon())))) {
-      return false;
-    }
-    return true;
+    return new HashSet<>(sr1.getLexicon()).equals(new HashSet<>(sr2.getLexicon()));
   }
 
   public int compare(SyntacticRepresentation sr1, SyntacticRepresentation sr2) {
@@ -59,7 +54,7 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
     }
     ParsingLevel p1 = ParsingLevelContrastor.detectLevel(sr1);
     ParsingLevel p2 = ParsingLevelContrastor.detectLevel(sr2);
-    return parsingLevelContrastor.compare(p1,p2);
+    return ParsingLevelContrastor.singleton.compare(p1,p2);
   }
 
 

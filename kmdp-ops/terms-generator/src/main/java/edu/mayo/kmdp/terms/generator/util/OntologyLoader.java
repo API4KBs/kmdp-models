@@ -15,6 +15,11 @@
  */
 package edu.mayo.kmdp.terms.generator.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -22,11 +27,6 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class OntologyLoader {
 
@@ -61,31 +61,30 @@ public class OntologyLoader {
 
   private OWLOntology loadOntologyPiece(String file, OWLOntologyManager manager)
       throws OWLOntologyCreationException {
-    InputStream inputStream = null;
     OWLOntology onto;
 
     File res = new File(file);
 
-    try {
-      if (!res.exists()) {
-        inputStream = OntologyLoader.class.getResourceAsStream(file);
-      } else {
-        inputStream = new FileInputStream(res);
-      }
+    try (InputStream inputStream = load(res,file)) {
       onto = manager.loadOntologyFromOntologyDocument(inputStream);
     } catch (IOException e) {
-      throw new RuntimeException(e);
-    } finally {
-      if (inputStream != null) {
-        try {
-          inputStream.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
+      throw new OntologyLoaderException(e);
     }
 
     return onto;
   }
 
+  private InputStream load(File res, String file) throws FileNotFoundException {
+    if (!res.exists()) {
+      return OntologyLoader.class.getResourceAsStream(file);
+    } else {
+      return new FileInputStream(res);
+    }
+  }
+
+  public static class OntologyLoaderException extends RuntimeException {
+    public OntologyLoaderException(Exception e) {
+      super(e);
+    }
+  }
 }
