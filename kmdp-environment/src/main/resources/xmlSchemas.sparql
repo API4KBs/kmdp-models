@@ -11,12 +11,10 @@ PREFIX dol: <http://www.omg.org/spec/DOL/DOL-terms/>
 
 SELECT ?L ?NS
 WHERE {
-  ?X a know:ConstructedLanguage;
-    owl:sameAs ?L;
-    dol:supportsSerialization ?Ser.
+  ?L a know:ConstructedLanguage;
+    dol:supportsSerialization ?NS.
 
-  ?Ser owl:sameAs ?NS;
-    know:depends-on ?XMLF.
+  ?NS know:depends-on ?XMLF.
 
   ?XMLF a know:MetaFormat;
     dc:source "http://www.w3.org/TR/xml11".

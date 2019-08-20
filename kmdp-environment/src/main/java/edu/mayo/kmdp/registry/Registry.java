@@ -15,14 +15,18 @@
  */
 package edu.mayo.kmdp.registry;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import static edu.mayo.kmdp.registry.RegistryUtil.findLatestLexicographically;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.reasoner.ReasonerRegistry;
@@ -43,7 +47,8 @@ public class Registry {
 
   private static Logger logger = LogManager.getLogger(Registry.class);
 
-  private static BiMap<String, String> prefixToNamespaceMap = HashBiMap.create();
+  private static Map<String, String> prefixToNamespaceMap = new HashMap<>();
+  private static Map<String, String> namespaceToPrefixMap = new HashMap<>();
   private static Map<String, String> languagSchemas = new HashMap<>();
 
   protected Registry() {
@@ -60,9 +65,7 @@ public class Registry {
         .read(Registry.class.getResourceAsStream(PATH),null);
     registryGraph = ModelFactory.createInfModel(ReasonerRegistry.getOWLMicroReasoner(),registryGraph);
 
-    RegistryUtil.askQuery(xmlPrefixesQry, registryGraph).forEach(
-        m -> prefixToNamespaceMap.put(m.get("P"), m.get("NS"))
-    );
+    populatePrefixMap(RegistryUtil.askQuery(xmlPrefixesQry, registryGraph));
 
     RegistryUtil.askQuery(xmlSchemasQry, registryGraph).forEach(
         m-> languagSchemas.put(m.get("L"), m.get("NS"))
@@ -70,13 +73,38 @@ public class Registry {
 
  }
 
+  private static void populatePrefixMap(List<Map<String, String>> askQuery) {
+    askQuery.forEach(
+        m -> prefixToNamespaceMap.put(m.get("P"), m.get("NS"))
+    );
+    askQuery.forEach(
+        m -> namespaceToPrefixMap.put(m.get("NS"), m.get("Code"))
+    );
+
+    Map<String, Set<String>> versions = new HashMap<>();
+    askQuery.forEach(l -> {
+      String code = l.get("Code");
+      String ver = l.get("Ver");
+      if (ver != null && !ver.isEmpty()) {
+        Set<String> verSet = versions.computeIfAbsent(code, c -> new HashSet<>());
+        verSet.add(ver);
+      }
+    });
+    versions.forEach((key,value) -> {
+       if (!key.isEmpty() && !value.isEmpty() && ! prefixToNamespaceMap.containsKey(key)) {
+         String lastKey = key + "-" + findLatestLexicographically(value);
+         prefixToNamespaceMap.put(key, prefixToNamespaceMap.get(lastKey));
+       }
+    });
+  }
+
 
   public static Optional<String> getNamespaceURIForPrefix(String pfx) {
     return Optional.ofNullable(prefixToNamespaceMap.get(pfx));
   }
 
   public static Optional<String> getPrefixforNamespace(String namespace) {
-    return Optional.ofNullable(prefixToNamespaceMap.inverse().get(namespace));
+    return Optional.ofNullable(namespaceToPrefixMap.get(namespace));
   }
 
   public static Optional<String> getPrefixforNamespace(URI namespace) {
@@ -106,5 +134,9 @@ public class Registry {
 
   public static Optional<String> getValidationSchema(URI lang) {
     return Optional.ofNullable(languagSchemas.get(lang.toString()));
+  }
+
+  public static Collection<String> listPrefixes() {
+    return new HashSet<>(prefixToNamespaceMap.keySet());
   }
 }
