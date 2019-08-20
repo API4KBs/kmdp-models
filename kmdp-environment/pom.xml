@@ -38,5 +38,13 @@
       <groupId>edu.stanford.protege</groupId>
       <artifactId>org.protege.xmlcatalog</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+    </dependency>
   </dependencies>
 </project>

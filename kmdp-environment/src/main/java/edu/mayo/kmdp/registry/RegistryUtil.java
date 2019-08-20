@@ -17,10 +17,12 @@ package edu.mayo.kmdp.registry;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -31,11 +33,13 @@ import org.apache.jena.rdf.model.Model;
 
 public class RegistryUtil {
 
-  private RegistryUtil() {}
+  private RegistryUtil() {
+  }
 
   public static List<Map<String, String>> askQuery(String qryString, Model knowledgeBase) {
+
     Query query = QueryFactory.create(qryString);
-    try(QueryExecution qexec = QueryExecutionFactory.create(query, knowledgeBase)) {
+    try (QueryExecution qexec = QueryExecutionFactory.create(query, knowledgeBase)) {
       ResultSet rs = qexec.execSelect();
       List<Map<String, String>> result = new ArrayList<>();
       while (rs.hasNext()) {
@@ -46,6 +50,18 @@ public class RegistryUtil {
         result.add(vals);
       }
       return result;
+    }
+  }
+
+  public static String findLatestLexicographically(Set<String> stringSet) {
+    if (stringSet.isEmpty()) {
+      return "";
+    } else if (stringSet.size() == 1) {
+      return stringSet.iterator().next();
+    } else {
+      List<String> strings = new ArrayList<>(stringSet);
+      Collections.sort(strings);
+      return strings.get(strings.size() - 1);
     }
   }
 

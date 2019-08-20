@@ -15,31 +15,41 @@
  */
 package edu.mayo.kmdp.registry;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
-import javax.xml.XMLConstants;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.net.URI;
+import javax.xml.XMLConstants;
+import org.apache.jena.vocabulary.SKOS;
+import org.junit.jupiter.api.Test;
 
 
 public class RegistryTest extends RegistryTestBase {
 
+  @Test
+  public void testKnownXMLNamespaces() {
+    assertFalse(Registry.listPrefixes().stream().anyMatch(p -> p.length() == 0));
+    assertEquals(48,Registry.listPrefixes().size());
+  }
 
   @Test
   public void testNamespaceMap() {
 
     assertEquals(XMLConstants.XML_NS_URI, getNS(XMLConstants.XMLNS_ATTRIBUTE));
     assertEquals(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI, getNS("xsi"));
-    assertEquals("urn:hl7-org:knowledgeartifact:r1", getNS("knart"));
-    assertEquals("urn:hl7-org:elm:r1", getNS("elm"));
-    assertEquals("http://kmdp.mayo.edu/metadata/surrogate", getNS("surr"));
     assertEquals("http://kmdp.mayo.edu/metadata/annotations", getNS("ann"));
+    assertEquals(SKOS.getURI(), getNS("skos"));
+  }
+
+  @Test
+  public void testVersionedNamespaces() {
+    assertEquals("http://www.omg.org/spec/DMN/20151101/dmn.xsd", getNS("dmn-v11"));
+    assertEquals("http://www.omg.org/spec/DMN/20180521/MODEL/", getNS("dmn-v12"));
+    assertEquals("http://www.omg.org/spec/DMN/20180521/MODEL/", getNS("dmn"));
+    assertEquals("urn:hl7-org:knowledgeartifact:r1", getNS("knart-v13"));
+    assertEquals("urn:hl7-org:elm:r1", getNS("elm-v12"));
+    assertEquals("http://www.w3.org/2001/XMLSchema", getNS("xsd"));
+    assertEquals("http://kmdp.mayo.edu/metadata/surrogate", getNS("surr-v1"));
   }
 
   @Test
