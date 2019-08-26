@@ -27,19 +27,24 @@ import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
 import edu.mayo.kmdp.metadata.annotations.MultiwordAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.Association;
+import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
+import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.ontology.taxonomies.kao.languagerole._20190801.KnowledgeRepresentationLanguageRole;
 import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
+import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.xml.validation.Schema;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
@@ -96,6 +101,8 @@ public class SurrogateHelper {
         return (Annotation) anno.copyTo(new ComplexAnnotation());
       } else if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.BasicAnnotation.class)) {
         return (Annotation) anno.copyTo(new BasicAnnotation());
+      } else if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.DatatypeAnnotation.class)) {
+        return (Annotation) anno.copyTo(new DatatypeAnnotation());
       }
     }
     return anno;
@@ -156,6 +163,39 @@ public class SurrogateHelper {
     } else {
       return Optional.empty();
     }
+  }
+
+  public static Representation canonicalRepresentationOf(KnowledgeAsset asset) {
+    if (asset == null
+        || asset.getCarriers().isEmpty()
+        || !(asset.getCarriers().get(0) instanceof ComputableKnowledgeArtifact)) {
+      return null;
+    }
+    ComputableKnowledgeArtifact artifact = (ComputableKnowledgeArtifact) asset.getCarriers().get(0);
+    return artifact.getRepresentation();
+  }
+
+  public static Stream<Representation> expandRepresentation(
+      Representation rep,
+      KnowledgeRepresentationLanguageRole role) {
+    if (rep == null) {
+      return Stream.empty();
+    }
+    return Stream.concat(
+        Stream.of(rep),
+        rep.getWith() != null
+            ? rep.getWith().stream()
+            .filter(sub -> role == null || sub.getRole() == role
+                || sub.getRole().hasAncestor(role))
+            .flatMap(sub -> expandRepresentation(sub.getSubLanguage(), role))
+            : Stream.empty());
+  }
+
+  public static Set<KnowledgeRepresentationLanguage> getSublanguages(Representation rep,
+      KnowledgeRepresentationLanguageRole role) {
+    return expandRepresentation(rep,role)
+        .map(Representation::getLanguage)
+        .collect(Collectors.toSet());
   }
 
 }

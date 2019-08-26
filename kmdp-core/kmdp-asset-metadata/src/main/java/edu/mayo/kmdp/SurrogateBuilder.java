@@ -210,51 +210,7 @@ public class SurrogateBuilder {
     return this;
   }
 
-  public SurrogateBuilder withFHIRServiceProfileExpression(Lexicon vocab) {
-    if (!get().getFormalType().contains(KnowledgeAssetType.Service_Profile)) {
-      get().getFormalType().add(KnowledgeAssetType.Service_Profile);
-    }
-    if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.Service_Profile)
-          .withWith(new SubLanguage()
-              .withRole(KnowledgeRepresentationLanguageRole.Expression_Language)
-              .withSubLanguage(
-                  new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
-          .withWith(new SubLanguage()
-              .withRole(KnowledgeRepresentationLanguageRole.Schema_Language)
-              .withSubLanguage(
-                  new Representation().withLanguage(KnowledgeRepresentationLanguage.FHIR_DSTU2)))
 
-          .withFormat(SerializationFormat.XML_1_1)
-
-          .withLexicon(getLexicons(vocab))));
-    }
-    return this;
-  }
-
-  private Lexicon[] getLexicons(Lexicon vocab) {
-    if (vocab != null) {
-      return new Lexicon[]{Lexicon.PCV, vocab};
-    } else {
-      return new Lexicon[]{Lexicon.PCV};
-    }
-  }
-
-  public SurrogateBuilder withNLPServiceProfileExpression() {
-    if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.Service_Profile)
-          .withWith(new SubLanguage()
-              .withRole(KnowledgeRepresentationLanguageRole.Expression_Language)
-              .withSubLanguage(
-                  new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
-
-          .withFormat(SerializationFormat.XML_1_1)
-          .withLexicon(Lexicon.PCV)));
-    }
-    return this;
-  }
 
   public SurrogateBuilder withInlinedFhirPath(String expr) {
     if (get().getCarriers().isEmpty()) {

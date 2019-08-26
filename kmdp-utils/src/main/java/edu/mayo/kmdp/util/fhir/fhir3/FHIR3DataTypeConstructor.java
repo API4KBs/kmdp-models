@@ -37,11 +37,11 @@ import org.hl7.fhir.dstu3.model.TimeType;
 import org.hl7.fhir.dstu3.model.Type;
 import org.hl7.fhir.exceptions.FHIRException;
 
-public class FHIRDataTypeConstructor {
+public class FHIR3DataTypeConstructor {
 
-  private static final Logger logger = LogManager.getLogger(FHIRDataTypeConstructor.class);
+  private static final Logger logger = LogManager.getLogger(FHIR3DataTypeConstructor.class);
 
-  private FHIRDataTypeConstructor() {}
+  private FHIR3DataTypeConstructor() {}
 
   // Used so often it deserves a constant
   private static final String VALUE = "value";
