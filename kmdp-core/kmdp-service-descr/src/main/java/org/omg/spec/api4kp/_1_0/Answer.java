@@ -21,6 +21,7 @@ import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -85,6 +87,16 @@ public class Answer<T> extends Explainer {
         .withExplanation("OK : Lift " + value.toString());
   }
 
+  public static <X> Answer<X> of(Optional<X> value) {
+    return value
+        .map(Answer::of)
+        .orElse(new Answer<X>()
+            .withCodedOutcome(ResponseCode.NotFound)
+            .withMeta(new HashMap<>())
+            .withValue(null)
+            .withExplanation("Optional empty"));
+  }
+
   public static <X> Answer<X> of(String responseCode, X value) {
     return of(resolveCode(responseCode),value,new HashMap<>());
   }
@@ -118,6 +130,10 @@ public class Answer<T> extends Explainer {
 
   public <U> Answer<U> flatMap(Function<? super T, Answer<U>> mapper) {
     return getHandler().flatMap(this, mapper);
+  }
+
+  public <U> Answer<U> flatOpt(Function<? super T, Optional<U>> mapper) {
+    return getHandler().flatOpt(this, mapper);
   }
 
   public <U> Answer<U> map(Function<? super T, ? extends U> mapper) {
@@ -161,12 +177,21 @@ public class Answer<T> extends Explainer {
     return getOptionalValue().orElse(alt);
   }
 
+  public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+    if (value != null) {
+      return value;
+    } else {
+      throw exceptionSupplier.get();
+    }
+  }
+
   public static <T> Stream<T> trimStream(Answer<T> ans) {
     if (ans == null) {
       return Stream.empty();
     }
     return Util.trimStream(ans.getOptionalValue());
   }
+
 
   public ResponseCode getOutcomeType() {
     return codedOutcome;
@@ -199,6 +224,12 @@ public class Answer<T> extends Explainer {
   public Optional<String> getMeta(String key) {
     return Optional.ofNullable(meta.get(key))
         .map(Util::concat);
+  }
+
+  public List<String> getMetas(String key) {
+    return meta.containsKey(key)
+        ? meta.get(key)
+        : Collections.emptyList();
   }
 
   public Collection<String> listMeta() {
@@ -327,6 +358,8 @@ public class Answer<T> extends Explainer {
 
     <U> Answer<U> flatMap(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper);
 
+    <U> Answer<U> flatOpt(Answer<T> tAnswer, Function<? super T, Optional<U>> mapper);
+
   }
 
   public static class SuccessOutcomeStrategy<T> implements OutcomeStrategy<T> {
@@ -365,6 +398,20 @@ public class Answer<T> extends Explainer {
             .withAddedExplanation(srcAnswer.explanation);
       }
     }
+
+    @Override
+    public <U> Answer<U> flatOpt(Answer<T> srcAnswer, Function<? super T, Optional<U>> mapper) {
+      try {
+        return Answer.of(mapper.apply(srcAnswer.value))
+            .withAddedMeta(srcAnswer.meta)
+            .withAddedExplanation(srcAnswer.explanation);
+      } catch (Exception e) {
+        logger.error(e.getMessage(),e);
+        return Answer.<U>failed(e)
+            .withAddedMeta(srcAnswer.meta)
+            .withAddedExplanation(srcAnswer.explanation);
+      }
+    }
   }
 
   public static class FailureOutcomeStrategy<T> implements OutcomeStrategy<T> {
@@ -385,6 +432,14 @@ public class Answer<T> extends Explainer {
 
     @Override
     public <U> Answer<U> flatMap(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper) {
+      return new Answer<U>()
+          .withCodedOutcome(tAnswer.getCodedOutcome())
+          .withExplanation(tAnswer.explanation)
+          .withMeta(tAnswer.meta);
+    }
+
+    @Override
+    public <U> Answer<U> flatOpt(Answer<T> tAnswer, Function<? super T, Optional<U>> mapper) {
       return new Answer<U>()
           .withCodedOutcome(tAnswer.getCodedOutcome())
           .withExplanation(tAnswer.explanation)

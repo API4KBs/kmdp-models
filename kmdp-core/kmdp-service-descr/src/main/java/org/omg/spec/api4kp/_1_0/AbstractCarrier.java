@@ -16,6 +16,8 @@
 package org.omg.spec.api4kp._1_0;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.mayo.kmdp.SurrogateHelper;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
@@ -29,6 +31,7 @@ import java.util.function.Function;
 import org.jvnet.jaxb2_commons.lang.CopyStrategy;
 import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import org.omg.spec.api4kp._1_0.services.ASTCarrier;
+import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.w3c.dom.Document;
@@ -141,6 +144,10 @@ public class AbstractCarrier {
     return rep(meta.getLanguage(), meta.getSerialization(), meta.getFormat(), null, null);
   }
 
+  public static SyntacticRepresentation canonicalRepresentationOf(KnowledgeAsset asset) {
+    return rep(SurrogateHelper.canonicalRepresentationOf(asset));
+  }
+
 
   public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageSerialization ser,
@@ -219,6 +226,14 @@ public class AbstractCarrier {
             : Optional.empty();
   }
 
+
+  public <T> Optional<T> asParseTree(Class<T> type) {
+    return
+        (this instanceof DocumentCarrier
+            && type.isInstance(((DocumentCarrier) this).getStructuredExpression()))
+            ? Optional.ofNullable(type.cast(((DocumentCarrier) this).getStructuredExpression()))
+            : Optional.empty();
+  }
 
 
 

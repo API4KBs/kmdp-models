@@ -16,8 +16,10 @@
 package edu.mayo.kmdp.id.helper;
 
 
+import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 import static edu.mayo.kmdp.util.Util.ensureUUIDFormat;
 
+import edu.mayo.kmdp.id.Identifier;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.URIUtil;
@@ -153,12 +155,48 @@ public class DatatypeHelper {
     return new QualifiedIdentifier().withQName(new QName(uri, name, pfx));
   }
 
-  public static String versionOf(URI versionedIdentifier, URI identifier) {
+  public static String versionOf(URI versionedIdentifier) {
     if (versionedIdentifier == null) {
       return null;
     }
-    // Can probably be refactored to be more efficient...
+    String idStr = versionedIdentifier.toString();
+
+    if (idStr.startsWith(BASE_UUID_URN)) {
+      int start = BASE_UUID_URN.length();
+      int end = idStr.lastIndexOf(':');
+      // need at least two ":"
+      if (end > start) {
+        return idStr.substring(end + 1);
+      }
+    }
+    // still open for improvement...
     return toVersionIdentifier(versionedIdentifier).getVersion();
+  }
+
+  public static String tagOf(URI identifier) {
+    if (identifier == null) {
+      return null;
+    }
+    // '#' based URIs
+    if (identifier.getFragment() != null) {
+      return identifier.getFragment();
+    }
+
+    String idStr = identifier.toString();
+    // 'urn:uuid:' identifiers
+    if (idStr.startsWith(BASE_UUID_URN)) {
+      int start = BASE_UUID_URN.length();
+      int end = idStr.lastIndexOf(':');
+      // handle urn:uuid:tag vs urn:uuid:tag:version
+      return end >= start
+          ? idStr.substring(start, end)
+          : idStr.substring(start);
+    } else {
+      // '/' identifiers
+      return idStr.contains("/")
+          ? idStr.substring(idStr.lastIndexOf('/') + 1)
+          : idStr;
+    }
   }
 
 
@@ -174,6 +212,12 @@ public class DatatypeHelper {
 
   public static VersionIdentifier toVersionIdentifier(URI versionId) {
     return versionId != null ? toVersionIdentifier(versionId.toString()) : null;
+  }
+
+  public static VersionIdentifier vid(String tag, String version) {
+    return new VersionIdentifier()
+        .withTag(tag)
+        .withVersion(version);
   }
 
   public static VersionIdentifier toVersionIdentifier(String versionId) {
@@ -195,7 +239,11 @@ public class DatatypeHelper {
       if (index >= 0) {
         tag = tag.substring(index + 1);
       } else {
-        // Not sure what to do in this case, probably nothing...
+        if (tag.startsWith(BASE_UUID_URN)) {
+          // TODO FIXME
+          version = versionOf(uri);
+          tag = tagOf(uri);
+        }
       }
     }
     return new VersionIdentifier().withTag(tag).withVersion(version);
@@ -222,7 +270,7 @@ public class DatatypeHelper {
     return URIUtil.toPrefixedName(qId.getQName());
   }
 
-  public static Optional<UUIDentifier> toUUIDentifier(ConceptIdentifier cid) {
+  public static Optional<UUIDentifier> toUUIDentifier(Identifier cid) {
     return ensureUUIDFormat(cid.getTag())
         .map(uuidStr -> new UUIDentifier().withTag(uuidStr));
   }
@@ -231,7 +279,7 @@ public class DatatypeHelper {
     UUID uuid = uid.getUUID();
     if (uuid != null) {
       return Optional
-          .ofNullable(new URIIdentifier().withUri(URI.create(Registry.BASE_UUID_URN + uuid.toString())));
+          .ofNullable(new URIIdentifier().withUri(URI.create(BASE_UUID_URN + uuid.toString())));
     } else {
       return Optional.empty();
     }

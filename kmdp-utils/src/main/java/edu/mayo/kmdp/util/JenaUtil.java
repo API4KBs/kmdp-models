@@ -39,6 +39,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
@@ -74,7 +75,12 @@ public abstract class JenaUtil {
   }
 
 
-  public static <T> Set<Map<String, T>> askQuery(Model model, String query,
+  public static <T> Set<Map<String, T>> askQuery(Model model, String queryStr,
+      Function<RDFNode, T> mapper) {
+    return askQuery(model, QueryFactory.create(queryStr),mapper);
+  }
+
+  public static <T> Set<Map<String, T>> askQuery(Model model, Query query,
       Function<RDFNode, T> mapper) {
     try (QueryExecution queryExec = QueryExecutionFactory.create(query, model)) {
       ResultSet results = queryExec.execSelect();
@@ -86,6 +92,10 @@ public abstract class JenaUtil {
       }
       return answers;
     }
+  }
+
+  public static Set<Map<String,String>> askQueryResults(Model model, Query query) {
+    return askQuery(model,query,RDFNode::toString);
   }
 
   public static Model construct(Model model, Query query) {
@@ -111,6 +121,8 @@ public abstract class JenaUtil {
       return answers;
     }
   }
+
+
 
   public static Set<Pair<RDFNode, RDFNode>> askBinaryQuery(Model model, Query selectQuery) {
     final Set<Pair<RDFNode, RDFNode>> total = new HashSet<>();

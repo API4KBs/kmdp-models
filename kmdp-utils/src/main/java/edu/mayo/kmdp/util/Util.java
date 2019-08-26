@@ -239,6 +239,18 @@ public class Util {
     return set;
   }
 
+  public static <T> Optional<T> as(Object o, Class<T> type) {
+    return type.isInstance(o)
+        ? Optional.of(type.cast(o))
+        : Optional.empty();
+  }
+
+  public static <T,X> Stream<T> streamAs(X instance, Class<T> type) {
+    return as(instance,type)
+        .map(Stream::of)
+        .orElseGet(Stream::empty);
+  }
+
   private static class Entry {
 
     private final Pattern pattern;
