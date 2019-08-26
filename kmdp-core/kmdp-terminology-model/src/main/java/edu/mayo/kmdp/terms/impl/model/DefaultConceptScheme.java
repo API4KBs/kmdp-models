@@ -48,7 +48,7 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
     this.withId(schemeURI)
         .withLabel(schemeName)
         .withTag(schemeID)
-        .withVersion(DatatypeHelper.versionOf(schemeVersionURI, schemeURI));
+        .withVersion(DatatypeHelper.versionOf(schemeVersionURI));
     this.versionId = schemeVersionURI;
 
     this.type = type;

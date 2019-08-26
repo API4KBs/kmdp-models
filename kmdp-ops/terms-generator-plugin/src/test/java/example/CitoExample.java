@@ -56,7 +56,7 @@ public enum CitoExample implements Term, Taxonomic<CitoExample> {
       .withId(schemeURI.getUri())
       .withLabel(schemeName)
       .withTag(schemeID)
-      .withVersion(DatatypeHelper.versionOf(schemeURI.getVersionId(), schemeURI.getUri()));
+      .withVersion(DatatypeHelper.versionOf(schemeURI.getVersionId()));
 
 
   private URI ref;

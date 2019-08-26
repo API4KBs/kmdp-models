@@ -38,7 +38,7 @@ public class AnonymousConceptScheme extends NamespaceIdentifier implements Conce
     this.withId(schemeURI)
         .withLabel(schemeName)
         .withTag(schemeId)
-        .withVersion(DatatypeHelper.versionOf(schemeVersionURI, schemeURI));
+        .withVersion(DatatypeHelper.versionOf(schemeVersionURI));
     this.versionId = schemeVersionURI;
   }
 
