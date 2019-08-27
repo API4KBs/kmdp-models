@@ -26,6 +26,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.omg.spec.api4kp._1_0.Answer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
 public class ResponseHelper {
+
+  private static Logger logger = LogManager.getLogger(ResponseHelper.class);
 
   private ResponseHelper() {
   }
@@ -182,9 +186,18 @@ public class ResponseHelper {
   }
 
   private static HttpStatus mapCode(ResponseCode outcomeType) {
-    HttpStatus status = HttpStatus.resolve(Integer.valueOf(outcomeType.getTag()));
-    return status != null
-        ? status
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    if (outcomeType == null) {
+      return HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+    try {
+      int statusCode = Integer.parseInt(outcomeType.getTag());
+      HttpStatus status = HttpStatus.resolve(statusCode);
+      return status != null
+          ? status
+          : HttpStatus.INTERNAL_SERVER_ERROR;
+    } catch (NumberFormatException nfe) {
+      logger.error(nfe.getMessage(),nfe);
+      return HttpStatus.INTERNAL_SERVER_ERROR;
+    }
   }
 }

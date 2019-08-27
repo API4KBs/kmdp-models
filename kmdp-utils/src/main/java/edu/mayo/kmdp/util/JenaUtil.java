@@ -134,7 +134,7 @@ public abstract class JenaUtil {
       }
       if (results.hasNext()) {
         results.forEachRemaining(sol -> {
-          Iterator<String> vars = sol.varNames();
+          Iterator<String> vars = selectQuery.getResultVars().iterator();
           Pair<RDFNode, RDFNode> pair =
               new ImmutablePair<>(sol.get(vars.next()),sol.get(vars.next()));
           total.add(pair);
