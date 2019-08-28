@@ -217,7 +217,7 @@ public class SkosTerminologyAbstractor {
         .stream()
         .findAny();
 
-    URI uri = getReferent(ind.asOWLNamedIndividual(), model);
+    URI uri = getURI(ind.asOWLNamedIndividual());
 
     return parentScheme.map(MutableConceptScheme.class::cast)
         .flatMap(mcs -> mcs.resolve(uri));
@@ -508,7 +508,7 @@ public class SkosTerminologyAbstractor {
 
     Optional<Term> resolve(URI uri) {
       return concepts.stream()
-          .filter(cd -> cd.getRef().equals(uri))
+          .filter(cd -> cd.getConceptId().equals(uri))
           .findAny();
     }
 
