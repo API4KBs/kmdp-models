@@ -13,8 +13,7 @@
      xmlns:cito="http://purl.org/spar/cito/cito:"
      xmlns:sit="http://www.ontologydesignpatterns.org/cp/owl/situation.owl#">
     <owl:Ontology rdf:about="http://purl.org/spar/cito">
-        <owl:imports rdf:resource="http://www.ontologydesignpatterns.org/cp/owl/situation.owl"/>
-        <rdfs:comment xml:lang="en">CiTO, the Citation Typing Ontology, is an ontology for the characterization of citations, both factually and rhetorically.  It forms part of SPAR, a suite of Semantic Publishing and Referencing Ontologies.  Other SPAR ontologies are described at http://purl.org/spar/.</rdfs:comment>
+    <rdfs:comment xml:lang="en">CiTO, the Citation Typing Ontology, is an ontology for the characterization of citations, both factually and rhetorically.  It forms part of SPAR, a suite of Semantic Publishing and Referencing Ontologies.  Other SPAR ontologies are described at http://purl.org/spar/.</rdfs:comment>
         <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Silvio Peroni</dc:creator>
         <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2.7.1</owl:versionInfo>
         <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">David Shotton</dc:creator>

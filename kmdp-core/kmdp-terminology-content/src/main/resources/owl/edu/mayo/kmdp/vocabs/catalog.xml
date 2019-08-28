@@ -56,6 +56,10 @@
     uri="/ontologies/API4KP/informative/api4kp-registry.rdf"
     name="http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/"/>
 
+  <uri id="LangCodes-ISO639-1"
+    uri="lcc.rdf"
+    name="https://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/"/>
+
   <uri id="LangCodes-ISO639-2"
     uri="lcc2.rdf"
     name="https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/"/>
@@ -75,5 +79,17 @@
   <uri id="HttpCodes"
     uri="statusCodes.rdf"
     name="http://www.w3.org/2011/http-statusCodes#"/>
+
+  <uri id="LCC-LR"
+    uri="LanguageRepresentation.rdf"
+    name="https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/"/>
+
+  <uri id="Spec-Metadata"
+    uri="SpecificationMetadata.rdf"
+    name="http://www.omg.org/techprocess/ab/SpecificationMetadata/"/>
+
+  <uri id="Situation"
+    uri="situation.owl"
+    name="http://www.ontologydesignpatterns.org/cp/owl/situation.owl"/>
 
 </catalog>

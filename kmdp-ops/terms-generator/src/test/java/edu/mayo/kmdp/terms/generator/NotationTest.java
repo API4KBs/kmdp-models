@@ -104,14 +104,7 @@ public class NotationTest {
   private OWLOntology doRead() {
     try {
 
-      OntologyManager manager = OntManagers.createONT();
-      manager.getIRIMappers().add((OWLOntologyIRIMapper) iri -> {
-        if (DCTerms.getURI().equals(iri.toString())) {
-          URL cached = NotationTest.class.getResource("/dcterms.rdf");
-          return cached != null ? IRI.create(cached) : null;
-        }
-        return null;
-      });
+      OntologyManager manager = TestHelper.initManager();
 
       Optional<Model> skosModel = new MireotExtractor()
           .fetch(NotationTest.class.getResourceAsStream("/multipleNotation.rdf"),

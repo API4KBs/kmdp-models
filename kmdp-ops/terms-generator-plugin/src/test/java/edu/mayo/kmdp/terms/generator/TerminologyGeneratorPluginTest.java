@@ -76,6 +76,7 @@ public class TerminologyGeneratorPluginTest {
   @Test
   public void testPlugin() {
     TermsGeneratorPlugin plugin = initPlugin(new File(genSource.getAbsolutePath() + "/xsd"));
+    plugin.setSourceCatalogPath(TerminologyGeneratorPluginTest.class.getResource("/test-catalog.xml").getPath());
     try {
       plugin.execute();
     } catch (MojoExecutionException | MojoFailureException e) {

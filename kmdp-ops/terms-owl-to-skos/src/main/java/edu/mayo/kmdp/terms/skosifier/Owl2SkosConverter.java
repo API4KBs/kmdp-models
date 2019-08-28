@@ -46,42 +46,55 @@ import org.apache.logging.log4j.Logger;
 public class Owl2SkosConverter extends ConverterInitBase implements
     BiFunction<Model, Owl2SkosConfig, Optional<Model>> {
 
-  public static final String SKOS_NAMESPACE = SKOS.getURI();
-  public static final String DC_NAMESPACE = DCTerms.getURI();
-  public static final String OLEX = "http://www.w3.org/ns/lemon/ontolex#";
+  private static final String SKOS_NAMESPACE = SKOS.getURI();
+  private static final String DC_NAMESPACE = DCTerms.getURI();
+  private static final String OLEX = "http://www.w3.org/ns/lemon/ontolex#";
 
   private static Logger logger = LogManager.getLogger(Owl2SkosConverter.class);
 
-  private static Model schema;
-
   @Override
   public Optional<Model> apply(Model source, Owl2SkosConfig cfg) {
-    Modes mode = cfg.get(OWLtoSKOSTxParams.MODE).map(Modes::valueOf).orElse(Modes.SKOS);
+    Modes mode = cfg.get(OWLtoSKOSTxParams.MODE)
+        .map(Modes::valueOf)
+        .orElse(Modes.SKOS);
+    String versionFragment = detectVersionFragment(source).orElse(null);
+
     return postProcess(
         applyQueries(source, mode, cfg),
-        detectVersionFragment(source).orElse(null),
+        versionFragment,
         mode,
         cfg);
   }
 
   public Optional<Model> run(final List<String> sources, Owl2SkosConfig cfg) {
-    Modes mode = cfg.get(OWLtoSKOSTxParams.MODE).map(Modes::valueOf).orElse(Modes.SKOS);
-    Model result = sources.stream()
-        .map(Owl2SkosConverter::createSourceModel)
-        .map(s -> applyQueries(s, mode, cfg))
-        .reduce(ModelFactory.createDefaultModel(), Model::add);
+    Modes mode = cfg.get(OWLtoSKOSTxParams.MODE)
+        .map(Modes::valueOf)
+        .orElse(Modes.SKOS);
 
-    return postProcess(result, detectVersionFragment(result).orElse(null), mode, cfg);
+    Model result = initModel(sources,mode, cfg);
+    String versionFragment = detectVersionFragment(result).orElse(null);
+
+    return postProcess(
+        result,
+        versionFragment,
+        mode,
+        cfg);
   }
 
-  protected Optional<Model> postProcess(Model model,
-      String versionFragment,
-      Modes mode,
+  private Optional<Model> postProcess(Model result, String versionFragment, Modes mode,
       Owl2SkosConfig cfg) {
+    result = validate(result, cfg);
+    OntModel ontModel = createOntModel(versionFragment,mode,cfg);
+    ontModel.add(result);
 
-    Model result = null;
+    new HierarchySealer().close(ontModel);
+    return Optional.of(ontModel);
+  }
+
+  private Model validate(Model model, Owl2SkosConfig cfg) {
+    Model result;
     if (cfg.getTyped(OWLtoSKOSTxParams.VALIDATE)) {
-      InfModel inf = infer(model, getSchema());
+      InfModel inf = infer(model, ModelFactory.createDefaultModel());
       ValidityReport report = inf.validate();
       if (!report.isValid()) {
         debug(report);
@@ -90,61 +103,65 @@ public class Owl2SkosConverter extends ConverterInitBase implements
     } else {
       result = model;
     }
-    return Optional.ofNullable(toSKOSOntologyModel(result, versionFragment, mode, cfg));
+    return result;
+  }
+
+  private Model initModel(List<String> sources, Modes mode, Owl2SkosConfig cfg) {
+    return sources.stream()
+        .map(Owl2SkosConverter::createSourceModel)
+        .map(s -> applyQueries(s, mode, cfg))
+        .reduce(ModelFactory.createDefaultModel(), Model::add);
   }
 
 
-  private OntModel toSKOSOntologyModel(Model result, String versionFragment, Modes modes,
+  private OntModel createOntModel(String versionFragment, Modes modes,
       Owl2SkosConfig cfg) {
     OntModel ontModel = ModelFactory.createOntologyModel();
-    String baseUri = cfg.getTyped(OWLtoSKOSTxParams.TGT_NAMESPACE);
+    Ontology ont = createOntology(
+        ontModel,
+        versionFragment,
+        cfg.getTyped(OWLtoSKOSTxParams.TGT_NAMESPACE));
+    loadImports(ont, ontModel, modes, cfg);
+    return ontModel;
+  }
 
+  private Ontology createOntology(OntModel ontModel, String versionFragment, String baseUri) {
     Ontology ont = ontModel.createOntology(baseUri);
     if (versionFragment != null && !versionFragment.isEmpty()) {
       ont.addProperty(OWL2.versionIRI,
           ResourceFactory.createResource(applyVersionToURI(baseUri, versionFragment)));
     }
+    return ont;
+  }
 
+  private void loadImports(Ontology ont, OntModel ontModel, Modes modes, Owl2SkosConfig cfg) {
     if (cfg.getTyped(OWLtoSKOSTxParams.ADD_IMPORTS)) {
+
+      ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
+      prefetchFromLocal(ontModel, SKOS_NAMESPACE, "/ontology/skos.rdf");
+
       if (modes.usesOlex) {
         ont.addImport(ontModel.createResource(OLEX));
+        prefetchFromLocal(ontModel, OLEX, "/ontology/ontolex.owl");
       }
-      ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
       if (modes.usedDC) {
         ont.addImport(ontModel.createResource(DC_NAMESPACE));
+        prefetchFromLocal(ontModel, DC_NAMESPACE, "/ontology/dcterms.rdf");
       }
+
     } else {
       ont.addImport(ontModel.createResource(removeLastChar(SKOS_NAMESPACE)));
     }
-
-    prefetch(ontModel, modes.usesOlex);
-
-    if (cfg.getTyped(OWLtoSKOSTxParams.ADD_IMPORTS)) {
-      ontModel.loadImports();
-    }
-
-    ontModel.add(result);
-
-    new HierarchySealer().close(ontModel);
-
-    return ontModel;
   }
 
-
-  private static void prefetch(OntModel ontModel, boolean olex) {
-    prefetchFromLocal(ontModel, SKOS_NAMESPACE, "/ontology/skos.rdf");
-    prefetchFromLocal(ontModel, DC_NAMESPACE, "/ontology/dcterms.rdf");
-    if (olex) {
-      prefetchFromLocal(ontModel, OLEX, "/ontology/ontolex.owl");
-    }
-  }
 
   private static void prefetchFromLocal(OntModel ontModel, String namespace, String path) {
     // try to resolve the local copy, to avoid fetching from the web in case the build is offline
     InputStream is = Owl2SkosConverter.class.getResourceAsStream(path);
     try {
       if (is != null && is.available() > 0) {
-        ontModel.read(is, namespace);
+        Model imported = ModelFactory.createOntologyModel().read(is, namespace);
+        ontModel.addSubModel(imported);
       }
     } catch (IOException e) {
       // do nothing
@@ -166,19 +183,6 @@ public class Owl2SkosConverter extends ConverterInitBase implements
     return ModelFactory.createInfModel(reasoner, result);
   }
 
-
-  private static Model getSchema() {
-    return getSchema(false);
-  }
-
-  private static Model getSchema(boolean withOlex) {
-    if (schema == null) {
-      schema = ModelFactory.createOntologyModel();
-
-      prefetch((OntModel) schema, withOlex);
-    }
-    return schema;
-  }
 
   private static Model createSourceModel(String ref) {
     Model sourceOntology = ModelFactory.createDefaultModel();

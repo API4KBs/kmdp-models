@@ -53,6 +53,7 @@ public class GenerateWithImportsTest {
   @Test
   public void testGenerateConceptsHierarchyWithImports() {
     ConceptGraph graph = doGenerate(CLOSURE_MODE.IMPORTS);
+    assertNotNull(graph);
     assertEquals(2, graph.getConceptSchemes().size());
 
     File src = initFolder(tmp.toFile(), "src");
@@ -102,6 +103,7 @@ public class GenerateWithImportsTest {
   @Test
   public void testGenerateConceptsHierarchyWithIncludes() {
     ConceptGraph graph = doGenerate(CLOSURE_MODE.INCLUDES);
+    assertNotNull(graph);
     assertEquals(2, graph.getConceptSchemes().size());
 
     File src = initFolder(tmp.toFile(), "src");
@@ -161,7 +163,8 @@ public class GenerateWithImportsTest {
 
   public static SkosTerminologyAbstractor.ConceptGraph doGenerate(CLOSURE_MODE closureMode) {
     try {
-      OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
+      OWLOntologyManager owlOntologyManager = TestHelper.initOWLManager();
+
       owlOntologyManager.loadOntologyFromOntologyDocument(
           GenerateWithImportsTest.class.getResourceAsStream("/supVocab.rdf"));
       OWLOntology o = owlOntologyManager.loadOntologyFromOntologyDocument(
