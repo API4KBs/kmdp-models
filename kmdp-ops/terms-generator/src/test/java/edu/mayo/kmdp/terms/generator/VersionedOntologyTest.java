@@ -27,14 +27,17 @@ import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
+import edu.mayo.kmdp.util.URIUtil;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
 import ru.avicomp.ontapi.OntManagers;
 import ru.avicomp.ontapi.OntologyManager;
 
@@ -81,13 +84,13 @@ public class VersionedOntologyTest {
           + "</rdf:RDF>\n";
 
   @Test
-  public void testOWLtoTerms() throws IOException {
+  public void testOWLtoTerms() {
 
     String owlPath = "/version.rdf";
     String entityURI = "http://org.test/labelsTest#Parent";
     String targetNS = "http://test.skos.foo/Test";
 
-    OntologyManager manager = OntManagers.createONT();
+    OntologyManager manager = TestHelper.initManager();
 
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, targetNS)

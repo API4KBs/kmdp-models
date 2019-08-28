@@ -191,10 +191,7 @@ public class ResponseHelper {
     }
     try {
       int statusCode = Integer.parseInt(outcomeType.getTag());
-      HttpStatus status = HttpStatus.resolve(statusCode);
-      return status != null
-          ? status
-          : HttpStatus.INTERNAL_SERVER_ERROR;
+      return HttpStatus.resolve(statusCode);
     } catch (NumberFormatException nfe) {
       logger.error(nfe.getMessage(),nfe);
       return HttpStatus.INTERNAL_SERVER_ERROR;

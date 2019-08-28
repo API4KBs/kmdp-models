@@ -69,7 +69,7 @@ public class Owl2Skos2TermsTest {
     File src = initFolder(folder,"src");
     File tgt = initFolder(folder,"tgt");
 
-    OntologyManager manager = OntManagers.createONT();
+    OntologyManager manager = TestHelper.initManager();
 
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, targetNS)

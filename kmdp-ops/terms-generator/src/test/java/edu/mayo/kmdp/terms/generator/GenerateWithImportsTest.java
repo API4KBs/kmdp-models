@@ -21,6 +21,7 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -36,6 +37,7 @@ import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractio
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
@@ -53,6 +55,7 @@ public class GenerateWithImportsTest {
   @Test
   public void testGenerateConceptsHierarchyWithImports() {
     ConceptGraph graph = doGenerate(CLOSURE_MODE.IMPORTS);
+    assertNotNull(graph);
     assertEquals(2, graph.getConceptSchemes().size());
 
     File src = initFolder(tmp.toFile(), "src");
@@ -102,6 +105,7 @@ public class GenerateWithImportsTest {
   @Test
   public void testGenerateConceptsHierarchyWithIncludes() {
     ConceptGraph graph = doGenerate(CLOSURE_MODE.INCLUDES);
+    assertNotNull(graph);
     assertEquals(2, graph.getConceptSchemes().size());
 
     File src = initFolder(tmp.toFile(), "src");
@@ -123,7 +127,10 @@ public class GenerateWithImportsTest {
 
 
     try {
-      assertEquals(2,subScheme.getEnumConstants().length);
+      assertEquals(3,subScheme.getEnumConstants().length);
+
+      Object[] enums = subScheme.getEnumConstants();
+      Arrays.sort(enums);
 
       Object t1 = subScheme.getEnumConstants()[0];
       String tag1 = (String) t1.getClass().getMethod("getTag").invoke(t1);
@@ -131,17 +138,28 @@ public class GenerateWithImportsTest {
       Object t2 = subScheme.getEnumConstants()[1];
       String tag2 = (String) t2.getClass().getMethod("getTag").invoke(t2);
 
-      assertTrue("000".equals(tag1) || "000".equals(tag2));
-      assertTrue("123".equals(tag1) || "123".equals(tag2));
+      Object t3 = subScheme.getEnumConstants()[2];
+      String tag3 = (String) t3.getClass().getMethod("getTag").invoke(t3);
 
-      Object child = "123".equalsIgnoreCase(tag1) ? t1 : t2;
+      assertTrue("000".equals(tag1));
+      assertTrue("123".equals(tag2));
+      assertTrue("124".equals(tag3));
 
-      Object anx = subScheme.getMethod("getAncestors").invoke(child);
-      assertTrue(anx.getClass().isArray());
-      Object[] ancestors = (Object[]) anx;
-      assertEquals(1, ancestors.length);
+      Object anx2 = subScheme.getMethod("getAncestors").invoke(t2);
+      assertTrue(anx2.getClass().isArray());
+      Object[] ancestors2 = (Object[]) anx2;
 
-      Object prn = ancestors[0];
+      Object anx3 = subScheme.getMethod("getAncestors").invoke(t3);
+      assertTrue(anx3.getClass().isArray());
+      Object[] ancestors3 = (Object[]) anx3;
+
+      assertEquals(1, ancestors2.length);
+      assertEquals(1, ancestors3.length);
+
+      assertSame(t1,ancestors2[0]);
+      assertSame(t1,ancestors3[0]);
+
+      Object prn = ancestors2[0];
       assertNotNull(prn);
 
       Object sUri = prn.getClass().getMethod("getNamespace").invoke(prn);
@@ -161,7 +179,8 @@ public class GenerateWithImportsTest {
 
   public static SkosTerminologyAbstractor.ConceptGraph doGenerate(CLOSURE_MODE closureMode) {
     try {
-      OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
+      OWLOntologyManager owlOntologyManager = TestHelper.initOWLManager();
+
       owlOntologyManager.loadOntologyFromOntologyDocument(
           GenerateWithImportsTest.class.getResourceAsStream("/supVocab.rdf"));
       OWLOntology o = owlOntologyManager.loadOntologyFromOntologyDocument(
