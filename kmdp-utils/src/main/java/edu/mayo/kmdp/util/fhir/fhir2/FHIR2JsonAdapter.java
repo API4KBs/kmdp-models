@@ -51,8 +51,8 @@ public class FHIR2JsonAdapter extends
         FHIR2JsonAdapter::setParam);
   }
 
-  private static void setParam(Parameters p, String paramName, IDatatype value) {
-    p.addParameter().setName(paramName).setValue(value);
+  private static void setParam(Parameters p, IDatatype value) {
+    p.addParameter().setValue(value);
   }
 
   private static IDatatype getParam(Parameters p) {
@@ -74,7 +74,7 @@ public class FHIR2JsonAdapter extends
       } else if (v instanceof IResource) {
         gen.writeRawValue(FHIR2JsonUtil.instance.toJsonString((IResource) v));
       } else if (v instanceof IDatatype) {
-        gen.writeObject(instance.trySerializeType((IDatatype) v));
+        gen.writeRawValue(instance.trySerializeType((IDatatype) v));
       }  else if (isFHIRList(v)) {
         Bundle b = new Bundle().setType(BundleTypeEnum.COLLECTION);
         ((List<?>) v).forEach(x -> b.addEntry(new Bundle.Entry().setResource((IResource) x)));

@@ -19,13 +19,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 public class DateAdapter extends XmlAdapter<String, Date> {
 
-  private static final Logger logger = LogManager.getLogger(DateAdapter.class);
+  private static final Logger logger = LoggerFactory.getLogger(DateAdapter.class);
 
   public static final String PATTERN = "yyyy-MM-dd";
 

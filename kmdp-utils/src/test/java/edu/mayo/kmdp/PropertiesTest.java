@@ -15,14 +15,15 @@
  */
 package edu.mayo.kmdp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class PropertiesTest {
+class PropertiesTest {
 
   @Test
-  public void testConfig() {
+  void testConfig() {
     FooConfig cfg = new FooConfig()
         .with(FooConfig.BarOpts.A, "aaa")
         .with(FooConfig.BarOpts.B, Boolean.TRUE);
@@ -32,7 +33,7 @@ public class PropertiesTest {
     int c = cfg.getTyped(FooConfig.BarOpts.C, Integer.class);
 
     assertEquals("aaa", a);
-    assertEquals(true, b);
+    assertTrue(b);
     assertEquals(42, c);
 
   }

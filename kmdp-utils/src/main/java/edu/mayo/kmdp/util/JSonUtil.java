@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import edu.mayo.kmdp.util.adapters.DateAdapter;
@@ -41,12 +42,12 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JSonUtil {
   
-  private static Logger logger = LogManager.getLogger(JSonUtil.class);
+  private static Logger logger = LoggerFactory.getLogger(JSonUtil.class);
   
   private JSonUtil() {}
 
@@ -72,7 +73,11 @@ public class JSonUtil {
   }
 
   public static Optional<JsonNode> readJson(String data) {
-    return readJson(data.getBytes());
+    return data != null ? readJson(data.getBytes()) : Optional.empty();
+  }
+
+  public static <T> Optional<T> readJson(String data, Class<T> klass) {
+    return data != null ? readJson(data.getBytes(), klass) : Optional.empty();
   }
 
   public static Optional<JsonNode> readJson(byte[] data) {
@@ -115,14 +120,16 @@ public class JSonUtil {
 
   public static Optional<String> printJson(Object root, Properties p) {
     return writeJson(root, null, p)
-        .map(ByteArrayOutputStream::toByteArray)
-        .map(String::new);
+        .flatMap(Util::asString);
+  }
+  public static Optional<String> printJson(Object root, Module m, Properties p) {
+    return writeJson(root, m, p)
+        .flatMap(Util::asString);
   }
 
   public static void printOutJson(Object root) {
     writeJson(root, null, defaultProperties())
-        .map(ByteArrayOutputStream::toByteArray)
-        .map(String::new)
+        .flatMap(Util::asString)
         .ifPresent(logger::trace);
   }
 
@@ -185,6 +192,10 @@ public class JSonUtil {
         .orElse(new SimpleDateFormat(DateAdapter.PATTERN)));
     objectMapper.configure(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID, true);
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    objectMapper.setDateFormat(new StdDateFormat().withColonInTimeZone(true));
+
     return objectMapper;
   }
 

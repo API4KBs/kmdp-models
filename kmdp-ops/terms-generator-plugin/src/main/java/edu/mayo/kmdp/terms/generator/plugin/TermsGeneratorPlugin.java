@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -61,7 +61,7 @@ import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
  */
 public class TermsGeneratorPlugin extends AbstractMojo {
 
-  private Logger logger = LogManager.getLogger(TermsGeneratorPlugin.class);
+  private Logger logger = LoggerFactory.getLogger(TermsGeneratorPlugin.class);
 
   /**
    * @parameter default-value="false"

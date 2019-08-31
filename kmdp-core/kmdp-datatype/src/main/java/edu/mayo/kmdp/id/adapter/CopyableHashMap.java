@@ -21,7 +21,7 @@ import org.jvnet.jaxb2_commons.lang.CopyStrategy;
 import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 
 // May not be necessary if copyTo is not enabled
-public class CopyableHashMap<K, V> extends HashMap<K, V> {
+public class CopyableHashMap<K, V, M extends CopyableHashMap<K,V,M>> extends HashMap<K, V> {
 
   public CopyableHashMap() {
 
@@ -29,6 +29,11 @@ public class CopyableHashMap<K, V> extends HashMap<K, V> {
 
   public CopyableHashMap(Map<K, V> src) {
     super(src);
+  }
+
+  public M addEntry(K key, V value) {
+    super.put(key,value);
+    return (M) this;
   }
 
   public java.lang.Object copyTo(ObjectLocator locator, java.lang.Object target,

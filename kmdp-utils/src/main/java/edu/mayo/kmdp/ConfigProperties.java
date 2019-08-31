@@ -22,13 +22,13 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     O extends Option<?>> extends Properties {
 
-  private static Logger logger = LogManager.getLogger(ConfigProperties.class);
+  private static Logger logger = LoggerFactory.getLogger(ConfigProperties.class);
 
   protected static <O extends Option> Properties defaulted(Class<O> barOptsClass) {
     Properties defaults = new Properties();

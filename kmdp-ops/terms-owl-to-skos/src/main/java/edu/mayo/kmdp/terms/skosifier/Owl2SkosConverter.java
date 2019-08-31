@@ -39,8 +39,8 @@ import org.apache.jena.reasoner.ValidityReport;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.SKOS;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 public class Owl2SkosConverter extends ConverterInitBase implements
@@ -50,7 +50,7 @@ public class Owl2SkosConverter extends ConverterInitBase implements
   private static final String DC_NAMESPACE = DCTerms.getURI();
   private static final String OLEX = "http://www.w3.org/ns/lemon/ontolex#";
 
-  private static Logger logger = LogManager.getLogger(Owl2SkosConverter.class);
+  private static Logger logger = LoggerFactory.getLogger(Owl2SkosConverter.class);
 
   @Override
   public Optional<Model> apply(Model source, Owl2SkosConfig cfg) {
@@ -169,10 +169,10 @@ public class Owl2SkosConverter extends ConverterInitBase implements
   }
 
 
-  private void debug( ValidityReport report) {
+  private void debug(ValidityReport report) {
     report.getReports().forEachRemaining(rep -> {
       if (rep.isError()) {
-        logger.error(rep);
+        logger.error(rep.toString());
       }
     });
   }

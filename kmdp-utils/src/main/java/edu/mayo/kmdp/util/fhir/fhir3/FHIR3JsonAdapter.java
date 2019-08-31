@@ -52,8 +52,9 @@ public class FHIR3JsonAdapter extends
         FHIR3JsonAdapter::setParam);
   }
 
-  private static void setParam(Parameters p, String paramName, Type value) {
-    p.addParameter().setName(paramName).setValue(value);
+  private static void setParam(Parameters p, Type value) {
+    p.addParameter()
+        .setValue(value);
   }
 
   private static Type getParam(Parameters p) {
@@ -76,7 +77,7 @@ public class FHIR3JsonAdapter extends
       } else if (v instanceof Resource) {
         gen.writeRawValue(FHIR3JsonUtil.instance.toJsonString((Resource) v));
       }  else if (v instanceof Type) {
-        gen.writeObject(instance.trySerializeType((Type) v));
+        gen.writeRawValue(instance.trySerializeType((Type) v));
       } else if (isFHIRList(v)) {
          Bundle b = new Bundle().setType(COLLECTION);
         ((List<?>) v).forEach(

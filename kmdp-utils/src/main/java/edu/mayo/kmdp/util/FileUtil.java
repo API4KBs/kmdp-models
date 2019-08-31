@@ -42,12 +42,12 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class FileUtil {
 
-  private static Logger logger = LogManager.getLogger(FileUtil.class);
+  private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
   protected FileUtil() {
 

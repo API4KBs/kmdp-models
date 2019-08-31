@@ -17,6 +17,7 @@ package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.util.JSonUtil.asMapOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.Module;
@@ -26,22 +27,32 @@ import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.fhir.fhir2_hl7.FHIR2HL7JacksonModule;
 import edu.mayo.kmdp.util.fhir.fhir2_hl7.FHIR2HL7JsonAdapter;
+import edu.mayo.kmdp.util.fhir.fhir2_hl7.FHIR2HL7JsonUtil;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.hl7.fhir.instance.model.Age;
 import org.hl7.fhir.instance.model.Base;
 import org.hl7.fhir.instance.model.BaseResource;
+import org.hl7.fhir.instance.model.CodeableConcept;
+import org.hl7.fhir.instance.model.Coding;
 import org.hl7.fhir.instance.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.instance.model.HumanName;
 import org.hl7.fhir.instance.model.Identifier;
+import org.hl7.fhir.instance.model.Observation;
+import org.hl7.fhir.instance.model.Parameters;
+import org.hl7.fhir.instance.model.Parameters.ParametersParameterComponent;
 import org.hl7.fhir.instance.model.Patient;
+import org.hl7.fhir.instance.model.Provenance;
 import org.hl7.fhir.instance.model.Quantity;
+import org.hl7.fhir.instance.model.Resource;
+import org.hl7.fhir.instance.model.StringType;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.junit.jupiter.api.Test;
 
-public class FHIR2HL7JsonSerializationTest {
+class FHIR2HL7JsonSerializationTest {
 
   private Patient res = (Patient) new Patient()
       .addName(new HumanName().addGiven("John").addFamily("Hurt"))
@@ -54,7 +65,7 @@ public class FHIR2HL7JsonSerializationTest {
   private Module module = new FHIR2HL7JacksonModule();
 
   @Test
-  public void testSerializeFHIRResource() {
+  void testSerializeFHIRResource() {
     Optional<String> pat = JSonUtil
         .writeJson(res, new FHIR2HL7JacksonModule(), JSonUtil.defaultProperties())
         .flatMap(Util::asString);
@@ -76,7 +87,7 @@ public class FHIR2HL7JsonSerializationTest {
   }
 
   @Test
-  public void testSerializeFHIRResourceWithInferredType() {
+  void testSerializeFHIRResourceWithInferredType() {
     Optional<String> pat = JSonUtil.writeJson(res, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(pat.isPresent());
@@ -95,7 +106,7 @@ public class FHIR2HL7JsonSerializationTest {
   }
 
   @Test
-  public void testNonFHIRResource() {
+  void testNonFHIRResource() {
     Optional<String> foo = JSonUtil.writeJson(nonRes, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(foo.isPresent());
@@ -109,7 +120,7 @@ public class FHIR2HL7JsonSerializationTest {
 
 
   @Test
-  public void testNonFHIRMaps() {
+  void testNonFHIRMaps() {
     Map<String, String> map = new HashMap<>();
     map.put("a", "b");
     Optional<String> foo = JSonUtil.writeJson(map, module, JSonUtil.defaultProperties())
@@ -126,7 +137,7 @@ public class FHIR2HL7JsonSerializationTest {
 
 
   @Test
-  public void testInnerFHIRResource() {
+  void testInnerFHIRResource() {
     Boo boo = new Boo();
     boo.setPat(res);
     boo.setAge((Age) new Age().setValue(BigDecimal.valueOf(42)));
@@ -145,7 +156,7 @@ public class FHIR2HL7JsonSerializationTest {
   }
 
   @Test
-  public void testInnerFHIRResourceWithAnnotationControls() {
+  void testInnerFHIRResourceWithAnnotationControls() {
     Zoo zoo = new Zoo();
     zoo.setPat(res);
 
@@ -163,7 +174,7 @@ public class FHIR2HL7JsonSerializationTest {
 
 
   @Test
-  public void testFHIRDatatype() {
+  void testFHIRDatatype() {
     Quantity q = new Quantity().setValue(BigDecimal.valueOf(42)).setCode("a").setUnit("yr");
 
     Optional<String> qStr = JSonUtil.writeJson(q, module, JSonUtil.defaultProperties())
@@ -178,7 +189,7 @@ public class FHIR2HL7JsonSerializationTest {
   }
 
   @Test
-  public void testFHIRinMap() {
+  void testFHIRinMap() {
     Map<String, IBase> map = new HashMap<>();
     map.put("a", res);
     map.put("c", new Quantity().setValue(BigDecimal.valueOf(42)).setCode("a").setUnit("yr"));
@@ -197,7 +208,7 @@ public class FHIR2HL7JsonSerializationTest {
   }
 
   @Test
-  public void testFHIRinMapField() {
+  void testFHIRinMapField() {
     Map<String, Base> map = new HashMap<>();
     map.put("a", res);
     map.put("b", new Quantity().setValue(BigDecimal.valueOf(42)).setCode("a").setUnit("yr"));
@@ -214,6 +225,48 @@ public class FHIR2HL7JsonSerializationTest {
     Map reconstructed = p.get().getAtts();
     assertTrue(reconstructed.get("a") instanceof Patient);
     assertTrue(reconstructed.get("b") instanceof Quantity);
+  }
+
+  @Test
+  void testParameters() {
+    Parameters parameters = new Parameters()
+        .addParameter(new ParametersParameterComponent().setName("key")
+            .setValue(new StringType().setValue("val")));
+    String paramStr = FHIR2HL7JsonUtil.instance.toJsonString(parameters);
+    Parameters parameters2 = FHIR2HL7JsonUtil.instance.parse(paramStr.getBytes(), Parameters.class);
+    ParametersParameterComponent p = parameters2.getParameter().get(0);
+    assertEquals("key", p.getName());
+    assertEquals("val",
+        ((StringType) p.getValue()).getValueNotNull());
+  }
+
+
+  @Test
+  void testNestedContains() {
+    Observation obs = (Observation) new Observation()
+        .setCode(new CodeableConcept().addCoding(new Coding().setCode("x")))
+        .setId("#id1");
+
+    Provenance prov = new Provenance();
+    prov.addTarget().setReference("#id1");
+    prov.addContained(obs);
+
+    Parameters parameters = new Parameters()
+        .addParameter(new ParametersParameterComponent().setName("key")
+            .setResource(prov));
+
+    String paramStr = FHIR2HL7JsonUtil.instance.toJsonString(parameters);
+
+    Parameters parameters2 = FHIR2HL7JsonUtil.instance.parse(paramStr.getBytes(), Parameters.class);
+
+    Resource r = parameters2.getParameter().get(0).getResource();
+    assertTrue(r instanceof Provenance);
+    List<Resource> inner = ((Provenance) r).getContained();
+    assertFalse(inner.isEmpty());
+    assertTrue(inner.get(0) instanceof Observation);
+
+    Observation o = (Observation) inner.get(0);
+    assertEquals("x", o.getCode().getCoding().get(0).getCode());
   }
 
   private static class Foo {

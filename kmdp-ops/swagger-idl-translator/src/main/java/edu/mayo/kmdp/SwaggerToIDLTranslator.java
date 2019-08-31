@@ -42,15 +42,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Optional;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class SwaggerToIDLTranslator {
 
   private Swagger20Parser parser = new Swagger20Parser();
   private static final String VOID = "Void";
 
-  private static final Logger logger = LogManager.getLogger(SwaggerToIDLTranslator.class);
+  private static final Logger logger = LoggerFactory.getLogger(SwaggerToIDLTranslator.class);
 
   public Optional<String> translate(InputStream input) {
     return FileUtil.read(input)

@@ -33,8 +33,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 
 /**
@@ -55,7 +55,7 @@ public class Answer<T> extends Explainer {
 
   protected Map<String, List<String>> meta;
 
-  private static Logger logger = LogManager.getLogger(Answer.class);
+  private static Logger logger = LoggerFactory.getLogger(Answer.class);
 
   /* Constructors (lifters) */
 
