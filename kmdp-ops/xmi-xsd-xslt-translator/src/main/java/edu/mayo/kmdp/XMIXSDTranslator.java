@@ -17,8 +17,8 @@ package edu.mayo.kmdp;
 
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.xslt.XSLTConfig;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.w3c.dom.Document;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class XMIXSDTranslator {
 
-  private static final Logger logger = LogManager.getLogger(XMIXSDTranslator.class);
+  private static final Logger logger = LoggerFactory.getLogger(XMIXSDTranslator.class);
 
   private String defaultXSLT = "/edu/mayo/kmdp/xmi-to-xsd.xsl";
 

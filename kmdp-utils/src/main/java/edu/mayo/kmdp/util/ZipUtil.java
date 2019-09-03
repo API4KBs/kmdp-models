@@ -21,12 +21,12 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class ZipUtil {
 
-  private static Logger logger = LogManager.getLogger(ZipUtil.class);
+  private static Logger logger = LoggerFactory.getLogger(ZipUtil.class);
 
   private ZipUtil() {}
 

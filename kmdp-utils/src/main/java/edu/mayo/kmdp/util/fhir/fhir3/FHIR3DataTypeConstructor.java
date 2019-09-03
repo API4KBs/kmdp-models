@@ -19,8 +19,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.BooleanType;
 import org.hl7.fhir.dstu3.model.CodeType;
@@ -39,7 +39,7 @@ import org.hl7.fhir.exceptions.FHIRException;
 
 public class FHIR3DataTypeConstructor {
 
-  private static final Logger logger = LogManager.getLogger(FHIR3DataTypeConstructor.class);
+  private static final Logger logger = LoggerFactory.getLogger(FHIR3DataTypeConstructor.class);
 
   private FHIR3DataTypeConstructor() {}
 

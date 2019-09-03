@@ -30,12 +30,12 @@ import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.Swagger20Parser;
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class SwaggerTestUtil {
 
-  private static Logger logger = LogManager.getLogger(SwaggerTestUtil.class);
+  private static Logger logger = LoggerFactory.getLogger(SwaggerTestUtil.class);
 
   private SwaggerTestUtil() {}
 

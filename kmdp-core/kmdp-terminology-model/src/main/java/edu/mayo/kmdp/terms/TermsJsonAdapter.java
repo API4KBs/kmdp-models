@@ -26,9 +26,31 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public interface TermsJsonAdapter {
+
+  class SimpleSerializer extends JsonSerializer<Term> {
+
+    @Override
+    public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
+        throws IOException {
+      gen.writeString(v != null ? v.getTag() : null);
+    }
+  }
+
+
+  class KeySerializer extends JsonSerializer<Term> {
+
+    @Override
+    public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
+        throws IOException {
+      gen.writeFieldName(v.getTag());
+    }
+  }
 
   class Serializer extends JsonSerializer<Term> {
 
@@ -41,23 +63,46 @@ public interface TermsJsonAdapter {
 
   abstract class Deserializer extends JsonDeserializer<Term> {
 
+    public static final Logger logger = LoggerFactory.getLogger(TermsJsonAdapter.class);
+
     @Override
     public Term deserialize(JsonParser jp, DeserializationContext ctxt)
         throws IOException {
       TreeNode t = jp.readValueAsTree();
-      TreeNode nsNode = t.get("namespace");
-      if ( nsNode == null ) {
-        return null;
+
+      Optional<String> tagNode = getTagNode(t);
+      if (!tagNode.isPresent()) {
+        logger.warn("Unable to resolve concept {}", t);
       }
-      TextNode tagNode = (TextNode) t.get("tag");
-      TextNode nsIdNode = (TextNode) nsNode.get("@id");
-      if ( tagNode == null || nsIdNode == null ) {
-        return null;
+
+      Optional<Term> resolved = Arrays.stream(getValues())
+            .filter(trm -> trm.getTag().equals(tagNode.orElse("")))
+            .findAny();
+      if (tagNode.isPresent() && !resolved.isPresent()) {
+        logger.warn("Unable to resolve concept ID {}", tagNode.get());
       }
-      return Arrays.stream(getValues())
-          .filter(trm -> trm.getTag().equals(tagNode.asText()))
-          .findAny()
-          .orElse(null);
+      return resolved.orElse(null);
+    }
+
+    private Optional<String> getTagNode(TreeNode t) {
+      if (t.isObject()) {
+        TreeNode nsNode = t.get("namespace");
+        if (nsNode == null) {
+          return Optional.empty();
+        }
+        TextNode tagNode = (TextNode) t.get("tag");
+        TextNode nsIdNode = (TextNode) nsNode.get("@id");
+        if (tagNode == null || nsIdNode == null) {
+          return Optional.empty();
+        }
+        return Optional.of(tagNode)
+            .map(TextNode::asText);
+      } else if (t instanceof TextNode) {
+        return Optional.of((TextNode) t)
+            .map(TextNode::asText);
+      } else {
+        return Optional.empty();
+      }
     }
 
     protected abstract Term[] getValues();

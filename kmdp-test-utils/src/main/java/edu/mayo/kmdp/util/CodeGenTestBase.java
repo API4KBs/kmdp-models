@@ -39,15 +39,15 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import javax.validation.constraints.NotNull;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.jvnet.mjiip.v_2_2.XJC22Mojo;
 
 public abstract class CodeGenTestBase {
 
   protected CodeGenTestBase() {}
   
-  private static Logger logger = LogManager.getLogger(CodeGenTestBase.class);
+  private static Logger logger = LoggerFactory.getLogger(CodeGenTestBase.class);
   
   private static List<Diagnostic> doCompile(File source, File gen,
       File target) {

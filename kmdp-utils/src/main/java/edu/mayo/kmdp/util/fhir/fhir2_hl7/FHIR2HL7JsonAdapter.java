@@ -29,7 +29,6 @@ import edu.mayo.kmdp.util.fhir.AbstractFHIRJsonAdapter;
 import java.io.IOException;
 import java.util.List;
 import org.hl7.fhir.instance.model.Base;
-import org.hl7.fhir.instance.model.BaseResource;
 import org.hl7.fhir.instance.model.Bundle;
 import org.hl7.fhir.instance.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.instance.model.Bundle.BundleType;
@@ -54,8 +53,8 @@ public class FHIR2HL7JsonAdapter extends
         FHIR2HL7JsonAdapter::setParam);
   }
 
-  private static void setParam(Parameters p, String paramName, Type value) {
-    p.addParameter().setName(paramName).setValue(value);
+  private static void setParam(Parameters p, Type value) {
+    p.addParameter().setValue(value);
   }
 
   private static Type getParam(Parameters p) {
@@ -74,10 +73,10 @@ public class FHIR2HL7JsonAdapter extends
         throws IOException {
       if (v == null) {
         gen.writeNull();
-      } else if (v instanceof BaseResource) {
-        gen.writeRawValue(FHIR2HL7JsonUtil.instance.toJsonString((BaseResource) v));
+      } else if (v instanceof Resource) {
+        gen.writeRawValue(FHIR2HL7JsonUtil.instance.toJsonString((Resource)v));
       } else if (v instanceof Type) {
-        gen.writeObject(instance.trySerializeType((Type) v));
+        gen.writeRawValue(instance.trySerializeType((Type) v));
       } else if (isFHIRList(v)) {
         Bundle b = new Bundle().setType(BundleType.COLLECTION);
         ((List<?>) v)

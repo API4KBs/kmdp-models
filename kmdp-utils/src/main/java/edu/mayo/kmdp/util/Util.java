@@ -35,12 +35,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class Util {
 
-  private static final Logger logger = LogManager.getLogger(Util.class);
+  private static final Logger logger = LoggerFactory.getLogger(Util.class);
   
   private static final Pattern uuidPattern = Pattern.compile(
       "^([A-Fa-f0-9]{8})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{12})$");

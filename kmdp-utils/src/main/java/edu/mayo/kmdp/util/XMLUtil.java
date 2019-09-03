@@ -59,8 +59,8 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import net.sf.saxon.lib.FeatureKeys;
 import net.sf.saxon.lib.StandardErrorListener;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.apache.xerces.util.XMLCatalogResolver;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
 
 public class XMLUtil {
   
-  private static final Logger logger = LogManager.getLogger(XMLUtil.class);
+  private static final Logger logger = LoggerFactory.getLogger(XMLUtil.class);
 
   private XMLUtil() {}
 

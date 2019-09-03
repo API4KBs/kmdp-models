@@ -35,8 +35,8 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.protege.xmlcatalog.CatalogUtilities;
@@ -69,7 +69,7 @@ import org.semanticweb.owlapi.util.OWLOntologyMerger;
  */
 public class SkosGeneratorPlugin extends AbstractMojo {
 
-  private Logger logger = LogManager.getLogger(SkosGeneratorPlugin.class);
+  private Logger logger = LoggerFactory.getLogger(SkosGeneratorPlugin.class);
 
   /**
    * @parameter default-value="false"

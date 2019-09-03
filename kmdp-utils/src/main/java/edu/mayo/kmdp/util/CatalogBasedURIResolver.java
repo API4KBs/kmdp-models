@@ -32,13 +32,13 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.lib.RelativeURIResolver;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.apache.xerces.util.XMLCatalogResolver;
 
 public class CatalogBasedURIResolver implements RelativeURIResolver {
 
-  private static Logger logger = LogManager.getLogger(CatalogBasedURIResolver.class);
+  private static Logger logger = LoggerFactory.getLogger(CatalogBasedURIResolver.class);
 
   private String loc;
 

@@ -49,15 +49,15 @@ import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class RegistryGenerator {
 
-  private static final Logger logger = LogManager.getLogger(RegistryGenerator.class);
+  private static final Logger logger = LoggerFactory.getLogger(RegistryGenerator.class);
 
   private static final Resource constructedLanguage = ResourceFactory
       .createResource("https://www.omg.org/spec/API4KP/api4kp/ConstructedLanguage");

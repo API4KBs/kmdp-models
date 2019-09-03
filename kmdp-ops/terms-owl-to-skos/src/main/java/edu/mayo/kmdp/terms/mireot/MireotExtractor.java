@@ -38,13 +38,13 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 public class MireotExtractor {
 
-  private static final Logger logger = LogManager.getLogger(MireotExtractor.class);
+  private static final Logger logger = LoggerFactory.getLogger(MireotExtractor.class);
 
   private static final String MIREOT_PATH = "/query/mireot/mireot.sparql";
   private static final ParameterizedSparqlString MIREOT = new ParameterizedSparqlString(

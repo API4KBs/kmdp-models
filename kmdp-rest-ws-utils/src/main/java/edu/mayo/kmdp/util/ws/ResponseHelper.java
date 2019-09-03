@@ -26,8 +26,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.omg.spec.api4kp._1_0.Answer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ import org.springframework.util.MultiValueMap;
 
 public class ResponseHelper {
 
-  private static Logger logger = LogManager.getLogger(ResponseHelper.class);
+  private static Logger logger = LoggerFactory.getLogger(ResponseHelper.class);
 
   private ResponseHelper() {
   }

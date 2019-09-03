@@ -30,9 +30,9 @@ import java.util.Set;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.reasoner.ReasonerRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.xerces.util.XMLCatalogResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Registry {
 
@@ -45,7 +45,7 @@ public class Registry {
 
   private static Model registryGraph;
 
-  private static Logger logger = LogManager.getLogger(Registry.class);
+  private static Logger logger = LoggerFactory.getLogger(Registry.class);
 
   private static Map<String, String> prefixToNamespaceMap = new HashMap<>();
   private static Map<String, String> namespaceToPrefixMap = new HashMap<>();

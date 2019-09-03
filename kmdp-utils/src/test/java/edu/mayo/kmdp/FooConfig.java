@@ -21,7 +21,7 @@ public class FooConfig extends ConfigProperties<FooConfig, FooConfig.BarOpts> {
 
   private static final Properties defaults = defaulted(BarOpts.class);
 
-  public FooConfig() {
+  FooConfig() {
     super(defaults);
   }
 
@@ -37,14 +37,14 @@ public class FooConfig extends ConfigProperties<FooConfig, FooConfig.BarOpts> {
     C(Opt.of("_c", "42", "C", Integer.class, false));
 
 
-    private Opt opt;
+    private Opt<BarOpts> opt;
 
-    BarOpts(Opt opt) {
+    BarOpts(Opt<BarOpts> opt) {
       this.opt = opt;
     }
 
     @Override
-    public Opt getOption() {
+    public Opt<BarOpts> getOption() {
       return opt;
     }
   }

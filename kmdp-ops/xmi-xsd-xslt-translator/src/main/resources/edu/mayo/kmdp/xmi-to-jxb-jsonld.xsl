@@ -100,8 +100,8 @@
         </xsl:call-template>
 
         <xsl:call-template name="typeInfo">
-          <!--<xsl:with-param name="pack" select="$pack"/>
-          <xsl:with-param name="klass" select="$klass"/>-->
+          <!--<xsl:with-param name="pack" select="$pack"/-->
+          <xsl:with-param name="klassName" select="$klass/@name"/>
         </xsl:call-template>
 
         <xsl:call-template name="subTypeInfo">
@@ -172,6 +172,7 @@
   </xsl:template>
 
   <xsl:template name="typeInfo">
+    <xsl:param name="klassName" as="xs:string"/>
     <xsl:element name="annox:annotate">
       <xsl:variable name="idType" select="'NAME'"/>
       <xsl:variable name="as" select="'PROPERTY'"/>
@@ -180,8 +181,9 @@
       <xsl:value-of
         select="
           concat('@com.fasterxml.jackson.annotation.JsonTypeInfo(',
-          ' use = com.fasterxml.jackson.annotation.JsonTypeInfo.Id.', $idType, ', ',
-          ' include = com.fasterxml.jackson.annotation.JsonTypeInfo.As.', $as, ', ',
+          ' use = Id.', $idType, ', ',
+          ' include = As.', $as, ', ',
+          ' defaultImpl = ', $klassName, '.class, ',
           ' property = &quot;_class&quot; )')"
       />
     </xsl:element>

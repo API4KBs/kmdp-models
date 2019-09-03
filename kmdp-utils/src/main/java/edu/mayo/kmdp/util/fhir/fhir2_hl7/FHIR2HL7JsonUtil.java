@@ -18,29 +18,17 @@ package edu.mayo.kmdp.util.fhir.fhir2_hl7;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import edu.mayo.kmdp.util.fhir.AbstractFHIRJsonUtil;
-import java.util.List;
-import org.hl7.fhir.instance.model.DomainResource;
 import org.hl7.fhir.instance.model.Resource;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 
-public class FHIR2HL7JsonUtil extends AbstractFHIRJsonUtil<DomainResource, Resource> {
+public class FHIR2HL7JsonUtil extends AbstractFHIRJsonUtil<Resource> {
 
-  private static final IParser jsonParser = FhirContext.forDstu2Hl7Org().newJsonParser();
+  private static final FhirContext context = FhirContext.forDstu2Hl7Org();
 
   public static final FHIR2HL7JsonUtil instance = new FHIR2HL7JsonUtil();
 
   @Override
   protected IParser getParser() {
-    return jsonParser;
+    return context.newJsonParser();
   }
 
-  @Override
-  public String toJsonString(IBaseResource res) {
-    return toJsonString(res, DomainResource.class);
-  }
-
-  @Override
-  protected List<Resource> getContained(DomainResource baseResource) {
-    return baseResource.getContained();
-  }
 }

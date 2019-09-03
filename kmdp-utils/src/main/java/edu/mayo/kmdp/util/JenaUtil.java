@@ -54,12 +54,12 @@ import org.apache.jena.util.PrintUtil;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public abstract class JenaUtil {
   
-  private static Logger logger = LogManager.getLogger(JenaUtil.class);
+  private static Logger logger = LoggerFactory.getLogger(JenaUtil.class);
 
   static {
     FileManager.get().addLocatorClassLoader(JenaUtil.class.getClassLoader());

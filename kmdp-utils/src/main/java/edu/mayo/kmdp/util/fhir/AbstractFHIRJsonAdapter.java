@@ -17,12 +17,9 @@ package edu.mayo.kmdp.util.fhir;
 
 import ca.uhn.fhir.parser.IParser;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import edu.mayo.kmdp.util.JSonUtil;
-import edu.mayo.kmdp.util.TriConsumer;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import org.hl7.fhir.instance.model.api.IBase;
@@ -39,19 +36,19 @@ public abstract class AbstractFHIRJsonAdapter<
 
   protected abstract IParser getParser();
 
-  protected AbstractFHIRJsonUtil<R, I> jsonHelper;
+  protected AbstractFHIRJsonUtil<I> jsonHelper;
 
   protected Class<P> paramClass;
   protected Supplier<P> paramConstructor;
   protected Function<P, D> paramGetter;
-  protected TriConsumer<P, String, D> paramSetter;
+  protected BiConsumer<P, D> paramSetter;
 
   protected AbstractFHIRJsonAdapter(
-      AbstractFHIRJsonUtil<R, I> jsonHelper,
+      AbstractFHIRJsonUtil<I> jsonHelper,
       Class<P> paramClass,
       Supplier<P> paramConstructor,
       Function<P, D> paramGetter,
-      TriConsumer<P, String, D> paramSetter) {
+      BiConsumer<P, D> paramSetter) {
     this.jsonHelper = jsonHelper;
     this.paramClass = paramClass;
     this.paramConstructor = paramConstructor;
@@ -61,16 +58,20 @@ public abstract class AbstractFHIRJsonAdapter<
 
   // Will parse as either Resource, or Datatype
   protected IBase tryParse(JsonNode jn) {
-    if (jn.get("resourceType") != null) {
+    if (isResource(jn)) {
       return getParser().parseResource(jn.toString());
     } else {
       return tryParseType(jn);
     }
   }
 
+  private boolean isResource(JsonNode jn) {
+    return jn.get("resourceType") != null;
+  }
+
   // Will parse as either Resource, or - in case of Datatypes - as a wrapping Parameter
   protected R tryParseAsResource(JsonNode jn) {
-    if (jn.get("resourceType") != null) {
+    if (isResource(jn)) {
       return (R) getParser().parseResource(jn.toString());
     } else {
       return (R) parseTypeAsParam(jn);
@@ -83,35 +84,22 @@ public abstract class AbstractFHIRJsonAdapter<
   }
 
   private P parseTypeAsParam(JsonNode jn) {
-    P paramShell = paramConstructor.get();
-    paramSetter.accept(paramShell, "value", null);
-    String template = jsonHelper.toJsonString(paramShell);
-    Optional<JsonNode> parent = JSonUtil.readJson(template.getBytes());
-    if (parent.isPresent()) {
-
-      Iterator<String> jnFields = jn.fieldNames();
-      // skip the JSON field called "name" to get the value
-      jnFields.next();
-      String pName = jnFields.next();
-
-      ((ObjectNode) parent.get().get("parameter").get(0))
-          .set(pName, jn.get(pName));
-
-      return getParser().parseResource(paramClass, parent.get().toString());
-    } else {
-      return paramConstructor.get();
-    }
+    JsonNode parent = JsonNodeFactory.instance.objectNode()
+        .set("resourceType", JsonNodeFactory.instance.textNode("Parameters"));
+    ((ArrayNode) parent.withArray("parameter")).add(jn);
+    return getParser().parseResource(paramClass, parent.toString());
   }
 
 
-  protected JsonNode trySerializeType(D t) {
+  protected String trySerializeType(D t) {
     // wrap in P to serialize
     P p = paramConstructor.get();
-    paramSetter.accept(p, "value", t);
-    Optional<JsonNode> node = JSonUtil.readJson(jsonHelper.toJsonString(p).getBytes());
-    return node
-        .map(jsonNode -> jsonNode.get("parameter").get(0))
-        .orElse(JsonNodeFactory.instance.nullNode());
+    paramSetter.accept(p, t);
+    String paramS = jsonHelper.toJsonString((I) p);
+    paramS = paramS.substring(
+        paramS.indexOf('{', 1),
+        paramS.length() - 2);
+    return paramS;
   }
 
 
