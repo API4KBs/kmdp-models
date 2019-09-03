@@ -1,9 +1,12 @@
 language: java
+jdk:
+  - oraclejdk8
+dist: trusty
 install: true
-script: mvn package
+script: mvn package -Ppublic -q
 deploy:
   provider: script
-  script: mvn deploy -DskipTests -s .travis.settings.xml
+  script: mvn deploy -DskipTests -Ppublic -s .travis.settings.xml
   skip_cleanup: true
 env:
   global:
