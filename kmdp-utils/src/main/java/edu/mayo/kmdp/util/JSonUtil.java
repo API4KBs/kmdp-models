@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.type.ArrayType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
@@ -38,7 +39,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -93,6 +96,7 @@ public class JSonUtil {
       return Optional.empty();
     }
   }
+
 
   public static <T> Optional<T> readJson(byte[] data, Class<T> klass) {
     return readJson(new ByteArrayInputStream(data), klass);
@@ -305,6 +309,21 @@ public class JSonUtil {
     }
   }
 
+
+  public static <T> Optional<List<T>> parseJsonList(InputStream data, Class<T> memberKlass) {
+    return parseJsonList(data, null, memberKlass);
+  }
+
+  public static <T> Optional<List<T>> parseJsonList(InputStream data, Module m, Class<T> memberKlass) {
+    ObjectMapper objectMapper = configure(new ObjectMapper(), m, defaultProperties());
+    try {
+      return Optional.of(Arrays.asList(objectMapper.readValue(data, asArrayOf(memberKlass))));
+    } catch (IOException e) {
+      logger.error(e.getMessage(),e);
+      return Optional.empty();
+    }
+  }
+
   public static <T> Optional<T> parseJson(String json, Module mod, TypeReference<T> type) {
     try {
       ObjectMapper mapper = new ObjectMapper();
@@ -341,6 +360,10 @@ public class JSonUtil {
     return new JavaTypeReference<>(
         TypeFactory.defaultInstance().constructMapType(Map.class, keyClass, valueClass)
     );
+  }
+
+  public static <X> ArrayType asArrayOf(Class<X> klass) {
+    return TypeFactory.defaultInstance().constructArrayType(klass);
   }
 
   private static class JavaTypeReference<T> extends TypeReference<T> {

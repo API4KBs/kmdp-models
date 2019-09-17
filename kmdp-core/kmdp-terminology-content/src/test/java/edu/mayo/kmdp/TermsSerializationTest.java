@@ -16,8 +16,12 @@
 package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import edu.mayo.kmdp.terms.TermsJsonAdapter;
+import edu.mayo.kmdp.terms.TermsJsonAdapter.SimpleSerializer;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
@@ -55,7 +59,8 @@ public class TermsSerializationTest {
 
   @Test
   public void testJSON() {
-    Foo f = new Foo(KnowledgeAssetType.Cognitive_Process_Model, KnowledgeRepresentationLanguage.OWL_2);
+    Foo f = new Foo(KnowledgeAssetType.Cognitive_Process_Model,
+        KnowledgeRepresentationLanguage.OWL_2);
 
     String json = JSonUtil
         .writeJson(f)
@@ -79,16 +84,30 @@ public class TermsSerializationTest {
     assertEquals(1, f2.get().getLang().getTags().size());
   }
 
+  @Test
+  public void testJSONSimple() {
+    Bar b = new Bar();
+    b.lang = KnowledgeRepresentationLanguage.DMN_1_2;
+    b.type = KnowledgeAssetType.Decision_Model;
+
+    String s = JSonUtil.writeJson(b)
+        .flatMap(Util::asString)
+        .orElse("");
+    assertTrue(s.contains("\"type\" : \"" + KnowledgeAssetType.Decision_Model.getConceptUUID() + "\""));
+    assertTrue(s.contains("\"lang\" : \"" + KnowledgeRepresentationLanguage.DMN_1_2.getTag() + "\""));
+
+    Bar b2 = JSonUtil.parseJson(s,Bar.class)
+        .orElse(null);
+    assertNotNull(b2);
+    assertEquals(KnowledgeAssetType.Decision_Model,b2.getType());
+    assertEquals(KnowledgeRepresentationLanguage.DMN_1_2,b2.getLang());
+  }
 
   @XmlRootElement
   public static class Foo {
 
     private KnowledgeAssetType type;
     private KnowledgeRepresentationLanguage lang;
-
-    public Foo() {
-
-    }
 
     public Foo(KnowledgeAssetType type, KnowledgeRepresentationLanguage lang) {
       this.type = type;
@@ -108,6 +127,37 @@ public class TermsSerializationTest {
     }
 
     public void setLang(KnowledgeRepresentationLanguage lang) {
+      this.lang = lang;
+    }
+  }
+
+  public static class Bar {
+
+    @JsonSerialize(using = TermsJsonAdapter.UniversalSerializer.class)
+    protected KnowledgeAssetType type;
+
+    @JsonSerialize(using = SimpleSerializer.class)
+    protected KnowledgeRepresentationLanguage lang;
+
+    public Bar() {
+      // needed for deserialization
+    }
+
+    public KnowledgeAssetType getType() {
+      return type;
+    }
+
+    public void setType(
+        KnowledgeAssetType type) {
+      this.type = type;
+    }
+
+    public KnowledgeRepresentationLanguage getLang() {
+      return lang;
+    }
+
+    public void setLang(
+        KnowledgeRepresentationLanguage lang) {
       this.lang = lang;
     }
   }

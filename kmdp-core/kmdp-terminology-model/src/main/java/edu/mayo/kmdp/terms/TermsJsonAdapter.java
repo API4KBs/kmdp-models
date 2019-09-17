@@ -24,6 +24,8 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.util.URIUtil;
+import edu.mayo.kmdp.util.Util;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
@@ -34,11 +36,18 @@ import org.slf4j.LoggerFactory;
 public interface TermsJsonAdapter {
 
   class SimpleSerializer extends JsonSerializer<Term> {
-
     @Override
     public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
       gen.writeString(v != null ? v.getTag() : null);
+    }
+  }
+
+  class UniversalSerializer extends JsonSerializer<Term> {
+    @Override
+    public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
+        throws IOException {
+      gen.writeString(v != null ? v.getConceptUUID().toString() : null);
     }
   }
 
@@ -76,12 +85,24 @@ public interface TermsJsonAdapter {
       }
 
       Optional<Term> resolved = Arrays.stream(getValues())
-            .filter(trm -> trm.getTag().equals(tagNode.orElse("")))
+            .filter(trm -> matches(trm,tagNode.orElse(null)))
             .findAny();
       if (tagNode.isPresent() && !resolved.isPresent()) {
         logger.warn("Unable to resolve concept ID {}", tagNode.get());
       }
       return resolved.orElse(null);
+    }
+
+    private boolean matches(Term trm, String code) {
+      if (code == null) {
+        return false;
+      }
+      return
+          trm.getTag().equals(code)
+          || (Util.isUUID(code) && trm.getConceptUUID().equals(Util.toUUID(code)))
+          || (URIUtil.isUri(code) && trm.getConceptId().toString().equals(code))
+          || trm.getTags().contains(code)
+          ;
     }
 
     private Optional<String> getTagNode(TreeNode t) {
