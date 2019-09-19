@@ -109,6 +109,10 @@ public class TermsSerializationTest {
     private KnowledgeAssetType type;
     private KnowledgeRepresentationLanguage lang;
 
+    public Foo() {
+      // needed for deserialization
+    }
+
     public Foo(KnowledgeAssetType type, KnowledgeRepresentationLanguage lang) {
       this.type = type;
       this.lang = lang;
