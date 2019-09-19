@@ -57,4 +57,6 @@ public class InternalTerm extends ConceptIdentifier {
   public void setComment(String comment) {
     this.comment = comment;
   }
+
+
 }

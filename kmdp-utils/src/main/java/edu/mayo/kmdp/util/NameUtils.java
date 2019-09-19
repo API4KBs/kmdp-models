@@ -633,8 +633,15 @@ public final class NameUtils {
 
   public static String getTermConceptName(String conceptCode, String conceptName) {
     String term = Util.isEmpty(conceptName) ? conceptCode : conceptName;
+    if (Util.isEmpty(term)) {
+      return "";
+    }
     term = fixSpecialCharacters(term);
-    return NameUtils.capitalize(term.replaceAll("[^a-zA-Z0-9]", "_"));
+    term = term.replaceAll("[^a-zA-Z0-9]", "_").trim();
+    if (term.endsWith("_")) {
+      term = term.substring(0, term.length() - 1);
+    }
+    return NameUtils.capitalize(term);
   }
 
   private static String fixSpecialCharacters(String s) {
