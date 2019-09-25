@@ -9,22 +9,25 @@ PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX w3c: <http://www.w3.org/TR/>
 PREFIX dol: <http://www.omg.org/spec/DOL/DOL-terms/>
 
-SELECT ?L ?P ?NS
+SELECT ?L ?P ?NS ?Code ?Ver
 WHERE {
   {
-       ?L a know:ConstructedLanguage;
-            dc:identifier ?P;
-            dol:supportsSerialization ?Ser.
+    ?L a know:ConstructedLanguage;
+      dc:identifier ?Code;
+      dol:supportsSerialization ?NS.
 
-        ?Ser owl:sameAs ?NS;
-            know:depends-on ?MF.
+    OPTIONAL { ?L owl:versionInfo ?Ver. }
+    BIND( CONCAT( ?Code,
+                  IF( BOUND(?Ver), CONCAT( "-", ?Ver ), "" )
+    ) as ?P)
 
-        ?MF dc:source "http://www.w3.org/TR/xml11".
+    ?NS know:depends-on ?MF.
+
+    ?MF dc:source "http://www.w3.org/TR/xml11".
   }
   UNION
   {
-        ?L a know:Lexicon;
-            dc:identifier ?P;
-            owl:sameAs ?NS.
+      ?NS a know:Lexicon;
+        dc:identifier ?P.
   }
 }

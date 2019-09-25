@@ -52,7 +52,6 @@ public class CatalogGeneratorTest {
     context.put("entries",entries);
 
     String catalog = new CatalogGenerator().fromTemplate("catalog",context);
-    //System.out.println(catalog);
 
     try {
       SAXParserFactory factory = SAXParserFactory.newInstance();

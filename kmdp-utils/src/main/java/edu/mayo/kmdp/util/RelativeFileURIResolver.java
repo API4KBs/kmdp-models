@@ -15,14 +15,18 @@
  */
 package edu.mayo.kmdp.util;
 
+import java.net.URL;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
-import java.net.URL;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class RelativeFileURIResolver implements URIResolver {
 
+  public static final Logger logger = LoggerFactory.getLogger(RelativeFileURIResolver.class);
+  
   private String loc;
 
   public String getLoc() {
@@ -43,11 +47,11 @@ public class RelativeFileURIResolver implements URIResolver {
     try {
       URL url = XMLUtil.asFileURL(href);
       if (url == null) {
-        url = new URL(loc.substring(0, loc.lastIndexOf("/") + 1) + href);
+        url = new URL(loc.substring(0, loc.lastIndexOf('/') + 1) + href);
       }
       return new StreamSource(url.openStream());
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return null;
     }
   }

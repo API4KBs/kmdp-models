@@ -18,7 +18,6 @@ package edu.mayo.kmdp.terms.impl.model;
 
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.VocabularyCatalog;
-
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
@@ -41,7 +40,7 @@ public class DefaultVocabularyCatalog implements VocabularyCatalog {
   @Override
   public Optional<ConceptScheme> resolve(String schemeID) {
     return entries.values().stream()
-        .filter((s) -> schemeID.equals(s.getId()))
+        .filter(s -> schemeID.equals(s.getId().toString()))
         .findAny();
   }
 

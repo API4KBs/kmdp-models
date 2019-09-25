@@ -28,13 +28,18 @@ import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
@@ -42,17 +47,19 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.rdf.model.impl.StatementImpl;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.PrintUtil;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public abstract class JenaUtil {
+  
+  private static Logger logger = LoggerFactory.getLogger(JenaUtil.class);
 
   static {
     FileManager.get().addLocatorClassLoader(JenaUtil.class.getClassLoader());
@@ -68,39 +75,73 @@ public abstract class JenaUtil {
   }
 
 
-  public static <T> Set<Map<String, T>> askQuery(Model model, String query,
+  public static <T> Set<Map<String, T>> askQuery(Model model, String queryStr,
       Function<RDFNode, T> mapper) {
-    ResultSet results = QueryExecutionFactory.create(query,
-        model).execSelect();
-    Set<Map<String, T>> answers = new HashSet<>();
-    while (results.hasNext()) {
-      QuerySolution sol = results.next();
-      answers.add(results.getResultVars().stream()
-          .collect(Collectors.toMap(Function.identity(), (k) -> mapper.apply(sol.get(k)))));
+    return askQuery(model, QueryFactory.create(queryStr),mapper);
+  }
+
+  public static <T> Set<Map<String, T>> askQuery(Model model, Query query,
+      Function<RDFNode, T> mapper) {
+    try (QueryExecution queryExec = QueryExecutionFactory.create(query, model)) {
+      ResultSet results = queryExec.execSelect();
+      Set<Map<String, T>> answers = new HashSet<>();
+      while (results.hasNext()) {
+        QuerySolution sol = results.next();
+        answers.add(results.getResultVars().stream()
+            .collect(Collectors.toMap(Function.identity(), k -> mapper.apply(sol.get(k)))));
+      }
+      return answers;
     }
-    return answers;
+  }
+
+  public static Set<Map<String,String>> askQueryResults(Model model, Query query) {
+    return askQuery(model,query,RDFNode::toString);
   }
 
   public static Model construct(Model model, Query query) {
-    return QueryExecutionFactory.create(query,
-        model).execConstruct();
+    try (QueryExecution queryExec = QueryExecutionFactory.create(query, model)) {
+      return queryExec.execConstruct();
+    }
   }
 
   public static Set<Resource> askQuery(Model model, Query selectQuery) {
-    org.apache.jena.query.ResultSet results = QueryExecutionFactory.create(selectQuery,
-        model).execSelect();
+    try (QueryExecution queryExec = QueryExecutionFactory.create(selectQuery, model)) {
+      org.apache.jena.query.ResultSet results = queryExec.execSelect();
 
-    Set<Resource> answers = new HashSet<>();
-    if (results.hasNext()) {
-      results.forEachRemaining((sol) -> {
-        if (sol.varNames().hasNext()) {
-          answers.add(sol.getResource(sol.varNames().next()));
-        }
-      });
-    } else {
-      System.err.println("WARNING :: empty query ");
+      Set<Resource> answers = new HashSet<>();
+      if (results.hasNext()) {
+        results.forEachRemaining(sol -> {
+          if (sol.varNames().hasNext()) {
+            answers.add(sol.getResource(sol.varNames().next()));
+          }
+        });
+      } else {
+        logger.error("WARNING :: empty query ");
+      }
+      return answers;
     }
-    return answers;
+  }
+
+
+
+  public static Set<Pair<RDFNode, RDFNode>> askBinaryQuery(Model model, Query selectQuery) {
+    final Set<Pair<RDFNode, RDFNode>> total = new HashSet<>();
+    try (QueryExecution queryExec = QueryExecutionFactory.create(selectQuery, model)) {
+      org.apache.jena.query.ResultSet results = queryExec.execSelect();
+      if (results.getResultVars().size() != 2) {
+        throw new IllegalStateException(
+            "Binary query expected, but found # of vars = " + results.getResultVars().size());
+      }
+      if (results.hasNext()) {
+        results.forEachRemaining(sol -> {
+          Iterator<String> vars = selectQuery.getResultVars().iterator();
+          Pair<RDFNode, RDFNode> pair =
+              new ImmutablePair<>(sol.get(vars.next()),sol.get(vars.next()));
+          total.add(pair);
+        });
+      }
+      return total;
+    }
   }
 
 
@@ -121,7 +162,7 @@ public abstract class JenaUtil {
     try {
       return FileManager.get().loadModel(url.toURI().toString());
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
     return ModelFactory.createDefaultModel();
   }
@@ -146,12 +187,6 @@ public abstract class JenaUtil {
     return target;
   }
 
-
-  public static Model toSystemOut(Model target) {
-    // for testing purpose
-    return iterateAndStreamModel(target, System.out, PrintUtil::print);
-  }
-
   public static String asString(Model target) {
     // for testing purpose
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -169,7 +204,7 @@ public abstract class JenaUtil {
       }
       return Optional.of(m);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -179,46 +214,46 @@ public abstract class JenaUtil {
     return JSonUtil.writeJson(obj, JSonLDUtil.initLDModule(), JSonUtil.defaultProperties())
         .flatMap(Util::asString)
         .map(StringReader::new)
-        .map((json) -> m.read(json, null, "JSON-LD"));
+        .map(json -> m.read(json, null, "JSON-LD"));
   }
 
-  public static Statement obj_a(String subjURI, String propURI, String objURI) {
+  public static Statement objA(String subjURI, String propURI, String objURI) {
     return createStatement(createResource(subjURI),
         createProperty(propURI),
         createResource(objURI));
   }
 
-  public static Statement obj_a(String subjURI, Property prop, Resource obj) {
+  public static Statement objA(String subjURI, Property prop, Resource obj) {
     return createStatement(createResource(subjURI), prop, obj);
   }
 
-  public static Statement obj_a(String subjURI, Property prop, String obj) {
+  public static Statement objA(String subjURI, Property prop, String obj) {
     return createStatement(createResource(subjURI), prop, createResource(obj));
   }
 
-  public static Statement dat_a(String subjURI, String propURI, String val) {
+  public static Statement datA(String subjURI, String propURI, String val) {
     return createStatement(createResource(subjURI),
         createProperty(propURI),
         createStringLiteral(val));
   }
-  public static Statement dat_a(String subjURI, Property prop, String val) {
+  public static Statement datA(String subjURI, Property prop, String val) {
     return createStatement(createResource(subjURI),
         prop,
         createStringLiteral(val));
   }
 
-  public static Statement obj_a(Resource subj, Property prop, String val) {
+  public static Statement objA(Resource subj, Property prop, String val) {
     return createStatement(subj,
         prop,
         createResource(val));
   }
-  public static Statement obj_a(Resource subj, Property prop, Resource obj) {
+  public static Statement objA(Resource subj, Property prop, Resource obj) {
     return createStatement(subj,
         prop,
         obj);
   }
 
-  public static Statement dat_a(Resource subj, Property prop, String val) {
+  public static Statement datA(Resource subj, Property prop, String val) {
     return createStatement(subj,
         prop,
         createStringLiteral(val));

@@ -27,6 +27,7 @@ public interface QualifiedId extends ScopedIdentifier {
 
   QName getQName();
 
+  @Override
   default URI getFormat() {
     return IDFormats.QNAME.asURI();
   }

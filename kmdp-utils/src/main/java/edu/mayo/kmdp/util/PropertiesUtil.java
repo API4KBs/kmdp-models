@@ -20,8 +20,14 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Function;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class PropertiesUtil {
+
+  public static final Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
+  
+  private PropertiesUtil() {}
 
   public static Properties empty() {
     return new PropertyBuilder().get();
@@ -44,7 +50,7 @@ public class PropertiesUtil {
       return p.containsKey(name) ? Optional.of(Class.forName(p.getProperty(name)).newInstance())
           : Optional.empty();
     } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -76,7 +82,7 @@ public class PropertiesUtil {
       prop.load(new ByteArrayInputStream(serializedProperties.getBytes()));
       return Optional.of(prop);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -99,7 +105,7 @@ public class PropertiesUtil {
         defaults.load(PropertiesUtil.class.getResourceAsStream(path));
         this.p = defaults;
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.error(e.getMessage(),e);
         this.p = new Properties();
       }
     }

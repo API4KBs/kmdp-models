@@ -27,6 +27,7 @@ import edu.mayo.kmdp.terms.skosifier.Modes;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
+import edu.mayo.kmdp.util.URIUtil;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +36,11 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
 import ru.avicomp.ontapi.OntManagers;
 import ru.avicomp.ontapi.OntologyManager;
 
@@ -66,7 +70,7 @@ public class ConcreteTopConceptHierarchyTest {
 
   private List<Term> doGenerate(final Modes modes) {
     try {
-      OntologyManager manager = OntManagers.createONT();
+      OntologyManager manager = TestHelper.initManager();
 
       Optional<Model> skosModel = new MireotExtractor()
           .fetch(Owl2Skos2TermsTest.class.getResourceAsStream("/version.rdf"),

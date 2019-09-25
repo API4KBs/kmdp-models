@@ -87,12 +87,8 @@ public class WebSessionContextTest {
             testHeaders.put("Test", "1");
 
             WebSessionContext.setHeaders(testHeaders);
-            System.out.println("Set 1");
-
-            Thread.sleep(100);
 
             assertEquals(testHeaders, WebSessionContext.getHeaders());
-            System.out.println("Checked 1");
 
             return null;
         };
@@ -102,10 +98,8 @@ public class WebSessionContextTest {
             testHeaders.put("Test", "2");
 
             WebSessionContext.setHeaders(testHeaders);
-            System.out.println("Set 2");
 
             assertEquals(testHeaders, WebSessionContext.getHeaders());
-            System.out.println("Checked 2");
 
             return null;
         };

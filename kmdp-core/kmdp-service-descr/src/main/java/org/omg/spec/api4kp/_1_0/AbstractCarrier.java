@@ -16,6 +16,8 @@
 package org.omg.spec.api4kp._1_0;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.mayo.kmdp.SurrogateHelper;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
@@ -24,10 +26,12 @@ import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentation
 import edu.mayo.ontology.taxonomies.krprofile._20190801.KnowledgeRepresentationLanguageProfile;
 import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.function.Function;
 import org.jvnet.jaxb2_commons.lang.CopyStrategy;
 import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import org.omg.spec.api4kp._1_0.services.ASTCarrier;
+import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.w3c.dom.Document;
@@ -39,7 +43,7 @@ public class AbstractCarrier {
         .withSerializedExpression(s)
         .withLevel(ParsingLevel.Concrete_Knowledge_Expression)
         .withRepresentation(
-            // TODO - ADD "Natural Language" to the list of languages
+            // ADD "Natural Language" to the list of languages
             rep(KnowledgeRepresentationLanguage.HTML,
                 SerializationFormat.TXT));
   }
@@ -135,9 +139,13 @@ public class AbstractCarrier {
     return rep(language, serialization, format, null, null);
   }
 
-  // TODO Should the object be unified?
+  // Should the object be unified?
   public static SyntacticRepresentation rep(Representation meta) {
     return rep(meta.getLanguage(), meta.getSerialization(), meta.getFormat(), null, null);
+  }
+
+  public static SyntacticRepresentation canonicalRepresentationOf(KnowledgeAsset asset) {
+    return rep(SurrogateHelper.canonicalRepresentationOf(asset));
   }
 
 
@@ -204,20 +212,50 @@ public class AbstractCarrier {
     return rep(null, null, null, null, encoding);
   }
 
-  protected Object copyTo(ObjectLocator locator, Object target,
-      CopyStrategy strategy) {
-    return target;
+  protected Object copyTo(ObjectLocator locator, Object target, CopyStrategy strategy) {
+    return target != null && locator != null && strategy != null
+        ? target
+        : null ;
+  }
+
+  public <T> Optional<T> as(Class<T> type) {
+    return
+        (this instanceof ASTCarrier
+            && type.isInstance(((ASTCarrier) this).getParsedExpression()))
+            ? Optional.ofNullable(type.cast(((ASTCarrier) this).getParsedExpression()))
+            : Optional.empty();
+  }
+
+
+  public <T> Optional<T> asParseTree(Class<T> type) {
+    return
+        (this instanceof DocumentCarrier
+            && type.isInstance(((DocumentCarrier) this).getStructuredExpression()))
+            ? Optional.ofNullable(type.cast(((DocumentCarrier) this).getStructuredExpression()))
+            : Optional.empty();
   }
 
 
 
-  //TODO Rewrite as proper map/flatMap
+  /**
+   * @deprecated until reworked
+   * @param mapper
+   * @param <U>
+   * @return
+   */
+  // Rewrite as proper map/flatMap
   @Deprecated
   public <U> U flatMap(Function<? super KnowledgeCarrier, U> mapper) {
     return mapper.apply((KnowledgeCarrier) this);
   }
 
-  //TODO Rewrite as proper map/flatMap
+  /**
+   * @deprecated until reworked
+   * @param mapper
+   * @param <U>
+   * @return
+   */
+  // Rewrite as proper map/flatMap
   @Deprecated
   public <U extends KnowledgeCarrier> U map(Function<? super AbstractCarrier, U> mapper) {
     return mapper.apply(this);

@@ -16,26 +16,38 @@
 package edu.mayo.kmdp.id.helper;
 
 
+import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
+import static edu.mayo.kmdp.util.Util.ensureUUIDFormat;
+
+import edu.mayo.kmdp.id.Identifier;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.adapters.DateAdapter;
-import org.omg.spec.api4kp._1_0.identifiers.*;
-
-import javax.xml.namespace.QName;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static edu.mayo.kmdp.util.Util.ensureUUIDFormat;
+import javax.xml.namespace.QName;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.Pointer;
+import org.omg.spec.api4kp._1_0.identifiers.QualifiedIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.UUIDentifier;
+import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
 
 public class DatatypeHelper {
 
-  private final static Pattern VERSIONS_RX = Pattern.compile("^(.*/)?(.*)/versions/(.+)$");
-  private final static Pattern SEMVER_RX = Pattern.compile("^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$");
+  protected DatatypeHelper() {
+
+  }
+
+  private static final Pattern VERSIONS_RX = Pattern.compile("^(.*/)?(.*)/versions/(.+)$");
+  private static final Pattern SEMVER_RX = Pattern.compile("^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$");
 
 
   public static NamespaceIdentifier ns(final String nsUri) {
@@ -82,10 +94,10 @@ public class DatatypeHelper {
   private static URI ensureResolved(String termUri) {
     String uri = termUri;
     if (uri.matches("\\w+:.+")) {
-      String candidatePfx = uri.substring(0, uri.indexOf(":"));
+      String candidatePfx = uri.substring(0, uri.indexOf(':'));
       String base = Registry.getNamespaceURIForPrefix(candidatePfx).orElse(null);
       if (base != null) {
-        uri = base + "#" + termUri.substring(termUri.lastIndexOf(":") + 1);
+        uri = base + "#" + termUri.substring(termUri.lastIndexOf(':') + 1);
       }
     }
     return URI.create(uri);
@@ -124,7 +136,7 @@ public class DatatypeHelper {
     if (tag.matches("\\d+")) {
       return VersionTagType.SEQUENTIAL;
     }
-    if (DateAdapter.isDate(tag)) {
+    if (DateAdapter.instance().isDate(tag)) {
       return VersionTagType.TIMESTAMP;
     }
     Matcher matcher = SEMVER_RX.matcher(tag);
@@ -136,30 +148,76 @@ public class DatatypeHelper {
   }
 
   public static QualifiedIdentifier name(final String n) {
-    String pfx = n.substring(0, n.indexOf(":"));
+    String pfx = n.substring(0, n.indexOf(':'));
     String name = n.substring(n.indexOf(':') + 1);
     String uri = Registry.getNamespaceURIForPrefix(pfx).orElse("");
 
     return new QualifiedIdentifier().withQName(new QName(uri, name, pfx));
   }
 
-  public static String versionOf(URI versionedIdentifier, URI identifier) {
+  public static String versionOf(URI versionedIdentifier) {
     if (versionedIdentifier == null) {
       return null;
     }
-    // TODO Can probably be refactored to be more efficient...
+    String idStr = versionedIdentifier.toString();
+
+    if (idStr.startsWith(BASE_UUID_URN)) {
+      int start = BASE_UUID_URN.length();
+      int end = idStr.lastIndexOf(':');
+      // need at least two ":"
+      if (end > start) {
+        return idStr.substring(end + 1);
+      }
+    }
+    // still open for improvement...
     return toVersionIdentifier(versionedIdentifier).getVersion();
+  }
+
+  public static String tagOf(URI identifier) {
+    if (identifier == null) {
+      return null;
+    }
+    // '#' based URIs
+    if (identifier.getFragment() != null) {
+      return identifier.getFragment();
+    }
+
+    String idStr = identifier.toString();
+    // 'urn:uuid:' identifiers
+    if (idStr.startsWith(BASE_UUID_URN)) {
+      int start = BASE_UUID_URN.length();
+      int end = idStr.lastIndexOf(':');
+      // handle urn:uuid:tag vs urn:uuid:tag:version
+      return end >= start
+          ? idStr.substring(start, end)
+          : idStr.substring(start);
+    } else {
+      // '/' identifiers
+      return idStr.contains("/")
+          ? idStr.substring(idStr.lastIndexOf('/') + 1)
+          : idStr;
+    }
   }
 
 
   public static VersionIdentifier toVersionIdentifier(URIIdentifier uri) {
     return uri != null
-        ? toVersionIdentifier(uri.getVersionId() != null ? uri.getVersionId() : uri.getUri())
+        ? toVersionIdentifier(tryGetVersionedUri(uri))
         : null;
+  }
+
+  public static URI tryGetVersionedUri(URIIdentifier uri) {
+    return uri.getVersionId() != null ? uri.getVersionId() : uri.getUri();
   }
 
   public static VersionIdentifier toVersionIdentifier(URI versionId) {
     return versionId != null ? toVersionIdentifier(versionId.toString()) : null;
+  }
+
+  public static VersionIdentifier vid(String tag, String version) {
+    return new VersionIdentifier()
+        .withTag(tag)
+        .withVersion(version);
   }
 
   public static VersionIdentifier toVersionIdentifier(String versionId) {
@@ -181,7 +239,11 @@ public class DatatypeHelper {
       if (index >= 0) {
         tag = tag.substring(index + 1);
       } else {
-        // Not sure what to do in this case, probably nothing...
+        if (tag.startsWith(BASE_UUID_URN)) {
+          // TODO FIXME
+          version = versionOf(uri);
+          tag = tagOf(uri);
+        }
       }
     }
     return new VersionIdentifier().withTag(tag).withVersion(version);
@@ -208,16 +270,16 @@ public class DatatypeHelper {
     return URIUtil.toPrefixedName(qId.getQName());
   }
 
-  public static Optional<UUIDentifier> toUUIDentifier(ConceptIdentifier cid) {
+  public static Optional<UUIDentifier> toUUIDentifier(Identifier cid) {
     return ensureUUIDFormat(cid.getTag())
-        .map((uuidStr) -> new UUIDentifier().withTag(uuidStr));
+        .map(uuidStr -> new UUIDentifier().withTag(uuidStr));
   }
 
   public static Optional<URIIdentifier> toURIIDentifier(UUIDentifier uid) {
     UUID uuid = uid.getUUID();
     if (uuid != null) {
       return Optional
-          .ofNullable(new URIIdentifier().withUri(URI.create(Registry.BASE_UUID_URN + uuid.toString())));
+          .ofNullable(new URIIdentifier().withUri(URI.create(BASE_UUID_URN + uuid.toString())));
     } else {
       return Optional.empty();
     }

@@ -42,11 +42,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Optional;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class SwaggerToIDLTranslator {
 
   private Swagger20Parser parser = new Swagger20Parser();
-  private final static String Void = "Void";
+  private static final String VOID = "Void";
+
+  private static final Logger logger = LoggerFactory.getLogger(SwaggerToIDLTranslator.class);
 
   public Optional<String> translate(InputStream input) {
     return FileUtil.read(input)
@@ -56,7 +60,7 @@ public class SwaggerToIDLTranslator {
 
   private Optional<String> doTranslate(Swagger swagger) {
     return initModule(swagger.getBasePath())
-        .map((m) -> this.withOperations(m, swagger))
+        .map(m -> this.withOperations(m, swagger))
         .map(IDLSerializer::serialize);
   }
 
@@ -64,12 +68,12 @@ public class SwaggerToIDLTranslator {
     Module leafModule = getLeafModule(m);
     swagger.getPaths()
         .forEach(
-            (pathStr, path) -> path.getOperations().forEach((op) -> addOperation(leafModule, op, swagger)));
+            (pathStr, path) -> path.getOperations().forEach(op -> addOperation(leafModule, op, swagger)));
     return m;
   }
 
   private void addOperation(Module module, Operation op, Swagger swagger) {
-    op.getTags().forEach((tag) -> {
+    op.getTags().forEach(tag -> {
       Optional<Interface> intf = module.getInterface(tag);
 
       if (!intf.isPresent()) {
@@ -78,7 +82,7 @@ public class SwaggerToIDLTranslator {
 
       intf = module.getInterface(tag);
 
-      intf.get().addOperation(toIDLOperation(op, swagger));
+      intf.ifPresent(i -> i.addOperation(toIDLOperation(op, swagger)));
     });
   }
 
@@ -90,7 +94,7 @@ public class SwaggerToIDLTranslator {
     idlOp.setReturnType(getReturnType(swaggerOp));
 
     swaggerOp.getParameters().stream()
-        .map((p) -> toIDLParameter(p,swagger))
+        .map(p -> toIDLParameter(p,swagger))
         .forEach(idlOp::addInput);
     return idlOp;
   }
@@ -98,23 +102,22 @@ public class SwaggerToIDLTranslator {
   private edu.mayo.kmdp.idl.Parameter toIDLParameter(Parameter parameter,
       Swagger swagger) {
     if (parameter instanceof RefParameter) {
-      RefParameter refParam = (RefParameter) parameter;;
+      RefParameter refParam = (RefParameter) parameter;
         parameter = swagger.getParameter(refParam.getSimpleRef());
     }
     edu.mayo.kmdp.idl.Parameter idlParam = new edu.mayo.kmdp.idl.Parameter();
     idlParam.setDirection(Direction.IN);
     idlParam.setName(parameter.getName());
-    idlParam.setType(getParameterType(parameter,swagger));
+    idlParam.setType(getParameterType(parameter));
 
     return idlParam;
   }
 
-  private Type getParameterType(Parameter parameter, Swagger swagger) {
+  private Type getParameterType(Parameter parameter) {
     if (parameter instanceof BodyParameter) {
       Model m = ((BodyParameter) parameter).getSchema();
       if (m instanceof RefModel) {
         RefModel ref = (RefModel) m;
-        //m = swagger.getDefinitions().get(ref.getSimpleRef());
         // This is where we'd need to resolve the actual UML-driven YAML
         return new Type(ref.getSimpleRef());
       }
@@ -137,7 +140,7 @@ public class SwaggerToIDLTranslator {
             swaggerOp.getResponses().getOrDefault(ResponseCode.OK.getTag(),
                 null)))
         .map(this::toIDLType)
-        .orElse(new Type(Void));
+        .orElse(new Type(VOID));
   }
 
   private Type toIDLType(Response response) {
@@ -155,12 +158,8 @@ public class SwaggerToIDLTranslator {
       RefProperty rp = (RefProperty) schema;
       return new Type(rp.getSimpleRef());
     } else {
-      return new Type(schema != null && schema.getType() != null ? schema.getType() : Void);
+      return new Type(schema != null && schema.getType() != null ? schema.getType() : VOID);
     }
-  }
-
-  private String s(int status) {
-    return ""+status;
   }
 
   private Interface addInterface(Module module, String tag) {
@@ -174,7 +173,7 @@ public class SwaggerToIDLTranslator {
   }
 
   private Optional<Module> initModule(String basePath) {
-    String packageName = NameUtils.namespaceURIToPackage(basePath);
+    String packageName = NameUtils.namespaceURIStringToPackage(basePath);
     if (Util.isEmpty(packageName)) {
       return Optional.empty();
     }
@@ -187,7 +186,7 @@ public class SwaggerToIDLTranslator {
     try {
       return Optional.ofNullable(parser.parse(s));
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }

@@ -15,35 +15,45 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.util.JSonUtil.asMapOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import ca.uhn.fhir.model.api.BaseElement;
 import ca.uhn.fhir.model.api.IResource;
 import ca.uhn.fhir.model.dstu2.composite.AgeDt;
+import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
+import ca.uhn.fhir.model.dstu2.composite.CodingDt;
+import ca.uhn.fhir.model.dstu2.composite.ContainedDt;
 import ca.uhn.fhir.model.dstu2.composite.HumanNameDt;
 import ca.uhn.fhir.model.dstu2.composite.IdentifierDt;
 import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
 import ca.uhn.fhir.model.dstu2.resource.BaseResource;
+import ca.uhn.fhir.model.dstu2.resource.Observation;
+import ca.uhn.fhir.model.dstu2.resource.Parameters;
+import ca.uhn.fhir.model.dstu2.resource.Parameters.Parameter;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.dstu2.resource.Provenance;
 import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
+import ca.uhn.fhir.model.primitive.StringDt;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.kmdp.util.fhir2.json.FHIR2JacksonModule;
-import edu.mayo.kmdp.util.fhir2.json.FHIR2JsonAdapter;
+import edu.mayo.kmdp.util.fhir.fhir2.FHIR2JacksonModule;
+import edu.mayo.kmdp.util.fhir.fhir2.FHIR2JsonAdapter;
+import edu.mayo.kmdp.util.fhir.fhir2.FHIR2JsonUtil;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static edu.mayo.kmdp.util.JSonUtil.asMapOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class FHIR2JsonSerializationTest {
+class FHIR2JsonSerializationTest {
 
   private Patient res = new Patient()
       .setIdentifier(Collections.singletonList(new IdentifierDt().setValue("p123")))
@@ -55,7 +65,7 @@ public class FHIR2JsonSerializationTest {
   private Module module = new FHIR2JacksonModule();
 
   @Test
-  public void testSerializeFHIRResource() {
+  void testSerializeFHIRResource() {
     Optional<String> pat = JSonUtil
         .writeJson(res, new FHIR2JacksonModule(), JSonUtil.defaultProperties())
         .flatMap(Util::asString);
@@ -72,7 +82,7 @@ public class FHIR2JsonSerializationTest {
   }
 
   @Test
-  public void testSerializeFHIRResourceWithInferredType() {
+  void testSerializeFHIRResourceWithInferredType() {
     Optional<String> pat = JSonUtil.writeJson(res, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(pat.isPresent());
@@ -89,7 +99,7 @@ public class FHIR2JsonSerializationTest {
   }
 
   @Test
-  public void testNonFHIRResource() {
+  void testNonFHIRResource() {
     Optional<String> foo = JSonUtil.writeJson(nonRes, module, JSonUtil.defaultProperties())
         .flatMap(Util::asString);
     assertTrue(foo.isPresent());
@@ -103,7 +113,7 @@ public class FHIR2JsonSerializationTest {
 
 
   @Test
-  public void testNonFHIRMaps() {
+  void testNonFHIRMaps() {
     Map<String, String> map = new HashMap<>();
     map.put("a", "b");
     Optional<String> foo = JSonUtil.writeJson(map, module, JSonUtil.defaultProperties())
@@ -120,7 +130,7 @@ public class FHIR2JsonSerializationTest {
 
 
   @Test
-  public void testInnerFHIRResource() {
+  void testInnerFHIRResource() {
     Boo boo = new Boo();
     boo.setPat(res);
     boo.setAge((AgeDt) new AgeDt().setValue(42));
@@ -139,7 +149,7 @@ public class FHIR2JsonSerializationTest {
   }
 
   @Test
-  public void testInnerFHIRResourceWithAnnotationControls() {
+  void testInnerFHIRResourceWithAnnotationControls() {
     Zoo zoo = new Zoo();
     zoo.setPat(res);
 
@@ -157,7 +167,7 @@ public class FHIR2JsonSerializationTest {
 
 
   @Test
-  public void testFHIRDatatype() {
+  void testFHIRDatatype() {
     QuantityDt q = new QuantityDt().setValue(42).setCode("a").setUnit("yr");
 
     Optional<String> qStr = JSonUtil.writeJson(q, module, JSonUtil.defaultProperties())
@@ -172,7 +182,7 @@ public class FHIR2JsonSerializationTest {
   }
 
   @Test
-  public void testFHIRinMap() {
+  void testFHIRinMap() {
     Map<String, IBase> map = new HashMap<>();
     map.put("a", res);
     map.put("c", new QuantityDt().setValue(42).setCode("a").setUnit("yr"));
@@ -191,7 +201,7 @@ public class FHIR2JsonSerializationTest {
   }
 
   @Test
-  public void testFHIRinMapField() {
+  void testFHIRinMapField() {
     Map<String, BaseElement> map = new HashMap<>();
     map.put("a", res);
     map.put("b", new QuantityDt().setValue(42).setCode("a").setUnit("yr"));
@@ -209,6 +219,53 @@ public class FHIR2JsonSerializationTest {
     assertTrue(reconstructed.get("a") instanceof Patient);
     assertTrue(reconstructed.get("b") instanceof QuantityDt);
   }
+
+  @Test
+  void testParameters() {
+    Parameters parameters = new Parameters();
+    parameters.addParameter()
+        .setName("key")
+        .setValue(new StringDt().setValue("val"));
+    String paramStr = FHIR2JsonUtil.instance.toJsonString(parameters);
+    Parameters parameters2 = FHIR2JsonUtil.instance.parse(paramStr.getBytes(), Parameters.class);
+    Parameters.Parameter p = parameters2.getParameterFirstRep();
+    assertEquals("key", p.getName());
+    assertEquals("val",
+        ((StringDt) p.getValue()).getValueNotNull());
+
+  }
+
+
+  @Test
+  void testNestedContains() {
+    Observation obs = (Observation) new Observation()
+        .setCode(new CodeableConceptDt().addCoding(new CodingDt().setCode("x")))
+        .setId("#id1");
+
+    Provenance prov = new Provenance();
+    prov.addTarget().setReference("#id1");
+    ContainedDt innerRes = new ContainedDt();
+    innerRes.getContainedResources().add(obs);
+    prov.setContained(innerRes);
+
+    Parameters parameters = new Parameters()
+        .addParameter(new Parameter().setName("key")
+            .setResource(prov));
+
+    String paramStr = FHIR2JsonUtil.instance.toJsonString(parameters);
+
+    Parameters parameters2 = FHIR2JsonUtil.instance.parse(paramStr.getBytes(), Parameters.class);
+
+    IResource r = parameters2.getParameterFirstRep().getResource();
+    assertTrue(r instanceof Provenance);
+    List<IResource> inner = ((Provenance) r).getContained().getContainedResources();
+    assertFalse(inner.isEmpty());
+    assertTrue(inner.get(0) instanceof Observation);
+
+    Observation o = (Observation) inner.get(0);
+    assertEquals("x", o.getCode().getCodingFirstRep().getCode());
+  }
+
 
   private static class Foo {
 
@@ -247,8 +304,8 @@ public class FHIR2JsonSerializationTest {
 
   private static class Zoo extends Foo {
 
-    @JsonSerialize(using = FHIR2JsonAdapter.FHIRResourceSerializer.class)
-    @JsonDeserialize(using = FHIR2JsonAdapter.FHIRResourceDeserializer.class)
+    @JsonSerialize(using = FHIR2JsonAdapter.FHIRSerializer.class)
+    @JsonDeserialize(using = FHIR2JsonAdapter.FHIRDeserializer.class)
     private Patient pat;
 
     public Patient getPat() {

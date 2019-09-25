@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.idl;
 
-public class Struct {
+public interface Struct {
+
 
 }

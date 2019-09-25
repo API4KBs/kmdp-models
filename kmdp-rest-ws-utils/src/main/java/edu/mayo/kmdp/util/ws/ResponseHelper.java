@@ -15,6 +15,8 @@
  */
 package edu.mayo.kmdp.util.ws;
 
+import edu.mayo.kmdp.util.Util;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -24,11 +26,20 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.omg.spec.api4kp._1_0.Answer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
 public class ResponseHelper {
+
+  private static Logger logger = LoggerFactory.getLogger(ResponseHelper.class);
+
+  private ResponseHelper() {
+  }
 
   public static <T> List<T> getAll(ResponseEntity<List<T>> resp) {
     return isSuccess(resp) ? resp.getBody() : Collections.emptyList();
@@ -54,7 +65,7 @@ public class ResponseHelper {
   }
 
   public static ResponseEntity<Void> succeed(HttpStatus status) {
-    checkStatus(status,HttpStatus::is2xxSuccessful);
+    checkStatus(status, HttpStatus::is2xxSuccessful);
     return new ResponseEntity<>(status);
   }
 
@@ -65,15 +76,16 @@ public class ResponseHelper {
   }
 
   public static <T> ResponseEntity<T> succeed(T result, HttpStatus status) {
-    checkStatus(status,HttpStatus::is2xxSuccessful);
-    return new ResponseEntity<>(result,status);
+    checkStatus(status, HttpStatus::is2xxSuccessful);
+    return new ResponseEntity<>(result, status);
   }
 
-  public static <T> ResponseEntity<Void> succeed(T result, HttpStatus status, BiConsumer<HttpHeaders,T> headerSetter) {
-    checkStatus(status,HttpStatus::is2xxSuccessful);
+  public static <T> ResponseEntity<Void> succeed(T result, HttpStatus status,
+      BiConsumer<HttpHeaders, T> headerSetter) {
+    checkStatus(status, HttpStatus::is2xxSuccessful);
     HttpHeaders httpHeaders = new HttpHeaders();
-    headerSetter.accept(httpHeaders,result);
-    return new ResponseEntity<>(httpHeaders,status);
+    headerSetter.accept(httpHeaders, result);
+    return new ResponseEntity<>(httpHeaders, status);
   }
 
   public static <T> ResponseEntity<T> notSupported() {
@@ -97,8 +109,6 @@ public class ResponseHelper {
 
   public static <X, T> ResponseEntity<T> delegate(Optional<X> delegate,
       Function<X, ResponseEntity<T>> fun) {
-    ResponseEntity<T> x = delegate
-        .map(fun).orElse(null);
     return delegate
         .map(fun)
         .orElse(notSupported());
@@ -118,8 +128,7 @@ public class ResponseHelper {
     return delegates.stream()
         .map(mapper)
         .map(ResponseHelper::get)
-        .filter(Optional::isPresent)
-        .map(Optional::get)
+        .flatMap(Util::trimStream)
         .findAny();
   }
 
@@ -149,17 +158,43 @@ public class ResponseHelper {
       Stream<ResponseEntity<X>> responses) {
     return succeed(
         responses
-        .map(ResponseHelper::get)
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .collect(Collectors.toList()));
+            .map(ResponseHelper::get)
+            .flatMap(Util::trimStream)
+            .collect(Collectors.toList()));
   }
 
 
   private static void checkStatus(HttpStatus status, Predicate<HttpStatus> test) {
-    if (test != null && ! test.test(status)) {
-      throw new IllegalArgumentException("HTTP Status " + status + "is not adequate in this context" );
+    if (test != null && !test.test(status)) {
+      throw new IllegalArgumentException(
+          "HTTP Status " + status + "is not adequate in this context");
     }
   }
 
+  public static <T> ResponseEntity<T> asResponse(Answer<T> ans) {
+    return new ResponseEntity<>(
+        ans.getOptionalValue().orElse(null),
+        mapHeaders(ans),
+        mapCode(ans.getOutcomeType())
+    );
+  }
+
+  private static MultiValueMap<String, String> mapHeaders(Answer<?> ans) {
+    HttpHeaders headers = new HttpHeaders();
+    ans.listMeta().forEach(h -> headers.addAll(h, ans.getMetas(h)));
+    return headers;
+  }
+
+  private static HttpStatus mapCode(ResponseCode outcomeType) {
+    if (outcomeType == null) {
+      return HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+    try {
+      int statusCode = Integer.parseInt(outcomeType.getTag());
+      return HttpStatus.resolve(statusCode);
+    } catch (NumberFormatException nfe) {
+      logger.error(nfe.getMessage(),nfe);
+      return HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+  }
 }

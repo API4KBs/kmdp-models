@@ -32,10 +32,13 @@ import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
 public class ModelMIMECoder {
 
-  public static final String regexp = FileUtil
+  protected ModelMIMECoder() {
+  }
+
+  private static final String REGEXP = FileUtil
       .readStatic("/model.mime.regexp", ModelMIMECoder.class);
 
-  private static Pattern rxPattern = Pattern.compile(regexp);
+  private static Pattern rxPattern = Pattern.compile(REGEXP);
 
   public static String encode(SyntacticRepresentation rep) {
     return encode(rep, true);
@@ -46,7 +49,7 @@ public class ModelMIMECoder {
     if (rep.getLanguage() != null) {
       String langTag = withVersions
           ? rep.getLanguage().getTag()
-          : rep.getLanguage().getTag().substring(0, rep.getLanguage().getTag().indexOf("-"));
+          : rep.getLanguage().getTag().substring(0, rep.getLanguage().getTag().indexOf('-'));
       sb.append(langTag);
     }
     if (rep.getProfile() != null) {
@@ -62,7 +65,7 @@ public class ModelMIMECoder {
     }
     if (!rep.getLexicon().isEmpty()) {
       sb.append(";lex=").append("{");
-      rep.getLexicon().forEach((l) -> sb.append(l.getTag()).append(","));
+      rep.getLexicon().forEach(l -> sb.append(l.getTag()).append(","));
       sb.replace(sb.length() - 1, sb.length(), "}");
     }
 
@@ -87,25 +90,23 @@ public class ModelMIMECoder {
 
     String langTag = isEmpty(matcher.group(1)) ? "" : matcher.group(1).trim();
     String langVerTag = isEmpty(matcher.group(2)) ? "" : matcher.group(2).trim()
-        .replaceAll("-", "");
+        .replace("-", "");
     String versionedLangTag = langTag + (isEmpty(langVerTag) ? "" : ("-" + langVerTag));
 
     String profTag = isEmpty(matcher.group(3)) ? "" : matcher.group(3).trim()
-        .replaceAll("\\]", "")
-        .replaceAll("\\[", "");
+        .replace("]", "")
+        .replace("[", "");
 
     String serialTag = isEmpty(matcher.group(4)) ? "" : matcher.group(4).trim()
         .replaceAll("\\+", "");
-    String fullSerialTag = isEmpty(matcher.group(4)) ? "" :
-        (Util.isEmpty(versionedLangTag) ? "" : (versionedLangTag + "+" + serialTag));
 
     String formatTag = Util.isEmpty(matcher.group(4)) ? "" : matcher.group(4)
         .trim().replaceAll("\\+", "");
 
     String lexTags = isEmpty(matcher.group(5)) ? "" : matcher.group(5).trim()
-        .replaceAll("\\}", "")
-        .replaceAll("\\{", "")
-        .replaceAll("\\;lex=", "");
+        .replace("}", "")
+        .replace("{", "")
+        .replace(";lex=", "");
 
     if (!isEmpty(langVerTag)) {
       KnowledgeRepresentationLanguage.resolve(versionedLangTag)
@@ -114,7 +115,7 @@ public class ModelMIMECoder {
       String tag = langTag + "-";
       Arrays.stream(KnowledgeRepresentationLanguage.values())
           .map(KnowledgeRepresentationLanguage::getTag)
-          .filter((t) -> t.startsWith(tag))
+          .filter(t -> t.startsWith(tag))
           .findFirst()
           .flatMap(KnowledgeRepresentationLanguage::resolve)
           .ifPresent(rep::setLanguage);
@@ -133,9 +134,9 @@ public class ModelMIMECoder {
     rep.setFormat(SerializationFormat.resolve(formatTag).orElse(SerializationFormat.TXT));
 
     if (!isEmpty(lexTags)) {
-      Arrays.stream(lexTags.split(",")).forEach((l) -> {
-        Lexicon.resolve(l).ifPresent(rep::withLexicon);
-      });
+      Arrays.stream(lexTags.split(","))
+          .forEach(l -> Lexicon.resolve(l)
+              .ifPresent(rep::withLexicon));
     }
 
     return Optional.of(rep);

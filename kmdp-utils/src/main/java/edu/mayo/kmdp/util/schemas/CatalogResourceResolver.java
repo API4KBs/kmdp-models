@@ -15,17 +15,19 @@
  */
 package edu.mayo.kmdp.util.schemas;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.apache.xerces.dom.DOMInputImpl;
 import org.apache.xerces.util.XMLCatalogResolver;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
-//FIXME This class needs to be reengineered
 public class CatalogResourceResolver implements LSResourceResolver {
+
+  private static final Logger logger = LoggerFactory.getLogger(CatalogResourceResolver.class);
 
   private XMLCatalogResolver resolver;
 
@@ -58,7 +60,7 @@ public class CatalogResourceResolver implements LSResourceResolver {
             is,
             "UTF-8");
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.error(e.getMessage(),e);
       }
     }
     return null;

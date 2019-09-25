@@ -43,20 +43,18 @@ public class MapAdapter extends XmlAdapter<Map, Map> {
     adaptedMap.getAny().stream()
         .filter(Element.class::isInstance)
         .map(Element.class::cast)
-        .forEach((el) -> adaptedMap.put(getKey(el), getVal(el)));
+        .forEach(el -> adaptedMap.put(getKey(el), getVal(el)));
     adaptedMap.getAny().clear();
     return adaptedMap;
   }
 
   private Object getVal(Element el) {
-    return resolveType(el).flatMap((resolvedType) -> JaxbUtil.unmarshall(resolvedType,
-        el,
-        JaxbUtil.defaultProperties()))
+    return resolveType(el).flatMap(resolvedType -> JaxbUtil.unmarshall(resolvedType,el))
         .orElse(null);
   }
 
   private Optional<Class<?>> resolveType(Element el) {
-    return XMLUtil.resolveXsiTypeClassName(el).flatMap((n) -> {
+    return XMLUtil.resolveXsiTypeClassName(el).flatMap(n -> {
       try {
         return Optional.ofNullable(Class.forName(n));
       } catch (ClassNotFoundException e) {

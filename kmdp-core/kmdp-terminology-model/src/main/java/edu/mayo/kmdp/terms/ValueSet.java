@@ -17,9 +17,6 @@ package edu.mayo.kmdp.terms;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
-
 import java.util.Optional;
 import java.util.stream.Stream;
 

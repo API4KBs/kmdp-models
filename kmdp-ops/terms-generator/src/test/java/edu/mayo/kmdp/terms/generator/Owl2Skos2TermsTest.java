@@ -25,8 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
-import edu.mayo.kmdp.terms.example.MockTermsDirectory;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
@@ -69,7 +69,7 @@ public class Owl2Skos2TermsTest {
     File src = initFolder(folder,"src");
     File tgt = initFolder(folder,"tgt");
 
-    OntologyManager manager = OntManagers.createONT();
+    OntologyManager manager = TestHelper.initManager();
 
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, targetNS)
@@ -105,7 +105,7 @@ public class Owl2Skos2TermsTest {
 
     new JavaEnumTermsGenerator().generate(graph,
         new EnumGenerationConfig()
-            .with(EnumGenerationParams.TERMS_PROVIDER, MockTermsDirectory.provider)
+            .with(EnumGenerationParams.JSON_ADAPTER, MockTermsJsonAdapter.class.getName())
             .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
         src);
 

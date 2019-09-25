@@ -26,18 +26,26 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class Util {
 
-  private final static Pattern uuidPattern = Pattern.compile(
+  private static final Logger logger = LoggerFactory.getLogger(Util.class);
+  
+  private static final Pattern uuidPattern = Pattern.compile(
       "^([A-Fa-f0-9]{8})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{12})$");
 
+  private Util() {}
 
   public static URL resolveResource(String path) {
     return Util.class.getResource(path);
@@ -56,9 +64,11 @@ public class Util {
   }
 
 
-  public static <K> LinkedHashMap<K, K> toLinkedMap(K[]... values) {
-    return Arrays.stream(values).collect(Collectors.toMap((x) -> x[0],
-        (x) -> x[1],
+  @SafeVarargs
+  public static <K> Map<K, K> toLinkedMap(K[]... values) {
+    return Arrays.stream(values).collect(Collectors.toMap(
+        x -> x[0],
+        x -> x[1],
         (x, y) -> x,
         LinkedHashMap::new));
   }
@@ -70,20 +80,18 @@ public class Util {
 
   public static Optional<ByteArrayOutputStream> printOut(ByteArrayOutputStream os) {
     try {
-//      System.out.println(asString(os));
       return Optional.of(os);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
 
   public static Optional<String> printOut(String s) {
     try {
-//      System.out.println(s);
       return Optional.of(s);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -92,7 +100,7 @@ public class Util {
     try {
       return Optional.of(url.openStream());
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -110,7 +118,7 @@ public class Util {
         return Optional.ofNullable(Util.class.getResourceAsStream(local));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
 
     return Optional.empty();
@@ -119,20 +127,17 @@ public class Util {
 
   public static void processDir(File root, File dir, BiConsumer<File, File> processor) {
     if (dir != null && dir.isDirectory()) {
-      File[] files = Util.ensureArray(dir.listFiles(),File.class);
-      if (files.length > 0) {
-        for (File f : files) {
-          if (f.isDirectory()) {
-            processDir(root, f, processor);
-          } else {
-            try {
-              processor.accept(root, f);
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
+      FileUtil.streamChildFiles(dir).forEach(f -> {
+        if (f.isDirectory()) {
+          processDir(root, f, processor);
+        } else {
+          try {
+            processor.accept(root, f);
+          } catch (Exception e) {
+            logger.error(e.getMessage(), e);
           }
         }
-      }
+      });
     }
   }
 
@@ -164,7 +169,6 @@ public class Util {
         return word;
       }
 
-      // note that this isn't the same as allUpper &= Character.isUpperCase(ch);
       allUpper &= !Character.isLowerCase(ch);
     }
 
@@ -228,11 +232,23 @@ public class Util {
         : str;
   }
 
-  public static <E extends Enum<E>> EnumSet<E> newEnumSet(Iterable<E> iterable,
+  public static <E extends Enum<E>> Set<E> newEnumSet(Iterable<E> iterable,
       Class<E> elementType) {
     EnumSet<E> set = EnumSet.noneOf(elementType);
     iterable.forEach(set::add);
     return set;
+  }
+
+  public static <T> Optional<T> as(Object o, Class<T> type) {
+    return type.isInstance(o)
+        ? Optional.of(type.cast(o))
+        : Optional.empty();
+  }
+
+  public static <T,X> Stream<T> streamAs(X instance, Class<T> type) {
+    return as(instance,type)
+        .map(Stream::of)
+        .orElseGet(Stream::empty);
   }
 
   private static class Entry {
@@ -270,7 +286,7 @@ public class Util {
 
   public static Optional<String> ensureUUIDFormat(String tag) {
     Matcher matcher = uuidPattern.matcher(tag);
-    String id = tag.replaceAll("-", "");
+    String id = tag.replace("-", "");
     if (!uuidPattern.matcher(id).matches()) {
       return Optional.empty();
     } else {
@@ -282,8 +298,12 @@ public class Util {
     return ensureUUIDFormat(tag).map(UUID::fromString);
   }
 
+  public static UUID toUUID(String tag) {
+    return UUID.fromString(tag);
+  }
+
   public static boolean isUUID(String tag) {
-    String id = tag.replaceAll("-", "");
+    String id = tag.replace("-", "");
     return uuidPattern.matcher(id).matches();
   }
 
@@ -292,7 +312,7 @@ public class Util {
   }
 
   public static String compactUUID(UUID tag) {
-    return tag.toString().replaceAll("-", "");
+    return tag.toString().replace("-", "");
   }
 
   public static String ensureUTF8(String str) {
@@ -300,6 +320,10 @@ public class Util {
       return "";
     }
     return str.replaceAll("[^\\x20-\\x7e]", "");
+  }
+
+  public static <T> Stream<T> trimStream(Optional<T> opt) {
+    return opt.map(Stream::of).orElseGet(Stream::empty);
   }
 
 }

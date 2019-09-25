@@ -33,7 +33,7 @@ import org.springframework.web.client.RestTemplate;
 public class JsonRestWSUtils {
 
   public enum WithFHIR {
-    DSTU2, STU3, NONE;
+    DSTU2, DSTU2HL7, STU3, NONE;
   }
 
   public static MappingJackson2HttpMessageConverter jacksonFHIRAdapter() {
@@ -57,19 +57,24 @@ public class JsonRestWSUtils {
       switch (fhir) {
         case DSTU2:
           objectMapper.registerModule(
-              (Module) Class.forName("edu.mayo.kmdp.util.fhir2.json.FHIR2JacksonModule")
+              (Module) Class.forName("edu.mayo.kmdp.util.fhir.fhir2.FHIR2JacksonModule")
+                  .newInstance());
+          break;
+        case DSTU2HL7:
+          objectMapper.registerModule(
+              (Module) Class.forName("edu.mayo.kmdp.util.fhir.fhir2_hl7.FHIR2HL7JacksonModule")
                   .newInstance());
           break;
         case STU3:
           objectMapper.registerModule(
-              (Module) Class.forName("edu.mayo.kmdp.util.fhir3.json.FHIR3JacksonModule")
+              (Module) Class.forName("edu.mayo.kmdp.util.fhir.fhir3.FHIR3JacksonModule")
                   .newInstance());
           break;
         case NONE:
         default:
       }
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new FHIRConfigurationException(e);
     }
 
     return objectMapper;
@@ -134,4 +139,10 @@ public class JsonRestWSUtils {
   }
 
 
+  private static class FHIRConfigurationException extends RuntimeException {
+
+    public FHIRConfigurationException(Exception e) {
+      super(e);
+    }
+  }
 }

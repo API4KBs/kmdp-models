@@ -18,7 +18,6 @@ package edu.mayo.kmdp.util;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.Options;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -39,14 +39,19 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import javax.validation.constraints.NotNull;
-import org.apache.maven.plugin.MojoExecutionException;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.jvnet.mjiip.v_2_2.XJC22Mojo;
 
 public abstract class CodeGenTestBase {
 
-  public static List<Diagnostic<? extends JavaFileObject>> doCompile(File source, File gen,
+  protected CodeGenTestBase() {}
+  
+  private static Logger logger = LoggerFactory.getLogger(CodeGenTestBase.class);
+  
+  private static List<Diagnostic> doCompile(File source, File gen,
       File target) {
-    List<File> list = new LinkedList<File>();
+    List<File> list = new LinkedList<>();
 
     explore(source, list);
     if (gen != source) {
@@ -54,7 +59,7 @@ public abstract class CodeGenTestBase {
     }
 
     JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
-    DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+    DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
     StandardJavaFileManager fileManager = jc.getStandardFileManager(diagnostics, null, null);
     Iterable<? extends JavaFileObject> compilationUnits =
         fileManager.getJavaFileObjectsFromFiles(list);
@@ -62,15 +67,19 @@ public abstract class CodeGenTestBase {
     JavaCompiler.CompilationTask task = jc
         .getTask(null, fileManager, diagnostics, jcOpts, null, compilationUnits);
     task.call();
-    return diagnostics.getDiagnostics();
+    return diagnostics.getDiagnostics().stream()
+        .map(Diagnostic.class::cast)
+        .collect(Collectors.toList());
   }
 
   public static void ensureSuccessCompile(File src, File gen, File target) {
-    List<Diagnostic<? extends JavaFileObject>> diagnostics = doCompile(src, gen, target);
+    List<Diagnostic> diagnostics = doCompile(src, gen, target);
 
     boolean success = true;
     for (Diagnostic diag : diagnostics) {
-      System.out.println(diag.getKind() + " : " + diag);
+      if (logger.isWarnEnabled()) {
+        logger.warn(String.format("%s : %s", diag.getKind(), diag));
+      }
       if (diag.getKind() == Diagnostic.Kind.ERROR) {
         success = false;
       }
@@ -89,16 +98,16 @@ public abstract class CodeGenTestBase {
 
   public static void showDirContent(File file, int i, boolean enablePrintout) {
     if (enablePrintout) {
-      System.out.println(tab(i) + " " + file.getName());
+      String msg = String.format("%s : %s",tab(i),file.getName());
+      logger.info(msg);
     }
     if (file.isDirectory()) {
-      for (File sub : file.listFiles()) {
-        showDirContent(sub, i + 1, enablePrintout);
-      }
+      FileUtil.streamChildFiles(file)
+          .forEach(sub -> showDirContent(sub, i + 1, enablePrintout));
     }
   }
 
-  public static String tab(int n) {
+  private static String tab(int n) {
     StringBuilder sb = new StringBuilder();
     for (int j = 0; j < n; j++) {
       sb.append("\t");
@@ -106,7 +115,7 @@ public abstract class CodeGenTestBase {
     return sb.toString();
   }
 
-  public static void explore(File dir, List<File> files) {
+  private static void explore(File dir, List<File> files) {
     for (File f : Util.ensureArray(dir.listFiles(),File.class)) {
       if (f.getName().endsWith(".java")) {
         files.add(f);
@@ -127,7 +136,7 @@ public abstract class CodeGenTestBase {
 
       return Class.forName(name, true, urlKL);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       fail(e.getMessage());
     }
     return Object.class;
@@ -165,15 +174,14 @@ public abstract class CodeGenTestBase {
 
 
   public static void printSourceFile(File f, PrintStream out) {
-    try {
-      FileInputStream inputStream = new FileInputStream(f);
+    try (FileInputStream inputStream = new FileInputStream(f)) {
       int n = inputStream.available();
       byte[] buf = new byte[n];
       if (n == inputStream.read(buf)) {
         out.println(new String(buf));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       fail(e.getMessage());
     }
   }
@@ -193,55 +201,30 @@ public abstract class CodeGenTestBase {
 
   public static void applyJaxb(List<File> schemas, List<File> binds, File gen, File episode,
       File catalog, boolean withAnnotations, boolean withExtensions) {
-    schemas.forEach((src) -> {
-      if (!src.exists()) {
-        fail("Schema File or Dir Not Found : " + src);
-      }
-    });
-    binds.forEach((xjb) -> {
-      if (!xjb.exists()) {
-        fail("Schema File or Dir Not Found : " + xjb);
-      }
-    });
-    if (!gen.exists() || !gen.isDirectory()) {
-      fail("Generated Source Dir Not Found : " + gen);
-    }
+    checkResourcesExist(schemas, binds, gen);
 
     Options opts = new Options();
     opts.targetDir = gen;
-
-    schemas.forEach((src) -> {
-      if (src.isDirectory()) {
-        opts.addGrammarRecursive(src);
-      } else {
-        opts.addGrammar(src);
-      }
-    });
-
-    binds.forEach((xjb) -> {
-      if (xjb.isDirectory()) {
-        opts.addBindFileRecursive(xjb);
-      } else {
-        opts.addBindFile(xjb);
-      }
-    });
-
     opts.compatibilityMode = Options.EXTENSION;
 
-    if (catalog != null) {
-      if (!catalog.exists()) {
-        fail("Catalog File Not Found : " + catalog);
-      }
-      try {
-        opts.addCatalog(catalog);
-      } catch (IOException e) {
-        e.printStackTrace();
-        fail(e.getMessage());
-      }
-    }
+    registerSources(opts, schemas, binds);
 
+    checkAndRegisterCatalog(catalog, opts);
+
+    XJC22Mojo mojo = configureMojo(opts, episode, withAnnotations, withExtensions);
+
+    try {
+      int n = mojo.getArgs().size();
+      opts.parseArguments(mojo.getArgs().toArray(new String[n]));
+      mojo.doExecute(opts);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+    }
+  }
+
+  private static XJC22Mojo configureMojo(Options opts, File episode, boolean withAnnotations,
+      boolean withExtensions) {
     XJC22Mojo mojo = new XJC22Mojo();
-    //mojo.setLog(new SystemStreamLog());
     mojo.setVerbose(false);
     mojo.setExtension(true);
 
@@ -265,12 +248,54 @@ public abstract class CodeGenTestBase {
       mojo.getArgs().add("-Xannotate");
       opts.pluginURIs.add("http://annox.dev.java.net");
     }
+    return mojo;
+  }
 
-    try {
-      opts.parseArguments(mojo.getArgs().toArray(new String[mojo.getArgs().size()]));
-      mojo.doExecute(opts);
-    } catch (MojoExecutionException | BadCommandLineException e) {
-      e.printStackTrace();
+  private static void checkAndRegisterCatalog(File catalog, Options opts) {
+    if (catalog != null) {
+      if (!catalog.exists()) {
+        fail("Catalog File Not Found : " + catalog);
+      }
+      try {
+        opts.addCatalog(catalog);
+      } catch (IOException e) {
+        logger.error(e.getMessage(),e);
+        fail(e.getMessage());
+      }
+    }
+  }
+
+  private static void registerSources(Options opts, List<File> schemas, List<File> binds) {
+    schemas.forEach(src -> {
+      if (src.isDirectory()) {
+        opts.addGrammarRecursive(src);
+      } else {
+        opts.addGrammar(src);
+      }
+    });
+
+    binds.forEach(xjb -> {
+      if (xjb.isDirectory()) {
+        opts.addBindFileRecursive(xjb);
+      } else {
+        opts.addBindFile(xjb);
+      }
+    });
+  }
+
+  private static void checkResourcesExist(List<File> schemas, List<File> binds, File gen) {
+    schemas.forEach(src -> {
+      if (!src.exists()) {
+        fail("Schema File or Dir Not Found : " + src);
+      }
+    });
+    binds.forEach(xjb -> {
+      if (!xjb.exists()) {
+        fail("Schema File or Dir Not Found : " + xjb);
+      }
+    });
+    if (!gen.exists() || !gen.isDirectory()) {
+      fail("Generated Source Dir Not Found : " + gen);
     }
   }
 
@@ -305,12 +330,7 @@ public abstract class CodeGenTestBase {
       return null;
     }
     File f = new File(folder,subFolder);
-    if (!f.exists()) {
-      if (!f.mkdirs()) {
-        return null;
-      }
-    }
-    return f;
+    return f.exists() || f.mkdirs() ? f : null;
   }
 
 }

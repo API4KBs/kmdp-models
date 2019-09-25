@@ -40,11 +40,6 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
   private Class<T> type;
   private EnumMap<T, EnumSet<T>> ancestry;
 
-
-  private DefaultConceptScheme() {
-    super();
-  }
-
   public DefaultConceptScheme(final String schemeID,
       final String schemeName,
       final URI schemeURI,
@@ -53,7 +48,7 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
     this.withId(schemeURI)
         .withLabel(schemeName)
         .withTag(schemeID)
-        .withVersion(DatatypeHelper.versionOf(schemeVersionURI, schemeURI));
+        .withVersion(DatatypeHelper.versionOf(schemeVersionURI));
     this.versionId = schemeVersionURI;
 
     this.type = type;
@@ -93,7 +88,7 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
 
   @Override
   public Optional<T> getTopConcept() {
-    return concepts.stream().filter((t) -> !ancestry.containsKey(t) || ancestry.get(t).isEmpty())
+    return concepts.stream().filter(t -> !ancestry.containsKey(t) || ancestry.get(t).isEmpty())
         .findAny();
   }
 
@@ -108,10 +103,32 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
       return Optional.of(type.cast(cd));
     } else {
       return concepts.stream()
-          .filter((t) -> t.getRef().equals(cd.getRef()))
+          .filter(t -> t.getRef().equals(cd.getRef()))
           .findAny();
     }
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof DefaultConceptScheme)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
 
+    DefaultConceptScheme<?> that = (DefaultConceptScheme<?>) o;
+
+    return versionId != null ? versionId.equals(that.versionId) : that.versionId == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (versionId != null ? versionId.hashCode() : 0);
+    return result;
+  }
 }

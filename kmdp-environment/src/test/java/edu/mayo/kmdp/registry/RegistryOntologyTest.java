@@ -49,13 +49,8 @@ public class RegistryOntologyTest extends RegistryTestBase {
       return s1;
     });
 
-    assertTrue(
-        langs.contains("http://ontology.mayo.edu/ontologies/kmdp-registry/languages/api4kp/DMN/versions/1.2"));
-    assertTrue(langs.contains("http://ontology.mayo.edu/ontologies/kmdp-registry/profiles/dol/OWL2QL"));
-
-    assertTrue(langs.stream().allMatch(
-        (l) -> l.startsWith("http://ontology.mayo.edu/ontologies/kmdp-registry/languages/") || l
-            .startsWith("http://ontology.mayo.edu/ontologies/kmdp-registry/profiles/")));
+    assertTrue(langs.contains("https://www.omg.org/spec/DMN/1.2/"));
+    assertTrue(langs.contains("http://www.w3.org/ns/owl-profile/QL"));
   }
 
   @Test
@@ -76,7 +71,7 @@ public class RegistryOntologyTest extends RegistryTestBase {
     ));
 
     assertEquals("ccpm-v1",
-        ids.get("http://ontology.mayo.edu/ontologies/kmdp-registry/languages/kmdp/CognitiveCareProcessModel/versions/1.0"));
+        ids.get("http://kmdp.mayo.edu/ccpm/1.0"));
 
   }
 
@@ -99,9 +94,9 @@ public class RegistryOntologyTest extends RegistryTestBase {
     ));
 
     assertEquals("ccpm-v1",
-        ids.get("http://ontology.mayo.edu/ontologies/kmdp-registry/languages/kmdp/CognitiveCareProcessModel/versions/1.0"));
+        ids.get("http://kmdp.mayo.edu/ccpm/1.0"));
     assertEquals("QL",
-        ids.get("http://ontology.mayo.edu/ontologies/kmdp-registry/profiles/dol/OWL2QL"));
+        ids.get("http://www.w3.org/ns/owl-profile/QL"));
 
   }
 
@@ -143,12 +138,10 @@ public class RegistryOntologyTest extends RegistryTestBase {
         "SELECT ?LangNS ?LexNS " +
         " " +
         "WHERE { " +
-        "   ?L a know:ConstructedLanguage; "
-        + "   owl:sameAs ?LangNS; "
-        + "   know:uses-lexicon ?Lex. "
+        "   ?LangNS a know:ConstructedLanguage; "
+        + "   know:uses-lexicon ?LexNS. "
         + ""
-        + " ?Lex dc:identifier ?LexId;"
-        + "   owl:sameAs ?LexNS "
+        + " ?LexNS dc:identifier ?LexId."
         + "}";
 
     List<Map<String, String>> ans = askQuery(qry, registry);
@@ -172,10 +165,10 @@ public class RegistryOntologyTest extends RegistryTestBase {
     assertTrue(fhirLexica.contains("http://snomed.info/sct/900000000000207008/version/20180731"));
     assertTrue(fhirLexica.contains("https://www.nlm.nih.gov/research/umls/rxnorm/"));
 
-    assertEquals(4, uses.keySet().size());
+    assertEquals(7, uses.keySet().size());
 
     assertEquals(18,
-        uses.getOrDefault("http://kmdp.mayo.edu/metadata/surrogate", new HashSet<>()).size());
+        uses.getOrDefault("https://www.omg.org/spec/API4KP/1.0/surrogate", new HashSet<>()).size());
 
   }
 
@@ -230,10 +223,7 @@ public class RegistryOntologyTest extends RegistryTestBase {
         "WHERE { " +
         "   ?L a know:ConstructedLanguage; "
         + "   dc:identifier ?LangId; "
-        + "   dol:supportsSerialization ?Ser. "
-        + ""
-//        + " ?Ser know:governed-by ?G."
-        + " ?Ser owl:sameAs ?G."
+        + "   dol:supportsSerialization ?G. "
         + "}";
 
     List<Map<String, String>> ans = askQuery(qry, registry);

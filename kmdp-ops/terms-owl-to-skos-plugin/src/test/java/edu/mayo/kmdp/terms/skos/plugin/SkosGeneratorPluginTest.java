@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.terms.skos.plugin;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
@@ -23,15 +24,20 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.SKOS;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.io.FileDocumentSource;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
@@ -64,7 +70,7 @@ public class SkosGeneratorPluginTest {
   }
 
   @Test
-  public void testUsingTempFolder() throws IOException {
+  public void testUsingTempFolder() {
     SkosGeneratorPlugin mojo = init();
 
     try {
@@ -74,13 +80,11 @@ public class SkosGeneratorPluginTest {
     }
 
     OWLOntology onto = asOntology();
+    assertNotNull(onto);
     OWLDataFactory odf = onto.getOWLOntologyManager().getOWLDataFactory();
     Set<OWLIndividual> inds = EntitySearcher
         .getIndividuals(odf.getOWLClass(SKOS.Concept.getURI()), onto)
         .collect(Collectors.toSet());
-
-//    inds.stream()
-//        .forEach((i) -> System.out.println(i.asOWLNamedIndividual().getIRI().getShortForm()));
 
     assertEquals(45, inds.size());
   }
@@ -89,8 +93,14 @@ public class SkosGeneratorPluginTest {
     File f = new File(temp.getAbsolutePath() + File.separator + localName);
 
     try {
+      OWLOntologyLoaderConfiguration conf = new OWLOntologyLoaderConfiguration()
+          .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT)
+          .addIgnoredImport(IRI.create(DCTerms.getURI()));
+
       OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-      return manager.loadOntologyFromOntologyDocument(f);
+      return manager.loadOntologyFromOntologyDocument(
+          new FileDocumentSource(f),
+          conf);
     } catch (OWLOntologyCreationException e) {
       fail(e.getMessage());
     }

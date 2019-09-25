@@ -37,10 +37,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -50,6 +48,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -58,6 +57,10 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import net.sf.saxon.lib.FeatureKeys;
+import net.sf.saxon.lib.StandardErrorListener;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.apache.xerces.util.XMLCatalogResolver;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -68,26 +71,29 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XMLUtil {
+  
+  private static final Logger logger = LoggerFactory.getLogger(XMLUtil.class);
 
+  private XMLUtil() {}
 
   /**
    * Loads a Document from a URL, capturing exceptions
-   * @param source
-   * @return
+   * @param source the URL from which the XML Document can be retrieved
+   * @return a Document, if successful
    */
   public static Optional<Document> loadXMLDocument(URL source) {
     try {
       return loadXMLDocument(source.openStream());
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
 
   /**
    * Loads a Document from a Byte Array, capturing exceptions
-   * @param source
-   * @return
+   * @param source The serialized XML document
+   * @return a Document, if successful
    */
   public static Optional<Document> loadXMLDocument(byte[] source) {
     return loadXMLDocument(new ByteArrayInputStream(source));
@@ -95,18 +101,16 @@ public class XMLUtil {
 
   /**
    * Loads a Document from a Stream, capturing exceptions
-   * @param source
-   * @return
+   * @param source The stream carrying the XML Document
+   * @return a Document, if successful
    */
   public static Optional<Document> loadXMLDocument(InputStream source) {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setNamespaceAware(true);
     try {
-      DocumentBuilder builder = factory.newDocumentBuilder();
+      DocumentBuilder builder = getSecureBuilder();
       Document dox = builder.parse(source);
       return Optional.of(dox);
     } catch (SAXException | IOException | ParserConfigurationException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -114,29 +118,27 @@ public class XMLUtil {
   /**
    * Streams a Document to an output stream
    *
-   * TODO FIXME: Should accept Properties
-   * @param dox
-   * @param outputStream
+   * @param dox The Document to be serialized
+   * @param outputStream the Stream into which to serialize the Document
    */
   public static void streamXMLDocument(Document dox, OutputStream outputStream) {
     try {
       removeEmptyNodes(dox.getDocumentElement());
       streamXMLNode(dox, outputStream);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
   }
 
   /**
-   * Streams a Document to an output stream
+   * Streams an XML Node to an output stream
    *
-   * TODO FIXME: Should accept Properties
-   * @param dox
-   * @param outputStream
+   * @param dox The Node to be serialized
+   * @param outputStream the Stream into which to serialize the Node
    */
   public static void streamXMLNode(Node dox, OutputStream outputStream) {
     try {
-      Transformer transformer = TransformerFactory.newInstance().newTransformer();
+      Transformer transformer = getSecureTransformer();
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
       transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
@@ -144,10 +146,9 @@ public class XMLUtil {
       transformer.transform(new DOMSource(dox), result);
       outputStream.write(result.getWriter().toString().getBytes());
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
   }
-
 
   public static byte[] toByteArray(Document dox) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -164,7 +165,7 @@ public class XMLUtil {
 
   /**
    * Cleanup : removes empty nodes from an XML document
-   * @param node
+   * @param node The node to be pruned
    */
   private static void removeEmptyNodes(Node node) {
     if (node == null) {
@@ -183,8 +184,10 @@ public class XMLUtil {
 
   /**
    * XSD Validation
-   * @param dox
-   * @return
+   * @param dox The Document to validate
+   * @param lang the URI of the schema / language / metamodel that provides
+   * an XSD schema to validate against (notice this is not the URI of the schema itself)
+   * @return true if valid according to the schema, false otherwise
    */
   public static boolean validate(Document dox, URI lang) {
     return validate(new DOMSource(dox), lang);
@@ -196,16 +199,18 @@ public class XMLUtil {
 
   /**
    * XSD Validation
-   * @param source
-   * @return
+   * @param source A Source of the Document to validate
+   * @param lang the URI of the schema / language / metamodel that provides
+   * an XSD schema to validate against (notice this is not the URI of the schema itself)
+   * @return true if valid according to the schema, false otherwise
    */
   public static boolean validate(Source source, URI lang) {
-    return getSchemas(lang).map((schema) -> {
-          Validator validator = schema.newValidator();
+    return getSchemas(lang).map(schema -> {
           try {
+            Validator validator = getSecureValidator(schema);
             validator.validate(source);
           } catch (SAXException | IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return false;
           }
           return true;
@@ -219,28 +224,25 @@ public class XMLUtil {
   }
 
   public static boolean validate(Source source, Schema schema) {
-    Validator validator = schema.newValidator();
     try {
+      Validator validator = getSecureValidator(schema);
       validator.validate(source);
       return true;
     } catch (SAXException | IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return false;
     }
   }
 
   /**
    * Loads known schemas
-   * @return
+   * @return A Schema for the language and its sublanguages
    */
-
-  // Now let's do this in Java 8 using FlatMap List<String> flatMapList = playersInWorldCup2016.stream() .flatMap(pList -> pList.stream()) .collect(Collectors.toList());
   public static Optional<Schema> getSchemas(URI... langs) {
     XMLCatalogResolver cat = catalogResolver(
         Arrays.stream(langs)
             .map(Registry::getCatalog)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .flatMap(Util::trimStream)
             .map(XMLUtil.class::getResource)
             .toArray(URL[]::new));
 
@@ -254,7 +256,7 @@ public class XMLUtil {
       URL url = new URL(mainSchema);
       return getSchemas(url, cat);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Optional.empty();
     }
   }
@@ -279,33 +281,7 @@ public class XMLUtil {
     try {
       return Optional.ofNullable(sFactory.newSchema(mainSchemaURL));
     } catch (SAXException e) {
-      e.printStackTrace();
-    }
-    return Optional.empty();
-  }
-
-
-  private static Optional<Schema> getSchemasFromStreams(List<InputStream> schemas) {
-    return getSchemasFromStreams(schemas, null);
-  }
-
-  private static Optional<Schema> getSchemasFromStreams(List<InputStream> schemas,
-      final CatalogResourceResolver resolver) {
-
-    SchemaFactory schemaFactory = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
-
-    if (resolver != null) {
-      schemaFactory.setResourceResolver(resolver);
-    }
-
-    List<Source> sources = schemas.stream()
-        .map(StreamSource::new)
-        .collect(Collectors.toList());
-
-    try {
-      return Optional.of(schemaFactory.newSchema(sources.toArray(new Source[sources.size()])));
-    } catch (SAXException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
     }
     return Optional.empty();
   }
@@ -313,40 +289,36 @@ public class XMLUtil {
 
   /**
    * Utility: creates a Stream of Elements from a NodeList,
-   * to avoid the clunky iteration
+   * to avoid the unnecessarily complex iteration APIs
    *
    * Assumes the NodeList is actually a list of XML Elements
-   * @param nodes
-   * @return
+   * @param nodes the NodeList
+   * @return a Stream of Element
    */
   public static Stream<Element> asElementStream(NodeList nodes) {
-    int N = nodes.getLength();
-    Collection<Node> nodeList = new ArrayList<>(N);
-    for (int j = 0; j < N; j++) {
-      nodeList.add(nodes.item(j));
-    }
-    return nodeList.stream()
-        .filter(Element.class::isInstance)
-        .map(Element.class::cast);
+    return asElementStream(nodes,Element.class);
   }
 
   public static Stream<Attr> asAttributeStream(NodeList nodes) {
-    int N = nodes.getLength();
-    Collection<Node> nodeList = new ArrayList<>(N);
-    for (int j = 0; j < N; j++) {
+    return asElementStream(nodes,Attr.class);
+  }
+
+  private static <T> Stream<T> asElementStream(NodeList nodes, Class<T> type) {
+    int numNodes = nodes.getLength();
+    Collection<Node> nodeList = new ArrayList<>(numNodes);
+    for (int j = 0; j < numNodes; j++) {
       nodeList.add(nodes.item(j));
     }
     return nodeList.stream()
-        .filter(Attr.class::isInstance)
-        .map(Attr.class::cast);
+        .filter(type::isInstance)
+        .map(type::cast);
   }
-
 
   /**
    * Gets the prefix for a given namespace, as declared in the root element of an XML document
-   * @param dox
-   * @param namespace
-   * @return
+   * @param dox the Document
+   * @param namespace the Namespace
+   * @return the prefix for that namespace, as declared in the Document
    */
   public static String getPrefix(Document dox, String namespace) {
     NamedNodeMap map = dox.getDocumentElement().getAttributes();
@@ -357,7 +329,7 @@ public class XMLUtil {
         if ("xmlns".equals(xmlns)) {
           return "";
         }
-        return xmlns.substring(xmlns.indexOf(":") + 1) + ":";
+        return xmlns.substring(xmlns.indexOf(':') + 1) + ":";
       }
     }
     return "";
@@ -380,10 +352,7 @@ public class XMLUtil {
 
       TransformerFactory factory = initFactory(xslt.toString(), p.getTyped(XSLTOptions.CATALOGS));
 
-      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-      dbf.setNamespaceAware(true);
-      Document out = dbf.newDocumentBuilder()
-          .newDocument();
+      Document out = emptyDocument();
       DOMResult outputResult = new DOMResult(out);
 
       if (p.get(XSLTOptions.OUTPUT_RESOLVER).isPresent()) {
@@ -391,6 +360,7 @@ public class XMLUtil {
         factory.setAttribute(XSLTOptions.OUTPUT_RESOLVER.getName(), splitter);
 
         Transformer transformer = factory.newTransformer(stylesheetSource);
+        transformer.setErrorListener(new StandardErrorListener());
         applyProperties(transformer, p);
 
         transformer.transform(inputSource, outputResult);
@@ -404,7 +374,7 @@ public class XMLUtil {
       }
 
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Collections.emptyMap();
     }
 
@@ -420,7 +390,7 @@ public class XMLUtil {
     try {
       return applyXSLTSimple(source.openStream(), xslt, source.toString(), p);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return "";
     }
   }
@@ -445,7 +415,7 @@ public class XMLUtil {
       TransformerFactory factory = initFactory(null, p.getTyped(XSLTOptions.CATALOGS));
       Transformer transformer = factory.newTransformer(stylesheetSource);
 
-      p.get(XSLTOptions.CATALOGS).ifPresent((value) ->
+      p.get(XSLTOptions.CATALOGS).ifPresent(value ->
           transformer.setParameter(XSLTOptions.CATALOGS.name(), value));
 
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -454,15 +424,16 @@ public class XMLUtil {
       return new String(baos.toByteArray());
 
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return "";
     }
 
   }
 
 
-  private static TransformerFactory initFactory(String loc, String catalog) {
-    TransformerFactory factory = TransformerFactory.newInstance();
+  private static TransformerFactory initFactory(String loc, String catalog)
+      throws TransformerConfigurationException {
+    TransformerFactory factory = getSecureTransformerFactory();
 
     if (catalog != null) {
       factory.setURIResolver(new CatalogBasedURIResolver(catalog.split(",")).withLoc(loc));
@@ -480,6 +451,7 @@ public class XMLUtil {
         return url;
       }
     } catch (Exception ignored) {
+      // do nothing
     }
     return XMLUtil.class.getResource(href);
   }
@@ -488,7 +460,7 @@ public class XMLUtil {
     Attr xsiType = el.getAttributeNodeNS(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI,
         "type");
     QName qName = parseQName(xsiType.getValue(), el);
-    String pack = NameUtils.namespaceURIToPackage(qName.getNamespaceURI());
+    String pack = NameUtils.namespaceURIStringToPackage(qName.getNamespaceURI());
     String name = qName.getLocalPart();
     if (XML_NS_URI.equals(qName.getNamespaceURI())) {
       return Optional.empty();
@@ -496,4 +468,44 @@ public class XMLUtil {
       return Optional.of(pack + "." + name);
     }
   }
+
+  public static Document emptyDocument() {
+    try {
+      return getSecureBuilder().newDocument();
+    } catch (ParserConfigurationException e) {
+      logger.error(e.getMessage(),e);
+      return null;
+    }
+  }
+
+  public static DocumentBuilder getSecureBuilder() throws ParserConfigurationException {
+    return getSecureDocumentBuilderFactory().newDocumentBuilder();
+  }
+
+  public static Transformer getSecureTransformer()
+      throws TransformerConfigurationException {
+    return getSecureTransformerFactory().newTransformer();
+  }
+
+  private static TransformerFactory getSecureTransformerFactory()
+      throws TransformerConfigurationException {
+    TransformerFactory factory = TransformerFactory.newInstance();
+    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    factory.setFeature(FeatureKeys.ALLOW_EXTERNAL_FUNCTIONS,true);
+    return factory;
+  }
+
+  public static DocumentBuilderFactory getSecureDocumentBuilderFactory()
+      throws ParserConfigurationException {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING,true);
+    factory.setNamespaceAware(true);
+    return factory;
+  }
+
+  public static Validator getSecureValidator(Schema schema) {
+    return schema.newValidator();
+  }
+
+
 }

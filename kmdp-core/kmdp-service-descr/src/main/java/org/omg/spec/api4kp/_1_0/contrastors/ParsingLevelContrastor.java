@@ -28,7 +28,11 @@ import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 public class ParsingLevelContrastor extends Contrastor<ParsingLevel> implements
     Comparator<ParsingLevel> {
 
-  public static final Contrastor<ParsingLevel> parsingLevelContrastor = new ParsingLevelContrastor();
+  private ParsingLevelContrastor() {
+
+  }
+
+  public static final Contrastor<ParsingLevel> singleton = new ParsingLevelContrastor();
 
   public static ParsingLevel detectLevel(KnowledgeCarrier carrier) {
     if (carrier.getLevel() != null) {
@@ -88,8 +92,9 @@ public class ParsingLevelContrastor extends Contrastor<ParsingLevel> implements
         return l2 == ParsingLevel.Encoded_Knowledge_Expression ? 1 : -1;
       case Encoded_Knowledge_Expression:
         return -1;
+      default:
+        return 1;
     }
-    return 1;
   }
 
   @Override

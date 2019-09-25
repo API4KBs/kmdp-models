@@ -95,8 +95,6 @@ public class DatatypeJSONTest {
     Optional<String> s = JSonUtil.writeJsonAsString(c1);
     assertTrue(s.isPresent());
 
-    System.out.println(s.get());
-
     Optional<ConceptIdentifier> c2 = JSonUtil.parseJson(s.get(),ConceptIdentifier.class);
     assertTrue(c2.isPresent());
 

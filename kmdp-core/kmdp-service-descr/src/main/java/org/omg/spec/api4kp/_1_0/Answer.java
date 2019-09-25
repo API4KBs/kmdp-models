@@ -31,6 +31,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 
 /**
@@ -51,10 +55,20 @@ public class Answer<T> extends Explainer {
 
   protected Map<String, List<String>> meta;
 
+  private static Logger logger = LoggerFactory.getLogger(Answer.class);
+
   /* Constructors (lifters) */
 
   public static <X> Answer<X> unsupported() {
     return failed(new UnsupportedOperationException("Not Implemented"));
+  }
+
+  public static <X> Answer<X> failedOnServer(ServerSideException t) {
+    return new Answer<X>()
+        .withCodedOutcome(t.getCode())
+        .withMeta(t.getHeaders())
+        .withValue(null)
+        .withExplanation(t.getError().getMessage());
   }
 
   public static <X> Answer<X> failed(Throwable t) {
@@ -71,6 +85,16 @@ public class Answer<T> extends Explainer {
         .withMeta(new HashMap<>())
         .withValue(value)
         .withExplanation("OK : Lift " + value.toString());
+  }
+
+  public static <X> Answer<X> of(Optional<X> value) {
+    return value
+        .map(Answer::of)
+        .orElse(new Answer<X>()
+            .withCodedOutcome(ResponseCode.NotFound)
+            .withMeta(new HashMap<>())
+            .withValue(null)
+            .withExplanation("Optional empty"));
   }
 
   public static <X> Answer<X> of(String responseCode, X value) {
@@ -106,6 +130,10 @@ public class Answer<T> extends Explainer {
 
   public <U> Answer<U> flatMap(Function<? super T, Answer<U>> mapper) {
     return getHandler().flatMap(this, mapper);
+  }
+
+  public <U> Answer<U> flatOpt(Function<? super T, Optional<U>> mapper) {
+    return getHandler().flatOpt(this, mapper);
   }
 
   public <U> Answer<U> map(Function<? super T, ? extends U> mapper) {
@@ -145,6 +173,26 @@ public class Answer<T> extends Explainer {
     return Optional.ofNullable(getValue());
   }
 
+  public T orElse(T alt) {
+    return getOptionalValue().orElse(alt);
+  }
+
+  public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+    if (value != null) {
+      return value;
+    } else {
+      throw exceptionSupplier.get();
+    }
+  }
+
+  public static <T> Stream<T> trimStream(Answer<T> ans) {
+    if (ans == null) {
+      return Stream.empty();
+    }
+    return Util.trimStream(ans.getOptionalValue());
+  }
+
+
   public ResponseCode getOutcomeType() {
     return codedOutcome;
   }
@@ -178,6 +226,12 @@ public class Answer<T> extends Explainer {
         .map(Util::concat);
   }
 
+  public List<String> getMetas(String key) {
+    return meta.containsKey(key)
+        ? meta.get(key)
+        : Collections.emptyList();
+  }
+
   public Collection<String> listMeta() {
     return meta.keySet();
   }
@@ -204,6 +258,7 @@ public class Answer<T> extends Explainer {
     return this;
   }
 
+  @Override
   public Answer<T> withExplanation(String msg) {
     super.addExplanation(msg);
 
@@ -289,23 +344,27 @@ public class Answer<T> extends Explainer {
   protected OutcomeStrategy<T> selectHandler(ResponseCode code) {
     if (isSuccess()) {
       return SuccessOutcomeStrategy.getInstance();
-    } else {
+    } else if (Integer.valueOf(code.getTag()) >= 300) {
       return FailureOutcomeStrategy.getInstance();
+    } else {
+      return SuccessOutcomeStrategy.getInstance();
     }
   }
 
 
-  public static abstract class OutcomeStrategy<T> {
+  public interface OutcomeStrategy<T> {
 
-    public abstract <U> Answer<U> map(Answer<T> tAnswer, Function<? super T, ? extends U> mapper);
+    <U> Answer<U> map(Answer<T> tAnswer, Function<? super T, ? extends U> mapper);
 
-    public abstract <U> Answer<U> flatMap(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper);
+    <U> Answer<U> flatMap(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper);
+
+    <U> Answer<U> flatOpt(Answer<T> tAnswer, Function<? super T, Optional<U>> mapper);
 
   }
 
-  public static class SuccessOutcomeStrategy<T> extends OutcomeStrategy<T> {
+  public static class SuccessOutcomeStrategy<T> implements OutcomeStrategy<T> {
 
-    protected final static SuccessOutcomeStrategy<?> instance = new SuccessOutcomeStrategy<>();
+    protected static final SuccessOutcomeStrategy<?> instance = new SuccessOutcomeStrategy<>();
 
     public static <T> SuccessOutcomeStrategy<T> getInstance() {
       return (SuccessOutcomeStrategy<T>) instance;
@@ -319,8 +378,8 @@ public class Answer<T> extends Explainer {
             .withCodedOutcome(srcAnswer.getCodedOutcome())
             .withExplanation(srcAnswer.explanation)
             .withMeta(srcAnswer.meta);
-      } catch (Throwable t) {
-        return Answer.<U>failed(t)
+      } catch (Exception e) {
+        return Answer.<U>failed(e)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
       }
@@ -332,18 +391,32 @@ public class Answer<T> extends Explainer {
         return mapper.apply(srcAnswer.value)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
-      } catch (Throwable t) {
-        t.printStackTrace();
-        return Answer.<U>failed(t)
+      } catch (Exception e) {
+        logger.error(e.getMessage(),e);
+        return Answer.<U>failed(e)
+            .withAddedMeta(srcAnswer.meta)
+            .withAddedExplanation(srcAnswer.explanation);
+      }
+    }
+
+    @Override
+    public <U> Answer<U> flatOpt(Answer<T> srcAnswer, Function<? super T, Optional<U>> mapper) {
+      try {
+        return Answer.of(mapper.apply(srcAnswer.value))
+            .withAddedMeta(srcAnswer.meta)
+            .withAddedExplanation(srcAnswer.explanation);
+      } catch (Exception e) {
+        logger.error(e.getMessage(),e);
+        return Answer.<U>failed(e)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
       }
     }
   }
 
-  public static class FailureOutcomeStrategy<T> extends OutcomeStrategy<T> {
+  public static class FailureOutcomeStrategy<T> implements OutcomeStrategy<T> {
 
-    protected final static FailureOutcomeStrategy<?> instance = new FailureOutcomeStrategy<>();
+    protected static final FailureOutcomeStrategy<?> instance = new FailureOutcomeStrategy<>();
 
     public static <T> FailureOutcomeStrategy<T> getInstance() {
       return (FailureOutcomeStrategy<T>) instance;
@@ -359,6 +432,14 @@ public class Answer<T> extends Explainer {
 
     @Override
     public <U> Answer<U> flatMap(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper) {
+      return new Answer<U>()
+          .withCodedOutcome(tAnswer.getCodedOutcome())
+          .withExplanation(tAnswer.explanation)
+          .withMeta(tAnswer.meta);
+    }
+
+    @Override
+    public <U> Answer<U> flatOpt(Answer<T> tAnswer, Function<? super T, Optional<U>> mapper) {
       return new Answer<U>()
           .withCodedOutcome(tAnswer.getCodedOutcome())
           .withExplanation(tAnswer.explanation)

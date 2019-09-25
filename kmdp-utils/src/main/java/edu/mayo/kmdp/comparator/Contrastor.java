@@ -75,7 +75,7 @@ public abstract class Contrastor<T> implements Comparator<T> {
     return Comparison.NARROWER;
   }
 
-  private boolean canCompare() {
+  protected boolean canCompare() {
     return true;
   }
 

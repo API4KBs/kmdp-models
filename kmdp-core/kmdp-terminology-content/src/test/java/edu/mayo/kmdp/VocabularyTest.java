@@ -18,10 +18,10 @@ package edu.mayo.kmdp;
 import static edu.mayo.kmdp.util.Util.ensureUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._20190801.KnowledgeProcessingOperation;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
 import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
@@ -194,8 +194,6 @@ public class VocabularyTest {
     
   }
 
-
-
   @Test
   public void testGeneratedEnumsVersion() {
     Optional<UUID> uid = ensureUUID(KnowledgeAssetCategory.schemeID);
@@ -204,7 +202,18 @@ public class VocabularyTest {
     assertNotNull(KnowledgeAssetCategory.schemeURI.getVersionId());
     assertEquals(uid.get().toString(),
         KnowledgeAssetCategory.schemeURI.getVersionId().getFragment());
+  }
 
+  @Test
+  public void testKRLanguages() {
+    assertNotNull(KnowledgeRepresentationLanguage.SPARQL_1_1);
+
+    assertEquals(KnowledgeRepresentationLanguageSerialization.DMN_1_2_XML_Syntax,
+        Registry.getValidationSchema(KnowledgeRepresentationLanguage.DMN_1_2.getRef())
+            .flatMap(KnowledgeRepresentationLanguageSerialization::resolveRef)
+            .orElse(null));
+
+    assertNotNull(KnowledgeRepresentationLanguageProfile.CQL_Essentials);
   }
 
 }

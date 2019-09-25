@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import static edu.mayo.kmdp.util.NameUtils.namespaceURIToPackage;
+import static edu.mayo.kmdp.util.NameUtils.namespaceURIStringToPackage;
 import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 import static edu.mayo.kmdp.util.Util.ensureUTF8;
 import static edu.mayo.kmdp.util.Util.isUUID;
@@ -31,6 +31,7 @@ import edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme;
 import edu.mayo.kmdp.terms.impl.model.InternalTerm;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,6 +41,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -47,11 +49,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.semanticweb.HermiT.Configuration;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AsOWLNamedIndividual;
@@ -71,34 +73,28 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.InferredOntologyGenerator;
 
 
 public class SkosTerminologyAbstractor {
 
-  static final IRI CONCEPT_SCHEME = iri(SKOS.ConceptScheme);
-  static final IRI CONCEPT = iri(SKOS.Concept);
-  static final IRI LABEL = iri(SKOS.prefLabel);
-  static final IRI IS_DEFINED_BY = iri(RDFS.isDefinedBy);
-  static final IRI COMMENT = iri(RDFS.comment);
-  static final IRI NOTATION = iri(SKOS.notation);
-  static final IRI IN_SCHEME = iri(SKOS.inScheme);
-  static final IRI HAS_TOP = iri(SKOS.hasTopConcept);
-  static final IRI TOP_OF = iri(SKOS.topConceptOf);
-  static final IRI BROADER = iri(SKOS.broader);
-  static final IRI BROADER_TRANSITIVE = iri(SKOS.broaderTransitive);
-  static final IRI VERSION = iri(OWL2.versionInfo);
+  private static final IRI CONCEPT_SCHEME = iri(SKOS.ConceptScheme);
+  private static final IRI CONCEPT = iri(SKOS.Concept);
+  private static final IRI LABEL = iri(SKOS.prefLabel);
+  private static final IRI IS_DEFINED_BY = iri(RDFS.isDefinedBy);
+  private static final IRI COMMENT = iri(RDFS.comment);
+  private static final IRI NOTATION = iri(SKOS.notation);
+  private static final IRI IN_SCHEME = iri(SKOS.inScheme);
+  private static final IRI HAS_TOP = iri(SKOS.hasTopConcept);
+  private static final IRI TOP_OF = iri(SKOS.topConceptOf);
+  private static final IRI BROADER = iri(SKOS.broader);
+  private static final IRI BROADER_TRANSITIVE = iri(SKOS.broaderTransitive);
+  private static final IRI VERSION = iri(OWL2.versionInfo);
 
-  static final IRI DENOTES = iri("http://www.w3.org/ns/lemon/ontolex#denotes");
-  static final IRI IS_CONCEPT_OF = iri("http://www.w3.org/ns/lemon/ontolex#isConceptOf");
+  private static final IRI IS_CONCEPT_OF = iri("http://www.w3.org/ns/lemon/ontolex#isConceptOf");
 
-  static final IRI OID = iri("https://www.hl7.org/oid");
-
-  static final IRI dceUUID = iri("urn:uuid");
-
-  static final IRI dctID = iri(DCTerms.identifier);
+  private static final IRI OID = iri("https://www.hl7.org/oid");
 
   private static IRI iri(Resource res) {
     return IRI.create(res.getURI());
@@ -118,7 +114,7 @@ public class SkosTerminologyAbstractor {
     cfg = config != null ? config : new SkosAbstractionConfig();
 
     if (cfg.getTyped(SkosAbstractionParameters.REASON)) {
-      o = this.doReason(o);
+      this.doReason(o);
     }
     final OWLOntology model = o;
 
@@ -126,48 +122,48 @@ public class SkosTerminologyAbstractor {
 
     // build the code systems first
     codeSystems = model.individualsInSignature(Imports.INCLUDED)
-        .filter((i) -> isConceptScheme(i, model))
+        .filter(i -> isConceptScheme(i, model))
         .map(x -> toScheme(x, model))
         .collect(Collectors.toMap(ConceptScheme::getId,
             Function.identity()));
 
     // then the concepts
     model.individualsInSignature(Imports.INCLUDED)
-        .filter((i) -> isConcept(i, model))
-        .filter((i) -> !isTopConcept(i, model))
-        .forEach((ind) -> toCode(ind,
+        .filter(i -> isConcept(i, model))
+        .filter(i -> !isTopConcept(i, model))
+        .forEach(ind -> toCode(ind,
             getOrCreateInSchemes(ind, model, codeSystems),
             model));
 
     // finally the relationships
     model.individualsInSignature(Imports.INCLUDED)
         // concepts only
-        .filter((i) -> isConcept(i, model))
+        .filter(i -> isConcept(i, model))
         // get property assertions
-        .flatMap(model::objectPropertyAssertionAxioms)
+        .flatMap(i -> getAllObjectPropertyAssertions(i,model))
         // restrict to 'broader', on named concepts, avoid reflexivity
-        .filter((opax) -> opax.getProperty().isObjectPropertyExpression())
-        .filter((opax) -> (isProperty(BROADER, opax) || isProperty(BROADER_TRANSITIVE, opax)))
-        .filter((opax) -> (
+        .filter(opax -> opax.getProperty().isObjectPropertyExpression())
+        .filter(opax -> (isProperty(BROADER, opax) || isProperty(BROADER_TRANSITIVE, opax)))
+        .filter(opax -> (
             !opax.getSubject().equals(opax.getObject())
                 && opax.getSubject().isIndividual() && opax.getObject().isNamed())
-            && opax.getSubject().isIndividual() && opax.getObject().isNamed()
-        )
+            && opax.getSubject().isIndividual() && opax.getObject().isNamed())
         // ignore (mock) top concepts
-        .filter((opax) -> !isTopConcept(opax.getObject(), model))
+        .filter(opax -> !isTopConcept(opax.getObject(), model))
         // ignore parents that are outside of the recognized schemes (missing assertion, or mireoted parent)
-        .filter((opax) -> isInScheme(opax.getObject(), model))
+        .filter(opax -> isInScheme(opax.getObject(), model))
         // register rel
-        .forEach((opax) -> addAncestor(resolve(opax.getSubject(), model, codeSystems)
-                .orElseThrow(IllegalStateException::new),
+        .forEach(opax -> addAncestor(
+            resolve(opax.getSubject(), model, codeSystems)
+                .orElseThrow(() -> new IllegalStateException("Unresolvable Child Concept " + opax.getSubject())),
             resolve(opax.getObject(), model, codeSystems)
-                .orElseThrow(IllegalStateException::new)));
+                .orElseThrow(() -> new IllegalStateException("Unresolvable Parent Concept " + opax.getObject()))));
 
     // finally the Top Concept
     model.individualsInSignature(Imports.INCLUDED)
-        .filter((i) -> isConcept(i, model))
-        .filter((i) -> isTopConcept(i, model))
-        .forEach((top) -> toTopCode(top,
+        .filter(i -> isConcept(i, model))
+        .filter(i -> isTopConcept(i, model))
+        .forEach(top -> toTopCode(top,
             getOrCreateInSchemes(top, model, codeSystems),
             model));
 
@@ -178,32 +174,34 @@ public class SkosTerminologyAbstractor {
     return applyClosure(graph, cfg.getTyped(SkosAbstractionParameters.CLOSURE_MODE));
   }
 
+  private Stream<OWLObjectPropertyAssertionAxiom> getAllObjectPropertyAssertions(OWLNamedIndividual i, OWLOntology model) {
+    return model.importsClosure()
+        .flatMap(o -> o.objectPropertyAssertionAxioms(i))
+        .collect(Collectors.toSet())
+        .stream();
+  }
+
   private boolean isInScheme(OWLIndividual ind, OWLOntology model) {
     return model.importsClosure()
-        .flatMap((o) -> o.axioms(AxiomType.OBJECT_PROPERTY_ASSERTION))
-        .anyMatch((opax) -> (opax.getSubject().equals(ind) && isProperty(IN_SCHEME, opax)));
+        .flatMap(o -> o.axioms(AxiomType.OBJECT_PROPERTY_ASSERTION))
+        .anyMatch(opax -> (opax.getSubject().equals(ind) && isProperty(IN_SCHEME, opax)));
   }
 
   private boolean isTopConcept(OWLIndividual ind, OWLOntology model) {
     return model.importsClosure()
-        .flatMap((o) -> o.axioms(AxiomType.OBJECT_PROPERTY_ASSERTION))
-        .anyMatch((opax) -> (opax.getSubject().equals(ind) && isProperty(TOP_OF, opax)
+        .flatMap(o -> o.axioms(AxiomType.OBJECT_PROPERTY_ASSERTION))
+        .anyMatch(opax -> (opax.getSubject().equals(ind) && isProperty(TOP_OF, opax)
             || opax.getObject().equals(ind) && isProperty(HAS_TOP, opax)));
   }
 
   private static Map<Term, Set<Term>> join(Map<URI, ConceptScheme<Term>> conceptSchemes) {
     return conceptSchemes.values().stream()
-        .map((s) -> ((MutableConceptScheme) s).getAncestorsMap())
+        .map(s -> ((MutableConceptScheme) s).getAncestorsMap())
         .reduce(new HashMap<>(), SkosTerminologyAbstractor::mergeMaps);
   }
 
-  protected static List<Term> linearize(Stream<Term> concepts,
-      Map<Term, Set<Term>> graph) {
-    return new HierarchySorter<Term>().linearize(concepts.collect(Collectors.toSet()), graph);
-  }
 
-
-  protected static Map<Term, Set<Term>> mergeMaps(Map<Term, Set<Term>> m1,
+  private static Map<Term, Set<Term>> mergeMaps(Map<Term, Set<Term>> m1,
       Map<Term, Set<Term>> m2) {
     m1.putAll(m2);
     return m1;
@@ -219,13 +217,10 @@ public class SkosTerminologyAbstractor {
         .stream()
         .findAny();
 
-//    URI uri = getURI(ind.asOWLNamedIndividual());
-    URI uri = getReferent(ind.asOWLNamedIndividual(), model);
+    URI uri = getURI(ind.asOWLNamedIndividual());
 
-    Optional<Term> resolved = parentScheme.map(MutableConceptScheme.class::cast)
-        .flatMap((mcs) -> mcs.resolve(uri));
-
-    return resolved;
+    return parentScheme.map(MutableConceptScheme.class::cast)
+        .flatMap(mcs -> mcs.resolve(uri));
   }
 
   private void addAncestor(Term sub, Term sup) {
@@ -246,20 +241,17 @@ public class SkosTerminologyAbstractor {
 
     Collection<ConceptScheme<Term>> schems = getPropertyValues(ind, model, IN_SCHEME)
         .map(AsOWLNamedIndividual::asOWLNamedIndividual)
-        .map((sch) -> codeSystems.getOrDefault(getURI(sch), toScheme(sch, model)))
+        .map(sch -> codeSystems.getOrDefault(getURI(sch), toScheme(sch, model)))
         .collect(Collectors.toSet());
 
-    if (cfg.getTyped(SkosAbstractionParameters.ENFORCE_CLOSURE)) {
-
-      // FIXME Also, needs to be recursive in the traversal of the BROADER hierarchy, with an eye on performance
-      if (schems.isEmpty()) {
-        schems = getPropertyValues(ind, model, BROADER)
-            .filter((parent) -> isTopConcept(parent, model))
-            .flatMap((top) -> getSchemesForTopConcept(top, model))
-            .map(AsOWLNamedIndividual::asOWLNamedIndividual)
-            .map((sch) -> codeSystems.getOrDefault(getURI(sch), toScheme(sch, model)))
-            .collect(Collectors.toSet());
-      }
+    boolean enforceClosure = cfg.getTyped(SkosAbstractionParameters.ENFORCE_CLOSURE);
+    if (enforceClosure && schems.isEmpty()) {
+      schems = getPropertyValues(ind, model, BROADER)
+          .filter(parent -> isTopConcept(parent, model))
+          .flatMap(top -> getSchemesForTopConcept(top, model))
+          .map(AsOWLNamedIndividual::asOWLNamedIndividual)
+          .map(sch -> codeSystems.getOrDefault(getURI(sch), toScheme(sch, model)))
+          .collect(Collectors.toSet());
     }
 
     return schems;
@@ -269,8 +261,8 @@ public class SkosTerminologyAbstractor {
     Set<OWLIndividual> schemes1 = getPropertyValues(top.asOWLNamedIndividual(), model, TOP_OF)
         .collect(Collectors.toSet());
     Set<OWLIndividual> schemes2 = model.individualsInSignature(Imports.INCLUDED)
-        .filter((ind) -> isConceptScheme(ind, model))
-        .filter((sch) -> getPropertyValues(sch, model, HAS_TOP).anyMatch((t) -> t.equals(top)))
+        .filter(ind -> isConceptScheme(ind, model))
+        .filter(sch -> getPropertyValues(sch, model, HAS_TOP).anyMatch(t -> t.equals(top)))
         .collect(Collectors.toSet());
     schemes1.addAll(schemes2);
     return schemes1.stream();
@@ -281,7 +273,6 @@ public class SkosTerminologyAbstractor {
     URI version = applyVersion(ind, model).orElse(uri);
     String code = getCodedIdentifiers(ind, model).get(0);
 
-    // TODO FIXME: check rdfs:label vs skos:prefLabel, and consider that getFragment does not pick /name vs #name
     String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
     return new MutableConceptScheme(uri, version, code, label);
   }
@@ -293,12 +284,12 @@ public class SkosTerminologyAbstractor {
 
     if (!notations.isEmpty()) {
       String code = notations.stream()
-          .filter((lit) -> cfg.getTyped(SkosAbstractionParameters.TAG_TYPE)
+          .filter(lit -> cfg.getTyped(SkosAbstractionParameters.TAG_TYPE)
               .equals(lit.getDatatype().getIRI().toURI()))
           .findFirst()
           .map(OWLLiteral::getLiteral)
           .orElse(notations.iterator().next().getLiteral());
-      String primaryId = version.map((ver) -> code + "-" + ver).orElse(code);
+      String primaryId = version.map(ver -> code + "-" + ver).orElse(code);
 
       Set<String> aliases = notations.stream().map(OWLLiteral::getLiteral).collect(Collectors.toSet());
       aliases.remove(code);
@@ -321,7 +312,7 @@ public class SkosTerminologyAbstractor {
     String localId = NameUtils.getTrailingPart(ind.getIRI().toString());
 
     return model.getOntologyID().getVersionIRI()
-        .map((v) -> IRI
+        .map(v -> IRI
             .create( indURI.substring(0,indURI.lastIndexOf(localId) - 1)
                     + ( versionFragment.startsWith("/") ? versionFragment : "/" + versionFragment )
                     + "#" + localId)
@@ -342,7 +333,7 @@ public class SkosTerminologyAbstractor {
     return toCode(ind, schemes, model, true);
   }
 
-  protected Term toCode(OWLNamedIndividual ind,
+  private Term toCode(OWLNamedIndividual ind,
       Collection<ConceptScheme<Term>> schemes,
       OWLOntology model, boolean asTop) {
     if (schemes.size() >= 2) {
@@ -386,7 +377,7 @@ public class SkosTerminologyAbstractor {
       return UUID.nameUUIDFromBytes(conceptId.toString().getBytes());
     }
     return isUUID(id)
-        ? Util.ensureUUID(id).get()
+        ? Util.ensureUUID(id).orElseThrow(IllegalStateException::new)
         : UUID.nameUUIDFromBytes(id.getBytes());
   }
 
@@ -401,7 +392,7 @@ public class SkosTerminologyAbstractor {
         .filter(HasIRI.class::isInstance)
         .findAny()
         .map(HasIRI.class::cast)
-        .map((s) -> s.getIRI().toURI());
+        .map(s -> s.getIRI().toURI());
   }
 
   private Optional<URI> getDefinedBy(OWLNamedIndividual ind, OWLOntology model) {
@@ -424,7 +415,7 @@ public class SkosTerminologyAbstractor {
 
   private boolean is(OWLNamedIndividual ind, IRI type, OWLOntology model) {
     return EntitySearcher.getTypes(ind, model.importsClosure())
-        .anyMatch((kls) -> !kls.isAnonymous() && kls.asOWLClass().getIRI().equals(type));
+        .anyMatch(kls -> !kls.isAnonymous() && kls.asOWLClass().getIRI().equals(type));
   }
 
   private Stream<OWLIndividual> getPropertyValues(OWLNamedIndividual ind, OWLOntology model,
@@ -444,8 +435,7 @@ public class SkosTerminologyAbstractor {
     return EntitySearcher.getAnnotationObjects(ind, model.importsClosure(), p)
         .map(OWLAnnotation::getValue)
         .map(OWLAnnotationValue::asLiteral)
-        .filter(Optional::isPresent)
-        .map(Optional::get)
+        .flatMap(Util::trimStream)
         .map(OWLLiteral::getLiteral);
   }
 
@@ -455,16 +445,14 @@ public class SkosTerminologyAbstractor {
   }
 
 
-  private OWLOntology doReason(OWLOntology o) {
-    OWLReasonerFactory reasonerFactory = new Reasoner.ReasonerFactory();
-    OWLReasoner owler = reasonerFactory.createReasoner(o);
+  private void doReason(OWLOntology o) {
+    OWLReasoner owler = new Reasoner(new Configuration(),o);
 
     InferredOntologyGenerator reasoner = new InferredOntologyGenerator(owler);
 
     OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
 
     reasoner.fillOntology(owlOntologyManager.getOWLDataFactory(), o);
-    return o;
   }
 
 
@@ -476,11 +464,11 @@ public class SkosTerminologyAbstractor {
     // set when creating a graph
     private Map<Term, List<Term>> closure;
 
-    public MutableConceptScheme(URI uri, URI version, String code, String label) {
+    MutableConceptScheme(URI uri, URI version, String code, String label) {
       super(code, label, uri, version);
     }
 
-    public void setTop(Term top) {
+    void setTop(Term top) {
       this.top = top;
     }
 
@@ -489,11 +477,11 @@ public class SkosTerminologyAbstractor {
       return Optional.ofNullable(top);
     }
 
-    public void addConcept(Term cd) {
+    void addConcept(Term cd) {
       this.concepts.add(cd);
     }
 
-    public void addParent(Term child, Term parent) {
+    void addParent(Term child, Term parent) {
       if (!parents.containsKey(child)) {
         parents.put(child, new HashSet<>());
       }
@@ -505,65 +493,64 @@ public class SkosTerminologyAbstractor {
       return concepts.stream();
     }
 
-    public Set<Term> getAncestors(Term cd) {
+    Set<Term> getAncestors(Term cd) {
       return parents.containsKey(cd) ? Collections.unmodifiableSet(parents.get(cd))
           : Collections.emptySet();
     }
 
-    public Stream<Term> streamAncestors(Term cd) {
+    Stream<Term> streamAncestors(Term cd) {
       return getAncestors(cd).stream();
     }
 
-    public Map<Term, Set<Term>> getAncestorsMap() {
+    Map<Term, Set<Term>> getAncestorsMap() {
       return new HashMap<>(parents);
     }
 
-    public Optional<Term> resolve(URI uri) {
+    Optional<Term> resolve(URI uri) {
       return concepts.stream()
-          .filter((cd) -> cd.getRef().equals(uri))
+          .filter(cd -> cd.getConceptId().equals(uri))
           .findAny();
     }
 
-    public void setClosure(Map<Term, List<Term>> closure) {
+    void setClosure(Map<Term, List<Term>> closure) {
       this.closure = closure;
     }
 
-    public List<Term> getClosure(Term cd) {
+    List<Term> getClosure(Term cd) {
       return closure.containsKey(cd) ? Collections.unmodifiableList(closure.get(cd))
           : Collections.emptyList();
     }
 
-    public MutableConceptScheme clone() {
-      MutableConceptScheme clonedScheme = new MutableConceptScheme(getId(), getVersionId(),
-          getTag(), getLabel());
+    MutableConceptScheme(MutableConceptScheme other) {
+      this(
+          other.getId(),
+          other.getVersionId(),
+          other.getTag(),
+          other.getLabel());
 
-      clonedScheme.setTop(getTopConcept()
+      setTop(
+          other.getTopConcept()
           .map(ConceptTerm.class::cast)
-          .map((c) -> c.cloneInto(clonedScheme))
+          .map(c -> c.cloneInto(this))
           .orElse(null));
 
-      getConcepts()
+      other.getConcepts()
           .map(ConceptTerm.class::cast)
-          .map((ct) -> ct.cloneInto(clonedScheme))
+          .map(ct -> ct.cloneInto(this))
           .map(ConceptTerm.class::cast)
-          .forEach(clonedScheme::addConcept);
+          .forEach(this::addConcept);
 
-      getAncestorsMap().forEach((trm, anc) -> {
-        anc.forEach((a) -> {
-          Term child = clonedScheme.getConcepts()
-              .filter((c) -> c.equals(trm))
-              .findFirst()
-              .orElseThrow(IllegalStateException::new);
-          Term parent = clonedScheme.getConcepts()
-              .filter((c) -> c.equals(trm))
-              .findFirst()
-              .orElse(a);
-          clonedScheme.addParent(child, a);
-        });
-      });
+      other.getAncestorsMap().forEach(
+          (trm, anc) -> anc.forEach(a -> {
+            Term child = this.getConcepts()
+                .filter(c -> c.equals(trm))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
+            this.addParent(child, a);
+          }));
 
-      return clonedScheme;
-    }
+      closure = new HashMap<>();
+   }
 
     @Override
     public String toString() {
@@ -573,18 +560,36 @@ public class SkosTerminologyAbstractor {
           '}';
     }
 
+    @Override
     public boolean equals(Object other) {
       return other instanceof MutableConceptScheme &&
           getId().equals(((MutableConceptScheme) other).getId());
     }
 
+    @Override
     public int hashCode() {
       return getId().hashCode();
     }
 
-    public Term getConcept(URI conceptId) {
-      return getConcepts().filter((c) -> c.getConceptId().equals(conceptId)).findFirst()
+    Optional<Term> tryGetConcept(URI conceptId) {
+      return getConcepts()
+          .filter(c -> c.getConceptId().equals(conceptId))
+          .findFirst();
+    }
+
+    Term getConcept(URI conceptId) {
+      return getConcepts()
+          .filter(c -> c.getConceptId().equals(conceptId))
+          .findFirst()
           .orElseThrow(IllegalStateException::new);
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+      throw new UnsupportedOperationException("MutableConceptSchemes should only be used at compile time");
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+      throw new UnsupportedOperationException("MutableConceptSchemes should only be used at compile time");
     }
   }
 
@@ -602,37 +607,57 @@ public class SkosTerminologyAbstractor {
       conceptSchemes.values().stream()
           .filter(MutableConceptScheme.class::isInstance)
           .map(MutableConceptScheme.class::cast)
-          .forEach((mcs) -> mcs.setClosure(closure));
+          .forEach(mcs -> mcs.setClosure(assign(closure,mcs)));
+    }
+
+    private Map<Term, List<Term>> assign(Map<Term, List<Term>> closure, MutableConceptScheme mcs) {
+      Map<Term, List<Term>> assignedClosure = new HashMap<>();
+      for (Entry<Term, List<Term>> entry : closure.entrySet()) {
+        Optional<Term> resolvedChild = mcs.tryGetConcept(entry.getKey().getConceptId());
+        resolvedChild.ifPresent(
+            term -> assignedClosure.put(
+                term,
+                entry.getValue().stream()
+                    // prefer local
+                    .map(p -> mcs.tryGetConcept(p.getConceptId()).orElse(p))
+                    .collect(Collectors.toList())));
+      }
+      return assignedClosure;
     }
 
     public Map<Term, Set<Term>> getConceptHierarchy() {
       return conceptHierarchy;
     }
 
-    public List<Term> getConceptList(URI conceptSchemeURI) {
+    List<Term> getConceptList(URI conceptSchemeURI) {
       return linearize(conceptSchemes.get(conceptSchemeURI).getConcepts(),
           conceptHierarchy);
+    }
+
+    private static List<Term> linearize(Stream<Term> concepts,
+        Map<Term, Set<Term>> graph) {
+      return new HierarchySorter<Term>().linearize(concepts.collect(Collectors.toSet()), graph);
     }
 
     public Collection<ConceptScheme<Term>> getConceptSchemes() {
       return conceptSchemes.values();
     }
 
-    public Optional<ConceptScheme<Term>> getConceptScheme(URI schemeURI) {
+    Optional<ConceptScheme<Term>> getConceptScheme(URI schemeURI) {
       return Optional.ofNullable(conceptSchemes.get(schemeURI));
     }
   }
 
   public static class ConceptTerm extends InternalTerm {
 
-    private UUID conceptUUID;
+    private UUID internalConceptUUID;
     private List<String> notations;
 
-    public ConceptTerm(URI conceptURI, String code, String label, String comment, URI refUri,
+    ConceptTerm(URI conceptURI, String code, String label, String comment, URI refUri,
         ConceptScheme<Term> scheme, UUID conceptUUID, List<String> notations) {
 
       super(conceptURI, code, label, ensureUTF8(comment), refUri, scheme);
-      this.conceptUUID = conceptUUID;
+      this.internalConceptUUID = conceptUUID;
       this.notations = new ArrayList<>(notations);
     }
 
@@ -646,7 +671,7 @@ public class SkosTerminologyAbstractor {
     }
 
     public String getTermConceptPackage() {
-      return namespaceURIToPackage(removeTrailingPart(getScheme().getVersionId().toString()));
+      return namespaceURIStringToPackage(removeTrailingPart(getScheme().getVersionId().toString()));
     }
 
     public String getTermConceptScheme() {
@@ -661,16 +686,17 @@ public class SkosTerminologyAbstractor {
       return new ArrayList<>(((MutableConceptScheme) scheme).getClosure(this));
     }
 
-    public ConceptTerm cloneInto(ConceptScheme cs) {
+    ConceptTerm cloneInto(ConceptScheme<Term> cs) {
       return new ConceptTerm(getConceptId(), getTag(), getLabel(), getComment(), getRef(),
           cs, getConceptUUID(), new ArrayList<>(getNotations()));
     }
 
+    @Override
     public UUID getConceptUUID() {
-      return conceptUUID;
+      return internalConceptUUID;
     }
 
-    public List<String> getNotations() {
+    List<String> getNotations() {
       return notations;
     }
 
@@ -691,7 +717,7 @@ public class SkosTerminologyAbstractor {
     }
   }
 
-  public static ConceptGraph applyClosure(ConceptGraph graph, CLOSURE_MODE closureMode) {
+  private static ConceptGraph applyClosure(ConceptGraph graph, CLOSURE_MODE closureMode) {
     if (closureMode == CLOSURE_MODE.IMPORTS) {
       // Already implied
       return graph;
@@ -701,11 +727,11 @@ public class SkosTerminologyAbstractor {
     Map<ConceptScheme<Term>, Set<ConceptScheme<Term>>> dependencies = new HashMap<>();
     graph.conceptSchemes.values().stream()
         .map(MutableConceptScheme.class::cast)
-        .forEach((cs) -> cs.getConcepts()
+        .forEach(cs -> cs.getConcepts()
             .flatMap(cs::streamAncestors)
             .map(ConceptTerm.class::cast)
-            .filter((a) -> !a.getScheme().equals(cs))
-            .forEach((a) -> {
+            .filter(a -> !a.getScheme().equals(cs))
+            .forEach(a -> {
               if (!dependencies.containsKey(cs)) {
                 dependencies.put(cs, new HashSet<>());
               }
@@ -720,34 +746,40 @@ public class SkosTerminologyAbstractor {
 
     List<MutableConceptScheme> clonedSchemes = sortedSchemes.stream()
         .map(MutableConceptScheme.class::cast)
-        .map(MutableConceptScheme::clone)
+        .map(MutableConceptScheme::new)
         .collect(Collectors.toList());
 
     // Include Concepts from other schemes
-    clonedSchemes.forEach((src) -> {
-      dependencies.keySet().stream()
-          .filter((cs) -> cs.equals(src))
-          .map(dependencies::get)
-          .forEach((tgtDeps) -> {
-            for (ConceptScheme<Term> tgtDep : tgtDeps) {
-              tgtDep.getConcepts()
-                  .map(ConceptTerm.class::cast)
-                  .forEach((c) -> src.addConcept(c.cloneInto(src)));
-            }
-          });
-    });
+    clonedSchemes.forEach(src ->
+        dependencies.keySet().stream()
+            .filter(cs -> cs.equals(src))
+            .map(dependencies::get)
+            .forEach(tgtDeps -> {
+              for (ConceptScheme<Term> tgtDep : tgtDeps) {
+                // add the individuals
+                tgtDep.getConcepts()
+                    .map(ConceptTerm.class::cast)
+                    .forEach(c -> src.addConcept(c.cloneInto(src)));
+                // add the parent/child relationships
+                ((MutableConceptScheme) tgtDep).getAncestorsMap()
+                    .forEach((con,parents) -> {
+                      Term mapped = src.getConcept(con.getConceptId());
+                      parents.forEach(par ->
+                          src.addParent(mapped,src.getConcept(par.getConceptId())));
+                    });
+              }
+            }));
 
     // Now rewrite the parents to point to the internal concept
-    clonedSchemes.forEach((src) -> {
-      src.getAncestorsMap().forEach((trm, parents) -> {
-        Set<Term> includedParents = parents.stream()
-            .filter((prn) -> src.getConcepts().anyMatch((c) -> c.equals(prn)))
-            .filter((prn) -> !((ConceptTerm) prn).getScheme().equals(src))
-            .collect(Collectors.toSet());
-        parents.removeAll(includedParents);
-        includedParents.forEach((p) -> parents.add(src.getConcept(p.getConceptId())));
-      });
-    });
+    clonedSchemes.forEach(src ->
+        src.getAncestorsMap().forEach((trm, parents) -> {
+          Set<Term> includedParents = parents.stream()
+              .filter(prn -> src.getConcepts().anyMatch(c -> c.equals(prn)))
+              .filter(prn -> !((ConceptTerm) prn).getScheme().equals(src))
+              .collect(Collectors.toSet());
+          parents.removeAll(includedParents);
+          includedParents.forEach(p -> parents.add(src.getConcept(p.getConceptId())));
+        }));
 
     Map<URI, ConceptScheme<Term>> codeSystems = clonedSchemes.stream()
         .collect(Collectors.toMap(NamespaceIdentifier::getId, Function.identity()));

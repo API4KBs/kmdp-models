@@ -23,10 +23,10 @@ import java.util.Properties;
 
 public class XSLTConfig extends ConfigProperties<XSLTConfig, XSLTConfig.XSLTOptions> {
 
-  private static final Properties defaults = defaulted(XSLTOptions.class);
+  private static final Properties DEFAULTS = defaulted(XSLTOptions.class);
 
   public XSLTConfig() {
-    super(defaults);
+    super(DEFAULTS);
   }
 
   @Override

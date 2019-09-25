@@ -86,7 +86,7 @@ public class ComplexHierarchyTest {
 
   private ConceptScheme<Term> doGenerate(final Modes modes) {
     try {
-      OntologyManager manager = OntManagers.createONT();
+      OntologyManager manager = TestHelper.initManager();
 
       Optional<Model> skosModel = new MireotExtractor()
           .fetch(Owl2Skos2TermsTest.class.getResourceAsStream("/kac-test.rdf"),

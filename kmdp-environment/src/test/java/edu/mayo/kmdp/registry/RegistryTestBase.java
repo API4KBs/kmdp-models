@@ -59,10 +59,8 @@ public class RegistryTestBase {
 
   @BeforeAll
   static void init() {
-    registry = (OntModel) ModelFactory.createOntologyModel()
-        .read(RegistryTestBase.class.getResourceAsStream(Registry.path), null);
-    registry = ModelFactory.createInfModel(ReasonerRegistry.getOWLMicroReasoner(),registry);
-
+    registry = ModelFactory.createOntologyModel()
+        .read(RegistryTestBase.class.getResourceAsStream(Registry.PATH), null);
     assertNotNull(registry);
   }
 

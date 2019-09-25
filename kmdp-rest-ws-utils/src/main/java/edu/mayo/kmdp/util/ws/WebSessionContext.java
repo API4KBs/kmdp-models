@@ -21,6 +21,8 @@ import java.util.Map;
 
 public class WebSessionContext {
 
+    protected WebSessionContext() {}
+
     private static final ThreadLocal<Map<String,String>> CONTEXT = new ThreadLocal<>();
 
     public static void setHeaders(Map<String,String> headers) {

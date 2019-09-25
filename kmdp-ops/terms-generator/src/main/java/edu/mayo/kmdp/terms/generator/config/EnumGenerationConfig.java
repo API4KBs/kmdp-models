@@ -18,16 +18,15 @@ package edu.mayo.kmdp.terms.generator.config;
 import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
-import java.util.Map;
 import java.util.Properties;
 
 public class EnumGenerationConfig extends
     ConfigProperties<EnumGenerationConfig, EnumGenerationConfig.EnumGenerationParams> {
 
-  private static final Properties defaults = defaulted(EnumGenerationParams.class);
+  private static final Properties DEFAULTS = defaulted(EnumGenerationParams.class);
 
   public EnumGenerationConfig() {
-    super(defaults);
+    super(DEFAULTS);
   }
 
   @Override
@@ -39,19 +38,19 @@ public class EnumGenerationConfig extends
 
     WITH_JAXB(Opt.of(
         "withJaxb",
-        "false",
+        Boolean.FALSE.toString(),
         "Enable Jaxb support",
         Boolean.class,
         false)),
     WITH_JSONLD(Opt.of(
         "withJsonLD",
-        "false",
+        Boolean.FALSE.toString(),
         "Enable JSON-LD support",
         Boolean.class,
         false)),
     WITH_JSON(Opt.of(
         "withJson",
-        "false",
+        Boolean.FALSE.toString(),
         "Enable JSON support",
         Boolean.class,
         false)),
@@ -67,16 +66,16 @@ public class EnumGenerationConfig extends
         "Override package names from URI-driven defaults, provided as a comma-separated list of <defaultName>=<overriddenName>",
         String.class,
         false)),
-    TERMS_PROVIDER(Opt.of(
-        "termsProvider",
-        "",
-        "Java Terminology registry to register the Enumeration",
-        String.class,
-        false)),
     XML_ADAPTER(Opt.of(
         "baseXmlAdapter",
         "edu.mayo.kmdp.terms.TermsXMLAdapter",
         "Base class that controls the XML serialization of terminologies",
+        String.class,
+        false)),
+    JSON_ADAPTER(Opt.of(
+        "baseJsonAdapter",
+        "edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer",
+        "Base class that controls the JSON serialization of terminologies",
         String.class,
         false));
 

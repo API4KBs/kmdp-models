@@ -24,6 +24,8 @@ import java.io.StringWriter;
 
 public class IDLSerializer {
 
+  protected IDLSerializer() {}
+
   public static String serialize(Module m) {
     Template tmpl = Mustache.compiler()
         .withLoader(name -> new StringReader(load(name)))
@@ -32,7 +34,6 @@ public class IDLSerializer {
     StringWriter sw = new StringWriter();
     tmpl.execute(m, sw);
 
-    System.out.println(sw);
     return sw.toString();
   }
 

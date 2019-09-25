@@ -45,7 +45,6 @@ public class CatalogGenerator extends BaseEnumGenerator {
     entries = new HashSet<>(entries);
 
     context.put("targetNamespace", namespace);
-    //context.put( "base", NameUtils.namespaceURIToPackage( namespace ).replaceAll( "\\.", "/" ) );
     context.put("entries", entries);
 
     this.generateCatalog(context,
@@ -57,9 +56,11 @@ public class CatalogGenerator extends BaseEnumGenerator {
     String mainText = fromTemplate("catalog", context);
 
     File catalogFile = new File(outputDir, catalogName);
-    //System.out.println( mainText );
     if (catalogFile.exists()) {
-      mainText = mergeCatalogs(FileUtil.read(catalogFile).orElse(null), mainText);
+      mainText = mergeCatalogs(
+          FileUtil.read(catalogFile)
+              .orElse("<catalog/>"),
+          mainText);
     }
     this.writeToFile(mainText,catalogFile);
   }
@@ -71,7 +72,7 @@ public class CatalogGenerator extends BaseEnumGenerator {
         .orElseThrow(IllegalStateException::new);
 
     XMLUtil.asElementStream(newCatalog.getDocumentElement().getChildNodes())
-        .forEach( (n) -> migrate(n,existing));
+        .forEach( n -> migrate(n,existing));
     return new String(XMLUtil.toByteArray(existing));
   }
 
@@ -89,8 +90,8 @@ public class CatalogGenerator extends BaseEnumGenerator {
 
 
       this.id = removeFragment(scheme.getVersionId()).toString();
-      this.uri = NameUtils.namespaceURIToPackage(removeTrailingPart(scheme.getVersionId().toString()))
-          .replaceAll("\\.", "/")
+      this.uri = NameUtils.namespaceURIStringToPackage(removeTrailingPart(scheme.getVersionId().toString()))
+          .replace(".", "/")
           + "/"
           + NameUtils.getTermCodeSystemName(scheme.getPublicName())
           + ".xsd";

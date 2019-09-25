@@ -82,7 +82,7 @@ public class ServiceDescrCompilationTest {
       assertTrue(XMLUtil.validate(xml, schema.get()));
 
       Optional<Transrepresentator> asTrp = JaxbUtil
-          .unmarshall(tp.getClass(), Transrepresentator.class, xml, JaxbUtil.defaultProperties());
+          .unmarshall(tp.getClass(), Transrepresentator.class, xml);
       assertTrue(asTrp.isPresent());
 
       Transrepresentator anew = asTrp.get();

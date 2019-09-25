@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp;
 
+import edu.mayo.kmdp.util.XPathUtil;
 import edu.mayo.kmdp.util.XSLTSplitter;
 import edu.mayo.kmdp.xslt.XSLTConfig;
 import edu.mayo.kmdp.xslt.XSLTConfig.XSLTOptions;
@@ -23,8 +24,6 @@ import org.w3c.dom.Document;
 
 import java.util.Map;
 
-import static edu.mayo.kmdp.util.XPathUtil.xList;
-import static edu.mayo.kmdp.util.XPathUtil.xNode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -52,6 +51,7 @@ public class XSLTTest {
 
   @Test
   public void testMultiXSLT() {
+    XPathUtil xp = new XPathUtil();
     String source = "/complex/main.uml.xmi.xml";
 
     Map<String, Document> xsd = new XMIXSDTranslator()
@@ -71,21 +71,22 @@ public class XSLTTest {
     assertTrue(xsd.containsKey("Root/core/core.xsd"));
 
     Document dox1 = xsd.get("Root/core/sub/sub.xsd");
-    assertNotNull(xNode(dox1, "//xsd:complexType[@name='SomeExtendedType']"));
-    assertNotNull(xNode(dox1,
+    assertNotNull(xp.xNode(dox1, "//xsd:complexType[@name='SomeExtendedType']"));
+    assertNotNull(xp.xNode(dox1,
         "//xsd:complexType[@name='SomeExtendedType']//xsd:extension[@base='tns:Surrogate']"));
-    assertEquals(1, xList(dox1, "//xsd:import").getLength());
+    assertEquals(1, xp.xList(dox1, "//xsd:import").getLength());
 
     Document dox = xsd.get("Root/core/core.xsd");
-    assertNotNull(xNode(dox, "//xsd:complexType[@name='RootTop']"));
-    assertNotNull(xNode(dox, "//xsd:element[@type='tns:URIIdentifier']"));
-    assertEquals(1, xList(dox, "//xsd:import").getLength());
+    assertNotNull(xp.xNode(dox, "//xsd:complexType[@name='RootTop']"));
+    assertNotNull(xp.xNode(dox, "//xsd:element[@type='tns:URIIdentifier']"));
+    assertEquals(1, xp.xList(dox, "//xsd:import").getLength());
 
   }
 
 
   @Test
   public void testSchemaAdapter() {
+    XPathUtil xp = new XPathUtil();
     String source = "/complex/withResource.xmi.xml";
 
     Map<String, Document> xsd = new XMIXSDTranslator()
@@ -102,8 +103,8 @@ public class XSLTTest {
     assertEquals(1, xsd.size());
 
     Document dox1 = xsd.get("Test/ids/ids.xsd");
-    assertNotNull(xNode(dox1, "//xsd:complexType[@name='Pointer']"));
-    assertNotNull(xNode(dox1, "//xsd:complexType[@name='Pointer2']"));
+    assertNotNull(xp.xNode(dox1, "//xsd:complexType[@name='Pointer']"));
+    assertNotNull(xp.xNode(dox1, "//xsd:complexType[@name='Pointer2']"));
 
     Map<String, Document> xsd2 = new XMIXSDTranslator()
         .doTranslate(XSLTTest.class.getResource(source),
@@ -119,9 +120,9 @@ public class XSLTTest {
     assertEquals(1, xsd2.size());
 
     Document dox2 = xsd2.get("Test/ids/ids.openapi.xsd");
-    assertNull(xNode(dox2, "/xsd:schema/xsd:complexType[@name='Pointer']"));
+    assertNull(xp.xNode(dox2, "/xsd:schema/xsd:complexType[@name='Pointer']"));
 //		assertNotNull( xNode( dox2, "//xsd:complexType[@name='Pointer']" ) );
-    assertNull(xNode(dox2, "//xsd:complexType[@name='Pointer2']"));
+    assertNull(xp.xNode(dox2, "//xsd:complexType[@name='Pointer2']"));
 
   }
 }

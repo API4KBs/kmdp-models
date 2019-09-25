@@ -17,6 +17,8 @@ package edu.mayo.kmdp;
 
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.xslt.XSLTConfig;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.w3c.dom.Document;
 
 import java.io.IOException;
@@ -27,6 +29,8 @@ import java.util.Map;
 
 public class XMIXSDTranslator {
 
+  private static final Logger logger = LoggerFactory.getLogger(XMIXSDTranslator.class);
+
   private String defaultXSLT = "/edu/mayo/kmdp/xmi-to-xsd.xsl";
 
   public Map<String, Document> doTranslate(InputStream source, XSLTConfig properties) {
@@ -35,19 +39,19 @@ public class XMIXSDTranslator {
         properties);
   }
 
-  public Map<String, Document> doTranslate(URL source, String xsltPath, XSLTConfig properties) {
+  Map<String, Document> doTranslate(URL source, String xsltPath, XSLTConfig properties) {
     try {
       return XMLUtil.applyXSLT(source.openStream(),
           source.toString(),
           XMIXSDTranslator.class.getResource(xsltPath),
           properties);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(),e);
       return Collections.emptyMap();
     }
   }
 
-  public Map<String, Document> doTranslate(URL source, XSLTConfig properties) {
+  Map<String, Document> doTranslate(URL source, XSLTConfig properties) {
     return doTranslate(source, defaultXSLT, properties);
   }
 

@@ -25,6 +25,21 @@ pcv:123
         <http://www.w3.org/ns/lemon/ontolex#isConceptOf>
                 <http://foo.org/ontologies/referent/AThing> .
 
+pcv:124
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://foo.org/ontologies/propositionalconcepts#resolvable>
+                true ;
+        <http://purl.org/dc/elements/1.1/identifier>
+                "124" ;
+        <http://www.w3.org/2004/02/skos/core#broader>
+                scv:000 , pcv:subTop ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "124" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Another child Concept" ;
+        <http://www.w3.org/ns/lemon/ontolex#isConceptOf>
+                <http://foo.org/ontologies/referent/AThing> .
+
 pcv:subScheme
         a       <http://www.w3.org/2004/02/skos/core#ConceptScheme> ;
         <http://www.w3.org/2004/02/skos/core#hasTopConcept>

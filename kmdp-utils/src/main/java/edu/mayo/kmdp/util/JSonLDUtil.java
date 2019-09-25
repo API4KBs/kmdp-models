@@ -26,12 +26,15 @@ import de.escalon.hypermedia.hydra.serialize.JacksonHydraSerializer;
 
 public class JSonLDUtil {
 
+  private JSonLDUtil() {}
+
   public static Module initLDModule() {
     return new SimpleModule() {
+      @Override
       public void setupModule(Module.SetupContext context) {
         super.setupModule(context);
         context.addBeanSerializerModifier(new BeanSerializerModifier() {
-
+          @Override
           public JsonSerializer<?> modifySerializer(
               SerializationConfig config,
               BeanDescription beanDesc,

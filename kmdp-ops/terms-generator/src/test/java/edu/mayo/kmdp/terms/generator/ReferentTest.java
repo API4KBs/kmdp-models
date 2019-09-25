@@ -52,7 +52,7 @@ public class ReferentTest {
 
     String owlPath = "/singleClass.rdf";
 
-    OntologyManager manager = OntManagers.createONT();
+    OntologyManager manager = TestHelper.initManager();
 
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, "http://test.foo")

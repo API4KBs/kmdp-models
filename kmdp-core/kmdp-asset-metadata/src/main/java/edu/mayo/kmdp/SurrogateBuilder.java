@@ -21,6 +21,7 @@ import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._20190801.Know
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.annotations.SimpleApplicability;
 import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.surrogate.InlinedRepresentation;
@@ -127,6 +128,14 @@ public class SurrogateBuilder {
     return this;
   }
 
+  public SurrogateBuilder withApplicability(Term t) {
+    if (t == null) {
+      return this;
+    }
+    get().withApplicableIn(new SimpleApplicability().withSituation(t.asConcept()));
+    return this;
+  }
+
 
   public SurrogateBuilder asOperationalDefinition(ConceptIdentifier subject, Term proposition,
       Term... inputs) {
@@ -140,7 +149,7 @@ public class SurrogateBuilder {
       this.withAnnotation(AnnotationRelType.Has_Subject.asConcept(), subject);
     }
 
-    Arrays.stream(inputs).forEach((input) ->
+    Arrays.stream(inputs).forEach(input ->
         this.withAnnotation(AnnotationRelType.In_Terms_Of.asConcept(), input.asConcept())
     );
 
@@ -201,51 +210,7 @@ public class SurrogateBuilder {
     return this;
   }
 
-  public SurrogateBuilder withFHIRServiceProfileExpression(Lexicon vocab) {
-    if (!get().getFormalType().contains(KnowledgeAssetType.Service_Profile)) {
-      get().getFormalType().add(KnowledgeAssetType.Service_Profile);
-    }
-    if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.Service_Profile)
-          .withWith(new SubLanguage()
-              .withRole(KnowledgeRepresentationLanguageRole.Expression_Language)
-              .withSubLanguage(
-                  new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
-          .withWith(new SubLanguage()
-              .withRole(KnowledgeRepresentationLanguageRole.Schema_Language)
-              .withSubLanguage(
-                  new Representation().withLanguage(KnowledgeRepresentationLanguage.FHIR_DSTU2)))
 
-          .withFormat(SerializationFormat.XML_1_1)
-
-          .withLexicon(getLexicons(vocab))));
-    }
-    return this;
-  }
-
-  private Lexicon[] getLexicons(Lexicon vocab) {
-    if (vocab != null) {
-      return new Lexicon[]{Lexicon.PCV, vocab};
-    } else {
-      return new Lexicon[]{Lexicon.PCV};
-    }
-  }
-
-  public SurrogateBuilder withNLPServiceProfileExpression() {
-    if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.Service_Profile)
-          .withWith(new SubLanguage()
-              .withRole(KnowledgeRepresentationLanguageRole.Expression_Language)
-              .withSubLanguage(
-                  new Representation().withLanguage(KnowledgeRepresentationLanguage.Mustache)))
-
-          .withFormat(SerializationFormat.XML_1_1)
-          .withLexicon(Lexicon.PCV)));
-    }
-    return this;
-  }
 
   public SurrogateBuilder withInlinedFhirPath(String expr) {
     if (get().getCarriers().isEmpty()) {
@@ -276,7 +241,7 @@ public class SurrogateBuilder {
           .withLocator(loc);
       get().withCarriers(carrier);
     } else {
-      ((KnowledgeArtifact) get().getCarriers().get(0))
+      get().getCarriers().get(0)
           .withArtifactId(id)
           .withLocator(loc);
     }
@@ -319,7 +284,7 @@ public class SurrogateBuilder {
   }
 
   private static String validate(String uuid) {
-    return UUID.fromString(Util.ensureUUIDFormat(uuid).get()).toString();
+    return Util.ensureUUIDFormat(uuid).orElse("");
   }
 
 

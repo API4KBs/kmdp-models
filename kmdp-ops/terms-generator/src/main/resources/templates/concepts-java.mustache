@@ -10,7 +10,6 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.Identifier;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.ConceptScheme;
-import edu.mayo.kmdp.terms.ConceptSchemeDirectory;
 import edu.mayo.kmdp.terms.Taxonomic;
 import edu.mayo.kmdp.terms.impl.model.DefaultConceptScheme;
 
@@ -27,7 +26,7 @@ import {{implClassName}};
 {{/jaxb}}
 {{#json}}
 @com.fasterxml.jackson.databind.annotation.JsonSerialize( as = org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier.class, using = edu.mayo.kmdp.terms.TermsJsonAdapter.Serializer.class )
-@com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer.class )
+@com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{typeName}}.JsonAdapter.class )
 {{/json}}
 
 public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
@@ -54,11 +53,8 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
 	public static final NamespaceIdentifier __SCHEME = new NamespaceIdentifier().withId( schemeURI.getUri() )
     	                                                                      .withLabel( schemeName )
     	                                                                      .withTag( schemeID )
-    	                                                                      .withVersion( DatatypeHelper.versionOf( schemeURI.getVersionId(), schemeURI.getUri() ) );
+    	                                                                      .withVersion( DatatypeHelper.versionOf( schemeURI.getVersionId() ) );
 
-  static {
-    {{termsProvider}}.register(schemeURI.getUri(),{{typeName}}.class);
-  }
 
 
   private URI	ref;
@@ -134,34 +130,51 @@ public enum {{typeName}} implements Term, Taxonomic<{{typeName}}> {
 	}
 
 
-	public static Optional<{{typeName}}> resolve( final Term trm ) {
-		return {{termsProvider}}.resolve( trm, {{typeName}}.class );
-	}
+  public static Optional<{{typeName}}> resolve(final Term trm) {
+    return Arrays.stream({{typeName}}.values())
+        .filter((x) -> trm.getRef().equals(x.getRef()))
+        .findAny();
+  }
 
-	public static Optional<{{typeName}}> resolve( final String tag ) {
-		return {{termsProvider}}.resolve( tag, {{typeName}}.class );
-	}
+  public static Optional<{{typeName}}> resolve(final String tag) {
+    return Arrays.stream({{typeName}}.values())
+        .filter((x) -> x.getTag().equals(tag))
+        .findAny();
+  }
 
-	public static Optional<{{typeName}}> resolveTag( final String tag ) {
-		return {{termsProvider}}.resolveTag( tag, {{typeName}}.class );
-	}
+  public static Optional<{{typeName}}> resolveTag(final String tag) {
+    return Arrays.stream({{typeName}}.values())
+        .filter((x) -> x.getTags().contains(tag))
+        .findAny();
+  }
 
-	public static Optional<{{typeName}}> resolveUUID( final UUID id ) {
-		return {{termsProvider}}.resolveUUID( id, {{typeName}}.class );
-	}
+  public static Optional<{{typeName}}> resolveUUID(final UUID conceptId) {
+    return Arrays.stream({{typeName}}.values())
+        .filter((x) -> x.getConceptUUID().equals(conceptId))
+        .findAny();
+  }
 
-	public static Optional<{{typeName}}> resolveRef( final String refUri ) {
-		return {{termsProvider}}.resolveRef( refUri, {{typeName}}.class );
-	}
+  public static Optional<{{typeName}}> resolveId(final String conceptId) {
+    return Arrays.stream({{typeName}}.values())
+        .filter((x) -> x.getConceptId().toString().equals(conceptId) || x.getConceptUUID().toString().equals(conceptId))
+        .findAny();
+  }
 
-	public static Optional<{{typeName}}> resolveId( final String conceptId ) {
-		return {{termsProvider}}.resolveId( conceptId, {{typeName}}.class );
-	}
+  public static Optional<{{typeName}}> resolveRef(final String refUri) {
+    return Arrays.stream({{typeName}}.values())
+        .filter((x) -> x.getRef().toString().equals(refUri))
+        .findAny();
+  }
 
   public static class Adapter extends {{baseXmlAdapter}} {
     public static final {{baseXmlAdapter}} instance = new Adapter();
     protected Term[] getValues() { return values(); }
 	}
+
+  public static class JsonAdapter extends {{baseJsonAdapter}} {
+    public static final {{baseJsonAdapter}} instance = new JsonAdapter();
+    protected Term[] getValues() { return values(); }
+  }
 }
 
 
