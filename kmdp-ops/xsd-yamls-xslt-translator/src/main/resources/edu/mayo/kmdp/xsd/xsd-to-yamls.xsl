@@ -17,6 +17,7 @@
 
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
   xmlns:x2y="http://www.mayo.edu/kmdp/xsd2yamls" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog:uri" version="3.0">
 
@@ -379,8 +380,8 @@
           <xsl:variable name="CATALOG" select="."/>
           <xsl:variable name="catalogURI"
             select="replace(replace($CATALOG, '\\', '/'), '//', '/')"/>
-          <xsl:variable name="mappedURI" select="doc($catalogURI)//*[@name = $uri]/@uri"/>
-          <!--xsl:message select="concat($catalogURI, ' resolved ', $uri, ' as ', $mappedURI )"/-->
+          <xsl:variable name="mappedURI" select="doc($catalogURI)//*[@name = $uri][1]/@uri"/>
+          <!--xsl:message select="concat($catalogURI, ' resolved ', $uri, ' as ', fn:string-join($mappedURI) )"/-->
           <xsl:if test="$mappedURI != ''">
             <xsl:variable name="schemaLoc"
               select="x2y:makeRelative(resolve-uri($mappedURI, $catalogURI), document-uri(root($ctx)))"/>
