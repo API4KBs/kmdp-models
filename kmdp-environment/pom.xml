@@ -47,4 +47,51 @@
       <artifactId>poi-ooxml</artifactId>
     </dependency>
   </dependencies>
+
+
+  <build>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>${project.build.directory}/tmp</directory>
+      </resource>
+    </resources>
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-registry-graph</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+
+                  <artifactId>API4KP</artifactId>
+                  <groupId>org.omg.spec</groupId>
+                  <version>${org.omg.spec:API4KP:jar.version}</version>
+
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/tmp</outputDirectory>
+                  <includes>**/ontologies/API4KP/v*/**/api4kp-registry.rdf</includes>
+                </artifactItem>
+
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
+    </plugins>
+  </build>
 </project>

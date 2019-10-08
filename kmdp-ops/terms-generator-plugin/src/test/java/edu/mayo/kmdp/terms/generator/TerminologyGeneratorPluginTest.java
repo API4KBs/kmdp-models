@@ -44,8 +44,6 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -76,13 +74,10 @@ public class TerminologyGeneratorPluginTest {
   @Test
   public void testPlugin() {
     TermsGeneratorPlugin plugin = initPlugin(new File(genSource.getAbsolutePath() + "/xsd"));
-    plugin.setSourceCatalogPath(TerminologyGeneratorPluginTest.class.getResource("/test-catalog.xml").getPath());
-    try {
-      plugin.execute();
-    } catch (MojoExecutionException | MojoFailureException e) {
-      e.printStackTrace();
-      fail(e.getMessage());
-    }
+    plugin.setSourceCatalogPaths(
+        Collections.singletonList(
+            TerminologyGeneratorPluginTest.class.getResource("/test-catalog.xml").getPath()));
+    plugin.execute();
 
     testWithJaxb();
 
@@ -176,7 +171,7 @@ public class TerminologyGeneratorPluginTest {
     plugin.setXmlAdapter(MockTermsXMLAdapter.class.getName());
     plugin.setOutputDirectory(genSrc);
     plugin.setOwlFiles(Collections.singletonList(owlPath));
-    plugin.setSourceCatalogPath("/test-catalog.xml");
+    plugin.setSourceCatalogPaths(Collections.singletonList("/test-catalog.xml"));
 
     return plugin;
   }

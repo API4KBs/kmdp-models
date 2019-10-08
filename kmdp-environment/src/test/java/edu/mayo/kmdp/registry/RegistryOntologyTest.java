@@ -19,6 +19,7 @@ import static edu.mayo.kmdp.registry.RegistryUtil.askQuery;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,11 +29,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.jena.rdf.model.Model;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
 public class RegistryOntologyTest extends RegistryTestBase {
 
+
+  static Model registry;
+
+  @BeforeAll
+  static void init() {
+    registry = initRegistry("LATEST");
+  }
 
   @Test
   public void testLanguages() {

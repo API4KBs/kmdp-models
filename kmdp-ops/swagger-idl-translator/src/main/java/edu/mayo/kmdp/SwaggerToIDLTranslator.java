@@ -22,7 +22,7 @@ import edu.mayo.kmdp.idl.Type;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
 import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.RefModel;

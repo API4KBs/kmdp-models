@@ -1,25 +1,25 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.registry;
 
 import static edu.mayo.kmdp.registry.RegistryUtil.findLatestLexicographically;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,14 +36,12 @@ import org.slf4j.LoggerFactory;
 
 public class Registry {
 
-  public static final String PATH = "/ontologies/API4KP/informative/api4kp-registry.rdf";
+  public static final String REGISTRY_URI = "http://ontology.mayo.edu/ontologies/kmdp-registry/";
 
   public static final String MAYO_ASSETS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/assets/";
   public static final String BASE_UUID_URN = "urn:uuid:";
 
   private static XMLCatalogResolver xcat;
-
-  private static Model registryGraph;
 
   private static Logger logger = LoggerFactory.getLogger(Registry.class);
 
@@ -56,22 +54,48 @@ public class Registry {
   }
 
   static {
-    xcat = new XMLCatalogResolver(new String[] {Registry.class.getResource("/meta-catalog.xml").toString()});
+    xcat = new XMLCatalogResolver(
+        new String[]{Registry.class.getResource(getCatalogRef()).toString()});
 
     String xmlPrefixesQry = RegistryUtil.read("/xmlNSprefixes.sparql");
     String xmlSchemasQry = RegistryUtil.read("/xmlSchemas.sparql");
 
-    registryGraph = ModelFactory.createOntologyModel()
-        .read(Registry.class.getResourceAsStream(PATH),null);
-    registryGraph = ModelFactory.createInfModel(ReasonerRegistry.getOWLMicroReasoner(),registryGraph);
+    try {
+      String path = xcat.resolveURI(REGISTRY_URI);
 
-    populatePrefixMap(RegistryUtil.askQuery(xmlPrefixesQry, registryGraph));
+      Model registryGraph = ModelFactory.createOntologyModel()
+          .read(openStream(path), null);
+      registryGraph = ModelFactory.createInfModel(ReasonerRegistry.getOWLMicroReasoner(),
+          registryGraph);
 
-    RegistryUtil.askQuery(xmlSchemasQry, registryGraph).forEach(
-        m-> languagSchemas.put(m.get("L"), m.get("NS"))
-    );
+      populatePrefixMap(RegistryUtil.askQuery(xmlPrefixesQry, registryGraph));
 
- }
+      RegistryUtil.askQuery(xmlSchemasQry, registryGraph).forEach(
+          m -> languagSchemas.put(m.get("L"), m.get("NS"))
+      );
+    } catch (IOException e) {
+      logger.error(e.getMessage(), e);
+    }
+
+  }
+
+  public static String getCatalogRef() {
+    String ver = System.getProperty("ONTO-VERSION","LATEST");
+    return getCatalogVersion(ver);
+  }
+
+  public static String getCatalogVersion(String version) {
+    return String.format("/v%s/meta-catalog.xml",version);
+  }
+
+  private static InputStream openStream(String path) throws IOException {
+    URL url = new URL(path);
+    if ("file".equals(url.getProtocol())) {
+      return Registry.class.getResourceAsStream(url.getFile());
+    } else {
+      return url.openStream();
+    }
+  }
 
   private static void populatePrefixMap(List<Map<String, String>> askQuery) {
     askQuery.forEach(
@@ -90,11 +114,11 @@ public class Registry {
         verSet.add(ver);
       }
     });
-    versions.forEach((key,value) -> {
-       if (!key.isEmpty() && !value.isEmpty() && ! prefixToNamespaceMap.containsKey(key)) {
-         String lastKey = key + "-" + findLatestLexicographically(value);
-         prefixToNamespaceMap.put(key, prefixToNamespaceMap.get(lastKey));
-       }
+    versions.forEach((key, value) -> {
+      if (!key.isEmpty() && !value.isEmpty() && !prefixToNamespaceMap.containsKey(key)) {
+        String lastKey = key + "-" + findLatestLexicographically(value);
+        prefixToNamespaceMap.put(key, prefixToNamespaceMap.get(lastKey));
+      }
     });
   }
 
@@ -115,19 +139,19 @@ public class Registry {
           null,
           null).toString());
     } catch (URISyntaxException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
 
   public static Optional<String> getCatalog(URI lang) {
     try {
-      return Optional.ofNullable(xcat.resolvePublic(lang.toString(),null))
+      return Optional.ofNullable(xcat.resolvePublic(lang.toString(), null))
           .map(URI::create)
           .map(URI::getPath)
-          .map(path -> "/xsd"+path);
+          .map(path -> "/xsd" + path);
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }

@@ -66,7 +66,7 @@ public class TermsSerializationTest {
         .writeJson(f)
         .flatMap(Util::asString).get();
 
-    System.out.println(json);
+    //System.out.println(json);
 
     assertTrue(json.contains(KnowledgeAssetType.Cognitive_Process_Model.getTag()));
     assertTrue(json.contains(KnowledgeAssetType.Cognitive_Process_Model.getLabel()));

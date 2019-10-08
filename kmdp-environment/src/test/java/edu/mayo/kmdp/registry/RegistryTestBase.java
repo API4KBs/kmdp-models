@@ -15,30 +15,19 @@
  */
 package edu.mayo.kmdp.registry;
 
+import static edu.mayo.kmdp.registry.Registry.REGISTRY_URI;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.InfModel;
+import java.io.IOException;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
 import org.apache.jena.vocabulary.XSD;
-import org.junit.jupiter.api.BeforeAll;
+import org.apache.xerces.util.XMLCatalogResolver;
 
 public class RegistryTestBase {
 
@@ -55,13 +44,21 @@ public class RegistryTestBase {
       "PREFIX dol: <http://www.omg.org/spec/DOL/DOL-terms/> \n";
 
 
-  static Model registry;
-
-  @BeforeAll
-  static void init() {
-    registry = ModelFactory.createOntologyModel()
-        .read(RegistryTestBase.class.getResourceAsStream(Registry.PATH), null);
-    assertNotNull(registry);
+  static Model initRegistry(String catalogVersion) {
+    XMLCatalogResolver xcat = new XMLCatalogResolver(
+        new String[]{Registry.class.getResource(Registry.getCatalogVersion(catalogVersion)).toString()});
+    try {
+      String path = xcat.resolveURI(REGISTRY_URI);
+      assertNotNull(path);
+      path = path.replace("file:","");
+      Model registry = ModelFactory.createOntologyModel()
+          .read(RegistryTestBase.class.getResourceAsStream(path), null);
+      assertNotNull(registry);
+      return registry;
+    } catch (IOException e) {
+      fail(e.getMessage());
+      return null;
+    }
   }
 
 }

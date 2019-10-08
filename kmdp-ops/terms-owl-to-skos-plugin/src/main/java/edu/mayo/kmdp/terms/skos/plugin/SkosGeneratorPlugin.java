@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.terms.skos.plugin;
 
@@ -33,10 +31,10 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.jena.rdf.model.Model;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.protege.xmlcatalog.CatalogUtilities;
@@ -57,6 +55,8 @@ import org.semanticweb.owlapi.model.OntologyConfigurator;
 import org.semanticweb.owlapi.model.SetOntologyID;
 import org.semanticweb.owlapi.util.OWLOntologyImportsClosureSetProvider;
 import org.semanticweb.owlapi.util.OWLOntologyMerger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -87,14 +87,27 @@ public class SkosGeneratorPlugin extends AbstractMojo {
   /**
    * @parameter
    */
-  private String owlFile;
+  private String owlSourceURL;
 
-  public String getOwlFile() {
-    return owlFile;
+  public String getOwlSourceURL() {
+    return owlSourceURL;
   }
 
-  public void setOwlFile(String owlFile) {
-    this.owlFile = owlFile;
+  public void setOwlSourceURL(String owlSourceURL) {
+    this.owlSourceURL = owlSourceURL;
+  }
+
+  /**
+   * @parameter
+   */
+  private List<String> owlSourceURLs;
+
+  public List<String> getOwlSourceURLs() {
+    return owlSourceURLs;
+  }
+
+  public void setOwlSourceURLs(List<String> owlSourceURLs) {
+    this.owlSourceURLs = owlSourceURLs;
   }
 
   /**
@@ -113,14 +126,14 @@ public class SkosGeneratorPlugin extends AbstractMojo {
   /**
    * @parameter
    */
-  private String skosOutputFile;
+  private List<String> skosOutputFiles;
 
-  public String getSkosOutputFile() {
-    return skosOutputFile;
+  public List<String> getSkosOutputFiles() {
+    return skosOutputFiles;
   }
 
-  public void setSkosOutputFile(String outputFile) {
-    this.skosOutputFile = outputFile;
+  public void setSkosOutputFiles(List<String> outputFiles) {
+    this.skosOutputFiles = outputFiles;
   }
 
   /**
@@ -152,14 +165,14 @@ public class SkosGeneratorPlugin extends AbstractMojo {
   /**
    * @parameter
    */
-  private String targetNamespace;
+  private String owlNamespace;
 
-  public String getTargetNamespace() {
-    return targetNamespace;
+  public String getOwlNamespace() {
+    return owlNamespace;
   }
 
-  public void setTargetNamespace(String targetNamespace) {
-    this.targetNamespace = targetNamespace;
+  public void setOwlNamespace(String owlNamespace) {
+    this.owlNamespace = owlNamespace;
   }
 
   /**
@@ -258,44 +271,78 @@ public class SkosGeneratorPlugin extends AbstractMojo {
   /**
    * @parameter
    */
-  private URL catalogURL = null;
+  private List<URL> catalogURLs = null;
 
-  public URL getCatalogURL() {
-    return catalogURL;
+  public List<URL> getCatalogURLs() {
+    return catalogURLs;
   }
 
-  public void setCatalogURL(URL catalog) {
-    this.catalogURL = catalog;
+  public void setCatalogURLs(List<URL> catalog) {
+    this.catalogURLs = catalog;
   }
 
   public void execute() throws MojoExecutionException {
-    if (owlFile == null) {
-      getLog().info("No ontology file to process, exiting...");
-      return;
-    }
 
     if (targetURI == null) {
       getLog().info("No entity selected, exiting...");
       return;
     }
-    if (skosOutputFile == null) {
-      skosOutputFile = generateDefaultOutputFile(owlFile);
+
+    try {
+      List<String> sourceURLs = owlSourceURL != null
+          ? Collections.singletonList(owlSourceURL)
+          : owlSourceURLs;
+      if (sourceURLs == null || sourceURLs.isEmpty()) {
+        getLog().info("No ontology file to process, exiting...");
+        return;
+      }
+
+      int numSources = sourceURLs.size();
+
+      List<URL> catalogs = (catalogURLs == null || catalogURLs.isEmpty())
+          ? Collections.nCopies(numSources,null)
+          : catalogURLs;
+      if (catalogs.size() != numSources) {
+        if (catalogs.size() != 1) {
+          logger.warn("Mismatch between the number of provided catalogs and the number "
+              + "of source URLs");
+        }
+        catalogs = Collections.nCopies(numSources,catalogs.get(0));
+      }
+
+      List<String> outputFiles =
+          (skosOutputFiles == null
+              || skosOutputFiles.isEmpty() || skosOutputFiles.size() != numSources)
+          ? sourceURLs.stream().map(this::generateDefaultOutputFile).collect(Collectors.toList())
+          : skosOutputFiles;
+
+      for (int index = 0; index < numSources; index++) {
+        generateSKOS(sourceURLs.get(index),
+            catalogs.get(index),
+            outputFiles.get(index));
+      }
+    } catch (IOException e) {
+      logger.error(e.getMessage(), e);
     }
 
-    try(InputStream is = resolve(owlFile)) {
+  }
+
+  private void generateSKOS(String owlSourceURL, URL catalogURL, String outputFile)
+      throws IOException {
+    try (InputStream is = resolve(owlSourceURL, owlSourceURL, catalogURL)) {
 
       MireotConfig mfg = new MireotConfig()
-          .with(MireotParameters.BASE_URI,targetNamespace)
-          .with(MireotParameters.ENTITY_TYPE,entityType)
-          .with(MireotParameters.ENTITY_ONLY,entityOnly)
-          .with(MireotParameters.MIN_DEPTH,minDepth)
-          .with(MireotParameters.MAX_DEPTH,maxDepth);
+          .with(MireotParameters.BASE_URI, owlNamespace)
+          .with(MireotParameters.ENTITY_TYPE, entityType)
+          .with(MireotParameters.ENTITY_ONLY, entityOnly)
+          .with(MireotParameters.MIN_DEPTH, minDepth)
+          .with(MireotParameters.MAX_DEPTH, maxDepth);
 
       Owl2SkosConfig cfg = new Owl2SkosConfig()
-          .with(OWLtoSKOSTxParams.TGT_NAMESPACE,skosNamespace)
-          .with(OWLtoSKOSTxParams.ADD_IMPORTS,true)
-          .with(OWLtoSKOSTxParams.SCHEME_NAME,schemeName)
-          .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME,topConceptName)
+          .with(OWLtoSKOSTxParams.TGT_NAMESPACE, skosNamespace)
+          .with(OWLtoSKOSTxParams.ADD_IMPORTS, true)
+          .with(OWLtoSKOSTxParams.SCHEME_NAME, schemeName)
+          .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME, topConceptName)
           .with(OWLtoSKOSTxParams.MODE, profile);
 
       Optional<Model> mireotedModel = new MireotExtractor()
@@ -315,7 +362,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
         }
         File f = new File(getOutputDirectory()
             + File.separator
-            + getSkosOutputFile());
+            + outputFile);
         try (FileOutputStream fos = new FileOutputStream(f)) {
           skosModel.get().write(fos);
         }
@@ -323,9 +370,6 @@ public class SkosGeneratorPlugin extends AbstractMojo {
         getLog().error("Unable to generate a SKOS model");
       }
 
-    } catch (Exception e) {
-      logger.error(e.getMessage(),e);
-      throw new MojoExecutionException(e.getMessage(), e);
     }
 
   }
@@ -336,9 +380,9 @@ public class SkosGeneratorPlugin extends AbstractMojo {
         .replaceAll(".rdf", "") + ".skos.rdf";
   }
 
-  private InputStream resolve(String file) {
+  private InputStream resolve(String file, String owlSourceURL, URL catalogURL) {
     return CatalogBasedURIResolver.resolveFilePath(file, catalogURL)
-        .orElse(SkosGeneratorPlugin.class.getResourceAsStream(owlFile));
+        .orElse(SkosGeneratorPlugin.class.getResourceAsStream(owlSourceURL));
   }
 
 
@@ -350,7 +394,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
       OWLOntology onto = manager.loadOntologyFromOntologyDocument(is);
       OWLOntologyID originalId = onto.getOntologyID();
 
-      preloadImports(manager,onto);
+      preloadImports(manager, onto, catalogURL);
 
       OWLOntologyMerger merger = new OWLOntologyMerger(
           new OWLOntologyImportsClosureSetProvider(manager, onto));
@@ -367,27 +411,29 @@ public class SkosGeneratorPlugin extends AbstractMojo {
       return new ByteArrayInputStream(baos.toByteArray());
 
     } catch (Exception e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return is;
     }
   }
 
-  private void preloadImports(final OWLOntologyManager manager, final OWLOntology onto) {
+  private void preloadImports(final OWLOntologyManager manager, final OWLOntology onto,
+      URL catalogURL) {
     onto.directImportsDocuments().forEach(
         ontologyIRI -> {
           if (manager.getOntology(ontologyIRI) == null) {
             try {
               if (applyMappings(ontologyIRI, manager).isPresent()) {
-                OWLOntology importedOntology = manager.loadOntologyFromOntologyDocument(new StreamDocumentSource(
-                    resolve(ontologyIRI.toString()),
-                    ontologyIRI));
-                preloadImports(manager,importedOntology);
+                OWLOntology importedOntology = manager
+                    .loadOntologyFromOntologyDocument(new StreamDocumentSource(
+                        resolve(ontologyIRI.toString(), ontologyIRI.toString(), catalogURL),
+                        ontologyIRI));
+                preloadImports(manager, importedOntology, catalogURL);
               } else {
                 OWLOntology importedOntology = manager.loadOntology(ontologyIRI);
-                preloadImports(manager,importedOntology);
+                preloadImports(manager, importedOntology, catalogURL);
               }
             } catch (OWLOntologyCreationException e) {
-              logger.error(e.getMessage(),e);
+              logger.error(e.getMessage(), e);
             }
           }
         }

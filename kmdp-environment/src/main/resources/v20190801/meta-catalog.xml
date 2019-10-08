@@ -1,5 +1,8 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
+  <uri uri="/ontologies/API4KP/v20190801/informative/api4kp-registry.rdf"
+    name="http://ontology.mayo.edu/ontologies/kmdp-registry/" />
+
   <public uri="file:///dmn11-catalog.xml"
     publicId="https://www.omg.org/spec/DMN/1.1/"/>
 

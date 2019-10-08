@@ -32,7 +32,7 @@ import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._20190801.K
 import edu.mayo.ontology.taxonomies.kao.languagerole._20190801.KnowledgeRepresentationLanguageRole;
 import edu.mayo.ontology.taxonomies.kao.publicationeventtype._20190801.PublicationEventType;
 import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
-import edu.mayo.ontology.taxonomies.kao.publishingrole.PublishingRole;
+import edu.mayo.ontology.taxonomies.kao.publishingrole._2017_09_04.PublishingRole;
 import edu.mayo.ontology.taxonomies.kao.rel.citationreltype._2018_02_16.BibliographicCitationType;
 import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
 import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationType;

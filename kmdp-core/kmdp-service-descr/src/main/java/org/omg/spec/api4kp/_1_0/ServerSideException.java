@@ -15,7 +15,7 @@
  */
 package org.omg.spec.api4kp._1_0;
 
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
 import java.util.List;
 import java.util.Map;
 import org.omg.spec.api4kp._1_0.datatypes.Error;

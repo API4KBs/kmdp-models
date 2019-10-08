@@ -169,7 +169,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
       return Optional.empty();
     }
     try {
-      if (new File(url.toURI()).exists()) {
+      if ("file".equals(url.getProtocol()) && new File(url.toURI()).exists()) {
         return Optional.of(url);
       }
     } catch (URISyntaxException e) {

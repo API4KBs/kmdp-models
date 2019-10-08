@@ -17,7 +17,7 @@ package org.omg.spec.api4kp._1_0;
 
 
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

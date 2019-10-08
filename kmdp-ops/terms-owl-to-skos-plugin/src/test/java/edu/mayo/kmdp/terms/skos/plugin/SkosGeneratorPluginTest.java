@@ -20,8 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.jena.vocabulary.DCTerms;
@@ -59,12 +60,12 @@ public class SkosGeneratorPluginTest {
     mojo.setEntityOnly(false);
     mojo.setReason(false);
 
-    mojo.setOwlFile("/cito.rdf");
+    mojo.setOwlSourceURL("/cito.rdf");
     mojo.setTargetURI("http://purl.org/spar/cito/cites");
 
     mojo.setSkosNamespace("http://test.skos.foo");
     mojo.setOutputDirectory(temp);
-    mojo.setSkosOutputFile(localName);
+    mojo.setSkosOutputFiles(Collections.singletonList(localName));
 
     return mojo;
   }

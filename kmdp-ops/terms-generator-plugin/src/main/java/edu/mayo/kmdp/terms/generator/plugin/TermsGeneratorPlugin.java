@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.terms.generator.plugin;
 
@@ -37,11 +35,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.protege.xmlcatalog.CatalogUtilities;
@@ -50,6 +44,8 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Goal
@@ -249,14 +245,14 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   /**
    * @parameter
    */
-  private String sourceCatalogPath;
+  private List<String> sourceCatalogPaths;
 
-  public String getSourceCatalogPath() {
-    return sourceCatalogPath;
+  public List<String> getSourceCatalogPaths() {
+    return sourceCatalogPaths;
   }
 
-  public void setSourceCatalogPath(String sourceCatalogPath) {
-    this.sourceCatalogPath = sourceCatalogPath;
+  public void setSourceCatalogPaths(List<String> sourceCatalogPaths) {
+    this.sourceCatalogPaths = sourceCatalogPaths;
   }
 
   /**
@@ -299,38 +295,52 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   }
 
 
-
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   private MavenProject project;
 
-  public void execute() throws MojoExecutionException, MojoFailureException {
-    try {
-      if (xsdOutputDirectory == null) {
-        xsdOutputDirectory = outputDirectory;
-      }
-
-      List<String> files = flatten(owlFiles);
-      if (exclusions != null) {
-        files.removeAll(exclusions);
-      }
-
-      Collection<CatalogGenerator.CatalogEntry> entries = files.stream()
-          .flatMap(this::transform)
-          .collect(Collectors.toList());
-
-      if (catalogNamespace != null) {
-        new CatalogGenerator().generate(catalogNamespace, entries, xsdOutputDirectory, catalogName);
-      }
-
-      registerOutputDir();
-    } catch (Exception e) {
-      logger.error(e.getMessage(),e);
-      throw new MojoExecutionException(e.getMessage());
+  public void execute() {
+    if (xsdOutputDirectory == null) {
+      xsdOutputDirectory = outputDirectory;
     }
 
+    List<String> files = flatten(owlFiles);
+    if (exclusions != null) {
+      files.removeAll(exclusions);
+    }
+
+    if (files.isEmpty()) {
+      logger.warn("No files to process, exit...");
+      return;
+    }
+
+    final List<String> catalogs = alignCatalogs(sourceCatalogPaths, files);
+
+    Collection<CatalogGenerator.CatalogEntry> entries = files.stream()
+        .flatMap(f -> this.transform(f, catalogs.get(files.indexOf(f))))
+        .collect(Collectors.toList());
+
+    if (catalogNamespace != null) {
+      new CatalogGenerator().generate(catalogNamespace, entries, xsdOutputDirectory, catalogName);
+    }
+
+    registerOutputDir();
   }
 
-  private Stream<CatalogGenerator.CatalogEntry> transform(String source) {
+  private List<String> alignCatalogs(List<String> sourceCatalogPaths, List<String> files) {
+    List<String> catalogs = (sourceCatalogPaths == null || sourceCatalogPaths.isEmpty())
+        ? Collections.nCopies(files.size(), null)
+        : sourceCatalogPaths;
+    if (catalogs.size() != files.size()) {
+      if (catalogs.size() != 1) {
+        logger.warn("Mismatch between the number of provided catalogs and the number "
+            + "of source URLs");
+      }
+      catalogs = Collections.nCopies(files.size(), catalogs.get(0));
+    }
+    return catalogs;
+  }
+
+  private Stream<CatalogGenerator.CatalogEntry> transform(String source, String sourceCatalogPath) {
     OWLOntology ontology = null;
     try {
       IRI[] ignoreds = getIgnoredIRIs() == null
@@ -341,19 +351,19 @@ public class TermsGeneratorPlugin extends AbstractMojo {
               .toArray(new IRI[getIgnoredIRIs().size()]);
       ontology = new OntologyLoader().loadOntology(
           new String[]{source},
-          getSourceCatalog().orElse(null),
+          getSourceCatalog(sourceCatalogPath).orElse(null),
           ignoreds);
     } catch (OWLOntologyCreationException e) {
       return Stream.empty();
     }
 
     SkosAbstractionConfig cfg = new SkosAbstractionConfig()
-        .with(SkosAbstractionParameters.REASON,this.reason)
-        .with(SkosAbstractionParameters.ENFORCE_CLOSURE,enforceClosure)
-        .with(SkosAbstractionParameters.CLOSURE_MODE,closureMode)
-        .with(SkosAbstractionParameters.TAG_TYPE,tagFormat);
+        .with(SkosAbstractionParameters.REASON, this.reason)
+        .with(SkosAbstractionParameters.ENFORCE_CLOSURE, enforceClosure)
+        .with(SkosAbstractionParameters.CLOSURE_MODE, closureMode)
+        .with(SkosAbstractionParameters.TAG_TYPE, tagFormat);
     SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
-        .traverse(ontology,cfg);
+        .traverse(ontology, cfg);
 
     if (!outputDirectory.exists()) {
       outputDirectory.mkdirs();
@@ -378,7 +388,7 @@ public class TermsGeneratorPlugin extends AbstractMojo {
         .map(CatalogGenerator.CatalogEntry::new);
   }
 
-  private Optional<OWLOntologyIRIMapper> getSourceCatalog() {
+  private Optional<OWLOntologyIRIMapper> getSourceCatalog(String sourceCatalogPath) {
     if (Util.isEmpty(sourceCatalogPath)) {
       return Optional.empty();
     }
@@ -390,7 +400,7 @@ public class TermsGeneratorPlugin extends AbstractMojo {
     try {
       return Optional.of(new XMLCatalogIRIMapper(CatalogUtilities.parseDocument(cat)));
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
     }
     return Optional.empty();
   }
@@ -421,7 +431,7 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   }
 
   private List<String> listFiles(File f) {
-    return Arrays.stream(Util.ensureArray(f.listFiles(),File.class))
+    return Arrays.stream(Util.ensureArray(f.listFiles(), File.class))
         .map(File::getAbsolutePath)
         .collect(Collectors.toList());
   }

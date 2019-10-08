@@ -21,9 +21,11 @@
   <uri id="CiTO"
     uri="cito.rdf"
     name="http://purl.org/spar/cito"/>
+
   <uri id="PSO"
     uri="pso.rdf"
     name="http://purl.org/spar/pso"/>
+
   <uri id="PRO"
     uri="pro.rdf"
     name="http://purl.org/spar/pro"/>
@@ -31,30 +33,6 @@
   <uri id="SKOS"
     uri="skos.rdf"
     name="http://www.w3.org/2004/02/skos/core"/>
-
-  <uri id="API4KP"
-    uri="/ontologies/API4KP/api4kp.rdf"
-    name="https://www.omg.org/spec/API4KP/20190801/api4kp/"/>
-
-  <uri id="API4KP-Ops"
-    uri="/ontologies/API4KP/api4kp-ops.rdf"
-    name="https://www.omg.org/spec/API4KP/20190801/api4kp-ops/"/>
-
-  <uri id="API4KP-KAO"
-    uri="/ontologies/API4KP/api4kp-kao.rdf"
-    name="https://www.omg.org/spec/API4KP/20190801/api4kp-kao/"/>
-
-  <uri id="CKAO"
-    uri="/ontologies/API4KP/informative/ckao.rdf"
-    name="http://ontology.mayo.edu/ontologies/20190801/clinicalknowledgeassets/"/>
-
-  <uri id="API4KP-KMDO"
-    uri="/ontologies/API4KP/informative/kmdo.rdf"
-    name="http://ontology.mayo.edu/ontologies/20190801/knowledgemanagementdelivery/"/>
-
-  <uri id="API4KP-Registry"
-    uri="/ontologies/API4KP/informative/api4kp-registry.rdf"
-    name="http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/"/>
 
   <uri id="LangCodes-ISO639-1"
     uri="lcc.rdf"
@@ -91,5 +69,4 @@
   <uri id="Situation"
     uri="situation.owl"
     name="http://www.ontologydesignpatterns.org/cp/owl/situation.owl"/>
-
 </catalog>

@@ -213,6 +213,7 @@ public final class NameUtils {
    */
   public static String namespaceURIStringToPackage(String namespaceURI) {
     try {
+      namespaceURI = namespaceURI.replace("/LATEST","");
       return nameSpaceURIToPackage(new URI(namespaceURI));
     } catch (URISyntaxException ex) {
       return "INVALID";

@@ -22,16 +22,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.AbstractCarrier;
 import org.omg.spec.api4kp._1_0.Answer;
-import org.omg.spec.api4kp._1_0.Explainer;
 import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 

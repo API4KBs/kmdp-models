@@ -24,7 +24,7 @@ import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.Test;
 
 
-public class RegistryTest extends RegistryTestBase {
+public class RegistryTest {
 
   @Test
   public void testKnownXMLNamespaces() {
