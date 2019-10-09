@@ -88,8 +88,8 @@ public class RegistryGenerator {
   private static final Property supportSerialization = ResourceFactory
       .createProperty("http://www.omg.org/spec/DOL/DOL-terms/supportsSerialization");
 
-  private static final String REGISTRY_DB = "/home/davide/Projects/API4KB/api4kbs/src/main/resources/vLATEST/API4KP-Registry.xlsx";
-  private static final String REGISTRY_ONTO = "/home/davide/Projects/API4KB/api4kbs/ontologies/API4KP/vLATEST/informative/api4kp-registry.rdf";
+  private static final String REGISTRY_DB = "/home/davide/Projects/API4KB/api4kbs/src/main/resources/LATEST/API4KP-Registry.xlsx";
+  private static final String REGISTRY_ONTO = "/home/davide/Projects/API4KB/api4kbs/ontologies/API4KP/LATEST/informative/api4kp-registry.rdf";
 
   public static void main(String... args) {
     try (

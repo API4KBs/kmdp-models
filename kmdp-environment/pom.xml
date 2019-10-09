@@ -82,7 +82,7 @@
                   <type>jar</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}/tmp</outputDirectory>
-                  <includes>**/ontologies/API4KP/v*/**/api4kp-registry.rdf</includes>
+                  <includes>**/ontologies/API4KP/**/api4kp-registry.rdf</includes>
                 </artifactItem>
 
               </artifactItems>

@@ -107,7 +107,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/LATEST/kmdp-registry/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/</owlSourceURL>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/</owlSourceURL>
               </owlSourceURLs>
 
@@ -135,7 +135,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/LATEST/kmdp-registry/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/</owlSourceURL>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/</owlSourceURL>
               </owlSourceURLs>
 
@@ -161,7 +161,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/LATEST/kmdp-registry/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/</owlSourceURL>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/</owlSourceURL>
               </owlSourceURLs>
 
@@ -187,7 +187,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/LATEST/kmdp-registry/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/</owlSourceURL>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/</owlSourceURL>
               </owlSourceURLs>
 
@@ -213,7 +213,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/LATEST/kmdp-registry/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/</owlSourceURL>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/</owlSourceURL>
               </owlSourceURLs>
 
@@ -291,7 +291,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlSourceURL>
               </owlSourceURLs>
 
@@ -316,7 +316,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlSourceURL>
               </owlSourceURLs>
 
@@ -341,7 +341,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlSourceURL>
               </owlSourceURLs>
 
@@ -366,7 +366,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlSourceURL>
               </owlSourceURLs>
 
@@ -392,7 +392,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlSourceURL>
               </owlSourceURLs>
 
@@ -418,7 +418,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlSourceURL>
               </owlSourceURLs>
 
@@ -518,7 +518,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/LATEST/knowledgemanagementdelivery/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/knowledgemanagementdelivery/</owlSourceURL>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/knowledgemanagementdelivery/</owlSourceURL>
               </owlSourceURLs>
 
@@ -546,7 +546,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/LATEST/knowledgemanagementdelivery/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/knowledgemanagementdelivery/</owlSourceURL>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/knowledgemanagementdelivery/</owlSourceURL>
               </owlSourceURLs>
 
@@ -603,7 +603,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp-kao/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-kao/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp-kao/</owlSourceURL>
               </owlSourceURLs>
 
@@ -630,7 +630,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/LATEST/clinicalknowledgeassets/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/clinicalknowledgeassets/</owlSourceURL>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/clinicalknowledgeassets/</owlSourceURL>
               </owlSourceURLs>
 
@@ -685,7 +685,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp-kao/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-kao/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp-kao/</owlSourceURL>
               </owlSourceURLs>
 
@@ -739,7 +739,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp-kao/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-kao/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp-kao/</owlSourceURL>
               </owlSourceURLs>
 
@@ -766,7 +766,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp-kao/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-kao/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp-kao/</owlSourceURL>
               </owlSourceURLs>
 
@@ -793,7 +793,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp-ops/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-ops/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp-ops/</owlSourceURL>
               </owlSourceURLs>
 
@@ -820,7 +820,7 @@
             </goals>
             <configuration>
               <owlSourceURLs>
-                <owlSourceURL>https://www.omg.org/spec/API4KP/LATEST/api4kp/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp/</owlSourceURL>
                 <owlSourceURL>https://www.omg.org/spec/API4KP/20190801/api4kp/</owlSourceURL>
               </owlSourceURLs>
 

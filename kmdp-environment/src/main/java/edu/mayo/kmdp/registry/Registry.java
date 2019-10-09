@@ -85,7 +85,7 @@ public class Registry {
   }
 
   public static String getCatalogVersion(String version) {
-    return String.format("/v%s/meta-catalog.xml",version);
+    return String.format("/%s/meta-catalog.xml",version);
   }
 
   private static InputStream openStream(String path) throws IOException {
