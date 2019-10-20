@@ -17,6 +17,7 @@ package edu.mayo.kmdp.util.ws;
 
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -196,5 +197,11 @@ public class ResponseHelper {
       logger.error(nfe.getMessage(),nfe);
       return HttpStatus.INTERNAL_SERVER_ERROR;
     }
+  }
+
+  public static <T> ResponseEntity<T> redirectTo(URI locator) {
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.setLocation(locator);
+    return new ResponseEntity<>(null,httpHeaders,HttpStatus.SEE_OTHER);
   }
 }
