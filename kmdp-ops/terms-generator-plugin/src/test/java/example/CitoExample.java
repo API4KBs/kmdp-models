@@ -20,7 +20,6 @@ import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.Taxonomic;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
-import edu.mayo.kmdp.terms.example.Cito;
 import java.util.Arrays;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;

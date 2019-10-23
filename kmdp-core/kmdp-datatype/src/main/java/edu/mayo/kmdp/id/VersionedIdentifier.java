@@ -16,8 +16,23 @@
 package edu.mayo.kmdp.id;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.zafarkhaja.semver.Version;
+import edu.mayo.kmdp.util.Util;
+import java.util.Date;
+import java.util.Optional;
+
 public interface VersionedIdentifier extends Identifier {
 
   String getVersion();
+
+  @JsonIgnore
+  default Optional<Version> getSemanticVersion() {
+    return Util.isEmpty(getVersion())
+        ? Optional.empty()
+        : Optional.of(Version.valueOf(getVersion()));
+  }
+
+  Date getEstablishedOn();
 
 }

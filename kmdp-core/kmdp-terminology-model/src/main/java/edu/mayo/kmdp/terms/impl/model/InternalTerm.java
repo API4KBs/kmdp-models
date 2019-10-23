@@ -19,10 +19,9 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
-public class InternalTerm extends ConceptIdentifier {
+public class InternalTerm extends TermImpl {
 
   protected ConceptScheme<Term> scheme;
   protected String comment;

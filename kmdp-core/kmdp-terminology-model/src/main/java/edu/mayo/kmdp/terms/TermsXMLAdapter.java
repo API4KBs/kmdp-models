@@ -16,6 +16,11 @@
 package edu.mayo.kmdp.terms;
 
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.id.Versionable;
+import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import edu.mayo.kmdp.util.Util;
+import java.util.Arrays;
+import java.util.Optional;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
 public abstract class TermsXMLAdapter extends
@@ -23,23 +28,28 @@ public abstract class TermsXMLAdapter extends
 
   @Override
   public Term unmarshal(org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier v) {
-    return java.util.Arrays.stream(getValues())
-        .filter(x -> x.getRef().equals(v.getRef()))
-        .findFirst().orElse(null);
+    return DatatypeHelper.resolveTerm(v.getTag(),getValues(v.getNamespace()),Term::getTag)
+        .orElse(null);
   }
 
   @Override
   public org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier marshal(Term v) {
-    if (v == null) {
-      return null;
-    }
-    return new org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier()
-        .withRef(v.getRef())
-        .withLabel(v.getLabel())
-        .withTag(v.getTag())
-        .withConceptId(v.getConceptId())
-        .withNamespace((NamespaceIdentifier) v.getNamespace());
+    return DatatypeHelper.toConceptIdentifier(v);
   }
 
   protected abstract Term[] getValues();
+
+  protected Term[] getValues( final NamespaceIdentifier identifier ) {
+    return Arrays.stream(getValues())
+        .map(x -> getVersion(x,identifier.getVersion()))
+        .flatMap(Util::trimStream)
+        .toArray(Term[]::new);
+  }
+
+  private Optional<? extends Term> getVersion(Term x, String version) {
+    return x instanceof TermSeries
+        ? ((TermSeries<?>) x).getVersion(version)
+        : Optional.of(x);
+  }
+
 }

@@ -77,18 +77,22 @@
     <xsl:param name="root"/>
 
     <xsl:for-each
-      select="$root/packagedElement[@xmi:type = 'uml:Class' or @xmi:type = 'uml:DataType']">
-      <xsl:if test="@xmi:type = 'uml:Class' and not(@name='Any')">
+      select="$root/packagedElement[@xmi:type = 'uml:Class']">
+      <xsl:if test="not(@name='Any')">
         <xsl:call-template name="namedElement"/>
       </xsl:if>
       <xsl:call-template name="complexType"/>
       <xsl:call-template name="classContent"/>
     </xsl:for-each>
 
+    <xsl:for-each
+      select="$root/packagedElement[@xmi:type = 'uml:DataType']">
+      <xsl:call-template name="simpleType"/>
+    </xsl:for-each>
 
     <xsl:for-each
       select="$root/packagedElement[@xmi:type = 'uml:Enumeration' and exists(./ownedLiteral)]">
-      <xsl:call-template name="simpleType"/>
+      <xsl:call-template name="enums"/>
     </xsl:for-each>
   </xsl:template>
 
@@ -402,7 +406,18 @@
 
 
   <xsl:template name="simpleType">
-    <xsl:call-template name="enums"/>
+    <xsl:element name="xs:simpleType">
+      <xsl:attribute name="name" select="@name"/>
+      <xsl:element name="xs:restriction">
+        <xsl:attribute name="base">xs:string</xsl:attribute>
+      </xsl:element>
+    </xsl:element>
+    <!--    <xs:simpleType name="UUID-random">-->
+    <!--      <xs:restriction base="xs:string">-->
+    <!--        <xs:length value="36" fixed="true" />-->
+    <!--        <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}" fixed="true" />-->
+    <!--      </xs:restriction>-->
+    <!--    </xs:simpleType>-->
   </xsl:template>
 
   <xsl:template name="enums">

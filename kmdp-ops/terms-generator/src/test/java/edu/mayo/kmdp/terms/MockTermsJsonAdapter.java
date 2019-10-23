@@ -25,9 +25,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Arrays;
-import java.util.Optional;
 
 @Deprecated
 public abstract class MockTermsJsonAdapter {

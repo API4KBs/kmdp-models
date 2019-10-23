@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.terms.generator;
 
@@ -140,7 +138,7 @@ public class SkosTerminologyAbstractor {
         // concepts only
         .filter(i -> isConcept(i, model))
         // get property assertions
-        .flatMap(i -> getAllObjectPropertyAssertions(i,model))
+        .flatMap(i -> getAllObjectPropertyAssertions(i, model))
         // restrict to 'broader', on named concepts, avoid reflexivity
         .filter(opax -> opax.getProperty().isObjectPropertyExpression())
         .filter(opax -> (isProperty(BROADER, opax) || isProperty(BROADER_TRANSITIVE, opax)))
@@ -155,9 +153,11 @@ public class SkosTerminologyAbstractor {
         // register rel
         .forEach(opax -> addAncestor(
             resolve(opax.getSubject(), model, codeSystems)
-                .orElseThrow(() -> new IllegalStateException("Unresolvable Child Concept " + opax.getSubject())),
+                .orElseThrow(() -> new IllegalStateException(
+                    "Unresolvable Child Concept " + opax.getSubject())),
             resolve(opax.getObject(), model, codeSystems)
-                .orElseThrow(() -> new IllegalStateException("Unresolvable Parent Concept " + opax.getObject()))));
+                .orElseThrow(() -> new IllegalStateException(
+                    "Unresolvable Parent Concept " + opax.getObject()))));
 
     // finally the Top Concept
     model.individualsInSignature(Imports.INCLUDED)
@@ -174,7 +174,8 @@ public class SkosTerminologyAbstractor {
     return applyClosure(graph, cfg.getTyped(SkosAbstractionParameters.CLOSURE_MODE));
   }
 
-  private Stream<OWLObjectPropertyAssertionAxiom> getAllObjectPropertyAssertions(OWLNamedIndividual i, OWLOntology model) {
+  private Stream<OWLObjectPropertyAssertionAxiom> getAllObjectPropertyAssertions(
+      OWLNamedIndividual i, OWLOntology model) {
     return model.importsClosure()
         .flatMap(o -> o.objectPropertyAssertionAxioms(i))
         .collect(Collectors.toSet())
@@ -291,7 +292,8 @@ public class SkosTerminologyAbstractor {
           .orElse(notations.iterator().next().getLiteral());
       String primaryId = version.map(ver -> code + "-" + ver).orElse(code);
 
-      Set<String> aliases = notations.stream().map(OWLLiteral::getLiteral).collect(Collectors.toSet());
+      Set<String> aliases = notations.stream().map(OWLLiteral::getLiteral)
+          .collect(Collectors.toSet());
       aliases.remove(code);
 
       LinkedList<String> tags = new LinkedList<>(aliases);
@@ -306,16 +308,16 @@ public class SkosTerminologyAbstractor {
   private Optional<URI> applyVersion(OWLNamedIndividual ind, OWLOntology model) {
     String ontoUri = model.getOntologyID().getOntologyIRI().map(IRI::toString).orElse("");
     String versionUri = model.getOntologyID().getVersionIRI().map(IRI::toString).orElse("");
-    String versionFragment = NameUtils.strip(ontoUri,versionUri);
+    String versionFragment = NameUtils.strip(ontoUri, versionUri);
 
     String indURI = ind.getIRI().toString();
     String localId = NameUtils.getTrailingPart(ind.getIRI().toString());
 
     return model.getOntologyID().getVersionIRI()
         .map(v -> IRI
-            .create( indURI.substring(0,indURI.lastIndexOf(localId) - 1)
-                    + ( versionFragment.startsWith("/") ? versionFragment : "/" + versionFragment )
-                    + "#" + localId)
+            .create(indURI.substring(0, indURI.lastIndexOf(localId) - 1)
+                + (versionFragment.startsWith("/") ? versionFragment : "/" + versionFragment)
+                + "#" + localId)
             .toURI());
 
   }
@@ -343,11 +345,11 @@ public class SkosTerminologyAbstractor {
     MutableConceptScheme scheme =
         schemes.isEmpty() ? null : (MutableConceptScheme) schemes.iterator().next();
 
-
     List<String> codes = getCodedIdentifiers(ind, model);
     URI referentUri = getReferent(ind, model);
     String comment = getAnnotationValues(ind, model, COMMENT).findFirst().orElse(null);
-    String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(referentUri.getFragment());
+    String label = getAnnotationValues(ind, model, LABEL).findFirst()
+        .orElse(referentUri.getFragment());
 
     URI conceptId = ind.getIRI().toURI();
     String tag = codes.get(0);
@@ -446,7 +448,7 @@ public class SkosTerminologyAbstractor {
 
 
   private void doReason(OWLOntology o) {
-    OWLReasoner owler = new Reasoner(new Configuration(),o);
+    OWLReasoner owler = new Reasoner(new Configuration(), o);
 
     InferredOntologyGenerator reasoner = new InferredOntologyGenerator(owler);
 
@@ -530,9 +532,9 @@ public class SkosTerminologyAbstractor {
 
       setTop(
           other.getTopConcept()
-          .map(ConceptTerm.class::cast)
-          .map(c -> c.cloneInto(this))
-          .orElse(null));
+              .map(ConceptTerm.class::cast)
+              .map(c -> c.cloneInto(this))
+              .orElse(null));
 
       other.getConcepts()
           .map(ConceptTerm.class::cast)
@@ -550,7 +552,7 @@ public class SkosTerminologyAbstractor {
           }));
 
       closure = new HashMap<>();
-   }
+    }
 
     @Override
     public String toString() {
@@ -585,11 +587,14 @@ public class SkosTerminologyAbstractor {
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-      throw new UnsupportedOperationException("MutableConceptSchemes should only be used at compile time");
+      throw new UnsupportedOperationException(
+          "MutableConceptSchemes should only be used at compile time");
     }
 
-    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-      throw new UnsupportedOperationException("MutableConceptSchemes should only be used at compile time");
+    private void readObject(java.io.ObjectInputStream in)
+        throws IOException, ClassNotFoundException {
+      throw new UnsupportedOperationException(
+          "MutableConceptSchemes should only be used at compile time");
     }
   }
 
@@ -607,7 +612,7 @@ public class SkosTerminologyAbstractor {
       conceptSchemes.values().stream()
           .filter(MutableConceptScheme.class::isInstance)
           .map(MutableConceptScheme.class::cast)
-          .forEach(mcs -> mcs.setClosure(assign(closure,mcs)));
+          .forEach(mcs -> mcs.setClosure(assign(closure, mcs)));
     }
 
     private Map<Term, List<Term>> assign(Map<Term, List<Term>> closure, MutableConceptScheme mcs) {
@@ -678,12 +683,16 @@ public class SkosTerminologyAbstractor {
       return getScheme().getPublicName();
     }
 
-    public List<Term> getAncestors() {
-      return new ArrayList<>(((MutableConceptScheme) scheme).getAncestors(this));
+    @Override
+    public Term[] getAncestors() {
+      Set<Term> ancs = ((MutableConceptScheme) scheme).getAncestors(this);
+      return ancs.toArray(new Term[0]);
     }
 
-    public List<Term> getClosure() {
-      return new ArrayList<>(((MutableConceptScheme) scheme).getClosure(this));
+    @Override
+    public Term[] getClosure() {
+      List<Term> closure = ((MutableConceptScheme) scheme).getClosure(this);
+      return closure.toArray(new Term[0]);
     }
 
     ConceptTerm cloneInto(ConceptScheme<Term> cs) {
@@ -762,10 +771,10 @@ public class SkosTerminologyAbstractor {
                     .forEach(c -> src.addConcept(c.cloneInto(src)));
                 // add the parent/child relationships
                 ((MutableConceptScheme) tgtDep).getAncestorsMap()
-                    .forEach((con,parents) -> {
+                    .forEach((con, parents) -> {
                       Term mapped = src.getConcept(con.getConceptId());
                       parents.forEach(par ->
-                          src.addParent(mapped,src.getConcept(par.getConceptId())));
+                          src.addParent(mapped, src.getConcept(par.getConceptId())));
                     });
               }
             }));

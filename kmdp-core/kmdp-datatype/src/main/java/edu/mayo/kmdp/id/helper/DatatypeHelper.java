@@ -20,16 +20,22 @@ import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 import static edu.mayo.kmdp.util.Util.ensureUUIDFormat;
 
 import edu.mayo.kmdp.id.Identifier;
+import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.adapters.DateAdapter;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.xml.namespace.QName;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
@@ -291,5 +297,40 @@ public class DatatypeHelper {
 
   public static UUID seedUUID(String seed) {
     return UUID.nameUUIDFromBytes(seed.getBytes());
+  }
+
+  public static NamespaceIdentifier toNamespace(URIIdentifier schemeURI, String label) {
+    URI base = schemeURI.getUri();
+
+    return new NamespaceIdentifier()
+            .withId( URIUtil.normalizeURI(base) )
+            .withLabel( label )
+            .withTag( base.getFragment() )
+            .withVersion( DatatypeHelper.versionOf( schemeURI.getVersionId() ) );
+  }
+
+  public static ConceptIdentifier toConceptIdentifier(Term v) {
+    if (v == null) {
+      return null;
+    }
+    return new org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier()
+        .withRef(v.getRef())
+        .withConceptUUID(v.getConceptUUID())
+        .withLabel(v.getLabel())
+        .withTag(v.getTag())
+        .withConceptId(v.getConceptId())
+        .withNamespace((NamespaceIdentifier) v.getNamespace());
+  }
+
+
+  public static <T extends Term,X> Optional<T> resolveTerm(final X val, T[] values, Function<Term,X> getter) {
+    return Arrays.stream(values)
+        .filter(x -> val.equals(getter.apply(x)))
+        .findAny();
+  }
+
+  public static <T extends Term> Map<UUID, T> indexByUUID(T[] values) {
+    return Collections.unmodifiableMap(Arrays.stream(values)
+        .collect(Collectors.toConcurrentMap(Term::getConceptUUID, Function.identity())));
   }
 }
