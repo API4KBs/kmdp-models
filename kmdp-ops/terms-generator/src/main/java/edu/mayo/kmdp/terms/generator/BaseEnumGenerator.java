@@ -26,6 +26,9 @@ import edu.mayo.kmdp.terms.TermsJsonAdapter;
 import edu.mayo.kmdp.terms.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
+import edu.mayo.kmdp.terms.generator.internal.ConceptTerm;
+import edu.mayo.kmdp.terms.generator.internal.ConceptTermSeries;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.PropertiesUtil;
@@ -35,9 +38,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class BaseEnumGenerator {
 
@@ -52,7 +59,11 @@ public abstract class BaseEnumGenerator {
 
   private static void prepareTemplates() {
     registry.put("concepts-java",
-        getResource("concepts-java.mustache"));
+        getResource("java/concepts-java.mustache"));
+    registry.put("concepts-java-interface",
+        getResource("java/concepts-java-interface.mustache"));
+    registry.put("concepts-java-series",
+        getResource("java/concepts-java-series.mustache"));
     registry.put("concepts-xsd",
         getResource("concepts-xsd.mustache"));
     registry.put("concepts-xjb",
@@ -70,7 +81,7 @@ public abstract class BaseEnumGenerator {
 
   protected Map<String, Object> getContext(ConceptScheme<Term> conceptScheme,
       EnumGenerationConfig options,
-      SkosTerminologyAbstractor.ConceptGraph graph) {
+      ConceptGraph graph) {
 
     Boolean jaxb = options.getTyped(EnumGenerationParams.WITH_JAXB);
     Boolean jsonld = options.getTyped(EnumGenerationParams.WITH_JSONLD);
@@ -80,15 +91,28 @@ public abstract class BaseEnumGenerator {
     Properties overrides = PropertiesUtil.doParse(options.getTyped(EnumGenerationParams.PACKAGE_OVERRIDES));
 
     String className = conceptScheme.getPublicName();
-    String innerPackageName = getPackageName(conceptScheme, defaultPackage, overrides);
+    String seriesName = conceptScheme.getPublicName() + "Series";
+    String interfaceName = conceptScheme.getPublicName();
+    String innerPackageName = getPackageName(conceptScheme.getVersionId(), defaultPackage, overrides);
+    String outerPackageName = getPackageName(conceptScheme.getId(), defaultPackage, overrides);
+
+    if (interfaceName.equals(className) && outerPackageName.equals(innerPackageName)) {
+      interfaceName = "I" + interfaceName;
+    }
+
 
     Map<String, Object> context = new HashMap<>();
     context.put("conceptScheme", conceptScheme);
     context.put("conceptSchemeID", NameUtils.getTrailingPart(conceptScheme.getId().toString()));
-    context.put("concepts", graph.getConceptList(conceptScheme.getId()));
+    context.put("concepts", graph.getConceptList(conceptScheme));
+    context.put("conceptSeries",
+        toSeries(graph.getConceptSeries(conceptScheme.getId()), defaultPackage, overrides));
     context.put("typeName", className);
+    context.put("seriesName", seriesName);
+    context.put("intfName", interfaceName);
     context.put("namespace", edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.getVersionId()));
     context.put("packageName", innerPackageName);
+    context.put("intfPackageName", outerPackageName);
     context.put("overridePk", overridePk(defaultPackage,overrides));
     context.put("baseJsonAdapter", options.get(EnumGenerationParams.JSON_ADAPTER)
         .orElse(TermsJsonAdapter.Deserializer.class.getName()));
@@ -105,6 +129,18 @@ public abstract class BaseEnumGenerator {
     return context;
   }
 
+  private List<SeriesHolder> toSeries(
+      Collection<ConceptTermSeries> conceptSeries,
+      String defaultPackage, Properties overrides) {
+
+    return conceptSeries.stream()
+        .map(s -> new SeriesHolder(
+            s.getLabel(),
+            s.getVersions(),
+            p -> getPackageName(p, defaultPackage, overrides)))
+        .collect(Collectors.toList());
+  }
+
   private Mustache.Lambda overridePk(String defaultPackage, Properties overrides) {
     return (frag, out) -> {
       String key = frag.execute();
@@ -112,8 +148,8 @@ public abstract class BaseEnumGenerator {
     };
   }
 
-  protected String getPackageName(ConceptScheme<Term> conceptScheme, String defaultPackage, Properties packageNameOverrides) {
-    String packageName = namespaceURIStringToPackage(removeTrailingPart(conceptScheme.getVersionId().toString()));
+  protected String getPackageName(URI baseUri, String defaultPackage, Properties packageNameOverrides) {
+    String packageName = namespaceURIStringToPackage(removeTrailingPart(baseUri.toString()));
     return getPackageName(packageName,defaultPackage,packageNameOverrides);
   }
 
@@ -140,7 +176,10 @@ public abstract class BaseEnumGenerator {
   protected File getFile(File outputDir, Map<String, Object> context, String ext) {
     String packageName = (String) context.get("packageName");
     String fileName = (String) context.get("typeName");
+    return getFile(outputDir,packageName,fileName,ext);
+  }
 
+  protected File getFile(File outputDir, String packageName, String fileName, String ext) {
     File packageDir = new File(outputDir, packageName.replace('.', File.separatorChar));
     if (!packageDir.exists()) {
       packageDir.mkdirs();
@@ -164,6 +203,30 @@ public abstract class BaseEnumGenerator {
   protected class EnumGenerationException extends RuntimeException {
     public EnumGenerationException(Exception e) {
       super(e);
+    }
+  }
+
+  public static class SeriesHolder {
+    private String term;
+    private List<String> versions;
+
+    public SeriesHolder(String label, List<Term> versions, Function<String,String> packageNameMapper ) {
+      this.term = label;
+      this.versions = versions.stream()
+          .map(ConceptTerm.class::cast)
+          .map(v -> packageNameMapper.apply(v.getTermConceptPackage())
+              + "."
+              + v.getScheme().getPublicName()
+              + "."
+              + v.getTermConceptName())
+          .collect(Collectors.toList());
+    }
+
+    public String getTerm() {
+      return term;
+    }
+    public List<String> getVersions() {
+      return versions;
     }
   }
 }

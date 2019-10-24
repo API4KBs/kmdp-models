@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
 
 @Deprecated
 public abstract class MockTermsJsonAdapter {
@@ -60,5 +62,8 @@ public abstract class MockTermsJsonAdapter {
     }
 
     protected abstract Term[] getValues();
+
   }
+
+  protected abstract <U> Optional<U> resolveUUID(UUID uuid);
 }

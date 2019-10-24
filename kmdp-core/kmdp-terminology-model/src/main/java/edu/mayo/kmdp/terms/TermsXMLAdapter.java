@@ -16,7 +16,6 @@
 package edu.mayo.kmdp.terms;
 
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.Versionable;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.util.Util;
 import java.util.Arrays;

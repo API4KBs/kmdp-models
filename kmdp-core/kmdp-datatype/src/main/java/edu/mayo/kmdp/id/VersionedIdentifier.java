@@ -18,21 +18,57 @@ package edu.mayo.kmdp.id;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
-import edu.mayo.kmdp.util.Util;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Optional;
+import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
 
-public interface VersionedIdentifier extends Identifier {
+public interface VersionedIdentifier extends Identifier, Comparable<VersionedIdentifier> {
 
   String getVersion();
 
+  Date getEstablishedOn();
+
   @JsonIgnore
-  default Optional<Version> getSemanticVersion() {
-    return Util.isEmpty(getVersion())
-        ? Optional.empty()
-        : Optional.of(Version.valueOf(getVersion()));
+  default VersionTagType getVersioning() {
+    return VersionTagType.GENERIC;
   }
 
-  Date getEstablishedOn();
+  @Override
+  default int compareTo(VersionedIdentifier o) {
+    if (getVersioning() != null && getVersioning() == o.getVersioning()) {
+      switch (getVersioning()) {
+        case SEM_VER:
+          return compareAsSemVer(this, o);
+        case TIMESTAMP:
+          return compareAsDate(this, o);
+        case SEQUENTIAL:
+          return compareAsNumber(this,o);
+        case GENERIC:
+        default:
+      }
+    }
+    return getVersion().compareTo(o.getVersion());
+  }
+
+  default int compareAsNumber(VersionedIdentifier i, VersionedIdentifier o) {
+    return Integer.parseInt(i.getVersion()) - Integer.parseInt(o.getVersion());
+  }
+
+  default int compareAsDate(VersionedIdentifier i, VersionedIdentifier o) {
+    DateFormat sdf = DateFormat.getInstance();
+    try {
+      return sdf.parse(i.getVersion())
+          .compareTo(sdf.parse(o.getVersion()));
+    } catch (ParseException e) {
+      throw new UnsupportedOperationException("Unable to compare date-based version tags");
+    }
+  }
+
+  default int compareAsSemVer(VersionedIdentifier i, VersionedIdentifier o) {
+    return Version.valueOf(i.getVersion())
+        .compareTo(Version.valueOf(o.getVersion()));
+  }
 
 }

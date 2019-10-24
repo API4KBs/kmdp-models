@@ -22,7 +22,6 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initGenSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,11 +34,11 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
-import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -246,13 +245,13 @@ public class JaxbGenerationTest {
     deploy(src, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd");
     deploy(src, "/xsd/api4kp-catalog.xml");
 
-    SkosTerminologyAbstractor.ConceptGraph graph = doAbstract();
+    ConceptGraph graph = doAbstract();
     doGenerate(graph, opts, src);
 
 //		printSourceFile( new File( src.getAbsolutePath() + "/test/generator/v20180210/SCH1.xsd"), System.out );
 //		printSourceFile( new File( src.getAbsolutePath() + "/test/generator/v20180210/SCH1.java"), System.out );
 
-    showDirContent(folder);
+    //showDirContent(folder);
 
     applyJaxb(singletonList(new File(src.getAbsolutePath() + "/parent.xsd")),
         singletonList(new File(src.getAbsolutePath())),
@@ -261,14 +260,14 @@ public class JaxbGenerationTest {
 
     purge(gen);
 
-    showDirContent(folder);
+    //showDirContent(folder);
 
 //		printSourceFile( new File( src.getAbsolutePath() + "/org/tempuri/parent/Info.java"), System.out );
 //		printSourceFile( new File( src.getAbsolutePath() + "/org/tempuri/parent/ObjectFactory.java"), System.out );
 
     ensureSuccessCompile(src, gen, tgt);
 
-    showDirContent(folder);
+    //showDirContent(folder);
 
     return tgt;
   }
@@ -282,13 +281,13 @@ public class JaxbGenerationTest {
   }
 
 
-  private void doGenerate(SkosTerminologyAbstractor.ConceptGraph graph, EnumGenerationConfig opts,
+  private void doGenerate(ConceptGraph graph, EnumGenerationConfig opts,
       File tgt) {
     new JavaEnumTermsGenerator().generate(graph, opts, tgt);
     new XSDEnumTermsGenerator().generate(graph, opts, tgt);
   }
 
-  private SkosTerminologyAbstractor.ConceptGraph doAbstract() {
+  private ConceptGraph doAbstract() {
     try {
       OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
       OWLOntology o = owlOntologyManager.loadOntologyFromOntologyDocument(

@@ -30,6 +30,7 @@ public class HierarchySorter<K> {
     Map<K, Collection<K>> hierarchy = new HashMap<>(sortables.size());
     sortables.forEach(x ->
         hierarchy.put(x, sortables.stream()
+            .filter(y -> x != y)
             .filter(y -> hasAncestor(x, y, graph))
             .collect(Collectors.toList())));
     return sortFullHierarchy(hierarchy);

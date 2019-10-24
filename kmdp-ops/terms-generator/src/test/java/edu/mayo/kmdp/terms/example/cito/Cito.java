@@ -20,9 +20,9 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.toNamespace;
 
 import edu.mayo.kmdp.id.Identifier;
-import edu.mayo.kmdp.id.Series;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
+import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;

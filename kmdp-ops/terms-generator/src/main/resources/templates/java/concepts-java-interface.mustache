@@ -1,19 +1,23 @@
-package edu.mayo.kmdp.terms.example.sch1;
+package {{intfPackageName}};
 
 import edu.mayo.kmdp.terms.VersionableTerm;
 import java.net.URI;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
-public interface ISCH1 extends VersionableTerm<ISCH1> {
+public interface {{intfName}} extends VersionableTerm<{{intfName}}> {
 
-  String schemeName = "SCH1";
-  String schemeID = "0.0.0.0";
+  String schemeName = "{{conceptScheme.label}}";
+  String schemeID = "{{conceptSchemeID}}";
 
   URIIdentifier seriesUri = new URIIdentifier()
-      .withUri(URI.create("http://test/generator#concept_scheme1"));
+    .withUri( URI.create( "{{conceptScheme.id}}" ) );
 
   default URIIdentifier getSeriesUri() {
     return (URIIdentifier) seriesUri.clone();
   }
 
 }
+
+
+
+

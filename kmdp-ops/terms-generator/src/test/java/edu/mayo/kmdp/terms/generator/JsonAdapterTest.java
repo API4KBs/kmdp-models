@@ -22,12 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.mayo.kmdp.terms.example.SomeBean;
 import edu.mayo.kmdp.terms.example.sch1.SCH1Series;
 import edu.mayo.kmdp.util.JSonUtil;
-import edu.mayo.kmdp.util.JaxbUtil;
-import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
-import java.io.ByteArrayOutputStream;
-import java.util.Collections;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ObjectFactory;
 
 class JsonAdapterTest {
 

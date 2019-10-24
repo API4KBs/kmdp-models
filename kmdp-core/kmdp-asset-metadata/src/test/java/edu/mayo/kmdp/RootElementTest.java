@@ -34,6 +34,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
 public class RootElementTest {
 
@@ -46,7 +47,7 @@ public class RootElementTest {
             .withRef(br.getRef())
             .withTag("BusinessRuleAsset")
             .withLabel(br.getLabel())
-            .withNamespace(br.getNamespace()));
+            .withNamespace((NamespaceIdentifier) br.getNamespace()));
 
     Annotation rec = checkRoundTrip(anno);
     String ann = JaxbUtil.marshallToString(Collections.singleton(rec.getClass()),

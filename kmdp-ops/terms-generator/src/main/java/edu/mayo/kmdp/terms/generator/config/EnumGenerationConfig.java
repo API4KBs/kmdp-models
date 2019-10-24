@@ -74,9 +74,16 @@ public class EnumGenerationConfig extends
         false)),
     JSON_ADAPTER(Opt.of(
         "baseJsonAdapter",
-        "edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer",
+        "edu.mayo.kmdp.terms.TermsJsonAdapter.UUIDBasedDeserializer",
         "Base class that controls the JSON serialization of terminologies",
         String.class,
+        false)),
+    UUID_INDEX(Opt.of(
+        "indexByUUID",
+        "true",
+        "Uses UUID-based identifiers for indexing. "
+            + "Must be true when using UUIDBasedDeserializer as JSON Adapter.",
+        Boolean.class,
         false));
 
     private Opt opt;

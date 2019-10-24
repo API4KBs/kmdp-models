@@ -13,9 +13,6 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import static edu.mayo.kmdp.util.NameUtils.namespaceURIStringToPackage;
-import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
-import static edu.mayo.kmdp.util.Util.ensureUTF8;
 import static edu.mayo.kmdp.util.Util.isUUID;
 
 import edu.mayo.kmdp.id.Term;
@@ -23,15 +20,13 @@ import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
+import edu.mayo.kmdp.terms.generator.internal.ConceptTerm;
+import edu.mayo.kmdp.terms.generator.internal.MutableConceptScheme;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
-import edu.mayo.kmdp.terms.generator.util.TransitiveClosure;
-import edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme;
-import edu.mayo.kmdp.terms.impl.model.InternalTerm;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
-import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,7 +34,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -458,273 +452,8 @@ public class SkosTerminologyAbstractor {
   }
 
 
-  static class MutableConceptScheme extends AnonymousConceptScheme {
 
-    private Set<Term> concepts = new HashSet<>();
-    private Map<Term, Set<Term>> parents = new HashMap<>();
-    private Term top;
-    // set when creating a graph
-    private Map<Term, List<Term>> closure;
 
-    MutableConceptScheme(URI uri, URI version, String code, String label) {
-      super(code, label, uri, version);
-    }
-
-    void setTop(Term top) {
-      this.top = top;
-    }
-
-    @Override
-    public Optional<Term> getTopConcept() {
-      return Optional.ofNullable(top);
-    }
-
-    void addConcept(Term cd) {
-      this.concepts.add(cd);
-    }
-
-    void addParent(Term child, Term parent) {
-      if (!parents.containsKey(child)) {
-        parents.put(child, new HashSet<>());
-      }
-      parents.get(child).add(parent);
-    }
-
-    @Override
-    public Stream<Term> getConcepts() {
-      return concepts.stream();
-    }
-
-    Set<Term> getAncestors(Term cd) {
-      return parents.containsKey(cd) ? Collections.unmodifiableSet(parents.get(cd))
-          : Collections.emptySet();
-    }
-
-    Stream<Term> streamAncestors(Term cd) {
-      return getAncestors(cd).stream();
-    }
-
-    Map<Term, Set<Term>> getAncestorsMap() {
-      return new HashMap<>(parents);
-    }
-
-    Optional<Term> resolve(URI uri) {
-      return concepts.stream()
-          .filter(cd -> cd.getConceptId().equals(uri))
-          .findAny();
-    }
-
-    void setClosure(Map<Term, List<Term>> closure) {
-      this.closure = closure;
-    }
-
-    List<Term> getClosure(Term cd) {
-      return closure.containsKey(cd) ? Collections.unmodifiableList(closure.get(cd))
-          : Collections.emptyList();
-    }
-
-    MutableConceptScheme(MutableConceptScheme other) {
-      this(
-          other.getId(),
-          other.getVersionId(),
-          other.getTag(),
-          other.getLabel());
-
-      setTop(
-          other.getTopConcept()
-              .map(ConceptTerm.class::cast)
-              .map(c -> c.cloneInto(this))
-              .orElse(null));
-
-      other.getConcepts()
-          .map(ConceptTerm.class::cast)
-          .map(ct -> ct.cloneInto(this))
-          .map(ConceptTerm.class::cast)
-          .forEach(this::addConcept);
-
-      other.getAncestorsMap().forEach(
-          (trm, anc) -> anc.forEach(a -> {
-            Term child = this.getConcepts()
-                .filter(c -> c.equals(trm))
-                .findFirst()
-                .orElseThrow(IllegalStateException::new);
-            this.addParent(child, a);
-          }));
-
-      closure = new HashMap<>();
-    }
-
-    @Override
-    public String toString() {
-      return "MutableConceptScheme{" +
-          "label='" + label + '\'' +
-          ", tag='" + tag + '\'' +
-          '}';
-    }
-
-    @Override
-    public boolean equals(Object other) {
-      return other instanceof MutableConceptScheme &&
-          getId().equals(((MutableConceptScheme) other).getId());
-    }
-
-    @Override
-    public int hashCode() {
-      return getId().hashCode();
-    }
-
-    Optional<Term> tryGetConcept(URI conceptId) {
-      return getConcepts()
-          .filter(c -> c.getConceptId().equals(conceptId))
-          .findFirst();
-    }
-
-    Term getConcept(URI conceptId) {
-      return getConcepts()
-          .filter(c -> c.getConceptId().equals(conceptId))
-          .findFirst()
-          .orElseThrow(IllegalStateException::new);
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-      throw new UnsupportedOperationException(
-          "MutableConceptSchemes should only be used at compile time");
-    }
-
-    private void readObject(java.io.ObjectInputStream in)
-        throws IOException, ClassNotFoundException {
-      throw new UnsupportedOperationException(
-          "MutableConceptSchemes should only be used at compile time");
-    }
-  }
-
-  public static class ConceptGraph {
-
-    private Map<URI, ConceptScheme<Term>> conceptSchemes;
-    private Map<Term, Set<Term>> conceptHierarchy;
-    private Map<Term, List<Term>> closure;
-
-    public ConceptGraph(Map<URI, ConceptScheme<Term>> conceptSchemes,
-        Map<Term, Set<Term>> conceptsWithParents) {
-      this.conceptSchemes = new HashMap<>(conceptSchemes);
-      this.conceptHierarchy = new HashMap<>(conceptsWithParents);
-      this.closure = TransitiveClosure.closure(conceptHierarchy);
-      conceptSchemes.values().stream()
-          .filter(MutableConceptScheme.class::isInstance)
-          .map(MutableConceptScheme.class::cast)
-          .forEach(mcs -> mcs.setClosure(assign(closure, mcs)));
-    }
-
-    private Map<Term, List<Term>> assign(Map<Term, List<Term>> closure, MutableConceptScheme mcs) {
-      Map<Term, List<Term>> assignedClosure = new HashMap<>();
-      for (Entry<Term, List<Term>> entry : closure.entrySet()) {
-        Optional<Term> resolvedChild = mcs.tryGetConcept(entry.getKey().getConceptId());
-        resolvedChild.ifPresent(
-            term -> assignedClosure.put(
-                term,
-                entry.getValue().stream()
-                    // prefer local
-                    .map(p -> mcs.tryGetConcept(p.getConceptId()).orElse(p))
-                    .collect(Collectors.toList())));
-      }
-      return assignedClosure;
-    }
-
-    public Map<Term, Set<Term>> getConceptHierarchy() {
-      return conceptHierarchy;
-    }
-
-    List<Term> getConceptList(URI conceptSchemeURI) {
-      return linearize(conceptSchemes.get(conceptSchemeURI).getConcepts(),
-          conceptHierarchy);
-    }
-
-    private static List<Term> linearize(Stream<Term> concepts,
-        Map<Term, Set<Term>> graph) {
-      return new HierarchySorter<Term>().linearize(concepts.collect(Collectors.toSet()), graph);
-    }
-
-    public Collection<ConceptScheme<Term>> getConceptSchemes() {
-      return conceptSchemes.values();
-    }
-
-    Optional<ConceptScheme<Term>> getConceptScheme(URI schemeURI) {
-      return Optional.ofNullable(conceptSchemes.get(schemeURI));
-    }
-  }
-
-  public static class ConceptTerm extends InternalTerm {
-
-    private UUID internalConceptUUID;
-    private List<String> notations;
-
-    ConceptTerm(URI conceptURI, String code, String label, String comment, URI refUri,
-        ConceptScheme<Term> scheme, UUID conceptUUID, List<String> notations) {
-
-      super(conceptURI, code, label, ensureUTF8(comment), refUri, scheme);
-      this.internalConceptUUID = conceptUUID;
-      this.notations = new ArrayList<>(notations);
-    }
-
-    public ConceptTerm(ConceptTerm other) {
-      this(other.getConceptId(), other.getTag(), other.getLabel(), other.getComment(),
-          other.getRef(), other.getScheme(), other.getConceptUUID(), other.getNotations());
-    }
-
-    public String getTermConceptName() {
-      return edu.mayo.kmdp.util.NameUtils.getTermConceptName(tag, label);
-    }
-
-    public String getTermConceptPackage() {
-      return namespaceURIStringToPackage(removeTrailingPart(getScheme().getVersionId().toString()));
-    }
-
-    public String getTermConceptScheme() {
-      return getScheme().getPublicName();
-    }
-
-    @Override
-    public Term[] getAncestors() {
-      Set<Term> ancs = ((MutableConceptScheme) scheme).getAncestors(this);
-      return ancs.toArray(new Term[0]);
-    }
-
-    @Override
-    public Term[] getClosure() {
-      List<Term> closure = ((MutableConceptScheme) scheme).getClosure(this);
-      return closure.toArray(new Term[0]);
-    }
-
-    ConceptTerm cloneInto(ConceptScheme<Term> cs) {
-      return new ConceptTerm(getConceptId(), getTag(), getLabel(), getComment(), getRef(),
-          cs, getConceptUUID(), new ArrayList<>(getNotations()));
-    }
-
-    @Override
-    public UUID getConceptUUID() {
-      return internalConceptUUID;
-    }
-
-    List<String> getNotations() {
-      return notations;
-    }
-
-    @Override
-    public String toString() {
-      return label + '{' + tag + '}';
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      return object instanceof ConceptTerm && getConceptId()
-          .equals(((ConceptTerm) object).conceptId);
-    }
-
-    @Override
-    public int hashCode() {
-      return getConceptId().hashCode();
-    }
-  }
 
   private static ConceptGraph applyClosure(ConceptGraph graph, CLOSURE_MODE closureMode) {
     if (closureMode == CLOSURE_MODE.IMPORTS) {
@@ -734,7 +463,7 @@ public class SkosTerminologyAbstractor {
 
     // detect all cross-scheme dependencies
     Map<ConceptScheme<Term>, Set<ConceptScheme<Term>>> dependencies = new HashMap<>();
-    graph.conceptSchemes.values().stream()
+    graph.getConceptSchemes().stream()
         .map(MutableConceptScheme.class::cast)
         .forEach(cs -> cs.getConcepts()
             .flatMap(cs::streamAncestors)
@@ -751,7 +480,7 @@ public class SkosTerminologyAbstractor {
     // sort in case of transitive dependencies
     HierarchySorter<ConceptScheme<Term>> sorter = new HierarchySorter<>();
     List<ConceptScheme<Term>> sortedSchemes = sorter
-        .linearize(graph.conceptSchemes.values(), dependencies);
+        .linearize(graph.getConceptSchemes(), dependencies);
 
     List<MutableConceptScheme> clonedSchemes = sortedSchemes.stream()
         .map(MutableConceptScheme.class::cast)
@@ -783,7 +512,7 @@ public class SkosTerminologyAbstractor {
     clonedSchemes.forEach(src ->
         src.getAncestorsMap().forEach((trm, parents) -> {
           Set<Term> includedParents = parents.stream()
-              .filter(prn -> src.getConcepts().anyMatch(c -> c.equals(prn)))
+              .filter(prn -> src.getConcepts().anyMatch(c -> c.getConceptId().equals(prn.getConceptId())))
               .filter(prn -> !((ConceptTerm) prn).getScheme().equals(src))
               .collect(Collectors.toSet());
           parents.removeAll(includedParents);

@@ -7,6 +7,7 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 import edu.mayo.kmdp.id.Identifier;
 import edu.mayo.kmdp.id.ScopedIdentifier;
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.TermSeries;
@@ -47,6 +48,11 @@ public enum CitoSeries implements ICito, TermSeries<ICito> {
         .orElse(null);
   }
 
+  @Override
+  public VersionedIdentifier getVersionIdentifier() {
+    return getLatest().getVersionIdentifier();
+  }
+
 
 
 
@@ -77,6 +83,5 @@ public enum CitoSeries implements ICito, TermSeries<ICito> {
   public static Optional<ICito> resolveRef(final String refUri) {
     return resolveTerm(refUri, CitoSeries.values(), Term::getRef);
   }
-
 
 }

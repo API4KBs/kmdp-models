@@ -48,7 +48,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-public class TerminologyGeneratorPluginTest {
+class TerminologyGeneratorPluginTest extends AbstractPluginTest {
 
   @TempDir
   Path tmp;
@@ -73,7 +73,9 @@ public class TerminologyGeneratorPluginTest {
 
   @Test
   public void testPlugin() {
-    TermsGeneratorPlugin plugin = initPlugin(new File(genSource.getAbsolutePath() + "/xsd"));
+    TermsGeneratorPlugin plugin = initPlugin(
+        new File(genSource.getAbsolutePath() + "/xsd"),
+        Collections.singletonList(owlPath));
     plugin.setSourceCatalogPaths(
         Collections.singletonList(
             TerminologyGeneratorPluginTest.class.getResource("/test-catalog.xml").getPath()));
@@ -159,20 +161,5 @@ public class TerminologyGeneratorPluginTest {
         .map((model) -> model.write(baos));
 
     return baos.toByteArray();
-  }
-
-
-  private TermsGeneratorPlugin initPlugin(File genSrc) {
-    TermsGeneratorPlugin plugin = new TermsGeneratorPlugin();
-
-    plugin.setReason(false);
-    plugin.setJaxb(true);
-    plugin.setJsonAdapter(MockTermsJsonAdapter.class.getName());
-    plugin.setXmlAdapter(MockTermsXMLAdapter.class.getName());
-    plugin.setOutputDirectory(genSrc);
-    plugin.setOwlFiles(Collections.singletonList(owlPath));
-    plugin.setSourceCatalogPaths(Collections.singletonList("/test-catalog.xml"));
-
-    return plugin;
   }
 }

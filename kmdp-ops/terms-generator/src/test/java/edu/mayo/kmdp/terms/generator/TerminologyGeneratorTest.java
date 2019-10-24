@@ -18,7 +18,6 @@ package edu.mayo.kmdp.terms.generator;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,6 +31,8 @@ import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
+import edu.mayo.kmdp.terms.generator.internal.MutableConceptScheme;
 import edu.mayo.kmdp.terms.impl.model.InternalTerm;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -47,7 +48,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 public class TerminologyGeneratorTest {
 
-  private static SkosTerminologyAbstractor.ConceptGraph graph;
+  private static ConceptGraph graph;
 
   @TempDir
   public Path tmp;
@@ -104,7 +105,7 @@ public class TerminologyGeneratorTest {
     assertTrue(cd.isPresent());
 
     InternalTerm inner = (InternalTerm) cd.get();
-    SkosTerminologyAbstractor.MutableConceptScheme cs = (SkosTerminologyAbstractor.MutableConceptScheme) inner
+    MutableConceptScheme cs = (MutableConceptScheme) inner
         .getScheme();
     int n = cs.getAncestors(cd.get()).size();
     assertEquals(1, n);
@@ -127,7 +128,7 @@ public class TerminologyGeneratorTest {
               .with(EnumGenerationParams.PACKAGE_OVERRIDES,
                   "test.generator.v20180210=org.foo.test"),
           src);
-      showDirContent(folder);
+      //showDirContent(folder);
 
       ensureSuccessCompile(src, src, target);
 
@@ -161,7 +162,7 @@ public class TerminologyGeneratorTest {
               .with(EnumGenerationParams.JSON_ADAPTER, MockTermsJsonAdapter.class.getName())
               .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
           src);
-      showDirContent(folder);
+      //showDirContent(folder);
 
       ensureSuccessCompile(src, src, target);
 
@@ -176,7 +177,7 @@ public class TerminologyGeneratorTest {
   }
 
 
-  public static SkosTerminologyAbstractor.ConceptGraph doGenerate() {
+  public static ConceptGraph doGenerate() {
     try {
       OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
       OWLOntology o = owlOntologyManager.loadOntologyFromOntologyDocument(

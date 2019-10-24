@@ -182,6 +182,7 @@ public interface TermsJsonAdapter {
 
     protected abstract <U> Optional<U> resolveUUID(UUID uuid);
 
+    @Override
     protected String getKey() {
       return "conceptUUID";
     }

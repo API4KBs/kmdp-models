@@ -358,7 +358,10 @@ public class SkosGeneratorPlugin extends AbstractMojo {
 
       if (skosModel.isPresent()) {
         if (!getOutputDirectory().exists()) {
-          getOutputDirectory().mkdirs();
+          boolean success = getOutputDirectory().mkdirs();
+          if (!success) {
+            throw new IOException("Unable to create output folder " + getOutputDirectory());
+          }
         }
         File f = new File(getOutputDirectory()
             + File.separator

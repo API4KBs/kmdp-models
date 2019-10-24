@@ -21,13 +21,12 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
 import de.escalon.hypermedia.hydra.mapping.Expose;
 import edu.mayo.kmdp.id.Identifier;
-import edu.mayo.kmdp.id.Series;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
+import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.example.cito.ICito;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
-import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;

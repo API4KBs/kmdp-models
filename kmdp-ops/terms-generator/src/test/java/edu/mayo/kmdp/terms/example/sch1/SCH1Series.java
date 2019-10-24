@@ -22,6 +22,7 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 import edu.mayo.kmdp.id.Identifier;
 import edu.mayo.kmdp.id.ScopedIdentifier;
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.TermSeries;
@@ -99,6 +100,11 @@ public enum SCH1Series implements ISCH1, TermSeries<ISCH1> {
 
   public static Optional<ISCH1> resolveRef(final String refUri) {
     return resolveTerm(refUri, SCH1Series.values(), Term::getRef);
+  }
+
+  @Override
+  public VersionedIdentifier getVersionIdentifier() {
+    return getLatest().getVersionIdentifier();
   }
 
   public static class Adapter extends edu.mayo.kmdp.terms.TermsXMLAdapter {

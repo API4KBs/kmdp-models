@@ -19,17 +19,13 @@ package edu.mayo.kmdp.terms.example.sch1;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import de.escalon.hypermedia.hydra.mapping.Expose;
 import edu.mayo.kmdp.id.Identifier;
-import edu.mayo.kmdp.id.Series;
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.Versionable;
 import edu.mayo.kmdp.id.VersionedIdentifier;
+import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
-import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +40,7 @@ import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 *
 * */
 @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(SCH1.Adapter.class)
-public enum SCH1 implements ISCH1, Versionable {
+public enum SCH1 implements ISCH1 {
 
   @Expose("http://test/generator#specific_concept")
   Specific_Concept("6789",
@@ -87,7 +83,6 @@ public enum SCH1 implements ISCH1, Versionable {
 
   public static final Map<UUID, SCH1> index = indexByUUID(SCH1.values());
 
-
   private TermDescription description;
 
   public TermDescription getDescription() {
@@ -114,12 +109,12 @@ public enum SCH1 implements ISCH1, Versionable {
   }
 
   public static class Adapter extends edu.mayo.kmdp.terms.TermsXMLAdapter {
-    public static final edu.mayo.kmdp.terms.TermsXMLAdapter instance = new SCH1.Adapter();
+    public static final edu.mayo.kmdp.terms.TermsXMLAdapter instance = new Adapter();
     protected Term[] getValues() { return values(); }
   }
 
   public static class JsonAdapter extends edu.mayo.kmdp.terms.TermsJsonAdapter.UUIDBasedDeserializer {
-    public static final edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer instance = new SCH1.JsonAdapter();
+    public static final edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer instance = new JsonAdapter();
     protected Term[] getValues() { return values(); }
 
     @Override

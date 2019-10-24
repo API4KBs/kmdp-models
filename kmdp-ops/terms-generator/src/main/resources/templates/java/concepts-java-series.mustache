@@ -1,0 +1,102 @@
+package {{intfPackageName}};
+
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
+
+import edu.mayo.kmdp.id.Identifier;
+import edu.mayo.kmdp.id.ScopedIdentifier;
+import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.id.VersionedIdentifier;
+import edu.mayo.kmdp.terms.ConceptTerm;
+import edu.mayo.kmdp.terms.TermDescription;
+import edu.mayo.kmdp.terms.TermSeries;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+
+public enum {{seriesName}} implements {{intfName}}, TermSeries<{{intfName}}> {
+
+   {{#conceptSeries}}
+    {{term}}( {{#versions}} {{.}}  {{^-last}}, {{/-last}} {{/versions}} ) {{^-last}}, {{/-last}}
+   {{/conceptSeries}};
+
+  public static final Map<UUID, {{intfName}}> index = indexByUUID({{seriesName}}.values());
+
+  private List<{{intfName}}> versions;
+
+  {{seriesName}}({{intfName}}... versions) {
+    this.versions = Arrays.asList(versions);
+  }
+
+  public List<{{intfName}}> getVersions() {
+    return versions;
+  }
+
+  @Override
+  public TermDescription getDescription() {
+    return latest().map(ConceptTerm::getDescription)
+        .orElse(null);
+  }
+
+  @Override
+  public Identifier getNamespace() {
+    return latest().map(ScopedIdentifier::getNamespace)
+        .orElse(null);
+  }
+  
+  @Override
+  public VersionedIdentifier getVersionIdentifier() {
+    return getLatest().getVersionIdentifier();
+  }  
+  
+
+  public static Optional<{{intfName}}> resolve(final Term trm) {
+    return resolveId(trm.getConceptId());
+  }
+
+  public static Optional<{{intfName}}> resolve(final String tag) {
+    return resolveTag(tag);
+  }
+
+  public static Optional<{{intfName}}> resolveId(final String conceptId) {
+    return resolveId(URI.create(conceptId));
+  }
+
+  public static Optional<{{intfName}}> resolveTag(final String tag) {
+    return resolveTerm(tag, {{seriesName}}.values(), Term::getTag);
+  }
+
+  public static Optional<{{intfName}}> resolveUUID(final UUID conceptId) {
+    return Optional.of(index.get(conceptId));
+  }
+
+  public static Optional<{{intfName}}> resolveId(final URI conceptId) {
+    return resolveTerm(conceptId, {{seriesName}}.values(), Term::getConceptId);
+  }
+
+  public static Optional<{{intfName}}> resolveRef(final String refUri) {
+    return resolveTerm(refUri, {{seriesName}}.values(), Term::getRef);
+  }
+
+
+  public static class Adapter extends edu.mayo.kmdp.terms.TermsXMLAdapter {
+    public static final edu.mayo.kmdp.terms.TermsXMLAdapter instance = new {{seriesName}}.Adapter();
+    protected {{seriesName}}[] getValues() { return values(); }
+  }
+
+  public static class JsonAdapter extends edu.mayo.kmdp.terms.TermsJsonAdapter.UUIDBasedDeserializer {
+    public static final edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer instance = new {{seriesName}}.JsonAdapter();
+    protected Term[] getValues() { return values(); }
+
+    @Override
+    protected Optional<{{intfName}}> resolveUUID(UUID uuid) {
+      return {{seriesName}}.resolveUUID(uuid);
+    }
+  }
+}
+
+

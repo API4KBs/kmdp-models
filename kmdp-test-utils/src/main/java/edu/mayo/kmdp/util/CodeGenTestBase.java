@@ -77,6 +77,7 @@ public abstract class CodeGenTestBase {
 
     boolean success = true;
     for (Diagnostic diag : diagnostics) {
+      System.err.println(diag);
       if (logger.isWarnEnabled()) {
         logger.warn(String.format("%s : %s", diag.getKind(), diag));
       }
@@ -99,6 +100,7 @@ public abstract class CodeGenTestBase {
   public static void showDirContent(File file, int i, boolean enablePrintout) {
     if (enablePrintout) {
       String msg = String.format("%s : %s",tab(i),file.getName());
+      System.out.println(msg);
       logger.info(msg);
     }
     if (file.isDirectory()) {
