@@ -81,7 +81,7 @@ class TerminologySeriesPluginTest extends AbstractPluginTest {
       assertNotNull(seriesEnum);
       assertTrue(seriesEnum.isEnum());
 
-      assertEquals(3,seriesEnum.getEnumConstants().length);
+      assertEquals(4,seriesEnum.getEnumConstants().length);
 
     } catch (Exception e) {
       e.printStackTrace();

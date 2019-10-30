@@ -22,13 +22,14 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
-import edu.mayo.kmdp.terms.TermsJsonAdapter;
-import edu.mayo.kmdp.terms.TermsXMLAdapter;
+import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
-import edu.mayo.kmdp.terms.generator.internal.ConceptTerm;
+import edu.mayo.kmdp.terms.generator.internal.ConceptTermImpl;
 import edu.mayo.kmdp.terms.generator.internal.ConceptTermSeries;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.PropertiesUtil;
@@ -39,22 +40,30 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 
 public abstract class BaseEnumGenerator {
 
   protected static Map<String, Template> registry = new HashMap<>();
+
+  Map<ConceptScheme, Map<String, Object>> contextCache = new HashMap<>();
 
   static {
     prepareTemplates();
   }
 
   protected BaseEnumGenerator() {
+  }
+
+  protected BaseEnumGenerator(BaseEnumGenerator other) {
+    this.contextCache = new HashMap<>(other.contextCache);
   }
 
   private static void prepareTemplates() {
@@ -83,39 +92,49 @@ public abstract class BaseEnumGenerator {
       EnumGenerationConfig options,
       ConceptGraph graph) {
 
+    if (contextCache.containsKey(conceptScheme)) {
+      return contextCache.get(conceptScheme);
+    }
+
     Boolean jaxb = options.getTyped(EnumGenerationParams.WITH_JAXB);
     Boolean jsonld = options.getTyped(EnumGenerationParams.WITH_JSONLD);
     Boolean json = options.getTyped(EnumGenerationParams.WITH_JSON);
 
     String defaultPackage = options.getTyped(EnumGenerationParams.PACKAGE_NAME);
-    Properties overrides = PropertiesUtil.doParse(options.getTyped(EnumGenerationParams.PACKAGE_OVERRIDES));
+    Properties overrides = PropertiesUtil
+        .doParse(options.getTyped(EnumGenerationParams.PACKAGE_OVERRIDES));
 
     String className = conceptScheme.getPublicName();
     String seriesName = conceptScheme.getPublicName() + "Series";
     String interfaceName = conceptScheme.getPublicName();
-    String innerPackageName = getPackageName(conceptScheme.getVersionId(), defaultPackage, overrides);
+    String innerPackageName = getPackageName(conceptScheme.getVersionId(), defaultPackage,
+        overrides);
     String outerPackageName = getPackageName(conceptScheme.getId(), defaultPackage, overrides);
 
     if (interfaceName.equals(className) && outerPackageName.equals(innerPackageName)) {
       interfaceName = "I" + interfaceName;
     }
 
-
     Map<String, Object> context = new HashMap<>();
     context.put("conceptScheme", conceptScheme);
-    context.put("conceptSchemeID", NameUtils.getTrailingPart(conceptScheme.getId().toString()));
+    context.put("conceptSchemeTag", NameUtils.getTrailingPart(conceptScheme.getId().toString()));
     context.put("concepts", graph.getConceptList(conceptScheme));
+    context.put("schemeVersions", graph.getSchemeSeries(conceptScheme.getId()));
     context.put("conceptSeries",
         toSeries(graph.getConceptSeries(conceptScheme.getId()), defaultPackage, overrides));
+    context.put("publicationDate", DateTimeUtil.format(conceptScheme.getEstablishedOn()));
     context.put("typeName", className);
     context.put("seriesName", seriesName);
     context.put("intfName", interfaceName);
-    context.put("namespace", edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.getVersionId()));
+    context.put("seriesNamespace",
+        edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.getId()));
+    context.put("namespace",
+        edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.getVersionId()));
     context.put("packageName", innerPackageName);
     context.put("intfPackageName", outerPackageName);
-    context.put("overridePk", overridePk(defaultPackage,overrides));
+    context.put("overridePk", overridePk(defaultPackage, overrides));
     context.put("baseJsonAdapter", options.get(EnumGenerationParams.JSON_ADAPTER)
-        .orElse(TermsJsonAdapter.Deserializer.class.getName()));
+        .orElse(ConceptTermsJsonAdapter.class.getName()));
     context.put("baseXmlAdapter", options.get(EnumGenerationParams.XML_ADAPTER)
         .orElse(TermsXMLAdapter.class.getName()));
     context.put("implClassName",
@@ -125,6 +144,8 @@ public abstract class BaseEnumGenerator {
     context.put("jaxb", jaxb);
     context.put("jsonld", jsonld);
     context.put("json", json);
+
+    contextCache.put(conceptScheme, context);
 
     return context;
   }
@@ -210,10 +231,14 @@ public abstract class BaseEnumGenerator {
     private String term;
     private List<String> versions;
 
-    public SeriesHolder(String label, List<Term> versions, Function<String,String> packageNameMapper ) {
+    public SeriesHolder(String label, List<Term> versions, UnaryOperator<String> packageNameMapper ) {
       this.term = label;
       this.versions = versions.stream()
-          .map(ConceptTerm.class::cast)
+          .map(x -> Util.as(x, ConceptTermImpl.class))
+          .flatMap(Util::trimStream)
+          // Ensure latest version first
+          .sorted(Comparator.comparing(ConceptIdentifier::getNamespace).reversed())
+          //
           .map(v -> packageNameMapper.apply(v.getTermConceptPackage())
               + "."
               + v.getScheme().getPublicName()

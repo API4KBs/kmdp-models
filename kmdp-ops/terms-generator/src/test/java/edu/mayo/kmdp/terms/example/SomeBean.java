@@ -50,8 +50,9 @@ public class SomeBean {
 
   @XmlJavaTypeAdapter(value = SCH1Series.Adapter.class)
   @com.fasterxml.jackson.databind.annotation.JsonSerialize(
-      using = edu.mayo.kmdp.terms.TermsJsonAdapter.Serializer.class)
-  @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = SCH1Series.JsonAdapter.class)
+      using = SCH1Series.JsonSerializer.class)
+  @com.fasterxml.jackson.databind.annotation.JsonDeserialize(
+      using = SCH1Series.JsonDeserializer.class)
   private ISCH1 schone;
 
   @XmlTransient
@@ -92,21 +93,4 @@ public class SomeBean {
         '}';
   }
 
-  private class My implements Converter {
-
-    @Override
-    public Object convert(Object value) {
-      return null;
-    }
-
-    @Override
-    public JavaType getInputType(TypeFactory typeFactory) {
-      return null;
-    }
-
-    @Override
-    public JavaType getOutputType(TypeFactory typeFactory) {
-      return null;
-    }
-  }
 }

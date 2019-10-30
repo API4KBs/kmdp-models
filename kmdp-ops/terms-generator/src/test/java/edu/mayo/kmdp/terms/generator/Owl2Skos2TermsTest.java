@@ -57,7 +57,7 @@ public class Owl2Skos2TermsTest {
   public Path tmp;
 
   @Test
-  public void testOWLtoTerms() throws IOException {
+  public void testOWLtoTerms() {
     File folder = tmp.toFile();
 
     String owlPath = "/cito.rdf";

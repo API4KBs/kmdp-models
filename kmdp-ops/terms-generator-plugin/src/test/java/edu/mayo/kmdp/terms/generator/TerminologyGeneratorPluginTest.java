@@ -27,8 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
-import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.plugin.TermsGeneratorPlugin;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
@@ -40,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -85,7 +84,6 @@ class TerminologyGeneratorPluginTest extends AbstractPluginTest {
 
     ensureSuccessCompile(genSource, genSource, target);
 
-
     try {
       Class<?> info = getNamedClass("org.tempuri.test.Info", target);
       assertNotNull(info);
@@ -95,11 +93,19 @@ class TerminologyGeneratorPluginTest extends AbstractPluginTest {
       Class<?> cito = fld.getType();
 
       assertNotNull(cito);
-      assertEquals("Cito", cito.getSimpleName());
-      assertTrue(cito.isEnum());
+      assertEquals("ICito", cito.getSimpleName());
+      assertTrue(cito.isInterface());
 
-      assertEquals(44, cito.getEnumConstants().length);
+      Method setter = info.getMethod("setFoo",cito);
+      assertNotNull(setter);
 
+      Class<?> citoImpl = getNamedClass("terms.test.org.cito.Cito", target);
+      assertNotNull(citoImpl);
+      assertTrue(citoImpl.isEnum());
+      Class[] intfs = citoImpl.getInterfaces();
+      assertEquals(1,intfs.length);
+
+      assertEquals(44, citoImpl.getEnumConstants().length);
     } catch (Exception e) {
       e.printStackTrace();
       fail(e.getMessage());

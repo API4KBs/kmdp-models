@@ -90,22 +90,6 @@
     
 
 
-    <!-- http://test/generator#NestedSpecificConcept -->
-
-    <owl:Class rdf:about="http://test/generator#NestedSpecificConcept">
-        <rdfs:subClassOf rdf:resource="http://test/generator#SpecificConcept"/>
-    </owl:Class>
-    
-
-
-    <!-- http://test/generator#SpecificConcept -->
-
-    <owl:Class rdf:about="http://test/generator#SpecificConcept">
-        <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-    </owl:Class>
-    
-
-
     <!-- http://www.w3.org/2004/02/skos/core#Concept -->
 
     <owl:Class rdf:about="http://www.w3.org/2004/02/skos/core#Concept"/>
@@ -142,7 +126,7 @@
     <!-- http://test/generator#nested_specific_concept -->
 
     <owl:NamedIndividual rdf:about="http://test/generator#nested_specific_concept">
-        <rdf:type rdf:resource="http://test/generator#NestedSpecificConcept"/>
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:broader rdf:resource="http://test/generator#specific_concept"/>
         <skos:inScheme rdf:resource="http://test/generator#concept_scheme1"/>
         <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">12345</skos:notation>
@@ -153,7 +137,7 @@
     <!-- http://test/generator#specific_concept -->
 
     <owl:NamedIndividual rdf:about="http://test/generator#specific_concept">
-        <rdf:type rdf:resource="http://test/generator#SpecificConcept"/>
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:broader rdf:resource="http://www.w3.org/2004/02/skos/core#topConcept"/>
         <skos:inScheme rdf:resource="http://test/generator#concept_scheme1"/>
         <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">6789</skos:notation>
@@ -164,7 +148,7 @@
     <!-- http://test/generator#sub_sub_concept -->
 
     <owl:NamedIndividual rdf:about="http://test/generator#sub_sub_concept">
-        <rdf:type rdf:resource="http://test/generator#NestedSpecificConcept"/>
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:broader rdf:resource="http://test/generator#nested_specific_concept"/>
         <skos:inScheme rdf:resource="http://test/generator#concept_scheme1"/>
         <skos:notation>sub_sub</skos:notation>

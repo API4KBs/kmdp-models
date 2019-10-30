@@ -18,10 +18,9 @@ package edu.mayo.kmdp.id;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import java.util.Date;
+import java.util.Optional;
 import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
 
 public interface VersionedIdentifier extends Identifier, Comparable<VersionedIdentifier> {
@@ -57,13 +56,7 @@ public interface VersionedIdentifier extends Identifier, Comparable<VersionedIde
   }
 
   default int compareAsDate(VersionedIdentifier i, VersionedIdentifier o) {
-    DateFormat sdf = DateFormat.getInstance();
-    try {
-      return sdf.parse(i.getVersion())
-          .compareTo(sdf.parse(o.getVersion()));
-    } catch (ParseException e) {
-      throw new UnsupportedOperationException("Unable to compare date-based version tags");
-    }
+    return i.getEstablishedOn().compareTo(o.getEstablishedOn());
   }
 
   default int compareAsSemVer(VersionedIdentifier i, VersionedIdentifier o) {

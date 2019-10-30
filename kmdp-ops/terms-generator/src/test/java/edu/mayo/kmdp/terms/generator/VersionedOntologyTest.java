@@ -17,6 +17,7 @@ package edu.mayo.kmdp.terms.generator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
@@ -28,10 +29,14 @@ import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
+import edu.mayo.kmdp.util.DateTimeUtil;
+import edu.mayo.kmdp.util.URIUtil;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -82,7 +87,6 @@ public class VersionedOntologyTest {
   @Test
   public void testOWLtoTerms() {
 
-    String owlPath = "/version.rdf";
     String entityURI = "http://org.test/labelsTest#Parent";
     String targetNS = "http://test.skos.foo/Test";
 
@@ -105,12 +109,29 @@ public class VersionedOntologyTest {
 
     ConceptGraph graph = new SkosTerminologyAbstractor()
         .traverse(skosOntology.get(), new SkosAbstractionConfig()
+            .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/(.*)/.*$")
             .with(SkosAbstractionParameters.REASON, true));
 
     Collection<ConceptScheme<Term>> schemes = graph.getConceptSchemes();
     assertEquals(1, schemes.size());
     schemes.forEach((s) -> assertNotNull(s.getVersionId()));
 
+    ConceptScheme<Term> scheme = schemes.iterator().next();
+    String versionTag = scheme.getVersion();
+    assertEquals("20190108", versionTag);
+
+    assertEquals("2019-01-08", DateTimeUtil.format(scheme.getEstablishedOn()));
+  }
+
+  @Test
+  public void testVersionTagPattern() {
+    String versionPattern = ".*/(.*)/$";
+    URI uri = URI.create("https://o.m.e/t/Stuff/SNAPSHOT/#123");
+    uri = URIUtil.normalizeURI(uri);
+    Matcher m = Pattern.compile(versionPattern).matcher(uri.toString());
+    assertTrue(m.matches());
+    assertEquals(1,m.groupCount());
+    assertEquals("SNAPSHOT",m.group(1));
   }
 
 }

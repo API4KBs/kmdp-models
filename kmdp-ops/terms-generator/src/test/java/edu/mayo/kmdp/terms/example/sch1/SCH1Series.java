@@ -20,12 +20,14 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
 import edu.mayo.kmdp.id.Identifier;
-import edu.mayo.kmdp.id.ScopedIdentifier;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
+import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.TermSeries;
+import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.TermsXMLAdapter;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +39,9 @@ import java.util.UUID;
 	Example of generated 'terminology' class
 *
 * */
-public enum SCH1Series implements ISCH1, TermSeries<ISCH1> {
+@com.fasterxml.jackson.databind.annotation.JsonSerialize( using = SCH1Series.JsonSerializer.class )
+@com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = SCH1Series.JsonDeserializer.class )
+public enum SCH1Series implements ISCH1, TermSeries<ISCH1,SCH1Series> {
 
   Specific_Concept(SCH1.Specific_Concept,SCH1Old.Specific_Concept),
   Nested_Specific_Concept(SCH1.Nested_Specific_Concept),
@@ -67,8 +71,7 @@ public enum SCH1Series implements ISCH1, TermSeries<ISCH1> {
 
   @Override
   public Identifier getNamespace() {
-    return latest().map(ScopedIdentifier::getNamespace)
-        .orElse(null);
+    return ISCH1.seriesNamespace;
   }
 
 
@@ -107,20 +110,36 @@ public enum SCH1Series implements ISCH1, TermSeries<ISCH1> {
     return getLatest().getVersionIdentifier();
   }
 
-  public static class Adapter extends edu.mayo.kmdp.terms.TermsXMLAdapter {
-    public static final edu.mayo.kmdp.terms.TermsXMLAdapter instance = new SCH1Series.Adapter();
+  @Override
+  public SCH1Series asEnum() {
+    return this;
+  }
+
+  @Override
+  public Series<ISCH1> asSeries() {
+    return this;
+  }
+
+  public static class Adapter extends TermsXMLAdapter {
+    public static final TermsXMLAdapter instance = new SCH1Series.Adapter();
     protected SCH1Series[] getValues() { return values(); }
   }
 
-  public static class JsonAdapter extends edu.mayo.kmdp.terms.TermsJsonAdapter.UUIDBasedDeserializer {
-    public static final edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer instance = new SCH1Series.JsonAdapter();
-    protected Term[] getValues() { return values(); }
 
+  public static class JsonSerializer extends ConceptTermsJsonAdapter.Serializer {
+
+  }
+
+  public static class JsonDeserializer extends ConceptTermsJsonAdapter.Deserializer {
+    protected Term[] getValues() {
+      return values();
+    }
     @Override
     protected Optional<ISCH1> resolveUUID(UUID uuid) {
       return SCH1Series.resolveUUID(uuid);
     }
   }
+
 }
 
 

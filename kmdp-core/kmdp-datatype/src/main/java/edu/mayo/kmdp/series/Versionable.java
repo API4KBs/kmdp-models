@@ -3,7 +3,7 @@ package edu.mayo.kmdp.series;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import java.util.Comparator;
 
-public interface Versionable<T extends Versionable<T>> extends Cloneable {
+public interface Versionable<T extends Versionable<T>> {
 
   default void dub(VersionedIdentifier identifier) {
     if (getVersionIdentifier() != null) {

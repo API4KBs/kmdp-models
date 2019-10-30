@@ -9,7 +9,7 @@
      xmlns:skos="http://www.w3.org/2004/02/skos/core#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
     <owl:Ontology rdf:about="http://test/generator#">
-        <owl:versionIRI rdf:resource="http://test/generator/v20191201"/>
+        <owl:versionIRI rdf:resource="http://test/generator/v20190605"/>
     </owl:Ontology>
     
 

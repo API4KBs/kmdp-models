@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.terms.generator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -43,7 +44,7 @@ class XMLAdapterTest {
   @Test
   void testXMLSerializationWithLatest() {
     SomeBean bean = new SomeBean();
-    bean.setSchone(SCH1Series.Sub_Sub_Concept);
+    bean.setSchone(SCH1Series.Sub_Sub_Concept.getLatest());
 
     String xml = marshall(bean);
     assertTrue(xml.contains("ref=\"http://test/generator#sub_sub_concept\""));
@@ -67,10 +68,14 @@ class XMLAdapterTest {
     SomeBean bean = new SomeBean();
 
     bean.setSchone(SCH1Series.Specific_Concept);
+    String xml0 = marshall(bean);
+    assertFalse(xml0.contains("version=\"v01\""));
+
+    bean.setSchone(SCH1Series.Specific_Concept.getLatest());
     String xml1 = marshall(bean);
     assertTrue(xml1.contains("version=\"v01\""));
 
-    bean.setSchone(SCH1Series.Deprecated_Concept);
+    bean.setSchone(SCH1Series.Deprecated_Concept.getLatest());
     String xml2 = marshall(bean);
     assertTrue(xml2.contains("version=\"v00_Ancient\""));
 

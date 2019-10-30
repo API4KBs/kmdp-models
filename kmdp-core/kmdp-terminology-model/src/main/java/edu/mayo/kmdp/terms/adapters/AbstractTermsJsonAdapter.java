@@ -1,21 +1,4 @@
-/**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package edu.mayo.kmdp.terms;
-
-import static edu.mayo.kmdp.util.Util.ensureUUID;
+package edu.mayo.kmdp.terms.adapters;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -28,6 +11,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.TermSeries;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.IOException;
@@ -37,51 +21,27 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+public abstract class AbstractTermsJsonAdapter {
 
-public interface TermsJsonAdapter {
+  static final Logger logger = LoggerFactory.getLogger(AbstractTermsJsonAdapter.class);
 
-  class SimpleSerializer extends JsonSerializer<Term> {
-    @Override
-    public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
-        throws IOException {
-      gen.writeString(v != null ? v.getTag() : null);
-    }
+  protected AbstractTermsJsonAdapter() {
   }
 
-  class UniversalSerializer extends JsonSerializer<Term> {
+  public abstract static class AbstractJsonSerializer<T extends Term> extends JsonSerializer<T> {
     @Override
-    public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
-        throws IOException {
-      gen.writeString(v != null ? v.getConceptUUID().toString() : null);
-    }
-  }
-
-
-  class KeySerializer extends JsonSerializer<Term> {
-
-    @Override
-    public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
-        throws IOException {
-      gen.writeFieldName(v.getTag());
-    }
-  }
-
-  class Serializer extends JsonSerializer<Term> {
-
-    @Override
-    public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
+    public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
       gen.writeObject(v.asConcept());
     }
   }
 
-  abstract class Deserializer extends JsonDeserializer<Term> {
 
-    public static final Logger logger = LoggerFactory.getLogger(Deserializer.class);
+  public abstract static class AbstractJsonDeserializer<T extends Term> extends JsonDeserializer<T> {
     private static final String DEFAULT_KEY = "tag";
 
     @Override
-    public Term deserialize(JsonParser jp, DeserializationContext ctxt)
+    public T deserialize(JsonParser jp, DeserializationContext ctxt)
         throws IOException {
       TreeNode t = jp.readValueAsTree();
       if (t == null || t.isMissingNode()) {
@@ -95,18 +55,16 @@ public interface TermsJsonAdapter {
         logger.warn("Unable to resolve concept {}", t);
       }
 
-      Optional<Term> resolved = tagNode.flatMap(this::resolve);
+      Optional<T> resolved = tagNode.flatMap(this::resolve);
       if (tagNode.isPresent() && !resolved.isPresent()) {
         logger.warn("Unable to resolve concept ID {}", tagNode.get());
       }
 
-      Term resolvedTerm = resolved.orElse(null);
-      if (resolvedTerm instanceof TermSeries<?>) {
+      T resolvedTerm = resolved.orElse(null);
+      if (resolvedTerm instanceof TermSeries<?,?>) {
         String versionTag = getVersionNode(t).orElse(null);
         if (versionTag != null) {
-          resolvedTerm = ((TermSeries<?>) resolvedTerm).getVersion(versionTag).orElse(null);
-        } else {
-          resolvedTerm = ((TermSeries<?>) resolvedTerm).getLatest();
+          resolvedTerm = (T) ((TermSeries<?,?>) resolvedTerm).getVersion(versionTag).orElse(null);
         }
       }
       return resolvedTerm;
@@ -147,9 +105,13 @@ public interface TermsJsonAdapter {
       }
     }
 
-    protected abstract Term[] getValues();
+    protected abstract T[] getValues();
 
-    protected Optional<Term> resolve(String tag) {
+    protected Optional<T> resolveUUID(UUID uuid) {
+      return resolve(uuid.toString());
+    }
+
+    protected Optional<T> resolve(String tag) {
       if (Util.isEmpty(tag)) {
         return Optional.empty();
       }
@@ -171,22 +133,5 @@ public interface TermsJsonAdapter {
     }
 
   }
-
-  abstract class UUIDBasedDeserializer extends Deserializer {
-    @Override
-    protected Optional<Term> resolve(String tag) {
-      return ensureUUID(tag)
-          .flatMap(this::resolveUUID)
-          .map(Term.class::cast);
-    }
-
-    protected abstract <U> Optional<U> resolveUUID(UUID uuid);
-
-    @Override
-    protected String getKey() {
-      return "conceptUUID";
-    }
-  }
-
 
 }

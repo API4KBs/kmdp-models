@@ -26,13 +26,11 @@ import edu.mayo.kmdp.metadata.surrogate.Derivative;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JenaUtil;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.rel.citationreltype._2018_02_16.BibliographicCitationType;
-import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationType;
-import java.io.ByteArrayOutputStream;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
+import edu.mayo.ontology.taxonomies.kao.rel.citationreltype.BibliographicCitationTypeSeries;
+import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 //import org.springframework.hateoas.Link;
@@ -56,64 +54,44 @@ public class MetadataJSonTest {
   }
 
   @Test
-  @Disabled("Role of HATEOAS not yet fully evaluated")
-  void testSerializationWithHateoas() {
+  void testSerialization() {
     KnowledgeAsset ks = new KnowledgeAsset()
 
         .withAssetId(uri("http://foo.bar", "234"))
 
-        .withFormalCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
+        .withFormalCategory(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines.getLatest())
 
         .withDescription("This is a test")
 
         .withRelated(new Derivative()
-                .withRel(DerivationType.Abdridgement_Of)
+                .withRel(DerivationTypeSeries.Abdridgement_Of)
                 .withTgt(new ComputableKnowledgeArtifact()
                     .withArtifactId(uri("http://foo.bar/234"))),
             new Derivative()
-                .withRel(DerivationType.Derived_From)
+                .withRel(DerivationTypeSeries.Derived_From)
                 .withTgt(new KnowledgeAsset()
                     .withAssetId(uri("http://foo.bar/234"))))
         .withCitations(
             new Citation()
-                .withRel(BibliographicCitationType.Cites));
+                .withRel(BibliographicCitationTypeSeries.Cites));
     assertNotNull(ks);
 
-//    Resource<KnowledgeAsset> axx = new Resource<>(ks);
-//    axx.add(new Link("http://foo.bax").withRel("goto")
-//        .withHref("http://www.google.it.yourself.com")
-//        .withTitle("What next")
-//        .withType("http://my/onto/type/this_or_that_operation"));
-
-//    String jsonTree = toJsonLD(ks);
-//    System.out.println(jsonTree);
-//
-//		JenaUtil.toSystemOut( toTriples( jsonTree ) );
-
+    assertNotNull(toJson(ks));
   }
 
-  private String toJsonLD(Object x) {
-    assertNotNull(x);
-
-    Optional<ByteArrayOutputStream> baos = JSonUtil.writeJsonLD(x);
-    assertTrue(baos.isPresent());
-    Optional<?> y = JSonUtil.readJson(baos.get().toByteArray(), x.getClass());
-    assertTrue(y.isPresent());
-    assertEquals(x, y.get());
-
-    return new String(baos.get().toByteArray());
-  }
 
   private String toJson(Object x) {
     assertNotNull(x);
 
-    Optional<ByteArrayOutputStream> baos = JSonUtil.writeJson(x);
-    assertTrue(baos.isPresent());
-    Optional<?> y = JSonUtil.readJson(baos.get().toByteArray(), x.getClass());
+    String json = JSonUtil.writeJsonAsString(x)
+        .orElse("");
+
+    Optional<?> y = JSonUtil.readJson(json, x.getClass());
     assertTrue(y.isPresent());
+
     assertEquals(x, y.get());
 
-    return new String(baos.get().toByteArray());
+    return json;
   }
 
   private Model toTriples(String json) {

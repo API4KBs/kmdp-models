@@ -25,6 +25,9 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
+import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.TermsXMLAdapter;
+import edu.mayo.kmdp.terms.adapters.UUIDTermsJsonAdapter;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
 import java.net.URI;
 import java.util.Arrays;
@@ -69,6 +72,7 @@ public enum Cito implements ICito {
       .collect(Collectors.toConcurrentMap(ConceptTerm::getConceptUUID, Function.identity()));
 
   private TermDescription description;
+  private CitoSeries series;
 
   public TermDescription getDescription() {
     return description;
@@ -93,17 +97,36 @@ public enum Cito implements ICito {
     return namespace;
   }
 
-  public static class Adapter extends edu.mayo.kmdp.terms.TermsXMLAdapter {
-    public static final edu.mayo.kmdp.terms.TermsXMLAdapter instance = new Adapter();
+  @Override
+  public CitoSeries asEnum() {
+    return toSeries();
+  }
+
+  @Override
+  public Series<ICito> asSeries() {
+    return toSeries();
+  }
+
+  private CitoSeries toSeries() {
+    if (series == null) {
+      series = (CitoSeries) CitoSeries.resolveUUID(this.getConceptUUID())
+          .orElseThrow(IllegalStateException::new);
+    }
+    return series;
+  }
+
+  public static class Adapter extends TermsXMLAdapter {
+    public static final TermsXMLAdapter instance = new Adapter();
     protected Term[] getValues() { return values(); }
   }
 
-  public static class JsonAdapter extends edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer {
-    public static final edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer instance = new JsonAdapter();
-    protected Term[] getValues() { return values(); }
+  public static class JsonSerializer extends UUIDTermsJsonAdapter.Serializer { }
+
+  public static class JsonDeserializer extends ConceptTermsJsonAdapter.Deserializer {
+    protected Term[] getValues() {
+      return values();
+    }
   }
-
-
 
   public static Optional<Cito> resolve(final Term trm) {
     return resolveId(trm.getConceptId()); //TODO

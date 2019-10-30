@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.terms;
+package edu.mayo.kmdp.terms.adapters;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import edu.mayo.kmdp.terms.TermSeries;
 import edu.mayo.kmdp.util.Util;
 import java.util.Arrays;
 import java.util.Optional;
@@ -27,7 +28,10 @@ public abstract class TermsXMLAdapter extends
 
   @Override
   public Term unmarshal(org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier v) {
-    return DatatypeHelper.resolveTerm(v.getTag(),getValues(v.getNamespace()),Term::getTag)
+    return DatatypeHelper.resolveTerm(
+        v.getTag(),
+        v.getNamespace().getVersion() != null ? getValuesForVersion(v.getNamespace()) : getValues(),
+        Term::getTag)
         .orElse(null);
   }
 
@@ -38,7 +42,7 @@ public abstract class TermsXMLAdapter extends
 
   protected abstract Term[] getValues();
 
-  protected Term[] getValues( final NamespaceIdentifier identifier ) {
+  protected Term[] getValuesForVersion( final NamespaceIdentifier identifier ) {
     return Arrays.stream(getValues())
         .map(x -> getVersion(x,identifier.getVersion()))
         .flatMap(Util::trimStream)
@@ -47,7 +51,7 @@ public abstract class TermsXMLAdapter extends
 
   private Optional<? extends Term> getVersion(Term x, String version) {
     return x instanceof TermSeries
-        ? ((TermSeries<?>) x).getVersion(version)
+        ? ((TermSeries<?,?>) x).getVersion(version)
         : Optional.of(x);
   }
 

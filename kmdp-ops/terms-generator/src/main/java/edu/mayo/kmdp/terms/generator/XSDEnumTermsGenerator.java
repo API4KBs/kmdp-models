@@ -26,6 +26,14 @@ import java.util.Map;
 
 public class XSDEnumTermsGenerator extends BaseEnumGenerator {
 
+  public XSDEnumTermsGenerator() {
+    super();
+  }
+
+  public XSDEnumTermsGenerator(BaseEnumGenerator other) {
+    super(other);
+  }
+
   public void generate(ConceptGraph conceptGraph,
       EnumGenerationConfig options,
       File outputDir) {

@@ -51,7 +51,7 @@ public class JSONLDSerializationTest {
     assertTrue(model.isPresent());
 
     System.out.println(JenaUtil.asString(model.get()));
-    assertEquals(17, (int) JenaUtil.sizeOf(model.get()));
+    assertEquals(34, (int) JenaUtil.sizeOf(model.get()));
 
 
   }

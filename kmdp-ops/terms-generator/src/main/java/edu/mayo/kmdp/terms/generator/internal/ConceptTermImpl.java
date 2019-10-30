@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class ConceptTerm extends InternalTerm {
+public class ConceptTermImpl extends InternalTerm {
 
   private UUID internalConceptUUID;
   private List<String> notations;
 
-  public ConceptTerm(URI conceptURI, String code, String label, String comment, URI refUri,
+  public ConceptTermImpl(URI conceptURI, String code, String label, String comment, URI refUri,
       ConceptScheme<Term> scheme, UUID conceptUUID, List<String> notations) {
 
     super(conceptURI, code, label, ensureUTF8(comment), refUri, scheme);
@@ -26,7 +26,7 @@ public class ConceptTerm extends InternalTerm {
     this.notations = new ArrayList<>(notations);
   }
 
-  public ConceptTerm(ConceptTerm other) {
+  public ConceptTermImpl(ConceptTermImpl other) {
     this(other.getConceptId(), other.getTag(), other.getLabel(), other.getComment(),
         other.getRef(), other.getScheme(), other.getConceptUUID(), other.getNotations());
   }
@@ -55,8 +55,8 @@ public class ConceptTerm extends InternalTerm {
     return closure.toArray(new Term[0]);
   }
 
-  public ConceptTerm cloneInto(ConceptScheme<Term> cs) {
-    return new ConceptTerm(getConceptId(), getTag(), getLabel(), getComment(), getRef(),
+  public ConceptTermImpl cloneInto(ConceptScheme<Term> cs) {
+    return new ConceptTermImpl(getConceptId(), getTag(), getLabel(), getComment(), getRef(),
         cs, getConceptUUID(), new ArrayList<>(getNotations()));
   }
 
@@ -76,9 +76,9 @@ public class ConceptTerm extends InternalTerm {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof ConceptTerm
-        && getConceptId().equals(((ConceptTerm) object).getConceptId())
-        && getNamespace().equals(((ConceptTerm) object).getNamespace());
+    return object instanceof ConceptTermImpl
+        && getConceptId().equals(((ConceptTermImpl) object).getConceptId())
+        && getNamespace().equals(((ConceptTermImpl) object).getNamespace());
   }
 
   @Override

@@ -11,12 +11,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.id.SemVerIdentifier;
 import edu.mayo.kmdp.id.VersionedIdentifier;
-import edu.mayo.kmdp.series.SemVerSeries;
-import edu.mayo.kmdp.series.SemVersionable;
-import edu.mayo.kmdp.series.Series;
-import edu.mayo.kmdp.series.Versionable;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -74,7 +71,7 @@ class SeriesTest {
   void testAddNewVersion() {
     PersonSnapshot ps = p.evolve(18,
         Version.valueOf("0.0.0-SNAPSHOT"),
-        toDate("2001-01-1"));
+        toDate("2001-01-01"));
 
     assertNotNull(ps);
     assertNotSame(ps, p.getLatest());
@@ -89,7 +86,7 @@ class SeriesTest {
 
     p.evolve(22,
         Version.valueOf("0.0.0-a2"),
-        toDate("2005-01-1"));
+        toDate("2005-01-01"));
 
     assertFalse(p.asOf(toDate("1999-01-01")).isPresent());
 
@@ -209,12 +206,7 @@ class SeriesTest {
 
 
   private Date toDate(String s) {
-    try {
-      return new SimpleDateFormat("yyyy-MM-dd").parse(s);
-    } catch (ParseException e) {
-      fail(e.getMessage());
-      return null;
-    }
+    return DateTimeUtil.parseDate(s);
   }
 
 }

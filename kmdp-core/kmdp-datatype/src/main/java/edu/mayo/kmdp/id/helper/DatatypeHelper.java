@@ -22,13 +22,16 @@ import static edu.mayo.kmdp.util.Util.ensureUUIDFormat;
 import edu.mayo.kmdp.id.Identifier;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
+import edu.mayo.kmdp.id.adapter.URIId;
 import edu.mayo.kmdp.registry.Registry;
+import edu.mayo.kmdp.util.DateTimeUtil;
+import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.kmdp.util.adapters.DateAdapter;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,14 +74,15 @@ public class DatatypeHelper {
   }
 
   public static ConceptIdentifier trm(final String termUri) {
-    return trm(termUri,null,termUri);
+    return trm(termUri, null, termUri);
   }
 
   public static ConceptIdentifier trm(final String termUri, final String label) {
-    return trm(termUri,label,termUri);
+    return trm(termUri, label, termUri);
   }
 
-  public static ConceptIdentifier trm(final String termUri, final String label, final String refUri) {
+  public static ConceptIdentifier trm(final String termUri, final String label,
+      final String refUri) {
     URI u = ensureResolved(termUri);
     String l = ensureLabel(label, u);
     URI r = Util.isEmpty(refUri) ? u : ensureResolved(refUri);
@@ -142,7 +146,7 @@ public class DatatypeHelper {
     if (tag.matches("\\d+")) {
       return VersionTagType.SEQUENTIAL;
     }
-    if (DateAdapter.instance().isDate(tag)) {
+    if (DateTimeUtil.isDate(tag)) {
       return VersionTagType.TIMESTAMP;
     }
     Matcher matcher = SEMVER_RX.matcher(tag);
@@ -162,10 +166,17 @@ public class DatatypeHelper {
   }
 
   public static String versionOf(URI versionedIdentifier) {
+    // TODO fixme...
+    return versionOf(new URIIdentifier().withUri(versionedIdentifier));
+  }
+
+  public static String versionOf(URIId versionedIdentifier) {
     if (versionedIdentifier == null) {
       return null;
     }
-    String idStr = versionedIdentifier.toString();
+    String idStr = versionedIdentifier.getVersionId() != null
+        ? versionedIdentifier.getVersionId().toString()
+        : versionedIdentifier.getUri().toString();
 
     if (idStr.startsWith(BASE_UUID_URN)) {
       int start = BASE_UUID_URN.length();
@@ -175,8 +186,19 @@ public class DatatypeHelper {
         return idStr.substring(end + 1);
       }
     }
+
+    String ver = null;
+    VersionedIdentifier vid = toVersionIdentifier(versionedIdentifier.getVersionId());
+    if (vid != null) {
+      ver = vid.getVersion();
+    }
     // still open for improvement...
-    return toVersionIdentifier(versionedIdentifier).getVersion();
+    if (ver == null) {
+      ver = NameUtils.strip(versionedIdentifier.getUri().toString(),
+          versionedIdentifier.getVersionId().toString(),
+          '/','#');
+    }
+    return ver;
   }
 
   public static String tagOf(URI identifier) {
@@ -303,11 +325,12 @@ public class DatatypeHelper {
     URI base = schemeURI.getUri();
 
     return new NamespaceIdentifier()
-            .withId( URIUtil.normalizeURI(base) )
-            .withLabel( label )
-            .withTag( base.getFragment() )
-            .withVersion( DatatypeHelper.versionOf( schemeURI.getVersionId() ) );
+        .withId(URIUtil.normalizeURI(base))
+        .withLabel(label)
+        .withTag(base.getFragment())
+        .withVersion(DatatypeHelper.versionOf(schemeURI));
   }
+
 
   public static ConceptIdentifier toConceptIdentifier(Term v) {
     if (v == null) {
@@ -323,9 +346,17 @@ public class DatatypeHelper {
   }
 
 
-  public static <T extends Term,X> Optional<T> resolveTerm(final X val, T[] values, Function<Term,X> getter) {
+  public static <T extends Term, X> Optional<T> resolveTerm(final X val, T[] values,
+      Function<Term, X> getter) {
     return Arrays.stream(values)
         .filter(x -> val.equals(getter.apply(x)))
+        .findAny();
+  }
+
+  public static <T extends Term, X> Optional<T> resolveAliases(final X val, T[] values,
+      Function<T, List<X>> getter) {
+    return Arrays.stream(values)
+        .filter(x -> getter.apply(x).stream().anyMatch(t -> t.equals(val)))
         .findAny();
   }
 

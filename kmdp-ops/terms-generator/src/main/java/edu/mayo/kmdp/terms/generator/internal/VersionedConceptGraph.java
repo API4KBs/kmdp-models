@@ -44,7 +44,7 @@ public class VersionedConceptGraph extends ConceptGraph {
 
     schemeVersions.forEach(cs ->
         cs.getConcepts().forEach(con -> {
-          ConceptTerm trm = (ConceptTerm) con;
+          ConceptTermImpl trm = (ConceptTermImpl) con;
           if (!series.containsKey(trm.getConceptId())) {
             series.put(trm.getConceptId(), new ConceptTermSeries(trm));
           } else {

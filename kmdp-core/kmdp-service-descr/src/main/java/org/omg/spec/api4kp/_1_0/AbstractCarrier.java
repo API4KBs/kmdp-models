@@ -20,11 +20,13 @@ import edu.mayo.kmdp.SurrogateHelper;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.util.FileUtil;
-import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
-import edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
-import edu.mayo.ontology.taxonomies.krprofile._20190801.KnowledgeRepresentationLanguageProfile;
-import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
+import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
+import edu.mayo.ontology.taxonomies.krformat.SerializationFormat;
+import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfile;
+import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerialization;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Function;
@@ -41,46 +43,46 @@ public class AbstractCarrier {
   public static KnowledgeCarrier ofNaturalLanguageRep(String s) {
     return new org.omg.spec.api4kp._1_0.services.resources.ExpressionCarrier()
         .withSerializedExpression(s)
-        .withLevel(ParsingLevel.Concrete_Knowledge_Expression)
+        .withLevel(ParsingLevelSeries.Concrete_Knowledge_Expression)
         .withRepresentation(
             // ADD "Natural Language" to the list of languages
-            rep(KnowledgeRepresentationLanguage.HTML,
-                SerializationFormat.TXT));
+            rep(KnowledgeRepresentationLanguageSeries.HTML,
+                SerializationFormatSeries.TXT));
   }
 
   public static KnowledgeCarrier of(byte[] encoded) {
     return new org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier()
         .withEncodedExpression(encoded)
-        .withLevel(ParsingLevel.Encoded_Knowledge_Expression);
+        .withLevel(ParsingLevelSeries.Encoded_Knowledge_Expression);
   }
 
   public static KnowledgeCarrier of(InputStream stream) {
     return new org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier()
         .withEncodedExpression(FileUtil.readBytes(stream).orElse(new byte[0]))
-        .withLevel(ParsingLevel.Encoded_Knowledge_Expression);
+        .withLevel(ParsingLevelSeries.Encoded_Knowledge_Expression);
   }
 
   public static KnowledgeCarrier of(String serialized) {
     return new org.omg.spec.api4kp._1_0.services.resources.ExpressionCarrier()
         .withSerializedExpression(serialized)
-        .withLevel(ParsingLevel.Concrete_Knowledge_Expression);
+        .withLevel(ParsingLevelSeries.Concrete_Knowledge_Expression);
   }
 
   public static KnowledgeCarrier of(Document dox) {
     return new org.omg.spec.api4kp._1_0.services.resources.DocumentCarrier()
         .withStructuredExpression(dox)
-        .withLevel(ParsingLevel.Parsed_Knowedge_Expression);
+        .withLevel(ParsingLevelSeries.Parsed_Knowedge_Expression);
   }
 
   public static KnowledgeCarrier of(JsonNode jdox) {
     return new org.omg.spec.api4kp._1_0.services.resources.DocumentCarrier()
         .withStructuredExpression(jdox)
-        .withLevel(ParsingLevel.Parsed_Knowedge_Expression);
+        .withLevel(ParsingLevelSeries.Parsed_Knowedge_Expression);
   }
 
   public static KnowledgeCarrier ofAst(Object ast) {
     return new ASTCarrier().withParsedExpression(ast)
-        .withLevel(ParsingLevel.Abstract_Knowledge_Expression);
+        .withLevel(ParsingLevelSeries.Abstract_Knowledge_Expression);
   }
 
   public static KnowledgeCarrier of(byte[] encoded, SyntacticRepresentation rep) {

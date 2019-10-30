@@ -19,11 +19,10 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
@@ -32,18 +31,18 @@ import java.util.UUID;
 @Deprecated
 public abstract class MockTermsJsonAdapter {
 
-  public static class Serializer extends JsonSerializer<Term> {
+  public static class Serializer<T extends Term> extends ConceptTermsJsonAdapter.Serializer<T> {
     @Override
-    public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
+    public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
       gen.writeObject(v.asConcept());
     }
   }
 
-  public abstract static class Deserializer extends JsonDeserializer<Term> {
+  public abstract static class Deserializer<T extends Term> extends ConceptTermsJsonAdapter.Deserializer<T> {
 
     @Override
-    public Term deserialize(JsonParser jp, DeserializationContext ctxt)
+    public T deserialize(JsonParser jp, DeserializationContext ctxt)
         throws IOException {
       TreeNode t = jp.readValueAsTree();
       TreeNode nsNode = t.get("namespace");
@@ -61,9 +60,11 @@ public abstract class MockTermsJsonAdapter {
           .orElse(null);
     }
 
-    protected abstract Term[] getValues();
+    @Override
+    protected abstract Optional<T> resolveUUID(UUID uuid);
+
+    protected abstract T[] getValues();
 
   }
 
-  protected abstract <U> Optional<U> resolveUUID(UUID uuid);
 }

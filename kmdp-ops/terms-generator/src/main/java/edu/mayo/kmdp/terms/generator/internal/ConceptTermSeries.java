@@ -13,7 +13,7 @@ public class ConceptTermSeries {
 
   public ConceptTermSeries(Term trm) {
     this.id = trm.getConceptId();
-    this.label = ((ConceptTerm) trm).getTermConceptName();
+    this.label = ((ConceptTermImpl) trm).getTermConceptName();
     addMember(trm);
   }
 

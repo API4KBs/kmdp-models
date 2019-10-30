@@ -2,22 +2,29 @@ package {{intfPackageName}};
 
 import edu.mayo.kmdp.terms.VersionableTerm;
 import java.net.URI;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
-public interface {{intfName}} extends VersionableTerm<{{intfName}}> {
+@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( {{seriesName}}.Adapter.class )
+@com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{seriesName}}.JsonDeserializer.class )
+public interface {{intfName}} extends VersionableTerm<{{intfName}}, {{seriesName}}> {
 
   String schemeName = "{{conceptScheme.label}}";
-  String schemeID = "{{conceptSchemeID}}";
+  String schemeID = "{{conceptSchemeTag}}";
 
   URIIdentifier seriesUri = new URIIdentifier()
-    .withUri( URI.create( "{{conceptScheme.id}}" ) );
+    .withUri( URI.create( "{{seriesNamespace}}" ) );
+
+  NamespaceIdentifier seriesNamespace = new NamespaceIdentifier()
+      .withId(seriesUri.getUri())
+      .withLabel(schemeName)
+      .withTag(schemeID);
 
   default URIIdentifier getSeriesUri() {
-    return (URIIdentifier) seriesUri.clone();
+    return seriesUri;
   }
 
+  @Override
+  public NamespaceIdentifier getNamespace();
+
 }
-
-
-
-

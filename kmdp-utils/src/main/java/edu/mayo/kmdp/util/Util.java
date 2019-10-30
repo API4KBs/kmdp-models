@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -244,6 +245,18 @@ public class Util {
         ? Optional.of(type.cast(o))
         : Optional.empty();
   }
+
+  public static <T> Function<Object,Optional<T>> as(Class<T> type) {
+    return (x) -> type.isInstance(x)
+        ? Optional.of(type.cast(x))
+        : Optional.empty();
+  }
+
+  public static <T> Function<Object,Stream<T>> filterAs(Class<T> type) {
+    return (x) -> trimStream(as(x,type));
+  }
+
+
 
   public static <T,X> Stream<T> streamAs(X instance, Class<T> type) {
     return as(instance,type)

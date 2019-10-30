@@ -131,7 +131,7 @@ public class MimeCoderTest {
 
   @Test
   public void testWeights2() {
-    String c2 = "model/dmn+xml;q=0.21";
+    String c2 = "model/dmn-v11+xml;q=0.21";
     SyntacticRepresentation rep2 = ModelMIMECoder.decode(c2)
         .orElse(new SyntacticRepresentation());
     assertSame(DMN_1_1,rep2.getLanguage());

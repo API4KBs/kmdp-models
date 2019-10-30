@@ -1,8 +1,11 @@
 package edu.mayo.kmdp.terms;
 
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import edu.mayo.kmdp.series.Versionable;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,6 +51,12 @@ public interface ConceptTerm<T extends Term> extends Term, Taxonomic<T> {
     return getDescription().getAncestors();
   }
 
+  default Date getEstablishedOn() {
+    return ((VersionedIdentifier) getNamespace()).getEstablishedOn();
+  }
+  default String getVersion() {
+    return ((VersionedIdentifier) getNamespace()).getVersion();
+  }
 
   @Override
   default org.omg.spec.api4kp._1_0.identifiers.QualifiedIdentifier asQualified() {

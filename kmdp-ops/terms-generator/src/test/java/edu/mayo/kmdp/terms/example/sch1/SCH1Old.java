@@ -25,6 +25,8 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
+import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.example.cito.ICito;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
 import java.net.URI;
@@ -51,7 +53,8 @@ public enum SCH1Old implements ISCH1 {
       "specific concept",
       "http://test/generator#specific_concept",
       new SCH1Old[0],
-      new SCH1Old[0]),
+      new SCH1Old[0],
+      SCH1Series.Specific_Concept),
   @Expose("http://test/generator#deprecated_concept")
   Deprecated_Concept("999",
       UUID.nameUUIDFromBytes("deprecated_concept".getBytes()).toString(),
@@ -60,7 +63,8 @@ public enum SCH1Old implements ISCH1 {
       "deprecated concept",
       "http://test/generator#deprecated_concept",
       new SCH1Old[0],
-      new SCH1Old[0]);
+      new SCH1Old[0],
+      SCH1Series.Deprecated_Concept);
 
   public static final URIIdentifier schemeURI = Series.toVersion(
       ICito.seriesUri,
@@ -76,6 +80,7 @@ public enum SCH1Old implements ISCH1 {
 
 
   private TermDescription description;
+  private SCH1Series series;
 
   public TermDescription getDescription() {
     return description;
@@ -85,9 +90,11 @@ public enum SCH1Old implements ISCH1 {
       final String conceptId, final List<String> additionalCodes,
       final String displayName, final String referent,
       final Term[] ancestors,
-      final Term[] closure) {
+      final Term[] closure,
+      SCH1Series series) {
     this.description = new TermImpl(conceptId, conceptUUID, code, additionalCodes, displayName,
         referent, ancestors, closure);
+    this.series = series;
   }
 
   @Override
@@ -100,15 +107,36 @@ public enum SCH1Old implements ISCH1 {
     return namespace;
   }
 
-  public static class Adapter extends edu.mayo.kmdp.terms.TermsXMLAdapter {
-    public static final edu.mayo.kmdp.terms.TermsXMLAdapter instance = new SCH1Old.Adapter();
+  @Override
+  public SCH1Series asEnum() {
+    return toSeries();
+  }
+
+  @Override
+  public Series<ISCH1> asSeries() {
+    return toSeries();
+  }
+
+  private SCH1Series toSeries() {
+    if (series == null) {
+      series = (SCH1Series) SCH1Series.resolveUUID(this.getConceptUUID())
+          .orElseThrow(IllegalStateException::new);
+    }
+    return series;
+  }
+
+
+  public static class Adapter extends TermsXMLAdapter {
+    public static final TermsXMLAdapter instance = new SCH1Old.Adapter();
     protected Term[] getValues() { return values(); }
   }
 
-  public static class JsonAdapter extends edu.mayo.kmdp.terms.TermsJsonAdapter.UUIDBasedDeserializer {
-    public static final edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer instance = new SCH1Old.JsonAdapter();
-    protected Term[] getValues() { return values(); }
+  public static class JsonSerializer extends ConceptTermsJsonAdapter.Serializer { }
 
+  public static class JsonDeserializer extends ConceptTermsJsonAdapter.Deserializer {
+    protected Term[] getValues() {
+      return values();
+    }
     @Override
     protected Optional<SCH1Old> resolveUUID(UUID uuid) {
       return SCH1Old.resolveUUID(uuid);

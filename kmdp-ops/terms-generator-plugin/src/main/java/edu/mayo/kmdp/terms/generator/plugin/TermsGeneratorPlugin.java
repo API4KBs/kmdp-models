@@ -13,6 +13,7 @@
  */
 package edu.mayo.kmdp.terms.generator.plugin;
 
+import edu.mayo.kmdp.terms.generator.BaseEnumGenerator;
 import edu.mayo.kmdp.terms.generator.CatalogGenerator;
 import edu.mayo.kmdp.terms.generator.CatalogGenerator.CatalogEntry;
 import edu.mayo.kmdp.terms.generator.JavaEnumTermsGenerator;
@@ -85,6 +86,32 @@ public class TermsGeneratorPlugin extends AbstractMojo {
 
   public void setEnforceClosure(boolean enforceClosure) {
     this.enforceClosure = enforceClosure;
+  }
+
+  /**
+   * @parameter default-value="false"
+   */
+  private boolean enforceVersion = false;
+
+  public boolean isEnforceVersion() {
+    return enforceVersion;
+  }
+
+  public void setEnforceVersion(boolean enforceVersion) {
+    this.enforceVersion = enforceVersion;
+  }
+
+  /**
+   * @parameter default-value="false"
+   */
+  private String versionPattern;
+
+  public String getVersionPattern() {
+    return versionPattern;
+  }
+
+  public void setVersionPattern(String versionPattern) {
+    this.versionPattern = versionPattern;
   }
 
   /**
@@ -375,14 +402,18 @@ public class TermsGeneratorPlugin extends AbstractMojo {
       opts.with(EnumGenerationParams.PACKAGE_NAME, packageName);
     }
 
-    new JavaEnumTermsGenerator().generate(graph, opts, outputDirectory);
+    JavaEnumTermsGenerator bjg =
+        new JavaEnumTermsGenerator();
+    bjg.generate(graph, opts, outputDirectory);
     if (isJaxb()) {
-      new XSDEnumTermsGenerator().generate(graph, opts, xsdOutputDirectory);
+      new XSDEnumTermsGenerator(bjg).generate(graph, opts, xsdOutputDirectory);
     }
 
-    return graph.getConceptSchemes().stream()
+    return graph != null
+        ? graph.getConceptSchemes().stream()
         .map(CatalogGenerator.CatalogEntry::new)
-        .collect(Collectors.toList());
+        .collect(Collectors.toList())
+        : Collections.emptyList();
   }
 
   private ConceptGraph analyze(OWLOntology ontology) {
@@ -390,6 +421,8 @@ public class TermsGeneratorPlugin extends AbstractMojo {
         .with(SkosAbstractionParameters.REASON, this.reason)
         .with(SkosAbstractionParameters.ENFORCE_CLOSURE, enforceClosure)
         .with(SkosAbstractionParameters.CLOSURE_MODE, closureMode)
+        .with(SkosAbstractionParameters.ENFORCE_VERSION, enforceVersion)
+        .with(SkosAbstractionParameters.VERSION_PATTERN, versionPattern)
         .with(SkosAbstractionParameters.TAG_TYPE, tagFormat);
     return new SkosTerminologyAbstractor()
         .traverse(ontology, cfg);

@@ -24,7 +24,7 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
-import edu.mayo.kmdp.terms.generator.internal.ConceptTerm;
+import edu.mayo.kmdp.terms.generator.internal.ConceptTermImpl;
 import edu.mayo.kmdp.terms.mireot.EntityTypes;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
@@ -70,7 +70,7 @@ public class NotationTest {
   private Term getAndCheck(ConceptGraph graph) {
     assertEquals(1, graph.getConceptSchemes().size());
 
-    ConceptTerm trm = (ConceptTerm) graph.getConceptSchemes().iterator().next().getConcepts()
+    ConceptTermImpl trm = (ConceptTermImpl) graph.getConceptSchemes().iterator().next().getConcepts()
         .findFirst().orElse(null);
     assertNotNull(trm);
 

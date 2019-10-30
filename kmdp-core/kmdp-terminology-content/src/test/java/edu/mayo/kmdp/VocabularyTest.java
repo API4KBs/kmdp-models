@@ -200,8 +200,12 @@ public class VocabularyTest {
     assertTrue(uid.isPresent());
 
     assertNotNull(KnowledgeAssetCategory.schemeURI.getVersionId());
-    assertEquals(uid.get().toString(),
-        KnowledgeAssetCategory.schemeURI.getVersionId().getFragment());
+
+    String seriesId = KnowledgeAssetCategory.schemeURI.getUri().toString();
+    String versionId = KnowledgeAssetCategory.schemeURI.getVersionId().toString();
+    String version = versionId.replace(seriesId,"").replace("/","");
+    assertEquals(version, KnowledgeAssetCategory.schemeURI.getVersion());
+    assertEquals(version, KnowledgeAssetCategory.namespace.getVersion());
   }
 
   @Test

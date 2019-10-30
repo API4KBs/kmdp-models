@@ -60,6 +60,24 @@ public class SkosAbstractionConfig extends
         "Runs a DL reasoner on the SKOS ontology before performing the abstraction",
         Boolean.class,
         false)),
+    ENFORCE_VERSION(Opt.of(
+        "enforceVersion",
+        "false",
+        "If true, concept schemes must have a version, stated using owl:versionIRI",
+        Boolean.class,
+        false)),
+    VERSION_PATTERN(Opt.of(
+        "versionPattern",
+        "",
+        "Regular expression that maps a version URI to a version tag",
+        String.class,
+        false)),
+    DATE_PATTERN(Opt.of(
+        "datePattern",
+        "yyyyMMdd",
+        "Regular expression a version tag to a release date",
+        String.class,
+        false)),
     TAG_TYPE(Opt.of(
         "tag_type",
         "urn:uuid",

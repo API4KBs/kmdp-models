@@ -16,12 +16,15 @@
 package edu.mayo.kmdp.terms.generator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.terms.example.SomeBean;
+import edu.mayo.kmdp.terms.example.sch1.SCH1;
 import edu.mayo.kmdp.terms.example.sch1.SCH1Series;
 import edu.mayo.kmdp.util.JSonUtil;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class JsonAdapterTest {
@@ -39,7 +42,7 @@ class JsonAdapterTest {
   @Test
   void testJSONSerializationWithLatest() {
     SomeBean bean = new SomeBean();
-    bean.setSchone(SCH1Series.Sub_Sub_Concept);
+    bean.setSchone(SCH1Series.Sub_Sub_Concept.getLatest());
 
     String json = marshall(bean);
     assertTrue(json.contains("\"ref\" : \"http://test/generator#sub_sub_concept\""));
@@ -64,12 +67,32 @@ class JsonAdapterTest {
 
     bean.setSchone(SCH1Series.Specific_Concept);
     String json1 = marshall(bean);
-    assertTrue(json1.contains("\"version\" : \"v01\""));
+    assertFalse(json1.contains("\"version\" : \"v01\""));
 
     bean.setSchone(SCH1Series.Deprecated_Concept);
     String json2 = marshall(bean);
-    assertTrue(json2.contains("\"version\" : \"v00_Ancient\""));
+    assertFalse(json2.contains("\"version\" : \"v00_Ancient\""));
 
+    bean.setSchone(SCH1Series.Deprecated_Concept.getLatest());
+    String json3 = marshall(bean);
+    assertTrue(json3.contains("\"version\" : \"v00_Ancient\""));
+
+  }
+
+  @Test
+  void testJSONSerializationWithSeriesRoundtrip() {
+
+    SomeBean bean2 = new SomeBean();
+    bean2.setSchone(SCH1Series.Specific_Concept);
+    bean2 = roundtrip(bean2);
+    assertTrue(bean2.getSchone() instanceof SCH1Series);
+    bean2 = roundtrip(bean2);
+    assertTrue(bean2.getSchone() instanceof SCH1Series);
+
+    SomeBean bean1 = new SomeBean();
+    bean1.setSchone(SCH1Series.Specific_Concept.getLatest());
+    bean1 = roundtrip(bean1);
+    assertTrue(bean1.getSchone() instanceof SCH1);
   }
 
   @Test
@@ -106,5 +129,9 @@ class JsonAdapterTest {
     System.out.println(s);
     assertNotNull(s);
     return s;
+  }
+
+  private SomeBean roundtrip(SomeBean b) {
+    return rehydrate(marshall(b));
   }
 }

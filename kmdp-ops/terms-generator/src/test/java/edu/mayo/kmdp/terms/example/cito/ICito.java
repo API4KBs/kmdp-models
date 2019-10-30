@@ -4,7 +4,7 @@ import edu.mayo.kmdp.terms.VersionableTerm;
 import java.net.URI;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
-public interface ICito extends VersionableTerm<ICito> {
+public interface ICito extends VersionableTerm<ICito,CitoSeries> {
 
   String schemeName = "cito";
   String schemeID = "cito";

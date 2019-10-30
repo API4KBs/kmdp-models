@@ -16,19 +16,23 @@ package edu.mayo.kmdp.terms.generator;
 import static edu.mayo.kmdp.util.Util.isUUID;
 
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
-import edu.mayo.kmdp.terms.generator.internal.ConceptTerm;
+import edu.mayo.kmdp.terms.generator.internal.ConceptTermImpl;
 import edu.mayo.kmdp.terms.generator.internal.MutableConceptScheme;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -38,6 +42,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.jena.rdf.model.Resource;
@@ -45,6 +51,7 @@ import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
 import org.semanticweb.HermiT.Configuration;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -67,9 +74,13 @@ import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.InferredOntologyGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class SkosTerminologyAbstractor {
+
+  private static Logger logger = LoggerFactory.getLogger(SkosTerminologyAbstractor.class);
 
   private static final IRI CONCEPT_SCHEME = iri(SKOS.ConceptScheme);
   private static final IRI CONCEPT = iri(SKOS.Concept);
@@ -115,7 +126,7 @@ public class SkosTerminologyAbstractor {
     // build the code systems first
     codeSystems = model.individualsInSignature(Imports.INCLUDED)
         .filter(i -> isConceptScheme(i, model))
-        .map(x -> toScheme(x, model))
+        .map(x -> toScheme(x, model, cfg))
         .collect(Collectors.toMap(ConceptScheme::getId,
             Function.identity()));
 
@@ -219,7 +230,7 @@ public class SkosTerminologyAbstractor {
   }
 
   private void addAncestor(Term sub, Term sup) {
-    ConceptTerm subCD = (ConceptTerm) sub;
+    ConceptTermImpl subCD = (ConceptTermImpl) sub;
     MutableConceptScheme subMCS = (MutableConceptScheme) subCD.getScheme();
 
     subMCS.addParent(sub, sup);
@@ -236,7 +247,7 @@ public class SkosTerminologyAbstractor {
 
     Collection<ConceptScheme<Term>> schems = getPropertyValues(ind, model, IN_SCHEME)
         .map(AsOWLNamedIndividual::asOWLNamedIndividual)
-        .map(sch -> codeSystems.getOrDefault(getURI(sch), toScheme(sch, model)))
+        .map(sch -> codeSystems.computeIfAbsent(getURI(sch), k -> toScheme(sch, model, cfg)))
         .collect(Collectors.toSet());
 
     boolean enforceClosure = cfg.getTyped(SkosAbstractionParameters.ENFORCE_CLOSURE);
@@ -245,7 +256,7 @@ public class SkosTerminologyAbstractor {
           .filter(parent -> isTopConcept(parent, model))
           .flatMap(top -> getSchemesForTopConcept(top, model))
           .map(AsOWLNamedIndividual::asOWLNamedIndividual)
-          .map(sch -> codeSystems.getOrDefault(getURI(sch), toScheme(sch, model)))
+          .map(sch -> codeSystems.computeIfAbsent(getURI(sch),k -> toScheme(sch, model, cfg)))
           .collect(Collectors.toSet());
     }
 
@@ -263,13 +274,46 @@ public class SkosTerminologyAbstractor {
     return schemes1.stream();
   }
 
-  public ConceptScheme<Term> toScheme(OWLNamedIndividual ind, OWLOntology model) {
+  private ConceptScheme<Term> toScheme(OWLNamedIndividual ind, OWLOntology model,
+      SkosAbstractionConfig cfg) {
     URI uri = getURI(ind);
-    URI version = applyVersion(ind, model).orElse(uri);
+    URI version = applyVersion(ind, model, cfg.getTyped(SkosAbstractionParameters.ENFORCE_VERSION))
+        .orElse(uri);
     String code = getCodedIdentifiers(ind, model).get(0);
-
     String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
-    return new MutableConceptScheme(uri, version, code, label);
+
+    // assume that ontologies use date-oriented version tags
+
+    String versionTag = extractVersionTag(version,
+        cfg.getTyped(SkosAbstractionParameters.VERSION_PATTERN))
+        .orElse(null);
+    String dateFormatPattern = cfg.getTyped(SkosAbstractionParameters.DATE_PATTERN);
+    Date pubDate = DateTimeUtil.parseDateOrNow(
+        versionTag,
+        dateFormatPattern);
+    if (versionTag == null || Series.SNAPSHOT.equals(versionTag)) {
+      versionTag = DateTimeUtil.format(pubDate, Series.SNAPSHOT_DATE_PATTERN);
+    }
+
+    MutableConceptScheme mcs = new MutableConceptScheme(uri, version, code, versionTag, label,
+        pubDate);
+    mcs.withVersioning(VersionTagType.TIMESTAMP);
+    return mcs;
+  }
+
+  private Optional<String> extractVersionTag(URI version, String versionPattern) {
+    if (version == null || Util.isEmpty(versionPattern)) {
+      return Optional.empty();
+    }
+    Matcher m = Pattern.compile(versionPattern)
+        .matcher(URIUtil.normalizeURIString(version));
+    if (m.matches()) {
+      return Optional
+          .ofNullable(m.group(1));
+    } else {
+      logger.warn("WARNING unable to pick version tag from {}", version);
+      return Optional.empty();
+    }
   }
 
   private List<String> getCodedIdentifiers(OWLNamedIndividual ind, OWLOntology model) {
@@ -299,10 +343,15 @@ public class SkosTerminologyAbstractor {
     }
   }
 
-  private Optional<URI> applyVersion(OWLNamedIndividual ind, OWLOntology model) {
+  private Optional<URI> applyVersion(OWLNamedIndividual ind, OWLOntology model,
+      boolean enforceVersion) {
     String ontoUri = model.getOntologyID().getOntologyIRI().map(IRI::toString).orElse("");
     String versionUri = model.getOntologyID().getVersionIRI().map(IRI::toString).orElse("");
     String versionFragment = NameUtils.strip(ontoUri, versionUri);
+
+    if (Util.isEmpty(versionFragment) && enforceVersion) {
+      throw new IllegalArgumentException("Unable to detect required information for " + ontoUri);
+    }
 
     String indURI = ind.getIRI().toString();
     String localId = NameUtils.getTrailingPart(ind.getIRI().toString());
@@ -348,7 +397,7 @@ public class SkosTerminologyAbstractor {
     URI conceptId = ind.getIRI().toURI();
     String tag = codes.get(0);
     UUID uuid = makeUUID(conceptId);
-    Term cd = new ConceptTerm(
+    Term cd = new ConceptTermImpl(
         conceptId,
         tag,
         label,
@@ -452,9 +501,6 @@ public class SkosTerminologyAbstractor {
   }
 
 
-
-
-
   private static ConceptGraph applyClosure(ConceptGraph graph, CLOSURE_MODE closureMode) {
     if (closureMode == CLOSURE_MODE.IMPORTS) {
       // Already implied
@@ -467,7 +513,7 @@ public class SkosTerminologyAbstractor {
         .map(MutableConceptScheme.class::cast)
         .forEach(cs -> cs.getConcepts()
             .flatMap(cs::streamAncestors)
-            .map(ConceptTerm.class::cast)
+            .map(ConceptTermImpl.class::cast)
             .filter(a -> !a.getScheme().equals(cs))
             .forEach(a -> {
               if (!dependencies.containsKey(cs)) {
@@ -496,7 +542,7 @@ public class SkosTerminologyAbstractor {
               for (ConceptScheme<Term> tgtDep : tgtDeps) {
                 // add the individuals
                 tgtDep.getConcepts()
-                    .map(ConceptTerm.class::cast)
+                    .map(ConceptTermImpl.class::cast)
                     .forEach(c -> src.addConcept(c.cloneInto(src)));
                 // add the parent/child relationships
                 ((MutableConceptScheme) tgtDep).getAncestorsMap()
@@ -512,8 +558,9 @@ public class SkosTerminologyAbstractor {
     clonedSchemes.forEach(src ->
         src.getAncestorsMap().forEach((trm, parents) -> {
           Set<Term> includedParents = parents.stream()
-              .filter(prn -> src.getConcepts().anyMatch(c -> c.getConceptId().equals(prn.getConceptId())))
-              .filter(prn -> !((ConceptTerm) prn).getScheme().equals(src))
+              .filter(prn -> src.getConcepts()
+                  .anyMatch(c -> c.getConceptId().equals(prn.getConceptId())))
+              .filter(prn -> !((ConceptTermImpl) prn).getScheme().equals(src))
               .collect(Collectors.toSet());
           parents.removeAll(includedParents);
           includedParents.forEach(p -> parents.add(src.getConcept(p.getConceptId())));

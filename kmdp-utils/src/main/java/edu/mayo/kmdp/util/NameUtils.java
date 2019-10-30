@@ -599,7 +599,7 @@ public final class NameUtils {
   }
 
 
-  public static String strip(String str, String from) {
+  public static String strip(String str, String from, Character... separators) {
     int j = 0;
     StringBuilder delta = new StringBuilder();
 
@@ -622,6 +622,12 @@ public final class NameUtils {
     }
     if (j < from.length()) {
       delta.append(from.substring(j));
+    }
+    if (Arrays.binarySearch(separators, delta.charAt(0)) >= 0) {
+      delta.deleteCharAt(0);
+    }
+    if (Arrays.binarySearch(separators, delta.charAt(delta.length()-1)) >= 0) {
+      delta.deleteCharAt(delta.length()-1);
     }
     return delta.toString();
   }

@@ -62,7 +62,7 @@ public class JSonUtil {
     return props()
         .set(INCLUDES, JsonInclude.Include.NON_EMPTY)
         .set(PRETTYPRINT, true)
-        .set(DATEFORMAT, DateAdapter.PATTERN).get();
+        .set(DATEFORMAT, DateTimeUtil.DEFAULT_DATE_PATTERN).get();
   }
 
   public static Optional<JsonNode> readJson(InputStream data) {
@@ -168,6 +168,7 @@ public class JSonUtil {
       return Optional.of(baos);
     } catch (IOException e) {
       logger.error(e.getMessage(),e);
+      e.printStackTrace();
       return Optional.empty();
     }
   }
@@ -193,7 +194,7 @@ public class JSonUtil {
     objectMapper.setSerializationInclusion(pEnum(INCLUDES, p, JsonInclude.Include::valueOf)
         .orElse(JsonInclude.Include.USE_DEFAULTS));
     objectMapper.setDateFormat(pCustom(DATEFORMAT, p, SimpleDateFormat::new)
-        .orElse(new SimpleDateFormat(DateAdapter.PATTERN)));
+        .orElse(new SimpleDateFormat(DateTimeUtil.DEFAULT_DATE_PATTERN)));
     objectMapper.configure(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID, true);
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 

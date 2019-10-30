@@ -25,7 +25,10 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
+import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +43,8 @@ import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 *
 * */
 @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(SCH1.Adapter.class)
+@com.fasterxml.jackson.databind.annotation.JsonSerialize( using = SCH1.JsonSerializer.class )
+@com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = SCH1.JsonDeserializer.class )
 public enum SCH1 implements ISCH1 {
 
   @Expose("http://test/generator#specific_concept")
@@ -78,12 +83,14 @@ public enum SCH1 implements ISCH1 {
       .withId(URI.create("http://test/generator#concept_scheme1"))
       .withLabel("Concept Scheme 1")
       .withTag("concept_scheme_1")
-      .withVersion("v01");
+      .withVersion("v01")
+      .withEstablishedOn(DateTimeUtil.parseDateOrNow("20190801","yyyyMMdd"));
 
 
   public static final Map<UUID, SCH1> index = indexByUUID(SCH1.values());
 
   private TermDescription description;
+  private SCH1Series series;
 
   public TermDescription getDescription() {
     return description;
@@ -108,15 +115,35 @@ public enum SCH1 implements ISCH1 {
     return namespace;
   }
 
-  public static class Adapter extends edu.mayo.kmdp.terms.TermsXMLAdapter {
-    public static final edu.mayo.kmdp.terms.TermsXMLAdapter instance = new Adapter();
+  @Override
+  public SCH1Series asEnum() {
+    return toSeries();
+  }
+
+  @Override
+  public Series<ISCH1> asSeries() {
+    return toSeries();
+  }
+
+  private SCH1Series toSeries() {
+    if (series == null) {
+      series = (SCH1Series) SCH1Series.resolveUUID(this.getConceptUUID())
+          .orElseThrow(IllegalStateException::new);
+    }
+    return series;
+  }
+
+  public static class Adapter extends TermsXMLAdapter {
+    public static final TermsXMLAdapter instance = new Adapter();
     protected Term[] getValues() { return values(); }
   }
 
-  public static class JsonAdapter extends edu.mayo.kmdp.terms.TermsJsonAdapter.UUIDBasedDeserializer {
-    public static final edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer instance = new JsonAdapter();
-    protected Term[] getValues() { return values(); }
+  public static class JsonSerializer extends ConceptTermsJsonAdapter.Serializer<SCH1> { }
 
+  public static class JsonDeserializer extends ConceptTermsJsonAdapter.Deserializer<SCH1> {
+    protected SCH1[] getValues() {
+      return values();
+    }
     @Override
     protected Optional<SCH1> resolveUUID(UUID uuid) {
       return SCH1.resolveUUID(uuid);

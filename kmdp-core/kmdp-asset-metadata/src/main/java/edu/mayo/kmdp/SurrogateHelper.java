@@ -16,10 +16,6 @@
 package edu.mayo.kmdp;
 
 
-import static edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType.Depends_On;
-import static edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType.Imports;
-import static edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType.Includes;
-
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.metadata.annotations.ComplexAnnotation;
@@ -36,9 +32,9 @@ import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.kao.languagerole._20190801.KnowledgeRepresentationLanguageRole;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRole;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -92,25 +88,33 @@ public class SurrogateHelper {
 
   public static Annotation rootToFragment(Annotation anno) {
     Class<? extends Annotation> annoType = anno.getClass();
-    if (annoType.getPackage().equals(edu.mayo.kmdp.metadata.annotations.resources.ObjectFactory.class.getPackage())) {
+    if (annoType.getPackage()
+        .equals(edu.mayo.kmdp.metadata.annotations.resources.ObjectFactory.class.getPackage())) {
       if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation.class)) {
         return (Annotation) anno.copyTo(new SimpleAnnotation());
-      } else if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.MultiwordAnnotation.class)) {
+      } else if (annoType
+          .equals(edu.mayo.kmdp.metadata.annotations.resources.MultiwordAnnotation.class)) {
         return (Annotation) anno.copyTo(new MultiwordAnnotation());
-      } else if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.ComplexAnnotation.class)) {
+      } else if (annoType
+          .equals(edu.mayo.kmdp.metadata.annotations.resources.ComplexAnnotation.class)) {
         return (Annotation) anno.copyTo(new ComplexAnnotation());
-      } else if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.BasicAnnotation.class)) {
+      } else if (annoType
+          .equals(edu.mayo.kmdp.metadata.annotations.resources.BasicAnnotation.class)) {
         return (Annotation) anno.copyTo(new BasicAnnotation());
-      } else if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.DatatypeAnnotation.class)) {
+      } else if (annoType
+          .equals(edu.mayo.kmdp.metadata.annotations.resources.DatatypeAnnotation.class)) {
         return (Annotation) anno.copyTo(new DatatypeAnnotation());
       }
     }
     return anno;
   }
 
-  private static final Set<DependencyType> TRAVERSE_DEPS = Util
-      .newEnumSet(Arrays.asList(Imports, Includes, Depends_On),
-          DependencyType.class);
+  private static final Set<DependencyTypeSeries> TRAVERSE_DEPS = Util
+      .newEnumSet(Arrays.asList(
+          DependencyTypeSeries.Imports,
+          DependencyTypeSeries.Includes,
+          DependencyTypeSeries.Depends_On),
+          DependencyTypeSeries.class);
 
   public static Set<KnowledgeAsset> closure(KnowledgeAsset resource) {
     return closure(resource, true);
@@ -193,7 +197,7 @@ public class SurrogateHelper {
 
   public static Set<KnowledgeRepresentationLanguage> getSublanguages(Representation rep,
       KnowledgeRepresentationLanguageRole role) {
-    return expandRepresentation(rep,role)
+    return expandRepresentation(rep, role)
         .map(Representation::getLanguage)
         .collect(Collectors.toSet());
   }

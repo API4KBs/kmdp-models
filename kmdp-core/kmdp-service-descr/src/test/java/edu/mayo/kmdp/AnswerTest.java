@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
+import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ public class AnswerTest {
     assertTrue(expl instanceof ExpressionCarrier);
     assertNotNull(((ExpressionCarrier) expl).getSerializedExpression());
     assertTrue(((ExpressionCarrier) expl).getSerializedExpression().contains("foo"));
-    assertEquals(ParsingLevel.Concrete_Knowledge_Expression, expl.getLevel());
+    assertEquals(ParsingLevelSeries.Concrete_Knowledge_Expression, expl.getLevel().asSeries());
 
     assertTrue(ans.isSuccess());
     assertFalse(ans.isFailure());

@@ -2,6 +2,7 @@ package edu.mayo.kmdp.terms.impl.model;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.TermDescription;
+import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class TermImpl extends ConceptIdentifier implements TermDescription {
   public TermImpl(final String conceptId, final String conceptUUID, final String code,
       final List<String> additionalCodes, final String displayName, final String referent,
       final Term[] ancestors, final Term[] closure) {
-    this.ref = URI.create(referent);
+    this.ref = Util.isEmpty(referent) ? null : URI.create(referent);
     this.tag = code;
     this.tags = java.util.Collections.unmodifiableList(additionalCodes);
     this.label = displayName;

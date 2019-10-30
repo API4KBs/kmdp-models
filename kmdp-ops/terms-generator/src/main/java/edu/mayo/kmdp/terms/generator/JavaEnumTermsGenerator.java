@@ -25,7 +25,15 @@ import java.util.Map;
 
 public class JavaEnumTermsGenerator extends BaseEnumGenerator {
 
-  final static String EXTENSION = ".java";
+  private static final String EXTENSION = ".java";
+
+  public JavaEnumTermsGenerator() {
+    super();
+  }
+
+  public JavaEnumTermsGenerator(BaseEnumGenerator other) {
+    super(other);
+  }
 
   public void generate(ConceptGraph conceptGraph,
       File outputDir) {

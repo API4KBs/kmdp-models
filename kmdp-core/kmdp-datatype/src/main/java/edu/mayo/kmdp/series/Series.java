@@ -16,6 +16,9 @@ import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 
 public interface Series<T extends Versionable<T>> {
 
+  String SNAPSHOT = "SNAPSHOT";
+  String SNAPSHOT_DATE_PATTERN = "yyyyMMdd-HHmmSS";
+
   static boolean isSame(Versionable v0, Versionable v1) {
     if (v0 == null || v0.getVersionIdentifier() == null
         || v0.getVersionIdentifier().getTag() == null
@@ -36,7 +39,7 @@ public interface Series<T extends Versionable<T>> {
 
   default Optional<T> asOf(Date d) {
     return getVersions().stream()
-        .filter(v -> d.compareTo(v.getVersionIdentifier().getEstablishedOn()) > 0)
+        .filter(v -> d.compareTo(v.getVersionIdentifier().getEstablishedOn()) >= 0)
         .findFirst();
   }
 
