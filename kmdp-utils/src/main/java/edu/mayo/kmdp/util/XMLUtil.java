@@ -59,9 +59,9 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import net.sf.saxon.lib.FeatureKeys;
 import net.sf.saxon.lib.StandardErrorListener;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.apache.xerces.util.XMLCatalogResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -242,7 +242,7 @@ public class XMLUtil {
     XMLCatalogResolver cat = catalogResolver(
         Arrays.stream(langs)
             .map(Registry::getCatalog)
-            .flatMap(Util::trimStream)
+            .flatMap(StreamUtil::trimStream)
             .map(XMLUtil.class::getResource)
             .toArray(URL[]::new));
 

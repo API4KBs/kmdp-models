@@ -35,6 +35,7 @@ import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractio
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.internal.VersionedConceptGraph;
 import edu.mayo.kmdp.util.DateTimeUtil;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -111,7 +112,7 @@ public class VersionedGeneratorTest {
 
       versions.forEach(v -> assertTrue(v instanceof Versionable));
       List<Versionable> versionables = versions.stream()
-          .flatMap(Util.filterAs(Versionable.class))
+          .flatMap(StreamUtil.filterAs(Versionable.class))
           .collect(Collectors.toList());
 
       List<Date> releases = versionables.stream()

@@ -20,23 +20,44 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._1_0.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
 
 import edu.mayo.kmdp.comparator.Contrastor.Comparison;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
-public class RepresentationComparisonTest {
+class RepresentationComparisonTest {
 
   @Test
-  public void languageTest() {
-    SyntacticRepresentation r1 = rep(KnowledgeRepresentationLanguage.OWL_2).withSerialization(KnowledgeRepresentationLanguageSerialization.RDF_XML_Syntax);
-    SyntacticRepresentation r2 = rep(KnowledgeRepresentationLanguage.OWL_2).withSerialization(KnowledgeRepresentationLanguageSerialization.OWL_Functional_Syntax);
+  void languageTestWithSpecificVersion() {
+    SyntacticRepresentation r1 = rep(KnowledgeRepresentationLanguage.OWL_2)
+        .withSerialization(KnowledgeRepresentationLanguageSerialization.RDF_XML_Syntax);
+    SyntacticRepresentation r2 = rep(KnowledgeRepresentationLanguage.OWL_2)
+        .withSerialization(KnowledgeRepresentationLanguageSerialization.OWL_Functional_Syntax);
     SyntacticRepresentation r3 = rep(KnowledgeRepresentationLanguage.DMN_1_1);
     SyntacticRepresentation r4 = rep(KnowledgeRepresentationLanguage.OWL_2);
 
     assertEquals(Comparison.INCOMPARABLE,theRepContrastor.contrast(r1,r2));
     assertEquals(Comparison.INCOMPARABLE,theRepContrastor.contrast(r1,r3));
     assertEquals(Comparison.NARROWER,theRepContrastor.contrast(r1,r4));
+  }
+
+
+  @Test
+  void languageTestWithSeries() {
+    SyntacticRepresentation r1 = rep(KnowledgeRepresentationLanguageSeries.OWL_2)
+        .withSerialization(KnowledgeRepresentationLanguageSerializationSeries.RDF_XML_Syntax);
+
+    SyntacticRepresentation r2 = rep(KnowledgeRepresentationLanguage.OWL_2)
+        .withSerialization(KnowledgeRepresentationLanguageSerialization.RDF_XML_Syntax);
+
+    SyntacticRepresentation r3 = rep(KnowledgeRepresentationLanguageSeries.OWL_2.getLatest())
+        .withSerialization(KnowledgeRepresentationLanguageSerializationSeries.RDF_XML_Syntax.getLatest());
+
+    assertEquals(Comparison.EQUIVALENT,theRepContrastor.contrast(r1,r2));
+    assertEquals(Comparison.EQUIVALENT,theRepContrastor.contrast(r1,r3));
+    assertEquals(Comparison.EQUIVALENT,theRepContrastor.contrast(r2,r3));
   }
 
 }

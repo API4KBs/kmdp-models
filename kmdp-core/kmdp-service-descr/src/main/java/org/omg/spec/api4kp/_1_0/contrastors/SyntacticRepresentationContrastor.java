@@ -16,8 +16,10 @@
 package org.omg.spec.api4kp._1_0.contrastors;
 
 import edu.mayo.kmdp.comparator.Contrastor;
+import edu.mayo.kmdp.series.Series;
+import edu.mayo.kmdp.terms.ConceptTerm;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevel;
-import java.util.HashSet;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
 public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepresentation> {
@@ -29,7 +31,7 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
 
   @Override
   public boolean comparable(SyntacticRepresentation sr1, SyntacticRepresentation sr2) {
-    if (sr1.getLanguage() != sr2.getLanguage()) {
+    if (!Series.isSame(sr1.getLanguage(), sr2.getLanguage())) {
       return false;
     }
     Comparison profileComparison = ProfileContrastor.theProfileContrastor
@@ -38,14 +40,15 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
       return false;
     }
     if (sr1.getSerialization() != null && sr2.getSerialization() != null
-        && sr1.getSerialization() != sr2.getSerialization()) {
+        && ! Series.isSame(sr1.getSerialization(), sr2.getSerialization())) {
       return false;
     }
     if (sr1.getFormat() != null && sr2.getFormat() != null
-        && sr1.getFormat() != sr2.getFormat()) {
+        && ! Series.isSame(sr1.getFormat(), sr2.getFormat())) {
       return false;
     }
-    return new HashSet<>(sr1.getLexicon()).equals(new HashSet<>(sr2.getLexicon()));
+    return StreamUtil.mapToSet(sr1.getLexicon(),ConceptTerm::getConceptUUID)
+        .equals(StreamUtil.mapToSet(sr2.getLexicon(),ConceptTerm::getConceptUUID));
   }
 
   public int compare(SyntacticRepresentation sr1, SyntacticRepresentation sr2) {

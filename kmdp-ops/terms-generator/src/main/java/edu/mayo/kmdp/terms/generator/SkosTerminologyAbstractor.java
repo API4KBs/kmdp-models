@@ -27,6 +27,7 @@ import edu.mayo.kmdp.terms.generator.internal.MutableConceptScheme;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
@@ -480,7 +481,7 @@ public class SkosTerminologyAbstractor {
     return EntitySearcher.getAnnotationObjects(ind, model.importsClosure(), p)
         .map(OWLAnnotation::getValue)
         .map(OWLAnnotationValue::asLiteral)
-        .flatMap(Util::trimStream)
+        .flatMap(StreamUtil::trimStream)
         .map(OWLLiteral::getLiteral);
   }
 

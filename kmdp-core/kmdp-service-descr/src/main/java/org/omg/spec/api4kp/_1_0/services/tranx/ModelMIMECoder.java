@@ -16,14 +16,16 @@
 package org.omg.spec.api4kp._1_0.services.tranx;
 
 import static edu.mayo.kmdp.util.Util.isEmpty;
+import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TXT;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
-import edu.mayo.ontology.taxonomies.krprofile._20190801.KnowledgeRepresentationLanguageProfile;
-import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
-import edu.mayo.ontology.taxonomies.lexicon._20190801.Lexicon;
+import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfileSeries;
+import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
+import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -100,40 +102,40 @@ public class ModelMIMECoder {
           SyntacticRepresentation rep = new SyntacticRepresentation();
 
           if (!isEmpty(t.langVerTag)) {
-            KnowledgeRepresentationLanguage.resolve(t.versionedLangTag)
+            KnowledgeRepresentationLanguageSeries.resolve(t.versionedLangTag)
                 .ifPresent(rep::setLanguage);
           } else {
             String tag = t.langTag + "-";
             Optional<KnowledgeRepresentationLanguage> lang = Arrays
-                .stream(KnowledgeRepresentationLanguage.values())
+                .stream(KnowledgeRepresentationLanguageSeries.values())
                 .map(KnowledgeRepresentationLanguage::getTag)
                 .filter(x -> x.startsWith(tag))
                 .findFirst()
-                .flatMap(KnowledgeRepresentationLanguage::resolve);
+                .flatMap(KnowledgeRepresentationLanguageSeries::resolve);
             lang.ifPresent(rep::setLanguage);
             if (!lang.isPresent()) {
-              SerializationFormat.resolve(t.langTag)
+              SerializationFormatSeries.resolve(t.langTag)
                   .ifPresent(rep::setFormat);
             }
           }
 
           if (!isEmpty(t.profTag)) {
-            KnowledgeRepresentationLanguageProfile.resolve(t.profTag)
+            KnowledgeRepresentationLanguageProfileSeries.resolve(t.profTag)
                 .ifPresent(rep::setProfile);
           }
 
           if (!isEmpty(t.serialTag)) {
-            KnowledgeRepresentationLanguageSerialization.resolve(t.serialTag)
+            KnowledgeRepresentationLanguageSerializationSeries.resolve(t.serialTag)
                 .ifPresent(rep::setSerialization);
           }
 
           if (rep.getFormat() == null) {
-            rep.setFormat(SerializationFormat.resolve(t.formatTag).orElse(SerializationFormat.TXT));
+            rep.setFormat(SerializationFormatSeries.resolve(t.formatTag).orElse(TXT));
           }
 
           if (!isEmpty(t.lexTags)) {
             Arrays.stream(t.lexTags.split(","))
-                .forEach(l -> Lexicon.resolve(l)
+                .forEach(l -> LexiconSeries.resolve(l)
                     .ifPresent(rep::withLexicon));
           }
 

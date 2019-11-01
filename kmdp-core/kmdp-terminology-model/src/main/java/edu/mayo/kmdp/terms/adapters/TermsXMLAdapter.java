@@ -18,7 +18,7 @@ package edu.mayo.kmdp.terms.adapters;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.TermSeries;
-import edu.mayo.kmdp.util.Util;
+import edu.mayo.kmdp.util.StreamUtil;
 import java.util.Arrays;
 import java.util.Optional;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
@@ -45,7 +45,7 @@ public abstract class TermsXMLAdapter extends
   protected Term[] getValuesForVersion( final NamespaceIdentifier identifier ) {
     return Arrays.stream(getValues())
         .map(x -> getVersion(x,identifier.getVersion()))
-        .flatMap(Util::trimStream)
+        .flatMap(StreamUtil::trimStream)
         .toArray(Term[]::new);
   }
 

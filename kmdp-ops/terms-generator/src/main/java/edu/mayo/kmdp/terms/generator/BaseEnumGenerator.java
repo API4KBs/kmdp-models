@@ -33,6 +33,7 @@ import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.PropertiesUtil;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.File;
 import java.io.FileWriter;
@@ -234,8 +235,7 @@ public abstract class BaseEnumGenerator {
     public SeriesHolder(String label, List<Term> versions, UnaryOperator<String> packageNameMapper ) {
       this.term = label;
       this.versions = versions.stream()
-          .map(x -> Util.as(x, ConceptTermImpl.class))
-          .flatMap(Util::trimStream)
+          .flatMap(StreamUtil.filterAs(ConceptTermImpl.class))
           // Ensure latest version first
           .sorted(Comparator.comparing(ConceptIdentifier::getNamespace).reversed())
           //

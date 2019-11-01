@@ -89,7 +89,13 @@ public enum {{typeName}} implements {{intfPackageName}}.{{intfName}} {
 
   @Override
   public VersionedIdentifier getVersionIdentifier() {
-    return namespace;
+    return new NamespaceIdentifier()
+      .withId(getConceptId())
+      .withLabel(getLabel())
+      .withTag(getTag())
+      .withVersion(namespace.getVersion())
+      .withVersioning( VersionTagType.TIMESTAMP )
+      .withEstablishedOn(namespace.getEstablishedOn());
   }
 
   @Override

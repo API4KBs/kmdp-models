@@ -16,6 +16,7 @@
 package org.omg.spec.api4kp._1_0;
 
 
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
 import java.util.ArrayList;
@@ -33,9 +34,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Monadic class supporting KMDP API functional-style chaining
@@ -189,7 +190,7 @@ public class Answer<T> extends Explainer {
     if (ans == null) {
       return Stream.empty();
     }
-    return Util.trimStream(ans.getOptionalValue());
+    return StreamUtil.trimStream(ans.getOptionalValue());
   }
 
 

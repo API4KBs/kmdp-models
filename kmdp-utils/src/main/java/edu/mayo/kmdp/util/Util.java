@@ -247,21 +247,9 @@ public class Util {
   }
 
   public static <T> Function<Object,Optional<T>> as(Class<T> type) {
-    return (x) -> type.isInstance(x)
+    return x -> type.isInstance(x)
         ? Optional.of(type.cast(x))
         : Optional.empty();
-  }
-
-  public static <T> Function<Object,Stream<T>> filterAs(Class<T> type) {
-    return (x) -> trimStream(as(x,type));
-  }
-
-
-
-  public static <T,X> Stream<T> streamAs(X instance, Class<T> type) {
-    return as(instance,type)
-        .map(Stream::of)
-        .orElseGet(Stream::empty);
   }
 
   private static class Entry {
@@ -335,8 +323,5 @@ public class Util {
     return str.replaceAll("[^\\x20-\\x7e]", "");
   }
 
-  public static <T> Stream<T> trimStream(Optional<T> opt) {
-    return opt.map(Stream::of).orElseGet(Stream::empty);
-  }
 
 }

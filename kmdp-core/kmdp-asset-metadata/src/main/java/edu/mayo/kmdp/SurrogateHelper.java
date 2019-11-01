@@ -143,7 +143,7 @@ public class SurrogateHelper {
     return resource.getRelated().stream()
         .filter(dependency -> dependency instanceof Dependency)
         .map(dependency -> (Dependency) dependency)
-        .filter(dependency -> TRAVERSE_DEPS.contains(dependency.getRel()))
+        .filter(dependency -> TRAVERSE_DEPS.contains(dependency.getRel().asEnum()))
         .map(Association::getTgt)
         .map(x -> (edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset) x)
         .collect(Collectors.toSet());
