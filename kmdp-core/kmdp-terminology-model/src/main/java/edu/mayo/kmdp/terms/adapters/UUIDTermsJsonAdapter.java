@@ -4,7 +4,6 @@ import static edu.mayo.kmdp.util.Util.ensureUUID;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import edu.mayo.kmdp.id.Term;
@@ -47,6 +46,7 @@ public abstract class UUIDTermsJsonAdapter extends AbstractTermsJsonAdapter {
           .orElse(null);
     }
 
+    @Override
     protected abstract Optional<T> resolveUUID(UUID uuid);
 
   }

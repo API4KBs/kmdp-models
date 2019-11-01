@@ -16,7 +16,6 @@
 package org.omg.spec.api4kp._1_0.contrastors;
 
 import edu.mayo.kmdp.comparator.Contrastor;
-import edu.mayo.kmdp.series.Series;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevel;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
 import java.util.Comparator;

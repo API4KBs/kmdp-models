@@ -35,6 +35,7 @@ public class VersionedConceptGraph extends ConceptGraph {
         .collect(Collectors.toSet());
   }
 
+  @Override
   public Collection<ConceptTermSeries> getConceptSeries(URI schemeURI) {
     Map<URI, ConceptTermSeries> series = new HashMap<>();
 

@@ -87,6 +87,7 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
       return fragment;
     }
 
+    @Override
     protected abstract Optional<T> resolveUUID(UUID uuid);
   }
 

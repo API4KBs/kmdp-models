@@ -24,9 +24,11 @@ import org.slf4j.LoggerFactory;
 
 public class DateTimeUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(DateTimeUtil.class);
-
   public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
+
+  protected DateTimeUtil() {
+
+  }
 
   public static Date now() {
     return Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -63,7 +65,6 @@ public class DateTimeUtil {
               localDate.atStartOfDay(ZoneId.systemDefault())
                   .toInstant()));
     } catch (DateTimeParseException dtpe) {
-      //logger.warn(dtpe.getMessage(),dtpe);
       return Optional.empty();
     }
   }

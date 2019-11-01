@@ -24,9 +24,7 @@ import org.slf4j.LoggerFactory;
 
 public class DateAdapter extends XmlAdapter<String, Date> {
 
-  private static final Logger logger = LoggerFactory.getLogger(DateAdapter.class);
-
-  public static final String XML_DATETIME_PATTERN = "yyyy-MM-dd'T'hh:mm:ss";
+  private static final String XML_DATETIME_PATTERN = "yyyy-MM-dd'T'hh:mm:ss";
 
   private static DateAdapter instance = new DateAdapter();
 

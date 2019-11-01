@@ -17,10 +17,6 @@ package edu.mayo.kmdp.terms;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.ns;
 
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
-import edu.mayo.kmdp.util.URIUtil;
 import java.net.URI;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;

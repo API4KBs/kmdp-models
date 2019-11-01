@@ -1,7 +1,6 @@
 package edu.mayo.kmdp.terms;
 
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.terms.Taxonomic;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;

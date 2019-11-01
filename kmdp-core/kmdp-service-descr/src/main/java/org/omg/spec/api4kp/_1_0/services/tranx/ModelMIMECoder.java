@@ -247,12 +247,39 @@ public class ModelMIMECoder {
 
     @Override
     public int compareTo(WeightedCode o) {
+      if (!code.equals(o.code)) {
+        return 0;
+      }
       float delta = o.w - w;
       if (Math.abs(delta) < 0.001) {
         return 0;
       } else {
         return delta > 0 ? 1 : -1;
       }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof WeightedCode)) {
+        return false;
+      }
+
+      WeightedCode that = (WeightedCode) o;
+
+      if (Math.abs(w-that.w) > 0.001) {
+        return false;
+      }
+      return code.equals(that.code);
+    }
+
+    @Override
+    public int hashCode() {
+      int result = code.hashCode();
+      result = 31 * result + (w != +0.0f ? Float.floatToIntBits(w) : 0);
+      return result;
     }
   }
 }

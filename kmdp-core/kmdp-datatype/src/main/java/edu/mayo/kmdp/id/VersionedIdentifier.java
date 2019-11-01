@@ -18,9 +18,7 @@ package edu.mayo.kmdp.id;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
-import edu.mayo.kmdp.util.DateTimeUtil;
 import java.util.Date;
-import java.util.Optional;
 import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
 
 public interface VersionedIdentifier extends Identifier, Comparable<VersionedIdentifier> {

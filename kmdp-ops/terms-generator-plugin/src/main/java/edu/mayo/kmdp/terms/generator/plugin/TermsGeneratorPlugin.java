@@ -13,7 +13,6 @@
  */
 package edu.mayo.kmdp.terms.generator.plugin;
 
-import edu.mayo.kmdp.terms.generator.BaseEnumGenerator;
 import edu.mayo.kmdp.terms.generator.CatalogGenerator;
 import edu.mayo.kmdp.terms.generator.CatalogGenerator.CatalogEntry;
 import edu.mayo.kmdp.terms.generator.JavaEnumTermsGenerator;

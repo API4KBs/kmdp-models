@@ -168,7 +168,6 @@ public class JSonUtil {
       return Optional.of(baos);
     } catch (IOException e) {
       logger.error(e.getMessage(),e);
-      e.printStackTrace();
       return Optional.empty();
     }
   }
