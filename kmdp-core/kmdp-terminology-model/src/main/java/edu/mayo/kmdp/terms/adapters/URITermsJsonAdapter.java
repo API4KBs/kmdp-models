@@ -1,7 +1,5 @@
 package edu.mayo.kmdp.terms.adapters;
 
-import static edu.mayo.kmdp.util.Util.ensureUUID;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -11,6 +9,7 @@ import edu.mayo.kmdp.series.Versionable;
 import edu.mayo.kmdp.terms.TermSeries;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.URIUtil;
+import edu.mayo.kmdp.util.Util;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
@@ -48,17 +47,14 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
     public T deserialize(JsonParser jp, DeserializationContext ctxt) {
       try {
         String tok = jp.getText();
-        if (tok == null) {
-          return null;
-        }
-        URI uri = URI.create(tok.substring(0,tok.indexOf('|')).trim());
-        String uuid = extractIdentifier(uri);
-        return ensureUUID(uuid)
-            .flatMap(this::resolveUUID)
-            .map(t -> resolveInSeries(t, URIUtil.normalizeURI(uri)))
+        return extractURI(tok)
+            .flatMap(uri -> extractIdentifier(uri)
+                .flatMap(Util::ensureUUID)
+                .flatMap(this::resolveUUID)
+                .map(t -> resolveInSeries(t, URIUtil.normalizeURI(uri))))
             .orElse(null);
       } catch (IOException e) {
-        logger.error(e.getMessage(),e);
+        logger.error(e.getMessage(), e);
       }
       return null;
     }
@@ -74,9 +70,23 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
       return t;
     }
 
-    protected String extractIdentifier(URI uri) {
+    protected Optional<URI> extractURI(String tok) {
+      if (Util.isEmpty(tok)) {
+        return Optional.empty();
+      }
+      int delim = tok.indexOf('|');
+      if (delim == 0) {
+        return Optional.empty();
+      }
+      if (delim <= 0) {
+        return Optional.of(URI.create(tok.trim()));
+      }
+      return Optional.of(URI.create(tok.substring(0, delim).trim()));
+    }
+
+    protected Optional<String> extractIdentifier(URI uri) {
       String fragment = uri.getFragment();
-      if (fragment == null) {
+      if (Util.isEmpty(fragment)) {
         if ("urn".equals(uri.getScheme())) {
           fragment = uri.toString();
           fragment = fragment.substring(fragment.lastIndexOf(':') + 1);
@@ -84,7 +94,7 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
           fragment = NameUtils.getTrailingPart(uri.toString());
         }
       }
-      return fragment;
+      return Optional.ofNullable(fragment);
     }
 
     @Override

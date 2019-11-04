@@ -102,7 +102,7 @@ public enum {{seriesName}} implements {{intfName}}, TermSeries<{{intfName}},{{se
   }
 
   public static Optional<{{intfName}}> resolveUUID(final UUID conceptId) {
-    return Optional.of(index.get(conceptId));
+    return Optional.ofNullable(index.get(conceptId));
   }
 
   public static Optional<{{intfName}}> resolveId(final URI conceptId) {

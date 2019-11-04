@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.KeyDeserializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -28,12 +29,30 @@ public abstract class AbstractTermsJsonAdapter {
   protected AbstractTermsJsonAdapter() {
   }
 
+
+
   public abstract static class AbstractJsonSerializer<T extends Term> extends JsonSerializer<T> {
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
       gen.writeObject(v.asConcept());
     }
+  }
+
+  public abstract static class AbstractKeySerializer<T extends Term> extends AbstractJsonSerializer<T> {
+
+    @Override
+    public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
+        throws IOException {
+      gen.writeFieldName(v.getConceptUUID() != null ? v.getConceptUUID().toString() : v.getTag());
+    }
+  }
+
+
+  public abstract static class AbstractKeyDeserializer<T extends Term> extends KeyDeserializer {
+
+    public abstract T deserializeKey(String key, DeserializationContext ctxt) throws IOException;
+
   }
 
 

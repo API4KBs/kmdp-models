@@ -159,7 +159,7 @@ public enum {{typeName}} implements {{intfPackageName}}.{{intfName}} {
   }
 
   public static Optional<{{typeName}}> resolveUUID(final UUID conceptId) {
-    return Optional.of(index.get(conceptId));
+    return Optional.ofNullable(index.get(conceptId));
   }
 
   public static Optional<{{typeName}}> resolveId(final URI conceptId) {

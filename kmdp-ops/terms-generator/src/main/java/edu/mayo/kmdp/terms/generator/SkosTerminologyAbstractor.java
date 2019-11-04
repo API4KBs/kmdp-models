@@ -561,7 +561,7 @@ public class SkosTerminologyAbstractor {
           Set<Term> includedParents = parents.stream()
               .filter(prn -> src.getConcepts()
                   .anyMatch(c -> c.getConceptId().equals(prn.getConceptId())))
-              .filter(prn -> !((ConceptTermImpl) prn).getScheme().equals(src))
+              .filter(prn -> ((ConceptTermImpl) prn).getScheme() != src)
               .collect(Collectors.toSet());
           parents.removeAll(includedParents);
           includedParents.forEach(p -> parents.add(src.getConcept(p.getConceptId())));

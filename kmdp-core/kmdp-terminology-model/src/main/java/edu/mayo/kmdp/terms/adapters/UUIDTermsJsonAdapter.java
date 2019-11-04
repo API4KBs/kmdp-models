@@ -51,5 +51,25 @@ public abstract class UUIDTermsJsonAdapter extends AbstractTermsJsonAdapter {
 
   }
 
+  public static class KeySerializer<T extends Term> extends AbstractTermsJsonAdapter.AbstractKeySerializer<T> {
+    @Override
+    public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
+        throws IOException {
+      gen.writeFieldName(v.getConceptUUID().toString());
+    }
+  }
+
+  public abstract static class KeyDeserializer<T extends Term> extends AbstractTermsJsonAdapter.AbstractKeyDeserializer<T> {
+
+    @Override
+    public T deserializeKey(String key, DeserializationContext ctxt) throws IOException {
+      return ensureUUID(key)
+          .flatMap(this::resolveUUID)
+          .orElse(null);
+    }
+
+    protected abstract Optional<T> resolveUUID(UUID uuid);
+  }
+
 
 }
