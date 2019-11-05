@@ -11,7 +11,6 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.TermSeries;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public enum CitoSeries implements ICito, TermSeries<ICito,CitoSeries> {
+public enum CitoSeries implements ICito, Series<ICito> {
 
   Cites(Cito.Cites),
   Cites_As_Source_Document(Cito.Cites_As_Source_Document);

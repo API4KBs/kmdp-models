@@ -16,8 +16,8 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language.English;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._20190801.KnowledgeAssetRole.Operational_Concept_Definition;
+import static edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries.English;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries.Operational_Concept_Definition;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
@@ -31,16 +31,21 @@ import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.metadata.surrogate.SubLanguage;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._20190801.KnowledgeProcessingTechnique;
-import edu.mayo.ontology.taxonomies.kao.languagerole._20190801.KnowledgeRepresentationLanguageRole;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
-import edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
-import edu.mayo.ontology.taxonomies.krprofile._20190801.KnowledgeRepresentationLanguageProfile;
-import edu.mayo.ontology.taxonomies.lexicon._20190801.Lexicon;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique.KnowledgeProcessingTechniqueSeries;
+import edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRoleSeries;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyType;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
+import edu.mayo.ontology.taxonomies.krformat.SerializationFormat;
+import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfileSeries;
+import edu.mayo.ontology.taxonomies.lexicon.Lexicon;
+import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.UUID;
@@ -75,56 +80,56 @@ public class SurrogateBuilder {
   }
 
   public SurrogateBuilder withValuesetType() {
-    get().withFormalCategory(KnowledgeAssetCategory.Terminology_Ontology_And_Assertional_KBs)
-        .withFormalType(KnowledgeAssetType.Value_Set);
+    get().withFormalCategory(KnowledgeAssetCategorySeries.Terminology_Ontology_And_Assertional_KBs)
+        .withFormalType(KnowledgeAssetTypeSeries.Value_Set);
     return this;
   }
 
   public SurrogateBuilder withServiceType() {
-    get().withFormalCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
-        .withFormalType(KnowledgeAssetType.Service_Description);
+    get().withFormalCategory(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines)
+        .withFormalType(KnowledgeAssetTypeSeries.Service_Description);
     return this;
   }
 
   public SurrogateBuilder withCohortDefinitionType() {
-    get().withFormalCategory(KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models)
-        .withFormalType(KnowledgeAssetType.Cohort_Definition);
+    get().withFormalCategory(KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models)
+        .withFormalType(KnowledgeAssetTypeSeries.Cohort_Definition);
     return this;
   }
 
   public SurrogateBuilder withQueryType() {
-    get().withFormalCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
-        .withFormalType(KnowledgeAssetType.Inquiry_Specification);
+    get().withFormalCategory(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines)
+        .withFormalType(KnowledgeAssetTypeSeries.Inquiry_Specification);
     return this;
   }
 
   public SurrogateBuilder withContentType() {
-    get().withFormalCategory(KnowledgeAssetCategory.Terminology_Ontology_And_Assertional_KBs)
-        .withFormalType(KnowledgeAssetType.Factual_Knowledge);
+    get().withFormalCategory(KnowledgeAssetCategorySeries.Terminology_Ontology_And_Assertional_KBs)
+        .withFormalType(KnowledgeAssetTypeSeries.Factual_Knowledge);
     return this;
   }
 
   public SurrogateBuilder withExpressionType() {
-    get().withFormalCategory(KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models)
-        .withFormalType(KnowledgeAssetType.Functional_Expression);
+    get().withFormalCategory(KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models)
+        .withFormalType(KnowledgeAssetTypeSeries.Functional_Expression);
     return this;
   }
 
-  public SurrogateBuilder withFormalType(KnowledgeAssetCategory cat, KnowledgeAssetType... type) {
+  public SurrogateBuilder withFormalType(KnowledgeAssetCategory cat, KnowledgeAssetType type) {
     get().withFormalCategory(cat)
         .withFormalType(type);
     return this;
   }
 
   public SurrogateBuilder withDecisionAidType() {
-    get().withFormalCategory(KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models)
-        .withFormalType(KnowledgeAssetType.Computable_Decision_Model);
+    get().withFormalCategory(KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models)
+        .withFormalType(KnowledgeAssetTypeSeries.Computable_Decision_Model);
     return this;
   }
 
 
   public SurrogateBuilder aaS() {
-    get().withProcessingMethod(KnowledgeProcessingTechnique.Service_Based_Technique);
+    get().withProcessingMethod(KnowledgeProcessingTechniqueSeries.Service_Based_Technique);
     return this;
   }
 
@@ -142,15 +147,15 @@ public class SurrogateBuilder {
     get().withRole(Operational_Concept_Definition);
 
     if (proposition != null) {
-      this.withAnnotation(AnnotationRelType.Defines.asConcept(), proposition.asConcept());
+      this.withAnnotation(AnnotationRelTypeSeries.Defines.asConcept(), proposition.asConcept());
     }
 
     if (subject != null) {
-      this.withAnnotation(AnnotationRelType.Has_Subject.asConcept(), subject);
+      this.withAnnotation(AnnotationRelTypeSeries.Has_Subject.asConcept(), subject);
     }
 
     Arrays.stream(inputs).forEach(input ->
-        this.withAnnotation(AnnotationRelType.In_Terms_Of.asConcept(), input.asConcept())
+        this.withAnnotation(AnnotationRelTypeSeries.In_Terms_Of.asConcept(), input.asConcept())
     );
 
     return this;
@@ -160,9 +165,9 @@ public class SurrogateBuilder {
   public SurrogateBuilder withDMNExpression(KnowledgeRepresentationLanguage schema) {
     if (get().getCarriers().isEmpty()) {
       get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.DMN_1_1)
-          .withFormat(SerializationFormat.XML_1_1)
-          .withWith(new SubLanguage().withRole(KnowledgeRepresentationLanguageRole.Schema_Language)
+          .withLanguage(KnowledgeRepresentationLanguageSeries.DMN_1_1)
+          .withFormat(SerializationFormatSeries.XML_1_1)
+          .withWith(new SubLanguage().withRole(KnowledgeRepresentationLanguageRoleSeries.Schema_Language)
               .withSubLanguage(new Representation().withLanguage(schema)))));
     }
     return this;
@@ -172,8 +177,8 @@ public class SurrogateBuilder {
   public SurrogateBuilder withOpenAPIExpression() {
     if (get().getCarriers().isEmpty()) {
       get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.OpenAPI_2_X)
-          .withFormat(SerializationFormat.YAML_1_2)));
+          .withLanguage(KnowledgeRepresentationLanguageSeries.OpenAPI_2_X)
+          .withFormat(SerializationFormatSeries.YAML_1_2)));
     }
     return this;
   }
@@ -182,8 +187,8 @@ public class SurrogateBuilder {
     if (get().getCarriers().isEmpty()) {
       get().withCarriers(new ComputableKnowledgeArtifact().withLocalization(English)
           .withRepresentation(new Representation()
-              .withLanguage(KnowledgeRepresentationLanguage.HTML)
-              .withFormat(SerializationFormat.XML_1_1)));
+              .withLanguage(KnowledgeRepresentationLanguageSeries.HTML)
+              .withFormat(SerializationFormatSeries.XML_1_1)));
     }
     return this;
   }
@@ -191,10 +196,10 @@ public class SurrogateBuilder {
   public SurrogateBuilder withSKOSExpression() {
     if (get().getCarriers().isEmpty()) {
       get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.OWL_2)
-          .withFormat(SerializationFormat.RDF_1_1)
-          .withProfile(KnowledgeRepresentationLanguageProfile.OWL2_DL)
-          .withLexicon(Lexicon.SKOS)));
+          .withLanguage(KnowledgeRepresentationLanguageSeries.OWL_2)
+          .withFormat(SerializationFormatSeries.RDF_1_1)
+          .withProfile(KnowledgeRepresentationLanguageProfileSeries.OWL2_DL)
+          .withLexicon(LexiconSeries.SKOS)));
     }
     return this;
   }
@@ -203,8 +208,8 @@ public class SurrogateBuilder {
   public SurrogateBuilder withCQLExpression(Lexicon lex) {
     if (get().getCarriers().isEmpty()) {
       get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.HL7_CQL)
-          .withFormat(SerializationFormat.TXT)
+          .withLanguage(KnowledgeRepresentationLanguageSeries.HL7_CQL)
+          .withFormat(SerializationFormatSeries.TXT)
           .withLexicon(lex)));
     }
     return this;
@@ -215,8 +220,8 @@ public class SurrogateBuilder {
   public SurrogateBuilder withInlinedFhirPath(String expr) {
     if (get().getCarriers().isEmpty()) {
       get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguage.FHIRPath_STU1)
-          .withFormat(SerializationFormat.TXT))
+          .withLanguage(KnowledgeRepresentationLanguageSeries.FHIRPath_STU1)
+          .withFormat(SerializationFormatSeries.TXT))
           .withInlined(new InlinedRepresentation().withExpr(expr)));
     }
     return this;

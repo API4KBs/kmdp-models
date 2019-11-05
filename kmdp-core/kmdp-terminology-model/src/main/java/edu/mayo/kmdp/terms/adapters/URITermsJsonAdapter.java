@@ -5,9 +5,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.series.Versionable;
-import edu.mayo.kmdp.terms.TermSeries;
 import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.IOException;
@@ -47,22 +48,27 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
     public T deserialize(JsonParser jp, DeserializationContext ctxt) {
       try {
         String tok = jp.getText();
-        return extractURI(tok)
-            .flatMap(uri -> extractIdentifier(uri)
-                .flatMap(Util::ensureUUID)
-                .flatMap(this::resolveUUID)
-                .map(t -> resolveInSeries(t, URIUtil.normalizeURI(uri))))
-            .orElse(null);
+        return parse(tok);
       } catch (IOException e) {
         logger.error(e.getMessage(), e);
       }
       return null;
     }
 
+    protected T parse(String tok) {
+      return extractURI(tok)
+          .flatMap(uri -> extractIdentifier(uri)
+              .flatMap(Util::ensureUUID)
+              .flatMap(this::resolveUUID)
+              .map(t -> resolveInSeries(t, URIUtil.normalizeURI(uri))))
+          .orElse(null);
+    }
+
     private T resolveInSeries(T t, URI uri) {
-      if (t instanceof TermSeries) {
-        TermSeries<? extends Versionable,?> s = ((TermSeries) t);
+      if (t instanceof Series) {
+        Series<? extends Versionable> s = ((Series) t);
         Optional<?> opt = s.getVersions().stream()
+            .flatMap(StreamUtil.filterAs(Term.class))
             .filter(v -> ((NamespaceIdentifier) v.getNamespace()).getId().equals(uri))
             .findAny();
         return opt.map(o -> (T) o).orElse(t);

@@ -35,9 +35,15 @@ public interface Series<T extends Versionable<T>> {
   }
 
   default Optional<T> asOf(Date d) {
-    return getVersions().stream()
-        .filter(v -> d.compareTo(v.getVersionIdentifier().getEstablishedOn()) >= 0)
-        .findFirst();
+    boolean expired = this.getSeriesExpiredOn()
+        .map(exp -> d.compareTo(exp) >= 0)
+        .orElse(false);
+
+    return expired
+        ? Optional.empty()
+        : getVersions().stream()
+            .filter(v -> d.compareTo(v.getVersionEstablishedOn()) >= 0)
+            .findFirst();
   }
 
   default Optional<T> getVersion(String versionTag) {
@@ -93,6 +99,27 @@ public interface Series<T extends Versionable<T>> {
 
   default Optional<T> latest() {
     return isEmpty() ? Optional.empty() : Optional.of(getVersions().get(0));
+  }
+
+  default T getEarliest() {
+    return earliest().orElse(null);
+  }
+
+  default Optional<T> earliest() {
+    List<T> versions = getVersions();
+    return isEmpty() ? Optional.empty() : Optional.of(versions.get(versions.size() - 1));
+  }
+
+  default Date getSeriesEstablishedOn() {
+    return getEarliest().getVersionEstablishedOn();
+  }
+
+  default Optional<Date> getSeriesExpiredOn() {
+    return Optional.empty();
+  }
+
+  default boolean isSeriesExpired() {
+    return getLatest().isVersionExpired();
   }
 
   default List<T> getVersions() {

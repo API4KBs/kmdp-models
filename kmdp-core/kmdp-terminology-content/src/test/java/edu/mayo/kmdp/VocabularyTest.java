@@ -16,7 +16,6 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.util.Util.ensureUUID;
-import static edu.mayo.kmdp.util.Util.removeLastChar;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

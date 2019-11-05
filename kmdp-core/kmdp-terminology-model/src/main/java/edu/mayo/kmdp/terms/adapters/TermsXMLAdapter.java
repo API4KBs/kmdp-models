@@ -17,7 +17,7 @@ package edu.mayo.kmdp.terms.adapters;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
-import edu.mayo.kmdp.terms.TermSeries;
+import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.util.StreamUtil;
 import java.util.Arrays;
 import java.util.Optional;
@@ -50,8 +50,8 @@ public abstract class TermsXMLAdapter extends
   }
 
   private Optional<? extends Term> getVersion(Term x, String version) {
-    return x instanceof TermSeries
-        ? ((TermSeries<?,?>) x).getVersion(version)
+    return x instanceof Series
+        ? (Optional<? extends Term>) ((Series<?>) x).getVersion(version)
         : Optional.of(x);
   }
 

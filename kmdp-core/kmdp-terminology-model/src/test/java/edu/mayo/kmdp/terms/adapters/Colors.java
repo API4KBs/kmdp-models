@@ -78,6 +78,7 @@ public enum Colors implements IColors {
   @Override
   public Identifier getNamespace() {
     return new NamespaceIdentifier()
+        .withId(URI.create("http://colors.foo"))
         .withTag(trm.getTag())
         .withVersion("0.0.1")
         .withEstablishedOn(new Date())

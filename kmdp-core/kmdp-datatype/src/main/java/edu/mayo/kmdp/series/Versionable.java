@@ -2,6 +2,8 @@ package edu.mayo.kmdp.series;
 
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.Optional;
 
 public interface Versionable<T extends Versionable<T>> {
 
@@ -16,6 +18,18 @@ public interface Versionable<T extends Versionable<T>> {
 
   default T snapshot() {
     return (T) this;
+  }
+
+  default boolean isVersionExpired() {
+    return false;
+  }
+
+  default Optional<Date> getVersionExpiredOn () {
+    return Optional.empty();
+  }
+
+  default Date getVersionEstablishedOn() {
+    return getVersionIdentifier().getEstablishedOn();
   }
 
   static <T extends Versionable<T>> Comparator<T> mostRecentFirstComparator() {

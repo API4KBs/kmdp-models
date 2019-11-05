@@ -29,12 +29,14 @@ import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.example.cito.ICito;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
@@ -74,7 +76,8 @@ public enum SCH1Old implements ISCH1 {
       .withId(URI.create("http://test/generator#concept_scheme1"))
       .withLabel("Concept Scheme 1")
       .withTag("concept_scheme_1")
-      .withVersion("v00_Ancient");
+      .withVersion("v00_Ancient")
+      .withEstablishedOn(DateTimeUtil.parseDate("1981-12-01"));
 
   public static final Map<UUID,SCH1Old> index = indexByUUID(SCH1Old.values());
 

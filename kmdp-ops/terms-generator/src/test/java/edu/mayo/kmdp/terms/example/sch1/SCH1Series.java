@@ -25,11 +25,13 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.TermSeries;
 import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.TermsXMLAdapter;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,12 +43,18 @@ import java.util.UUID;
 * */
 @com.fasterxml.jackson.databind.annotation.JsonSerialize( using = SCH1Series.JsonSerializer.class )
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = SCH1Series.JsonDeserializer.class )
-public enum SCH1Series implements ISCH1, TermSeries<ISCH1,SCH1Series> {
+public enum SCH1Series implements ISCH1, Series<ISCH1> {
 
   Specific_Concept(SCH1.Specific_Concept,SCH1Old.Specific_Concept),
   Nested_Specific_Concept(SCH1.Nested_Specific_Concept),
   Deprecated_Concept(SCH1Old.Deprecated_Concept),
   Sub_Sub_Concept(SCH1.Sub_Sub_Concept);
+
+  public static final List<String> schemeVersions =
+      java.util.Arrays.asList( "20190801"  ,   "19811201"   );
+
+  public static final List<Date> schemeReleases =
+      DateTimeUtil.parseDates(java.util.Arrays.asList( "20190801"  ,   "19811201"   ),"yyyyMMdd");
 
 
   public static final Map<UUID, ISCH1> index = indexByUUID(SCH1Series.values());
@@ -73,6 +81,7 @@ public enum SCH1Series implements ISCH1, TermSeries<ISCH1,SCH1Series> {
   public Identifier getNamespace() {
     return ISCH1.seriesNamespace;
   }
+
 
 
 
@@ -108,6 +117,20 @@ public enum SCH1Series implements ISCH1, TermSeries<ISCH1,SCH1Series> {
   @Override
   public VersionedIdentifier getVersionIdentifier() {
     return getLatest().getVersionIdentifier();
+  }
+
+  @Override
+  public boolean isSeriesExpired() {
+    Date lastEstablished = getLatest().getVersionEstablishedOn();
+    return schemeReleases.get(0).compareTo(lastEstablished) > 0;
+  }
+
+  @Override
+  public Optional<Date> getSeriesExpiredOn() {
+    Date lastEstablished = getLatest().getVersionEstablishedOn();
+    return schemeReleases.stream()
+        .filter(r -> r.compareTo(lastEstablished) > 0)
+        .min(Comparator.naturalOrder());
   }
 
   @Override

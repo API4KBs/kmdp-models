@@ -52,7 +52,7 @@ public class MetadataTest {
 
 
   @Test
-  public void testKS() {
+  void testKS() {
     KnowledgeAssetCategory br = KnowledgeAssetCategory.Rules_Policies_And_Guidelines;
     KnowledgeAsset ks = new KnowledgeAsset()
         .withAssetId(uri("http://foo.bar", "234"))
@@ -64,6 +64,18 @@ public class MetadataTest {
     checkRoundTrip(ks);
   }
 
+  @Test
+  public void testApplicability() {
+    KnowledgeAsset ks = new KnowledgeAsset()
+        .withAssetId(uri("http://foo.bar", "142412"))
+        .withName("Foo")
+        .withApplicableIn(new SimpleApplicability()
+            .withSituation(TermsHelper.mayo("Example Situation","x123"))
+        );
+
+    ks = checkRoundTrip(ks);
+    assertEquals("x123", ((SimpleApplicability)ks.getApplicableIn()).getSituation().getTag());
+  }
 
   @Test
   /**
@@ -71,7 +83,7 @@ public class MetadataTest {
    * which itself is implemented in an external system, typically in
    * a proprietary / not transparent form
    */
-  public void testScenario_BasicExternalImpl() {
+  void testScenario_BasicExternalImpl() {
     KnowledgeAsset ks = new KnowledgeAsset()
 
         .withAssetId(uri("http://foo.bar", "234"))
@@ -141,7 +153,7 @@ public class MetadataTest {
   }
 
   @Test
-  public void testSimpleApplicability() {
+  void testSimpleApplicability() {
     KnowledgeAsset asset = new KnowledgeAsset();
     asset.withApplicableIn(new SimpleApplicability()
         .withSituation(TermsHelper.mayo("test","123")));
@@ -150,7 +162,7 @@ public class MetadataTest {
   }
 
   @Test
-  public void testComplexApplicability() {
+  void testComplexApplicability() {
     KnowledgeAsset asset = new KnowledgeAsset();
     asset.withApplicableIn(new ComplexApplicability()
         .withSituation(new InlinedRepresentation()

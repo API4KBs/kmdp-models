@@ -20,10 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.metadata.annotations.SimpleApplicability;
 import edu.mayo.kmdp.metadata.surrogate.Citation;
 import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.Derivative;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
@@ -52,6 +54,22 @@ public class MetadataJSonTest {
 //    JenaUtil.toSystemOut(triples);
 
   }
+
+  @Test
+  void testApplicability() {
+    KnowledgeAsset ks = new KnowledgeAsset()
+        .withAssetId(uri("http://foo.bar", "142412"))
+        .withApplicableIn(new SimpleApplicability()
+            .withSituation(TermsHelper.mayo("Example Situation","x123"))
+        );
+
+    String x = toJson(ks);
+    ks = JSonUtil.parseJson(x,KnowledgeAsset.class).orElse(null);
+    assertNotNull(ks);
+
+    assertEquals("x123", ((SimpleApplicability)ks.getApplicableIn()).getSituation().getTag());
+  }
+
 
   @Test
   void testSerialization() {

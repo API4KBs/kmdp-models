@@ -12,10 +12,10 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.TermSeries;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +32,7 @@ import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 @com.fasterxml.jackson.databind.annotation.JsonSerialize( using = {{seriesName}}.JsonSerializer.class )
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{seriesName}}.JsonDeserializer.class )
 {{/json}}
-public enum {{seriesName}} implements {{intfName}}, TermSeries<{{intfName}},{{seriesName}}> {
+public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
 
    {{#conceptSeries}}
     {{term}}( {{#versions}} {{.}}  {{^-last}}, {{/-last}} {{/versions}} ) {{^-last}}, {{/-last}}
@@ -40,7 +40,11 @@ public enum {{seriesName}} implements {{intfName}}, TermSeries<{{intfName}},{{se
 
   private static final Map<UUID, {{seriesName}}> index = indexByUUID({{seriesName}}.values());
 
-  public static final List<String> schemeVersions = java.util.Arrays.asList({{#schemeVersions}} "{{.}}"  {{^-last}}, {{/-last}} {{/schemeVersions}});
+  public static final List<String> schemeVersions =
+      java.util.Arrays.asList({{#schemeVersions}} "{{.}}"  {{^-last}}, {{/-last}} {{/schemeVersions}});
+
+  public static final List<Date> schemeReleases =
+      edu.mayo.kmdp.util.DateTimeUtil.parseDates(java.util.Arrays.asList({{#publicationDates}} "{{.}}"  {{^-last}}, {{/-last}} {{/publicationDates}}));
 
   private List<{{intfName}}> versions;
 
@@ -75,22 +79,35 @@ public enum {{seriesName}} implements {{intfName}}, TermSeries<{{intfName}},{{se
   public VersionedIdentifier getVersionIdentifier() {
     return getLatest().getVersionIdentifier();
   }  
-  
+
+  @Override
+  public boolean isSeriesExpired() {
+    Date lastEstablished = getLatest().getVersionEstablishedOn();
+    return ! schemeReleases.isEmpty() && schemeReleases.get(0).compareTo(lastEstablished) > 0;
+  }
+
+  @Override
+  public Optional<Date> getSeriesExpiredOn() {
+    Date lastEstablished = getLatest().getVersionEstablishedOn();
+    return schemeReleases.stream()
+        .filter(r -> r.compareTo(lastEstablished) > 0)
+        .min(java.util.Comparator.naturalOrder());
+  }
 
   public static Optional<{{intfName}}> resolve(final Term trm) {
-    return resolveId(trm.getConceptId());
+    return trm != null ? resolveId(trm.getConceptId()) : Optional.empty();
   }
 
   public static Optional<{{intfName}}> resolve(final String tag) {
-    return resolveTag(tag);
+    return tag != null ? resolveTag(tag) : Optional.empty();
   }
 
   public static Optional<{{intfName}}> resolveId(final String conceptId) {
-    return resolveId(URI.create(conceptId));
+    return conceptId != null ? resolveId(URI.create(conceptId)) : Optional.empty();
   }
 
   public static Optional<{{intfName}}> resolveRef(final String refUri) {
-    return resolveRef(URI.create(refUri));
+    return refUri != null ? resolveRef(URI.create(refUri)) : Optional.empty();
   }
 
   public static Optional<{{intfName}}> resolveTag(final String tag) {
@@ -102,7 +119,9 @@ public enum {{seriesName}} implements {{intfName}}, TermSeries<{{intfName}},{{se
   }
 
   public static Optional<{{intfName}}> resolveUUID(final UUID conceptId) {
-    return Optional.ofNullable(index.get(conceptId));
+    return conceptId != null
+      ? Optional.ofNullable(index.get(conceptId))
+      : Optional.empty();
   }
 
   public static Optional<{{intfName}}> resolveId(final URI conceptId) {

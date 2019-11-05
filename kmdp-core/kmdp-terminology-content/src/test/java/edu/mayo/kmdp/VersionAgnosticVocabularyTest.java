@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.registry.Registry;
+import edu.mayo.kmdp.series.Versionable;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations.KnowledgeProcessingOperation;
@@ -170,7 +171,7 @@ public class VersionAgnosticVocabularyTest {
   public void testHistory() {
     Date effectiveDate = KnowledgeRepresentationLanguageSeries.DMN_1_2
         .asOf(DateTimeUtil.parseDate("2019-09-15"))
-        .map(ConceptTerm::getEstablishedOn)
+        .map(Versionable::getVersionEstablishedOn)
         .orElse(null);
     assertNotNull(effectiveDate);
     assertEquals("2019-08-01",DateTimeUtil.format(effectiveDate));

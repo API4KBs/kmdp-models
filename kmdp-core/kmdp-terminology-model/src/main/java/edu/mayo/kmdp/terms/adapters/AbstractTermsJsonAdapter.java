@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.terms.TermSeries;
+import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.IOException;
@@ -63,6 +63,10 @@ public abstract class AbstractTermsJsonAdapter {
     public T deserialize(JsonParser jp, DeserializationContext ctxt)
         throws IOException {
       TreeNode t = jp.readValueAsTree();
+      return parse(t);
+    }
+
+    protected T parse(TreeNode t) {
       if (t == null || t.isMissingNode()) {
         return null;
       }
@@ -80,10 +84,10 @@ public abstract class AbstractTermsJsonAdapter {
       }
 
       T resolvedTerm = resolved.orElse(null);
-      if (resolvedTerm instanceof TermSeries<?,?>) {
+      if (resolvedTerm instanceof Series<?>) {
         String versionTag = getVersionNode(t).orElse(null);
         if (versionTag != null) {
-          resolvedTerm = (T) ((TermSeries<?,?>) resolvedTerm).getVersion(versionTag).orElse(null);
+          resolvedTerm = (T) ((Series<?>) resolvedTerm).getVersion(versionTag).orElse(null);
         }
       }
       return resolvedTerm;

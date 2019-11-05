@@ -17,10 +17,11 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.stream.Collectors;
 
 public class DateTimeUtil {
 
@@ -78,6 +79,9 @@ public class DateTimeUtil {
   public static String format(Date date) {
     return format(date, DEFAULT_DATE_PATTERN);
   }
+  public static String format(List<Date> dates) {
+    return format(dates, DEFAULT_DATE_PATTERN);
+  }
 
   public static String format(Date date, String pattern) {
     if (date == null) {
@@ -87,9 +91,27 @@ public class DateTimeUtil {
     return formatter.format(date.toInstant().atZone(ZoneId.systemDefault()));
   }
 
+  public static String format(List<Date> dates, String pattern) {
+    return dates.stream()
+        .map(d -> format(d,pattern))
+        .collect(Collectors.joining(","));
+  }
+
   public static boolean isDate(String dateStr) {
     return tryParseDate(dateStr).isPresent();
   }
 
 
+  public static List<Date> parseDates(List<String> asList) {
+    return parseDates(asList, DEFAULT_DATE_PATTERN);
+  }
+
+  public static List<Date> parseDates(List<String> asList, String pattern) {
+    if (asList == null) {
+      return Collections.emptyList();
+    }
+    return asList.stream()
+        .map(d -> parseDate(d, pattern))
+        .collect(Collectors.toList());
+  }
 }

@@ -135,19 +135,19 @@ public enum {{typeName}} implements {{intfPackageName}}.{{intfName}} {
 
 
   public static Optional<{{typeName}}> resolve(final Term trm) {
-    return resolveId(trm.getConceptId());
+    return trm != null ? resolveId(trm.getConceptId()) : Optional.empty();
   }
 
   public static Optional<{{typeName}}> resolve(final String tag) {
-    return resolveTag(tag);
+    return tag != null ? resolveTag(tag) : Optional.empty();
   }
 
   public static Optional<{{typeName}}> resolveId(final String conceptId) {
-    return resolveId(URI.create(conceptId));
+    return conceptId != null ? resolveId(URI.create(conceptId)) : Optional.empty();
   }
 
   public static Optional<{{typeName}}> resolveRef(final String refUri) {
-    return resolveRef(URI.create(refUri));
+    return refUri != null ? resolveRef(URI.create(refUri)) : Optional.empty();
   }
 
   public static Optional<{{typeName}}> resolveTag(final String tag) {
@@ -159,7 +159,9 @@ public enum {{typeName}} implements {{intfPackageName}}.{{intfName}} {
   }
 
   public static Optional<{{typeName}}> resolveUUID(final UUID conceptId) {
-    return Optional.ofNullable(index.get(conceptId));
+    return conceptId != null
+      ? Optional.ofNullable(index.get(conceptId))
+      : Optional.empty();
   }
 
   public static Optional<{{typeName}}> resolveId(final URI conceptId) {

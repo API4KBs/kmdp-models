@@ -18,13 +18,18 @@ package edu.mayo.kmdp.terms.generator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.example.sch1.ISCH1;
 import edu.mayo.kmdp.terms.example.sch1.SCH1;
+import edu.mayo.kmdp.terms.example.sch1.SCH1Old;
 import edu.mayo.kmdp.terms.example.sch1.SCH1Series;
+import edu.mayo.kmdp.util.DateTimeUtil;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -65,6 +70,50 @@ class VersionedTermsTest {
 
     Optional<? extends ISCH1> y = SCH1Series.resolve("6789");
     assertTrue(y.isPresent());
+
+  }
+
+  @Test
+  public void testDateAvailablilty() {
+    SCH1Series con = SCH1Series.Specific_Concept;
+    SCH1Series dep = SCH1Series.Deprecated_Concept;
+    assertSame(SCH1Old.Deprecated_Concept, dep.getLatest());
+    assertSame(SCH1.Specific_Concept, con.getLatest());
+
+    Date d0 = DateTimeUtil.parseDate("1981-12-01");
+    Date d1 = DateTimeUtil.parseDate("2019-08-01");
+    assertEquals(SCH1Series.schemeReleases, Arrays.asList(d1, d0));
+
+    assertEquals(d0,
+        dep.getLatest().getVersionEstablishedOn());
+    assertEquals(d0,
+        dep.getSeriesEstablishedOn());
+    assertEquals(d0,
+        dep.getVersionEstablishedOn());
+
+    assertEquals(d0,con.getSeriesEstablishedOn());
+    assertEquals(d0,dep.getSeriesEstablishedOn());
+    assertEquals(d1,con.getLatest().getVersionEstablishedOn());
+    assertEquals(d0,dep.getLatest().getVersionEstablishedOn());
+
+    Date epoch = DateTimeUtil.parseDate("1900-01-01");
+    Date x1 = DateTimeUtil.parseDate("1990-06-03");
+    Date x2 = DateTimeUtil.parseDate("2020-01-01");
+
+    assertFalse(con.asOf(epoch).isPresent());
+    assertFalse(dep.asOf(epoch).isPresent());
+
+    assertTrue(con.asOf(x1).isPresent());
+    assertSame(con.getVersions().get(1),con.asOf(x1).get());
+    assertTrue(dep.asOf(x1).isPresent());
+
+    assertFalse(con.isSeriesExpired());
+    assertNull(con.getSeriesExpiredOn().orElse(null));
+    assertTrue(dep.isSeriesExpired());
+    assertEquals(d1,dep.getSeriesExpiredOn().orElse(null));
+
+    assertTrue(con.asOf(x2).isPresent());
+    assertFalse(dep.asOf(x2).isPresent());
 
   }
 

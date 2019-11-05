@@ -77,6 +77,7 @@ public abstract class CodeGenTestBase {
 
     boolean success = true;
     for (Diagnostic diag : diagnostics) {
+      System.err.println(diag);
       if (logger.isWarnEnabled()) {
         logger.warn(String.format("%s : %s", diag.getKind(), diag));
       }

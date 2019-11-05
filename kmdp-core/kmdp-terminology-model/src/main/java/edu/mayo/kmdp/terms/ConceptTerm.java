@@ -50,13 +50,6 @@ public interface ConceptTerm<T extends Term> extends Term, Taxonomic<T> {
     return getDescription().getAncestors();
   }
 
-  default Date getEstablishedOn() {
-    return ((VersionedIdentifier) getNamespace()).getEstablishedOn();
-  }
-  default String getVersion() {
-    return ((VersionedIdentifier) getNamespace()).getVersion();
-  }
-
   @Override
   default org.omg.spec.api4kp._1_0.identifiers.QualifiedIdentifier asQualified() {
     return DatatypeHelper.toQualifiedIdentifier( this.getConceptId() );

@@ -25,7 +25,6 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.TermSeries;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,7 @@ import java.util.UUID;
 * */
 @com.fasterxml.jackson.databind.annotation.JsonSerialize( using = ColorsSeries.JsonSerializer.class )
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = ColorsSeries.JsonDeserializer.class )
-public enum ColorsSeries implements IColors, TermSeries<IColors,ColorsSeries> {
+public enum ColorsSeries implements IColors, Series<IColors> {
 
   RED(Colors.RED),
   GREEN(Colors.GREEN),
