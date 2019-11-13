@@ -336,6 +336,9 @@ public class DatatypeHelper {
     if (v == null) {
       return null;
     }
+    if (v instanceof ConceptIdentifier) {
+      return (ConceptIdentifier) v;
+    }
     return new org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier()
         .withRef(v.getRef())
         .withConceptUUID(v.getConceptUUID())
@@ -363,5 +366,17 @@ public class DatatypeHelper {
   public static <T extends Term> Map<UUID, T> indexByUUID(T[] values) {
     return Collections.unmodifiableMap(Arrays.stream(values)
         .collect(Collectors.toConcurrentMap(Term::getConceptUUID, Function.identity())));
+  }
+
+  public static Optional<String> toLabeledURI(Term trm) {
+    if (trm == null) {
+      return Optional.empty();
+    }
+
+    return Optional.of(
+        String.format("%s#%s | %s |",
+            ((NamespaceIdentifier) trm.getNamespace()).getId(),
+            trm.getConceptUUID() != null ? trm.getConceptUUID().toString() : trm.getTag(),
+            trm.getLabel()));
   }
 }

@@ -68,13 +68,13 @@ public class EnumGenerationConfig extends
         false)),
     XML_ADAPTER(Opt.of(
         "baseXmlAdapter",
-        "edu.mayo.kmdp.terms.adapters.TermsXMLAdapter",
+        "edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter",
         "Base class that controls the XML serialization of terminologies",
         String.class,
         false)),
     JSON_ADAPTER(Opt.of(
         "baseJsonAdapter",
-        "edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter",
+        "edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter",
         "Base class that controls the JSON serialization of terminologies",
         String.class,
         false)),

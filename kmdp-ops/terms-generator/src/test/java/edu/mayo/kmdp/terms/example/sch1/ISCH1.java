@@ -24,4 +24,8 @@ public interface ISCH1 extends VersionableTerm<ISCH1,SCH1Series> {
     return (URIIdentifier) seriesUri.clone();
   }
 
+  default boolean equals(ISCH1 other) {
+    return true;
+  }
+
 }

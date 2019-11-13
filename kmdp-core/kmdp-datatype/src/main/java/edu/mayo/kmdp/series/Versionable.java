@@ -29,7 +29,8 @@ public interface Versionable<T extends Versionable<T>> {
   }
 
   default Date getVersionEstablishedOn() {
-    return getVersionIdentifier().getEstablishedOn();
+    Date d0 = getVersionIdentifier().getEstablishedOn();
+    return d0 != null ? d0 : new Date(0);
   }
 
   static <T extends Versionable<T>> Comparator<T> mostRecentFirstComparator() {

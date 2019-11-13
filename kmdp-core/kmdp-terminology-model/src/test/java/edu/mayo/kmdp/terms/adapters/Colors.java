@@ -20,6 +20,7 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
+import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
 import java.net.URI;
 import java.util.Collections;

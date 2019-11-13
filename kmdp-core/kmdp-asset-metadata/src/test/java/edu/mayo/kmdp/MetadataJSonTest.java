@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleApplicability;
 import edu.mayo.kmdp.metadata.surrogate.Citation;
 import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
@@ -31,6 +32,7 @@ import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import edu.mayo.ontology.taxonomies.kao.rel.citationreltype.BibliographicCitationTypeSeries;
 import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
@@ -81,6 +83,10 @@ public class MetadataJSonTest {
 
         .withDescription("This is a test")
 
+        .withSubject(new SimpleAnnotation()
+            .withRel(AnnotationRelTypeSeries.Has_Primary_Subject.getLatest().asConcept())
+            .withExpr(TermsHelper.mayo("fooLabel", "123456")))
+
         .withRelated(new Derivative()
                 .withRel(DerivationTypeSeries.Abdridgement_Of)
                 .withTgt(new ComputableKnowledgeArtifact()
@@ -91,7 +97,8 @@ public class MetadataJSonTest {
                     .withAssetId(uri("http://foo.bar/234"))))
         .withCitations(
             new Citation()
-                .withRel(BibliographicCitationTypeSeries.Cites));
+                .withRel(BibliographicCitationTypeSeries.Cites)
+                .withBibliography("Joe,D. On everything. 2001"));
     assertNotNull(ks);
 
     assertNotNull(toJson(ks));
@@ -106,8 +113,11 @@ public class MetadataJSonTest {
 
     Optional<?> y = JSonUtil.readJson(json, x.getClass());
     assertTrue(y.isPresent());
+    System.out.println(json);
 
-    assertEquals(x, y.get());
+    String json2 = JSonUtil.writeJsonAsString(y.get())
+        .orElse("");
+    assertEquals(json,json2);
 
     return json;
   }

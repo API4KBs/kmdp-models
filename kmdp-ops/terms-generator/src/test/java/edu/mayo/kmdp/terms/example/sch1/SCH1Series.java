@@ -25,8 +25,8 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
-import edu.mayo.kmdp.terms.adapters.TermsXMLAdapter;
+import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Arrays;
@@ -81,9 +81,6 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
   public Identifier getNamespace() {
     return ISCH1.seriesNamespace;
   }
-
-
-
 
 
   public static Optional<ISCH1> resolve(final Term trm) {

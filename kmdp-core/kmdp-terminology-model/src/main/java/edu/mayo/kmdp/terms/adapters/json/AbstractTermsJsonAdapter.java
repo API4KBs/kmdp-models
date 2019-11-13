@@ -1,4 +1,4 @@
-package edu.mayo.kmdp.terms.adapters;
+package edu.mayo.kmdp.terms.adapters.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;

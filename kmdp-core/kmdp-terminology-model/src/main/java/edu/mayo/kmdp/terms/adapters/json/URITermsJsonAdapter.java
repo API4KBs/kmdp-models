@@ -1,10 +1,11 @@
-package edu.mayo.kmdp.terms.adapters;
+package edu.mayo.kmdp.terms.adapters.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import edu.mayo.kmdp.id.Term;
+import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.series.Versionable;
 import edu.mayo.kmdp.util.NameUtils;
@@ -32,12 +33,15 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
     public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
       if (v == null) {
+        gen.writeNull();
         return;
       }
-      gen.writeString(String.format("%s#%s | %s |",
-          ((NamespaceIdentifier)v.getNamespace()).getId(),
-          v.getConceptUUID().toString(),
-          v.getLabel()));
+      Optional<String> uri = DatatypeHelper.toLabeledURI(v);
+      if(uri.isPresent()) {
+        gen.writeString(uri.get());
+      } else {
+        gen.writeNull();
+      }
     }
   }
 
@@ -88,6 +92,19 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
         return Optional.of(URI.create(tok.trim()));
       }
       return Optional.of(URI.create(tok.substring(0, delim).trim()));
+    }
+
+
+    protected Optional<String> extractLabel(String tok) {
+      if (Util.isEmpty(tok)) {
+        return Optional.empty();
+      }
+      int delim = tok.indexOf('|');
+      int endDelim = tok.lastIndexOf('|');
+      if (delim < 0 || endDelim <= 0) {
+        return Optional.empty();
+      }
+      return Optional.of(tok.substring(delim + 1, endDelim).trim());
     }
 
     protected Optional<String> extractIdentifier(URI uri) {

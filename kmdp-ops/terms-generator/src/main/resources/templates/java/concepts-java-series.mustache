@@ -133,8 +133,8 @@ public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
   }
 
 
-  public static class Adapter extends edu.mayo.kmdp.terms.adapters.TermsXMLAdapter {
-    public static final edu.mayo.kmdp.terms.adapters.TermsXMLAdapter instance = new {{seriesName}}.Adapter();
+  public static class Adapter extends edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter {
+    public static final edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter instance = new {{seriesName}}.Adapter();
     protected {{seriesName}}[] getValues() { return values(); }
   }
 

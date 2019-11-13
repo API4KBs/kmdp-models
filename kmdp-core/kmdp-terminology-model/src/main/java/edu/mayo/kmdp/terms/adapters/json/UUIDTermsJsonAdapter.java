@@ -1,4 +1,4 @@
-package edu.mayo.kmdp.terms.adapters;
+package edu.mayo.kmdp.terms.adapters.json;
 
 import static edu.mayo.kmdp.util.Util.ensureUUID;
 

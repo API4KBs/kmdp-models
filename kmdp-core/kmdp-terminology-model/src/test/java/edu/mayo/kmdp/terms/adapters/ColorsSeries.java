@@ -25,6 +25,7 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
+import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

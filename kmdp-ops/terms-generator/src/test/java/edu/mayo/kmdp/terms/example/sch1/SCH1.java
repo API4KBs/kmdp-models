@@ -25,8 +25,8 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
-import edu.mayo.kmdp.terms.adapters.TermsXMLAdapter;
+import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
@@ -103,6 +103,10 @@ public enum SCH1 implements ISCH1 {
       final Term[] closure) {
     this.description = new TermImpl(conceptId, conceptUUID, code, additionalCodes, displayName,
         referent, ancestors, closure);
+  }
+
+  public boolean equals(ISCH1 other) {
+    return true;
   }
 
   @Override

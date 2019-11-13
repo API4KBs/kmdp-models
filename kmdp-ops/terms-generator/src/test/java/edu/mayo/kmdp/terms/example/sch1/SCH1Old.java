@@ -25,8 +25,8 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
-import edu.mayo.kmdp.terms.adapters.TermsXMLAdapter;
+import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.example.cito.ICito;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
 import edu.mayo.kmdp.util.DateTimeUtil;
@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 

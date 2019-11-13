@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.terms.adapters;
+package edu.mayo.kmdp.terms.adapters.xml;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;

@@ -2,6 +2,9 @@ package edu.mayo.kmdp.terms.adapters;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.URITermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.UUIDTermsJsonAdapter;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;

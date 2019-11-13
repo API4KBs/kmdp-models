@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.terms.adapters.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;

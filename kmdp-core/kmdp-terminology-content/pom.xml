@@ -896,7 +896,7 @@
             <sourceCatalogPath>${ontologyDir}${s}catalog.xml</sourceCatalogPath>
           </sourceCatalogPaths>
           <catalogNamespace>https://ontology.mayo.edu/taxonomies</catalogNamespace>
-          <jsonAdapter>edu.mayo.kmdp.terms.adapters.LegacyURITermsJsonAdapter</jsonAdapter>
+          <jsonAdapter>edu.mayo.kmdp.terms.adapters.json.LegacyURITermsJsonAdapter</jsonAdapter>
         </configuration>
         <executions>
           <execution>
