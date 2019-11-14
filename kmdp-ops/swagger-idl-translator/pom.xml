@@ -24,6 +24,19 @@
       <artifactId>kmdp-terminology-content</artifactId>
     </dependency>
     <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-datatype</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-service-descr</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>terms-generator</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>io.swagger</groupId>
       <artifactId>swagger-parser</artifactId>
     </dependency>
@@ -36,6 +49,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.olivergondza</groupId>
+      <artifactId>maven-jdk-tools-wrapper</artifactId>
+      <version>0.1</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

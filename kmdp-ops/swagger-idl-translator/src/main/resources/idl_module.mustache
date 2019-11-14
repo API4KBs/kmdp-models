@@ -1,4 +1,13 @@
 module {{name}} {
+
+{{#structs}}
+struct {{typeName}} {
+  {{#fields}}
+    {{type.name}} {{name}};
+  {{/fields}}
+};
+{{/structs}}
+
 {{#subModules}}
 {{> idl_module}}
 {{/subModules}}

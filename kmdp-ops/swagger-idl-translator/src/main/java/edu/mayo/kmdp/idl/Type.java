@@ -24,6 +24,13 @@ public class Type {
     this.name = type;
   }
 
+
+  public Type(String type, boolean collection) {
+    this.name = type;
+    this.collection = collection;
+  }
+
+
   public boolean isCollection() {
     return collection;
   }
@@ -35,5 +42,6 @@ public class Type {
   public String getName() {
     return name;
   }
+
 
 }

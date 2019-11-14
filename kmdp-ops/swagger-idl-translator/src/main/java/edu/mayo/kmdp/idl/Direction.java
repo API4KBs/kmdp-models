@@ -16,5 +16,16 @@
 package edu.mayo.kmdp.idl;
 
 public enum Direction {
-  IN, OUT, INOUT;
+  IN("in"), OUT("out"), INOUT("inout");
+
+  private String externalForm;
+
+  Direction(String txt) {
+    this.externalForm = txt;
+  }
+
+  public String toString() {
+    return externalForm;
+  }
+
 }

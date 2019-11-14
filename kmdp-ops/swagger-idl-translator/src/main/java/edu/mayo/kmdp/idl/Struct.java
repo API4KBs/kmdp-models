@@ -15,7 +15,88 @@
  */
 package edu.mayo.kmdp.idl;
 
-public interface Struct {
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class Struct {
+
+  private String typeName;
+  private Map<String, Field> fields = new LinkedHashMap<>();
+
+
+  public Struct(String name) {
+    this.typeName = name;
+  }
+
+  public void setTypeName(String typeName) {
+    this.typeName = typeName;
+  }
+
+  public String getTypeName() {
+    return typeName;
+  }
+
+  public void addField(String name, Type type) {
+    this.fields.put(name, new Field(name,type));
+  }
+
+  public Collection<Field> getFields() {
+    return fields.values();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Struct)) {
+      return false;
+    }
+
+    Struct struct = (Struct) o;
+
+    return typeName.equals(struct.typeName);
+  }
+
+  @Override
+  public int hashCode() {
+    return typeName.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "Struct{" +
+        "typeName='" + typeName + '\'' +
+        '}';
+  }
+
+  public static class Field {
+    private String name;
+    private Type type;
+
+    public Field(String name, Type type) {
+      this.name = name;
+      this.type = type;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public Type getType() {
+      return type;
+    }
+
+    public void setType(Type type) {
+      this.type = type;
+    }
+  }
 
 
 }
+

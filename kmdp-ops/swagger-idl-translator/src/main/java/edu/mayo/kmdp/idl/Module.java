@@ -18,15 +18,16 @@ package edu.mayo.kmdp.idl;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class Module {
 
   private String name;
-  private Map<String,Module> subModules = new HashMap<>();
-  private Map<String,Struct> structs = new HashMap<>();
-  private Map<String,Interface> interfaces = new HashMap<>();
+  private Map<String,Module> subModules = new LinkedHashMap<>();
+  private Map<String,Struct> structs = new LinkedHashMap<>();
+  private Map<String,Interface> interfaces = new LinkedHashMap<>();
 
   public Module(String name) {
     this.name = name;
@@ -56,6 +57,12 @@ public class Module {
     return this;
   }
 
+  public Module addStruct(Struct struct) {
+    structs.put(struct.getTypeName(),struct);
+    return this;
+  }
+
+
   public String getName() {
     return name;
   }
@@ -68,7 +75,11 @@ public class Module {
     this.subModules = subModules;
   }
 
-  public Map<String, Struct> getStructs() {
+  public Collection<Struct> getStructs() {
+    return structs.values();
+  }
+
+  public Map<String,Struct> getStructMap() {
     return structs;
   }
 
