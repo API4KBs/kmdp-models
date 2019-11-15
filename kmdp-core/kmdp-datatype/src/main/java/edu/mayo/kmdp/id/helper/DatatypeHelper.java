@@ -345,7 +345,21 @@ public class DatatypeHelper {
         .withLabel(v.getLabel())
         .withTag(v.getTag())
         .withConceptId(v.getConceptId())
-        .withNamespace((NamespaceIdentifier) v.getNamespace());
+        .withNamespace((NamespaceIdentifier) ((NamespaceIdentifier) v.getNamespace()).clone());
+  }
+
+  public static ConceptIdentifier toUnqualifiedConceptIdentifier(Term v) {
+    if (v == null) {
+      return null;
+    }
+    if (v instanceof ConceptIdentifier) {
+      return (ConceptIdentifier) v;
+    }
+    return new org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier()
+        .withConceptUUID(v.getConceptUUID())
+        .withLabel(v.getLabel())
+        .withTag(v.getTag())
+        .withConceptId(v.getConceptId());
   }
 
 
@@ -368,15 +382,36 @@ public class DatatypeHelper {
         .collect(Collectors.toConcurrentMap(Term::getConceptUUID, Function.identity())));
   }
 
-  public static Optional<String> toLabeledURI(Term trm) {
+
+
+  public static Optional<String> encodeConcept(Term trm) {
     if (trm == null) {
       return Optional.empty();
     }
 
-    return Optional.of(
-        String.format("%s#%s | %s |",
-            ((NamespaceIdentifier) trm.getNamespace()).getId(),
-            trm.getConceptUUID() != null ? trm.getConceptUUID().toString() : trm.getTag(),
-            trm.getLabel()));
+    String ns = trm.getNamespace() != null
+        ? ((NamespaceIdentifier) trm.getNamespace()).getId().toString()
+        : "urn:";
+
+    String effectiveTag = trm.getConceptUUID() != null
+        ? trm.getConceptUUID().toString()
+        : trm.getTag();
+
+    String qualifiedNs = URIUtil.normalizeURI(trm.getConceptId()).toString();
+
+    if (ns.startsWith(qualifiedNs)) {
+      return Optional.of(
+          String.format("%s#%s | %s |",
+              ns,
+              effectiveTag,
+              trm.getLabel()));
+    } else {
+      return Optional.of(
+          String.format("{%s} %s#%s | %s |",
+              ns,
+              qualifiedNs,
+              effectiveTag,
+              trm.getLabel()));
+    }
   }
 }

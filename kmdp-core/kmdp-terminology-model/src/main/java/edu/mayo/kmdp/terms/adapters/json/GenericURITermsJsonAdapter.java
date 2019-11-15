@@ -73,12 +73,22 @@ public abstract class GenericURITermsJsonAdapter extends URITermsJsonAdapter {
     }
 
     protected ConceptIdentifier parse(String asText) {
+      URI nsURI = null;
+
+      if (asText.charAt(0) == '{') {
+        int nsEnd = asText.indexOf('}');
+        nsURI = URI.create(asText.substring(1,nsEnd).trim());
+        asText = asText.substring(nsEnd + 1);
+      }
+
       URI uri = extractURI(asText).orElse(null);
       if (uri == null) {
         return null;
       }
+
       ConceptIdentifier cid = new ConceptIdentifier()
-          .withConceptId(uri);
+          .withNamespace(new NamespaceIdentifier()
+              .withId(URIUtil.normalizeURI(nsURI != null ? nsURI : uri)));
 
       String id = extractIdentifier(uri).orElse(null);
       if (id != null && isUUID(id)) {
@@ -87,11 +97,10 @@ public abstract class GenericURITermsJsonAdapter extends URITermsJsonAdapter {
         cid.withTag(id);
       }
 
+      cid.withConceptId(uri);
+
       String label = extractLabel(asText).orElse(null);
       cid.withLabel(label);
-
-      cid.withNamespace(new NamespaceIdentifier()
-          .withId(URIUtil.normalizeURI(uri)));
 
       return cid;
     }

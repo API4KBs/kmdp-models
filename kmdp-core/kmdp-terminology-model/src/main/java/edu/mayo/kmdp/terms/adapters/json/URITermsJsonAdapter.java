@@ -36,7 +36,7 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
         gen.writeNull();
         return;
       }
-      Optional<String> uri = DatatypeHelper.toLabeledURI(v);
+      Optional<String> uri = DatatypeHelper.encodeConcept(v);
       if(uri.isPresent()) {
         gen.writeString(uri.get());
       } else {
@@ -84,6 +84,13 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
       if (Util.isEmpty(tok)) {
         return Optional.empty();
       }
+
+      if (tok.charAt(0) == '{') {
+        int nsEnd = tok.indexOf('}');
+        String nsURI = tok.substring(1,nsEnd).trim();
+        tok = nsURI + tok.substring(nsEnd + 1).trim();
+      }
+
       int delim = tok.indexOf('|');
       if (delim == 0) {
         return Optional.empty();

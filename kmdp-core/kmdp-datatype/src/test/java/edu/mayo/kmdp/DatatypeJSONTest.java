@@ -15,25 +15,24 @@
  */
 package edu.mayo.kmdp;
 
-import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-import edu.mayo.kmdp.util.JSonUtil;
-import java.util.Optional;
-import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.Pointer;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URI;
-
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import edu.mayo.kmdp.util.JSonUtil;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 
 public class DatatypeJSONTest {
 

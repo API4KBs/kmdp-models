@@ -30,6 +30,7 @@ import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.util.JaxbUtil;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRole;
@@ -152,9 +153,8 @@ public class SurrogateHelper {
   public static Optional<ConceptIdentifier> getSimpleAnnotationValue(KnowledgeAsset asset,
       ConceptIdentifier rel) {
     return asset.getSubject().stream()
-        .filter(SimpleAnnotation.class::isInstance)
-        .map(SimpleAnnotation.class::cast)
-        .filter(ann -> rel == null || rel.equals(ann.getRel()))
+        .flatMap(StreamUtil.filterAs(SimpleAnnotation.class))
+        .filter(ann -> rel == null || rel.getConceptUUID().equals(ann.getRel().getConceptUUID()))
         .map(SimpleAnnotation::getExpr)
         .findAny();
   }
