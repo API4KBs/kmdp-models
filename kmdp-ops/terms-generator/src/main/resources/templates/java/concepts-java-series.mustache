@@ -64,6 +64,16 @@ public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
     return this;
   }
 
+  public static int count() {
+    return values().length;
+  }
+
+  public static int countUnexpired() {
+    return  (int) Arrays.stream(values())
+        .filter(x -> !x.isSeriesExpired())
+        .count();
+  }
+
   @Override
   public TermDescription getDescription() {
     return latest().map(ConceptTerm::getDescription)

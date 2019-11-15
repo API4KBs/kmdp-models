@@ -70,6 +70,15 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
     return versions;
   }
 
+  public static int count() {
+    return values().length;
+  }
+
+  public static int countUnexpired() {
+    return  (int) Arrays.stream(values())
+        .filter(x -> !x.isSeriesExpired())
+        .count();
+  }
 
   @Override
   public TermDescription getDescription() {

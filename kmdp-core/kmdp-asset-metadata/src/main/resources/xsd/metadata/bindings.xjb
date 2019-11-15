@@ -17,7 +17,7 @@
     <xjc:simple/>
     <namespace:prefix name="surr"/>
 
-    <jxb:bindings node="//xsd:element[@type='tns:ConceptIdentifier']" multiple="true"
+    <!--<jxb:bindings node="//xsd:element[@type='tns:ConceptIdentifier']" multiple="true"
       xmlns:tns="http://www.omg.org/spec/API4KP/1.0/identifiers">
       <annox:annotate target="field">
         <annox:annotate annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize"
@@ -25,7 +25,7 @@
         <annox:annotate annox:class="com.fasterxml.jackson.databind.annotation.JsonDeserialize"
           using="edu.mayo.kmdp.terms.adapters.json.GenericURITermsJsonAdapter.GenericDeserializer"/>
       </annox:annotate>
-    </jxb:bindings>
+    </jxb:bindings-->
 
   </jxb:bindings>
 
@@ -34,7 +34,7 @@
     <xjc:simple/>
     <namespace:prefix name="ann"/>
 
-    <jxb:bindings node="//xsd:element[@type='tns:ConceptIdentifier']" multiple="true"
+    <!--<jxb:bindings node="//xsd:element[@type='tns:ConceptIdentifier']" multiple="true"
       xmlns:tns="http://www.omg.org/spec/API4KP/1.0/identifiers">
       <annox:annotate target="field">
         <annox:annotate annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize"
@@ -42,7 +42,7 @@
         <annox:annotate annox:class="com.fasterxml.jackson.databind.annotation.JsonDeserialize"
           using="edu.mayo.kmdp.terms.adapters.json.GenericURITermsJsonAdapter.GenericDeserializer"/>
       </annox:annotate>
-    </jxb:bindings>
+    </jxb:bindings-->
 
   </jxb:bindings>
 
