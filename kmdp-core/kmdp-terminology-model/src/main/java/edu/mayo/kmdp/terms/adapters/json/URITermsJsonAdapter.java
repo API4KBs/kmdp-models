@@ -17,14 +17,19 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
+public abstract class URITermsJsonAdapter {
+
+  static final Logger logger = LoggerFactory.getLogger(URITermsJsonAdapter.class);
 
   protected URITermsJsonAdapter() {
-    // nothing to do
+    // don't instantiate
   }
 
-  public static class Serializer<T extends Term> extends AbstractJsonSerializer<T> {
+  public static class Serializer<T extends Term>
+      extends AbstractTermsJsonAdapter.AbstractSerializer<T> {
     protected Serializer() {
       // nothing to do
     }
@@ -45,8 +50,8 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
     }
   }
 
-  public abstract static class Deserializer<T extends Term> extends AbstractJsonDeserializer<T> {
-    protected Deserializer() {}
+  public abstract static class Deserializer<T extends Term>
+      extends AbstractTermsJsonAdapter.AbstractDeserializer<T> {
 
     @Override
     public T deserialize(JsonParser jp, DeserializationContext ctxt) {
@@ -70,7 +75,7 @@ public abstract class URITermsJsonAdapter extends AbstractTermsJsonAdapter {
 
     private T resolveInSeries(T t, URI uri) {
       if (t instanceof Series) {
-        Series<? extends Versionable> s = ((Series) t);
+        Series<? extends Versionable> s = ((Series<? extends Versionable>) t);
         Optional<?> opt = s.getVersions().stream()
             .flatMap(StreamUtil.filterAs(Term.class))
             .filter(v -> ((NamespaceIdentifier) v.getNamespace()).getId().equals(uri))

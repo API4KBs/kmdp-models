@@ -22,7 +22,7 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
-import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
@@ -116,13 +116,17 @@ public abstract class BaseEnumGenerator {
       interfaceName = "I" + interfaceName;
     }
 
+    List<SeriesHolder> holder = toSeries(graph.getConceptSeries(conceptScheme.getId()), defaultPackage, overrides);
+
     Map<String, Object> context = new HashMap<>();
     context.put("conceptScheme", conceptScheme);
     context.put("conceptSchemeTag", NameUtils.getTrailingPart(conceptScheme.getId().toString()));
     context.put("concepts", graph.getConceptList(conceptScheme));
     context.put("schemeVersions", graph.getSchemeSeries(conceptScheme.getId()));
-    context.put("conceptSeries",
-        toSeries(graph.getConceptSeries(conceptScheme.getId()), defaultPackage, overrides));
+    context.put("schemeVersionIdentifiers",
+        graph.getSchemeSeriesURI(conceptScheme.getId()));
+
+    context.put("conceptSeries", holder);
     context.put("publicationDate", DateTimeUtil.format(conceptScheme.getEstablishedOn()));
     context.put("publicationDates", graph.getSchemeReleases(conceptScheme.getId()));
 
@@ -137,7 +141,7 @@ public abstract class BaseEnumGenerator {
     context.put("intfPackageName", outerPackageName);
     context.put("overridePk", overridePk(defaultPackage, overrides));
     context.put("baseJsonAdapter", options.get(EnumGenerationParams.JSON_ADAPTER)
-        .orElse(ConceptTermsJsonAdapter.class.getName()));
+        .orElse(AbstractTermsJsonAdapter.class.getName()));
     context.put("baseXmlAdapter", options.get(EnumGenerationParams.XML_ADAPTER)
         .orElse(TermsXMLAdapter.class.getName()));
     context.put("implClassName",

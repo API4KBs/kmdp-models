@@ -25,7 +25,7 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
@@ -155,12 +155,12 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
   }
 
 
-  public static class JsonSerializer extends ConceptTermsJsonAdapter.Serializer {
+  public static class JsonSerializer extends AbstractTermsJsonAdapter.AbstractSerializer<ISCH1> {
 
   }
 
-  public static class JsonDeserializer extends ConceptTermsJsonAdapter.Deserializer {
-    protected Term[] getValues() {
+  public static class JsonDeserializer extends AbstractTermsJsonAdapter.AbstractDeserializer<ISCH1> {
+    protected ISCH1[] getValues() {
       return values();
     }
     @Override

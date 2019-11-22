@@ -12,6 +12,7 @@ public interface {{intfName}} extends VersionableTerm<{{intfName}}, {{seriesName
   String schemeName = "{{conceptScheme.label}}";
   String schemeID = "{{conceptSchemeTag}}";
 
+  String seriesIdentifier = "{{seriesNamespace}}";
   URIIdentifier seriesUri = new URIIdentifier()
     .withUri( URI.create( "{{seriesNamespace}}" ) );
 

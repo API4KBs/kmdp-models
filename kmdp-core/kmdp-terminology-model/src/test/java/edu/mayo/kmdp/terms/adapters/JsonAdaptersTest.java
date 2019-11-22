@@ -75,8 +75,8 @@ public class JsonAdaptersTest {
   }
 
   public static class Foo {
-    @JsonSerialize(using = GenericURITermsJsonAdapter.GenericSerializer.class)
-    @JsonDeserialize(using = GenericURITermsJsonAdapter.GenericDeserializer.class)
+    @JsonSerialize(using = GenericURITermsJsonAdapter.GenericURISerializer.class)
+    @JsonDeserialize(using = GenericURITermsJsonAdapter.GenericURIDeserializer.class)
     private Term t;
 
     public Foo() {

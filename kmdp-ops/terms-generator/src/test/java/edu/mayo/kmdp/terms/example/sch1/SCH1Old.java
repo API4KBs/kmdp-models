@@ -25,7 +25,7 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.example.cito.ICito;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
@@ -133,10 +133,10 @@ public enum SCH1Old implements ISCH1 {
     protected Term[] getValues() { return values(); }
   }
 
-  public static class JsonSerializer extends ConceptTermsJsonAdapter.Serializer { }
+  public static class JsonSerializer extends AbstractTermsJsonAdapter.AbstractSerializer<SCH1Old> { }
 
-  public static class JsonDeserializer extends ConceptTermsJsonAdapter.Deserializer {
-    protected Term[] getValues() {
+  public static class JsonDeserializer extends AbstractTermsJsonAdapter.AbstractDeserializer<SCH1Old> {
+    protected SCH1Old[] getValues() {
       return values();
     }
     @Override

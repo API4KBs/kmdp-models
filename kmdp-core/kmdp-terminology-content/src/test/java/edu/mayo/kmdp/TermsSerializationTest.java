@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.json.URITermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.json.UUIDTermsJsonAdapter;
 import edu.mayo.kmdp.util.JSonUtil;
@@ -135,10 +135,10 @@ public class TermsSerializationTest {
   @XmlRootElement
   public static class Foo {
 
-    @JsonSerialize(using = ConceptTermsJsonAdapter.Serializer.class)
+    @JsonSerialize(using = AbstractTermsJsonAdapter.AbstractSerializer.class)
     @JsonDeserialize(using = AssetDeserializer.class)
     private KnowledgeAssetType type;
-    @JsonSerialize(using = ConceptTermsJsonAdapter.Serializer.class)
+    @JsonSerialize(using = AbstractTermsJsonAdapter.AbstractSerializer.class)
     @JsonDeserialize(using = LangDeserializer.class)
     private KnowledgeRepresentationLanguage lang;
 
@@ -167,7 +167,7 @@ public class TermsSerializationTest {
       this.lang = lang;
     }
 
-    public static class LangDeserializer extends ConceptTermsJsonAdapter.Deserializer {
+    public static class LangDeserializer extends AbstractTermsJsonAdapter.AbstractDeserializer {
 
       @Override
       protected Term[] getValues() {
@@ -175,7 +175,7 @@ public class TermsSerializationTest {
       }
     }
 
-    public static class AssetDeserializer extends ConceptTermsJsonAdapter.Deserializer {
+    public static class AssetDeserializer extends AbstractTermsJsonAdapter.AbstractDeserializer {
 
       @Override
       protected Term[] getValues() {
@@ -231,6 +231,7 @@ public class TermsSerializationTest {
   public static class Baz {
 
     @JsonSerialize(using = URITermsJsonAdapter.Serializer.class)
+    @JsonDeserialize(using = BazURIDeserializer.class)
     protected SerializationFormat format;
 
     public Baz() {

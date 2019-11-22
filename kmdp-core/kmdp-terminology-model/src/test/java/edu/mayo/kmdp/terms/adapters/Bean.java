@@ -2,7 +2,7 @@ package edu.mayo.kmdp.terms.adapters;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.json.URITermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.json.UUIDTermsJsonAdapter;
 import java.util.Arrays;
@@ -24,11 +24,11 @@ public class Bean {
   public IColors col3 = Colors.BLUE;
 
 
-  public static class TrmSerializer extends ConceptTermsJsonAdapter.Serializer<IColors> {
+  public static class TrmSerializer extends AbstractTermsJsonAdapter.AbstractSerializer<IColors> {
 
   }
 
-  public static class TrmDeserializer extends ConceptTermsJsonAdapter.Deserializer<IColors> {
+  public static class TrmDeserializer extends AbstractTermsJsonAdapter.AbstractDeserializer<IColors> {
 
     @Override
     protected IColors[] getValues() {

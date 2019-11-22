@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
@@ -31,7 +31,7 @@ import java.util.UUID;
 @Deprecated
 public abstract class MockTermsJsonAdapter {
 
-  public static class Serializer<T extends Term> extends ConceptTermsJsonAdapter.Serializer<T> {
+  public static class Serializer<T extends Term> extends AbstractTermsJsonAdapter.AbstractSerializer<T> {
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
@@ -39,7 +39,7 @@ public abstract class MockTermsJsonAdapter {
     }
   }
 
-  public abstract static class Deserializer<T extends Term> extends ConceptTermsJsonAdapter.Deserializer<T> {
+  public abstract static class Deserializer<T extends Term> extends AbstractTermsJsonAdapter.AbstractDeserializer<T> {
 
     @Override
     public T deserialize(JsonParser jp, DeserializationContext ctxt)

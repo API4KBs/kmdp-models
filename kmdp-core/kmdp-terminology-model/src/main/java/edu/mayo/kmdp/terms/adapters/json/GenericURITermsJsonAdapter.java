@@ -3,13 +3,9 @@ package edu.mayo.kmdp.terms.adapters.json;
 import static edu.mayo.kmdp.util.Util.ensureUUID;
 import static edu.mayo.kmdp.util.Util.isUUID;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
-import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.util.JSonUtil;
@@ -20,38 +16,32 @@ import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class GenericURITermsJsonAdapter extends URITermsJsonAdapter {
+public abstract class GenericURITermsJsonAdapter {
+
+  static final Logger logger = LoggerFactory.getLogger(GenericURITermsJsonAdapter.class);
+
 
   protected GenericURITermsJsonAdapter() {
     // nothing to do
   }
 
-  public static class GenericSerializer extends URITermsJsonAdapter.Serializer<ConceptIdentifier> {
+  public static class GenericURISerializer
+      extends URITermsJsonAdapter.Serializer<ConceptIdentifier> {
 
-    protected GenericSerializer() {
+    protected GenericURISerializer() {
       // nothing to do
     }
 
-    @Override
-    public void serializeWithType(ConceptIdentifier v, JsonGenerator gen,
-        SerializerProvider serializers,
-        TypeSerializer typeSer)
-        throws IOException {
-      serialize(v, gen, serializers);
-    }
   }
 
-  public static class GenericDeserializer extends
-      URITermsJsonAdapter.Deserializer<ConceptIdentifier> {
+  public static class GenericURIDeserializer
+      extends URITermsJsonAdapter.Deserializer<ConceptIdentifier> {
 
-    protected GenericDeserializer() {
-    }
-
-    @Override
-    public Object deserializeWithType(JsonParser p, DeserializationContext ctxt,
-        TypeDeserializer typeDeserializer) {
-      return deserialize(p, ctxt);
+    protected GenericURIDeserializer() {
+      // don't instantiate
     }
 
     @Override
@@ -72,6 +62,12 @@ public abstract class GenericURITermsJsonAdapter extends URITermsJsonAdapter {
       }
     }
 
+    @Override
+    protected ConceptIdentifier resolveGeneric(TreeNode t) {
+      return parseAsConceptIdentifier(t);
+    }
+
+    @Override
     protected ConceptIdentifier parse(String asText) {
       URI nsURI = null;
 

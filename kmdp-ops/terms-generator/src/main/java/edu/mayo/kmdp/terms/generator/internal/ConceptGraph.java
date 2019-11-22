@@ -6,6 +6,7 @@ import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
 import edu.mayo.kmdp.terms.generator.util.TransitiveClosure;
 import edu.mayo.kmdp.util.DateTimeUtil;
+import edu.mayo.kmdp.util.URIUtil;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
@@ -106,6 +107,16 @@ public class ConceptGraph {
         .filter(s -> s.getId().equals(schemeURI))
         .sorted(Comparator.comparing(VersionedIdentifier::getEstablishedOn).reversed())
         .map(ConceptScheme::getVersion)
+        .collect(Collectors.toList());
+  }
+
+  public List<String> getSchemeSeriesURI(URI schemeURI) {
+    return getConceptSchemes().stream()
+        .filter(s -> s.getId().equals(schemeURI))
+        .sorted(Comparator.comparing(VersionedIdentifier::getEstablishedOn).reversed())
+        .map(ConceptScheme::getVersionId)
+        .map(URIUtil::normalizeURI)
+        .map(URI::toString)
         .collect(Collectors.toList());
   }
 

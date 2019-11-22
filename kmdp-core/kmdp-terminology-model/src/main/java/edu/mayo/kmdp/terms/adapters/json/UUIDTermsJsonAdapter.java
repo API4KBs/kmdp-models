@@ -8,16 +8,18 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import edu.mayo.kmdp.id.Term;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class UUIDTermsJsonAdapter extends AbstractTermsJsonAdapter {
+public abstract class UUIDTermsJsonAdapter {
 
   protected UUIDTermsJsonAdapter() {
-    // nothing to do
+    // don't instantiate
   }
 
-  public static class Serializer<T extends Term> extends AbstractJsonSerializer<T> {
+  public static class Serializer<T extends Term>
+      extends AbstractTermsJsonAdapter.AbstractSerializer<T> {
     public Serializer() {
       // nothing to do
     }
@@ -29,10 +31,8 @@ public abstract class UUIDTermsJsonAdapter extends AbstractTermsJsonAdapter {
     }
   }
 
-  public abstract static class Deserializer<T extends Term> extends AbstractJsonDeserializer<T> {
-    public Deserializer() {
-      // nothing to do
-    }
+  public abstract static class Deserializer<T extends Term>
+      extends AbstractTermsJsonAdapter.AbstractDeserializer<T> {
 
     @Override
     public T deserialize(JsonParser jp, DeserializationContext ctxt)
@@ -47,11 +47,16 @@ public abstract class UUIDTermsJsonAdapter extends AbstractTermsJsonAdapter {
     }
 
     @Override
-    protected abstract Optional<T> resolveUUID(UUID uuid);
+    protected Optional<T> resolveUUID(UUID uuid) {
+      return Arrays.stream(getValues())
+          .filter(x -> x.getConceptUUID().equals(uuid))
+          .findFirst();
+    }
 
   }
 
-  public static class KeySerializer<T extends Term> extends AbstractTermsJsonAdapter.AbstractKeySerializer<T> {
+  public static class KeySerializer<T extends Term>
+      extends AbstractTermsJsonAdapter.AbstractKeySerializer<T> {
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
@@ -59,7 +64,8 @@ public abstract class UUIDTermsJsonAdapter extends AbstractTermsJsonAdapter {
     }
   }
 
-  public abstract static class KeyDeserializer<T extends Term> extends AbstractTermsJsonAdapter.AbstractKeyDeserializer<T> {
+  public abstract static class KeyDeserializer<T extends Term>
+      extends AbstractTermsJsonAdapter.AbstractKeyDeserializer<T> {
 
     @Override
     public T deserializeKey(String key, DeserializationContext ctxt) throws IOException {

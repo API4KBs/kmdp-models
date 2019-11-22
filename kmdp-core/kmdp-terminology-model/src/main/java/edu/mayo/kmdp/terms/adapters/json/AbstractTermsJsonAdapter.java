@@ -9,16 +9,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.KeyDeserializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.series.Series;
+import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,17 +33,21 @@ public abstract class AbstractTermsJsonAdapter {
   protected AbstractTermsJsonAdapter() {
   }
 
-
-
-  public abstract static class AbstractJsonSerializer<T extends Term> extends JsonSerializer<T> {
+  public static class AbstractSerializer<T extends Term> extends JsonSerializer<T> {
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
       gen.writeObject(v.asConcept());
     }
+
+    @Override
+    public void serializeWithType(T value, JsonGenerator gen, SerializerProvider serializers,
+        TypeSerializer typeSer) throws IOException {
+      serialize(value,gen,serializers);
+    }
   }
 
-  public abstract static class AbstractKeySerializer<T extends Term> extends AbstractJsonSerializer<T> {
+  public abstract static class AbstractKeySerializer<T extends Term> extends AbstractSerializer<T> {
 
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
@@ -56,7 +64,7 @@ public abstract class AbstractTermsJsonAdapter {
   }
 
 
-  public abstract static class AbstractJsonDeserializer<T extends Term> extends JsonDeserializer<T> {
+  public abstract static class AbstractDeserializer<T extends Term> extends JsonDeserializer<T> {
     private static final String DEFAULT_KEY = "tag";
 
     @Override
@@ -64,6 +72,12 @@ public abstract class AbstractTermsJsonAdapter {
         throws IOException {
       TreeNode t = jp.readValueAsTree();
       return parse(t);
+    }
+
+    @Override
+    public T deserializeWithType(JsonParser p, DeserializationContext ctxt,
+        TypeDeserializer typeDeserializer) throws IOException {
+      return deserialize(p, ctxt);
     }
 
     protected T parse(TreeNode t) {
@@ -78,21 +92,38 @@ public abstract class AbstractTermsJsonAdapter {
         logger.warn("Unable to resolve concept {}", t);
       }
 
-      Optional<T> resolved = tagNode.flatMap(this::resolve);
-      if (tagNode.isPresent() && !resolved.isPresent()) {
-        logger.warn("Unable to resolve concept ID {}", tagNode.get());
-      }
-
-      T resolvedTerm = resolved.orElse(null);
-      if (resolvedTerm instanceof Series<?>) {
-        String versionTag = getVersionNode(t).orElse(null);
-        if (versionTag != null) {
-          resolvedTerm = (T) ((Series<?>) resolvedTerm).getVersion(versionTag).orElse(null);
-        }
-      }
-      return resolvedTerm;
+      return tagNode
+          .flatMap(tag -> this.resolveAsKnownTerm(t,tag))
+          .orElseGet(() -> this.resolveGeneric(t));
     }
 
+
+    protected abstract T[] getValues();
+
+    protected T resolveGeneric(TreeNode t) {
+      throw new UnsupportedOperationException();
+    }
+
+    protected Optional<T> resolveAsKnownTerm(TreeNode t,String tagNode) {
+      return resolve(tagNode)
+          .flatMap(resTerm -> resolveVersion(resTerm, t));
+    }
+
+    protected Optional<T> resolveVersion(T resolvedTerm, TreeNode t) {
+      if (resolvedTerm instanceof Series<?>) {
+        Optional<T> versionedTerm = (Optional<T>) getVersionNode(t)
+            .flatMap(((Series<?>) resolvedTerm)::getVersion);
+        if (versionedTerm.isPresent()) {
+          return versionedTerm;
+        }
+      }
+      return Optional.of(resolvedTerm);
+    }
+
+    protected ConceptIdentifier parseAsConceptIdentifier(TreeNode t) {
+      return JSonUtil.parseJson(((ObjectNode) t), ConceptIdentifier.class)
+          .orElse(null);
+    }
 
     protected Optional<String> getTag(TreeNode t) {
       return getIdNode(t,getKey())
@@ -127,8 +158,6 @@ public abstract class AbstractTermsJsonAdapter {
         return Optional.empty();
       }
     }
-
-    protected abstract T[] getValues();
 
     protected Optional<T> resolveUUID(UUID uuid) {
       return resolve(uuid.toString());

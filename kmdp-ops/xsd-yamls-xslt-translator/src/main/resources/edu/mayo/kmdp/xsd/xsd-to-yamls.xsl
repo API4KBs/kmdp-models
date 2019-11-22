@@ -70,7 +70,13 @@
 
       <xsl:call-template name="xmlBinding">
         <xsl:with-param name="isAttribute" select="false()"/>
-        <xsl:with-param name="indent" select="$indent"/>
+        <xsl:with-param name="indent"
+          select="
+            if ($isExtension) then
+              ($indent + 2 * $tab)
+            else
+              ($indent)"
+        />
         <xsl:with-param name="type" select="$type"/>
       </xsl:call-template>
 

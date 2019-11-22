@@ -39,6 +39,7 @@ import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Date;
@@ -107,10 +108,20 @@ public class VersionedGeneratorTest {
           .findFirst();
       assertTrue(x.isPresent());
 
+      Field versionURIs = sseries.getDeclaredField("schemeVersionIdentifiers");
+      assertNotNull(versionURIs);
+      List<?> v = (List) versionURIs.get(null);
+      assertEquals(3,v.size());
+
+      Field latestVersionURI = sseries.getDeclaredField("latestVersionIdentifier");
+      assertNotNull(latestVersionURI);
+      URI u = (URI) latestVersionURI.get(null);
+      assertEquals(URI.create("http://test/generator/SNAPSHOT"),u);
+
       assertTrue(x.get() instanceof Series);
       List<?> versions = ((Series)x.get()).getVersions();
 
-      versions.forEach(v -> assertTrue(v instanceof Versionable));
+      versions.forEach(ver -> assertTrue(ver instanceof Versionable));
       List<Versionable> versionables = versions.stream()
           .flatMap(StreamUtil.filterAs(Versionable.class))
           .collect(Collectors.toList());

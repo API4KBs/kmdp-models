@@ -46,6 +46,13 @@ public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
   public static final List<Date> schemeReleases =
       edu.mayo.kmdp.util.DateTimeUtil.parseDates(java.util.Arrays.asList({{#publicationDates}} "{{.}}"  {{^-last}}, {{/-last}} {{/publicationDates}}));
 
+  public static final List<URI> schemeVersionIdentifiers =
+      java.util.Arrays.asList(
+            {{#schemeVersionIdentifiers}} URI.create("{{.}}") {{^-last}}, {{/-last}} {{/schemeVersionIdentifiers}}
+          );
+
+  public static final URI latestVersionIdentifier = schemeVersionIdentifiers.get(0);
+
   private List<{{intfName}}> versions;
 
   {{seriesName}}({{intfName}}... versions) {

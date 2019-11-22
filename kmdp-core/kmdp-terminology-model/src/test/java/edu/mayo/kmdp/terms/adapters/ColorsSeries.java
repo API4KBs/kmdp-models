@@ -25,7 +25,7 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -85,11 +85,11 @@ public enum ColorsSeries implements IColors, Series<IColors> {
     return this;
   }
 
-  public static class JsonSerializer extends ConceptTermsJsonAdapter.Serializer {
+  public static class JsonSerializer extends AbstractTermsJsonAdapter.AbstractSerializer {
 
   }
 
-  public static class JsonDeserializer extends ConceptTermsJsonAdapter.Deserializer {
+  public static class JsonDeserializer extends AbstractTermsJsonAdapter.AbstractDeserializer {
     protected Term[] getValues() {
       return values();
     }

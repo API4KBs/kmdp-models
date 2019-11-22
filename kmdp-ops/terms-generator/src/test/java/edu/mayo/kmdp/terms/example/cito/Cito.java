@@ -25,7 +25,7 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.adapters.json.UUIDTermsJsonAdapter;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
@@ -122,7 +122,7 @@ public enum Cito implements ICito {
 
   public static class JsonSerializer extends UUIDTermsJsonAdapter.Serializer { }
 
-  public static class JsonDeserializer extends ConceptTermsJsonAdapter.Deserializer {
+  public static class JsonDeserializer extends UUIDTermsJsonAdapter.Deserializer {
     protected Term[] getValues() {
       return values();
     }

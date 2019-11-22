@@ -74,7 +74,7 @@ public class EnumGenerationConfig extends
         false)),
     JSON_ADAPTER(Opt.of(
         "baseJsonAdapter",
-        "edu.mayo.kmdp.terms.adapters.json.ConceptTermsJsonAdapter",
+        "edu.mayo.kmdp.terms.adapters.json.ConceptIdentifierTermsJsonAdapter",
         "Base class that controls the JSON serialization of terminologies",
         String.class,
         false)),

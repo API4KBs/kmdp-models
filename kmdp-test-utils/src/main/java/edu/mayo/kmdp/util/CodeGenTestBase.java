@@ -100,6 +100,7 @@ public abstract class CodeGenTestBase {
   public static void showDirContent(File file, int i, boolean enablePrintout) {
     if (enablePrintout) {
       String msg = String.format("%s : %s",tab(i),file.getName());
+      System.out.println(msg);
       logger.info(msg);
     }
     if (file.isDirectory()) {
