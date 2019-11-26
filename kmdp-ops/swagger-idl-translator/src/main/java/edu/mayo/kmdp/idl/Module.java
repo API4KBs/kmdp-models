@@ -16,6 +16,8 @@
 package edu.mayo.kmdp.idl;
 
 
+import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.NameUtils.IdentifierType;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -46,15 +48,22 @@ public class Module {
   }
 
   public Optional<Interface> getInterface(String tag) {
-    return Optional.ofNullable(interfaces.get(tag));
+    return Optional.ofNullable(interfaces.get(tag2Name(tag)));
   }
 
-  public Module addInterface(Interface itf) {
+  public Interface addInterface( String tag) {
+    Interface itf = new Interface(tag2Name(tag));
+
     if (interfaces.containsKey(itf.getName())) {
-      throw new UnsupportedOperationException("Cannot merge interfaces yet");
+      Interface existing = interfaces.get(itf.getName());
+      itf.merge(existing);
     }
     interfaces.put(itf.getName(),itf);
-    return this;
+    return itf;
+  }
+
+  private String tag2Name(String tag) {
+    return NameUtils.nameToIdentifier(tag, IdentifierType.CLASS);
   }
 
   public Module addStruct(Struct struct) {

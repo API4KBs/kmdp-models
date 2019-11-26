@@ -22,6 +22,7 @@ import edu.mayo.kmdp.idl.Type;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.NameUtils.IdentifierType;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import io.swagger.models.Operation;
@@ -101,9 +102,8 @@ public class SwaggerToIDLTranslator {
           Optional<Interface> intf = module.getInterface(tag);
 
           if (!intf.isPresent()) {
-            this.addInterface(module, tag);
+            module.addInterface(tag);
           }
-
           intf = module.getInterface(tag);
 
           intf.ifPresent(i -> i.addOperation(toIDLOperation(op, swagger, provider)));
@@ -140,12 +140,6 @@ public class SwaggerToIDLTranslator {
     return idlParam;
   }
 
-
-  private Interface addInterface(Module module, String tag) {
-    Interface itf = new Interface(tag);
-    module.addInterface(itf);
-    return itf;
-  }
 
   private Module getLeafModule(Module m) {
     return m.getSubModules().isEmpty() ? m : getLeafModule(m.getSubModules().iterator().next());

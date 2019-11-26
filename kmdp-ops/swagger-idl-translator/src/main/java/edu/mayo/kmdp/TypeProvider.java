@@ -22,14 +22,12 @@ import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 class TypeProvider {
 
@@ -46,10 +44,10 @@ class TypeProvider {
 
   public Type registerType(Type type) {
     if (isPrimitive(type)) {
-      return new Type(primitiveMap(type.getName()),type.isCollection());
+      return new Type(primitiveMap(type.getName()), type.isCollection());
     }
 
-    Struct struct = new Struct(type.getName());
+    Struct struct = new Struct(type.getName(), type.getPackageName());
     Model model = find(type.getName(), swaggers);
 
     if (model.getProperties() != null) {
@@ -180,7 +178,9 @@ class TypeProvider {
   public void sortTypeDeclarations(Module m) {
     HierarchySorter<Struct> sorter = new HierarchySorter<>();
 
-    List<Struct> sortedStructs = sorter.linearize(m.getStructs(),getDependencies(m.getStructMap()));
+    List<Struct> sortedStructs = sorter.linearize(
+        m.getStructs(),
+        getDependencies(m.getStructMap()));
 
     m.getStructMap().clear();
     sortedStructs.forEach(m::addStruct);

@@ -18,6 +18,8 @@ package edu.mayo.kmdp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.util.CodeGenTestBase;
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -44,15 +46,22 @@ public class SwaggerToIDLTranslatorTest {
         .map(SwaggerToIDLTranslatorTest.class::getResourceAsStream)
         .collect(Collectors.toList());
 
+    File gen = new File(tmp.toFile(),"gen");
+    assertTrue(gen.mkdir());
+    File out = new File(tmp.toFile(),"out");
+    assertTrue(out.mkdir());
+
     Optional<String> target = new SwaggerToIDLTranslator()
         .translate(sources);
     assertTrue(target.isPresent());
+
     System.out.println(target.get());
 
-    String errs = TestIDLCompiler.tryCompileSource(tmp.toFile(), target.orElse(""));
+    String errs = TestIDLCompiler.tryCompileSource(gen, target.orElse(""));
     assertEquals("", errs, errs);
+    CodeGenTestBase.ensureSuccessCompile(gen,gen,out);
 
-    System.out.println(target.get());
+    CodeGenTestBase.showDirContent(tmp.toFile(),true);
   }
 
 }

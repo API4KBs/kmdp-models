@@ -18,18 +18,27 @@ package edu.mayo.kmdp.idl;
 public class Type {
 
   private String name;
+  private String packageName;
   private boolean collection = false;
 
   public Type(String type) {
-    this.name = type;
+    this(type,null,false);
   }
 
+  public Type(String type, String packageName) {
+    this(type,packageName,false);
+  }
+
+  public Type(String type, String packageName, boolean collection) {
+    this.name = type;
+    this.packageName = packageName;
+    this.collection = collection;
+  }
 
   public Type(String type, boolean collection) {
     this.name = type;
     this.collection = collection;
   }
-
 
   public boolean isCollection() {
     return collection;
@@ -43,5 +52,7 @@ public class Type {
     return name;
   }
 
-
+  public String getPackageName() {
+    return packageName;
+  }
 }

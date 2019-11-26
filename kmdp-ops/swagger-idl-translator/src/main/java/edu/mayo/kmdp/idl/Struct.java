@@ -15,8 +15,11 @@
  */
 package edu.mayo.kmdp.idl;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Struct {
@@ -24,6 +27,14 @@ public class Struct {
   private String typeName;
   private Map<String, Field> fields = new LinkedHashMap<>();
 
+  private List<String> packages = Collections.emptyList();
+
+  public Struct(String name, String packageName) {
+    this.typeName = name;
+    if (packageName != null) {
+      this.packages = Arrays.asList(packageName.split(","));
+    }
+  }
 
   public Struct(String name) {
     this.typeName = name;
