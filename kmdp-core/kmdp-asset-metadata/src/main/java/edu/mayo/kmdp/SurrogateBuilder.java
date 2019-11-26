@@ -219,9 +219,11 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withInlinedFhirPath(String expr) {
     if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new ComputableKnowledgeArtifact().withRepresentation(new Representation()
-          .withLanguage(KnowledgeRepresentationLanguageSeries.FHIRPath_STU1)
-          .withFormat(SerializationFormatSeries.TXT))
+      get().withCarriers(new ComputableKnowledgeArtifact()
+          .withArtifactId(id(expr != null ? Util.uuid(expr) : UUID.randomUUID(),"LATEST"))
+          .withRepresentation(new Representation()
+              .withLanguage(KnowledgeRepresentationLanguageSeries.FHIRPath_STU1)
+              .withFormat(SerializationFormatSeries.TXT))
           .withInlined(new InlinedRepresentation().withExpr(expr)));
     }
     return this;

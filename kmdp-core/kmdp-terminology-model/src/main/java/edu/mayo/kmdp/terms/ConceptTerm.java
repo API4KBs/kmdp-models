@@ -39,6 +39,11 @@ public interface ConceptTerm<T extends Term> extends Term, Taxonomic<T> {
   default URI getConceptId() {
     return getDescription().getConceptId();
   }
+
+  default void setConceptId(URI id) {
+    throw new UnsupportedOperationException("IDs are immutable");
+  }
+
   
   @Override
   default Term[] getClosure() {

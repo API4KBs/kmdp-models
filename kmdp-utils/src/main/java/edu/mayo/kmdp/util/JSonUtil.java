@@ -79,7 +79,7 @@ public class JSonUtil {
     return data != null ? readJson(data.getBytes()) : Optional.empty();
   }
 
-  public static <T> Optional<T> readJson(String data, Class<T> klass) {
+  public static <T> Optional<T> readJson(String data, Class<? extends T> klass) {
     return data != null ? readJson(data.getBytes(), klass) : Optional.empty();
   }
 
@@ -87,7 +87,7 @@ public class JSonUtil {
     return readJson(new ByteArrayInputStream(data));
   }
 
-  public static <T> Optional<T> readJson(InputStream data, Class<T> klass) {
+  public static <T> Optional<T> readJson(InputStream data, Class<? extends T> klass) {
     ObjectMapper objectMapper = configureMapper(new ObjectMapper(), defaultProperties());
     try {
       return Optional.ofNullable(objectMapper.readValue(data, klass));
@@ -99,7 +99,7 @@ public class JSonUtil {
   }
 
 
-  public static <T> Optional<T> readJson(byte[] data, Class<T> klass) {
+  public static <T> Optional<T> readJson(byte[] data, Class<? extends T> klass) {
     return readJson(new ByteArrayInputStream(data), klass);
   }
 
@@ -271,7 +271,7 @@ public class JSonUtil {
   }
 
   public static <T> Optional<T> parseJson(String json,
-      Class<T> type) {
+      Class<? extends T> type) {
     try {
       return Optional.of(new ObjectMapper().readValue(json, type));
     } catch (IOException e) {
@@ -282,7 +282,7 @@ public class JSonUtil {
   }
 
   public static <T> Optional<T> tryParseJson(String json,
-      Class<T> type) {
+      Class<? extends T> type) {
     try {
       return Optional.of(new ObjectMapper().readValue(json, type));
     } catch (IOException e) {
@@ -300,7 +300,7 @@ public class JSonUtil {
     }
   }
 
-  public static <T> Optional<T> parseJson(String json, Module mod, Class<T> klass) {
+  public static <T> Optional<T> parseJson(String json, Module mod, Class<? extends T> klass) {
     try {
       ObjectMapper mapper = new ObjectMapper();
       configure(mapper, mod, defaultProperties());
@@ -313,11 +313,11 @@ public class JSonUtil {
   }
 
 
-  public static <T> Optional<List<T>> parseJsonList(InputStream data, Class<T> memberKlass) {
+  public static <T> Optional<List<T>> parseJsonList(InputStream data, Class<? extends T> memberKlass) {
     return parseJsonList(data, null, memberKlass);
   }
 
-  public static <T> Optional<List<T>> parseJsonList(InputStream data, Module m, Class<T> memberKlass) {
+  public static <T> Optional<List<T>> parseJsonList(InputStream data, Module m, Class<? extends T> memberKlass) {
     ObjectMapper objectMapper = configure(new ObjectMapper(), m, defaultProperties());
     try {
       return Optional.of(Arrays.asList(objectMapper.readValue(data, asArrayOf(memberKlass))));

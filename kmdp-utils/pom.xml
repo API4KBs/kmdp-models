@@ -78,6 +78,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.javers</groupId>
+      <artifactId>javers-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>edu.stanford.protege</groupId>
       <artifactId>org.protege.xmlcatalog</artifactId>
       <scope>provided</scope>

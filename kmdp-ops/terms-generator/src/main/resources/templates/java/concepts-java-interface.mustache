@@ -1,5 +1,6 @@
 package {{intfPackageName}};
 
+import edu.mayo.kmdp.terms.ControlledTerm;
 import edu.mayo.kmdp.terms.VersionableTerm;
 import java.net.URI;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
@@ -7,7 +8,7 @@ import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
 @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( {{seriesName}}.Adapter.class )
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{seriesName}}.JsonDeserializer.class )
-public interface {{intfName}} extends VersionableTerm<{{intfName}}, {{seriesName}}> {
+public interface {{intfName}} extends ControlledTerm, VersionableTerm<{{intfName}}, {{seriesName}}> {
 
   String schemeName = "{{conceptScheme.label}}";
   String schemeID = "{{conceptSchemeTag}}";
