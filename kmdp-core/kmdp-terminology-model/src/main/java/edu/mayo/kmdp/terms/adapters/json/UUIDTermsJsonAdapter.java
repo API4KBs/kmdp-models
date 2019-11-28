@@ -12,13 +12,9 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class UUIDTermsJsonAdapter {
+public interface UUIDTermsJsonAdapter {
 
-  protected UUIDTermsJsonAdapter() {
-    // don't instantiate
-  }
-
-  public static class Serializer<T extends Term>
+  class Serializer<T extends Term>
       extends AbstractTermsJsonAdapter.AbstractSerializer<T> {
     public Serializer() {
       // nothing to do
@@ -31,7 +27,7 @@ public abstract class UUIDTermsJsonAdapter {
     }
   }
 
-  public abstract static class Deserializer<T extends Term>
+  abstract class Deserializer<T extends Term>
       extends AbstractTermsJsonAdapter.AbstractDeserializer<T> {
 
     @Override
@@ -55,7 +51,7 @@ public abstract class UUIDTermsJsonAdapter {
 
   }
 
-  public static class KeySerializer<T extends Term>
+  class KeySerializer<T extends Term>
       extends AbstractTermsJsonAdapter.AbstractKeySerializer<T> {
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
@@ -64,7 +60,7 @@ public abstract class UUIDTermsJsonAdapter {
     }
   }
 
-  public abstract static class KeyDeserializer<T extends Term>
+  abstract class KeyDeserializer<T extends Term>
       extends AbstractTermsJsonAdapter.AbstractKeyDeserializer<T> {
 
     @Override

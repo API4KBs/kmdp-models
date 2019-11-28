@@ -22,7 +22,6 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initGenSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -113,7 +112,8 @@ public class JaxbGenerationTest {
       "</jaxb:bindings>";
 
   @Test
-  public void testJaxbGeneration() {
+  @SuppressWarnings("unchecked")
+  void testJaxbGeneration() {
     File tgt = compile();
 
     Class<?> info = getNamedClass("org.tempuri.parent.Info", tgt);
@@ -140,7 +140,7 @@ public class JaxbGenerationTest {
       Object values = arg.getMethod("values").invoke(null);
       assertTrue(values.getClass().isArray());
 
-      ((List) m.invoke(i)).add(Array.get(values, 0));
+      ((List<Object>) m.invoke(i)).add(Array.get(values, 0));
 
       String x = JaxbUtil.marshallToString(Collections.singleton(ObjectFactory.class),
           i,
@@ -149,7 +149,7 @@ public class JaxbGenerationTest {
 
       Optional<Schema> schema = XMLUtil
           .getSchemas(new File(tgt.getParent() + "/test/parent.xsd").toURI().toURL(),
-              catalogResolver(JaxbGenerationTest.class.getResource("/xsd/api4kp-catalog.xml")));
+              XMLUtil.catalogResolver(JaxbGenerationTest.class.getResource("/xsd/api4kp-catalog.xml")));
       assertTrue(schema.isPresent());
       XMLUtil.validate(x, schema.get());
 
@@ -162,7 +162,7 @@ public class JaxbGenerationTest {
 
 
   @Test
-  public void testXSDConfig() {
+  void testXSDConfig() {
     XSDEnumTermsGenerator xsdGen = new XSDEnumTermsGenerator();
     ConceptGraph conceptGraph = doAbstract();
 
@@ -176,7 +176,6 @@ public class JaxbGenerationTest {
 
     Optional<Document> odox = XMLUtil.loadXMLDocument(xsd.getBytes());
     assertTrue(odox.isPresent());
-    Document dox = odox.get();
 
     Pattern p = Pattern.compile("xs:enumeration", Pattern.LITERAL);
     Matcher m = p.matcher(xsd);
@@ -189,7 +188,7 @@ public class JaxbGenerationTest {
 
 
   @Test
-  public void testJaxbConfig() {
+  void testJaxbConfig() {
     XSDEnumTermsGenerator xsdGen = new XSDEnumTermsGenerator();
     ConceptGraph conceptGraph = doAbstract();
 
@@ -207,7 +206,7 @@ public class JaxbGenerationTest {
 
 
   @Test
-  public void testJava() {
+  void testJava() {
     XSDEnumTermsGenerator xsdGen = new XSDEnumTermsGenerator();
     ConceptGraph conceptGraph = doAbstract();
 
@@ -229,6 +228,7 @@ public class JaxbGenerationTest {
 
 
 
+  @SuppressWarnings("deprecation")
   private File compile() {
     File folder = tmp.toFile();
 

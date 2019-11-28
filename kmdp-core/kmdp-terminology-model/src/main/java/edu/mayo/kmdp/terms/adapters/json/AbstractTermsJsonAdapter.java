@@ -26,14 +26,11 @@ import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractTermsJsonAdapter {
+public interface AbstractTermsJsonAdapter {
 
-  static final Logger logger = LoggerFactory.getLogger(AbstractTermsJsonAdapter.class);
+  Logger logger = LoggerFactory.getLogger(AbstractTermsJsonAdapter.class);
 
-  protected AbstractTermsJsonAdapter() {
-  }
-
-  public static class AbstractSerializer<T extends Term> extends JsonSerializer<T> {
+  class AbstractSerializer<T extends Term> extends JsonSerializer<T> {
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
@@ -47,7 +44,7 @@ public abstract class AbstractTermsJsonAdapter {
     }
   }
 
-  public abstract static class AbstractKeySerializer<T extends Term> extends AbstractSerializer<T> {
+  abstract class AbstractKeySerializer<T extends Term> extends AbstractSerializer<T> {
 
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
@@ -57,14 +54,14 @@ public abstract class AbstractTermsJsonAdapter {
   }
 
 
-  public abstract static class AbstractKeyDeserializer<T extends Term> extends KeyDeserializer {
+  abstract class AbstractKeyDeserializer<T extends Term> extends KeyDeserializer {
 
     public abstract T deserializeKey(String key, DeserializationContext ctxt) throws IOException;
 
   }
 
 
-  public abstract static class AbstractDeserializer<T extends Term> extends JsonDeserializer<T> {
+  abstract class AbstractDeserializer<T extends Term> extends JsonDeserializer<T> {
     private static final String DEFAULT_KEY = "tag";
 
     @Override
@@ -109,6 +106,7 @@ public abstract class AbstractTermsJsonAdapter {
           .flatMap(resTerm -> resolveVersion(resTerm, t));
     }
 
+    @SuppressWarnings("unchecked")
     protected Optional<T> resolveVersion(T resolvedTerm, TreeNode t) {
       if (resolvedTerm instanceof Series<?>) {
         Optional<T> versionedTerm = (Optional<T>) getVersionNode(t)

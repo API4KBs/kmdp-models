@@ -32,7 +32,6 @@ import java.util.StringTokenizer;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
-import org.apache.xerces.util.XMLChar;
 
 
 public final class NameUtils {
@@ -235,47 +234,7 @@ public final class NameUtils {
     }
 
     if (null != authority && !"".equals(authority)) {
-      if ("urn".equals(uri.getScheme())) {
-        packageName.append(authority);
-        for (int i = 0; i < packageName.length(); i++) {
-          if (packageName.charAt(i) == '-') {
-            packageName.setCharAt(i, '.');
-          }
-        }
-        authority = packageName.toString();
-        packageName.setLength(0);
-
-        StringTokenizer st = new StringTokenizer(authority, ":");
-        while (st.hasMoreTokens()) {
-          String token = st.nextToken();
-          if (packageName.length() > 0) {
-            packageName.insert(0, ".");
-            packageName.insert(0, normalizePackageNamePart(token));
-          } else {
-            packageName.insert(0, token);
-          }
-        }
-        authority = packageName.toString();
-        packageName.setLength(0);
-
-      }
-
-      StringTokenizer st = new StringTokenizer(authority, ".");
-      if (st.hasMoreTokens()) {
-        String token = null;
-        while (st.hasMoreTokens()) {
-          token = st.nextToken();
-          if (packageName.length() == 0) {
-            if ("www".equals(token)) {
-              continue;
-            }
-          } else {
-            packageName.insert(0, ".");
-          }
-          packageName.insert(0, normalizePackageNamePart(token));
-        }
-
-      }
+      processAuthority(uri.getScheme(),authority,packageName);
     }
 
     String path = uri.getPath();
@@ -291,6 +250,54 @@ public final class NameUtils {
       packageName.append(normalizePackageNamePart(token));
     }
     return packageName.toString();
+  }
+
+  private static void processAuthority(String scheme, String authority, StringBuilder packageName) {
+    if ("urn".equals(scheme)) {
+      authority = processURNAuthority(authority,packageName);
+    }
+
+    StringTokenizer st = new StringTokenizer(authority, ".");
+    if (st.hasMoreTokens()) {
+      String token = null;
+      while (st.hasMoreTokens()) {
+        token = st.nextToken();
+        if (packageName.length() == 0) {
+          if ("www".equals(token)) {
+            continue;
+          }
+        } else {
+          packageName.insert(0, ".");
+        }
+        packageName.insert(0, normalizePackageNamePart(token));
+      }
+
+    }
+  }
+
+  private static String processURNAuthority(String authority, StringBuilder packageName) {
+    packageName.append(authority);
+    for (int i = 0; i < packageName.length(); i++) {
+      if (packageName.charAt(i) == '-') {
+        packageName.setCharAt(i, '.');
+      }
+    }
+    authority = packageName.toString();
+    packageName.setLength(0);
+
+    StringTokenizer st = new StringTokenizer(authority, ":");
+    while (st.hasMoreTokens()) {
+      String token = st.nextToken();
+      if (packageName.length() > 0) {
+        packageName.insert(0, ".");
+        packageName.insert(0, normalizePackageNamePart(token));
+      } else {
+        packageName.insert(0, token);
+      }
+    }
+    authority = packageName.toString();
+    packageName.setLength(0);
+    return authority;
   }
 
   private static String normalizePackageNamePart(String name) {
@@ -367,10 +374,18 @@ public final class NameUtils {
   }
 
   public static String toElementName(String name) {
-    if (!XMLChar.isValidName(name)) {
+    if (!isValidXMLStartName(name)) {
       return KEYWORD_PREFIX + name;
     }
     return name;
+  }
+
+  private static boolean isValidXMLStartName(String name) {
+    if (name == null || name.length() == 0) {
+      return false;
+    }
+    Character c = name.charAt(0);
+    return Character.isLetter(c) || c.equals('_') || c.equals(':');
   }
 
 
@@ -391,23 +406,12 @@ public final class NameUtils {
 
     while (i < sword.length()) {
       if (Character.isDigit(firstChar)) {
-        while (i < sword.length() && Character.isDigit(sword.charAt(i))) {
-          i++;
-        }
+        i = scanStartingWithNumber(i, sword);
       } else if (isCasedLetter(firstChar)) {
-        boolean previousIsLower = Character.isLowerCase(firstChar);
-        while (i < sword.length() && isCasedLetter(sword.charAt(i))) {
-          if (Character.isUpperCase(sword.charAt(i)) && previousIsLower) {
-            break;
-          }
-          previousIsLower = Character.isLowerCase(sword.charAt(i));
-          i++;
-        }
+        i = scanStartingWithUppecase(i, firstChar, sword);
       } else {
         // first must be a mark or an uncased letter
-        while (i < sword.length() && (isMark(sword.charAt(i)) || !isCasedLetter(sword.charAt(i)))) {
-          i++;
-        }
+        i = scan(i, sword);
       }
 
       // characters from first to i are all either
@@ -429,6 +433,32 @@ public final class NameUtils {
     if (index > (listIndex + 1)) {
       words.remove(listIndex);
     }
+  }
+
+  private static int scan(int i, StringBuilder sword) {
+    while (i < sword.length() && (isMark(sword.charAt(i)) || !isCasedLetter(sword.charAt(i)))) {
+      i++;
+    }
+    return i;
+  }
+
+  private static int scanStartingWithUppecase(int i, Character firstChar, StringBuilder sword) {
+    boolean previousIsLower = Character.isLowerCase(firstChar);
+    while (i < sword.length() && isCasedLetter(sword.charAt(i))) {
+      if (Character.isUpperCase(sword.charAt(i)) && previousIsLower) {
+        break;
+      }
+      previousIsLower = Character.isLowerCase(sword.charAt(i));
+      i++;
+    }
+    return i;
+  }
+
+  private static int scanStartingWithNumber(int i, StringBuilder sword) {
+    while (i < sword.length() && Character.isDigit(sword.charAt(i))) {
+      i++;
+    }
+    return i;
   }
 
   private static boolean isMark(char c) {
@@ -607,19 +637,21 @@ public final class NameUtils {
       return from;
     }
 
-    for (int i = 0; i < str.length(); i++) {
+    int i = 0;
+    while (i < str.length()) {
       if (j == from.length()) {
         break;
       }
       if (str.charAt(i) == from.charAt(j)) {
+        i++;
         j++;
       } else {
         do {
           delta.append(from.charAt(j++));
         } while (j < from.length() && str.charAt(i) != from.charAt(j));
-        i--;
       }
     }
+
     if (j < from.length()) {
       delta.append(from.substring(j));
     }

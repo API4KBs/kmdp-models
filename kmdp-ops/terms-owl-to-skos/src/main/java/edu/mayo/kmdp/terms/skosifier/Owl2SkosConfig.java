@@ -21,6 +21,7 @@ import edu.mayo.kmdp.Option;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import java.util.Properties;
 
+@SuppressWarnings("unchecked")
 public class Owl2SkosConfig extends ConfigProperties<Owl2SkosConfig, OWLtoSKOSTxParams> {
 
   private static final Properties DEFAULTS = defaulted( OWLtoSKOSTxParams.class );
@@ -91,14 +92,14 @@ public class Owl2SkosConfig extends ConfigProperties<Owl2SkosConfig, OWLtoSKOSTx
     )),
     ;
 
-    private Opt opt;
+    private Opt<OWLtoSKOSTxParams> opt;
 
-    OWLtoSKOSTxParams( Opt opt ) {
+    OWLtoSKOSTxParams( Opt<OWLtoSKOSTxParams> opt ) {
       this.opt = opt;
     }
 
     @Override
-    public Opt getOption() {
+    public Opt<OWLtoSKOSTxParams> getOption() {
       return opt;
     }
 

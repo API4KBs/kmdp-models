@@ -77,67 +77,67 @@ public class LegacyTermsJsonAdapter {
 
       Optional<? extends Term> res = Optional.empty();
       switch (ci.getNamespace().getTag()) {
-        case DependencyType.schemeID:
+        case DependencyType.SCHEME_ID:
           res = DependencyTypeSeries.resolve(ci);
           break;
-        case KnowledgeAssetCategory.schemeID:
+        case KnowledgeAssetCategory.SCHEME_ID:
           res = KnowledgeAssetCategorySeries.resolve(ci);
           break;
-        case KnowledgeAssetType.schemeID:
+        case KnowledgeAssetType.SCHEME_ID:
           res = KnowledgeAssetTypeSeries.resolve(ci);
           break;
-        case KnowledgeProcessingTechnique.schemeID:
+        case KnowledgeProcessingTechnique.SCHEME_ID:
           res = KnowledgeProcessingTechniqueSeries.resolve(ci);
           break;
-        case KnowledgeAssetRole.schemeID:
+        case KnowledgeAssetRole.SCHEME_ID:
           res = KnowledgeAssetRoleSeries.resolve(ci);
           break;
-        case StructuralPartType.schemeID:
+        case StructuralPartType.SCHEME_ID:
           res = StructuralPartTypeSeries.resolve(ci);
           break;
-        case DerivationType.schemeID:
+        case DerivationType.SCHEME_ID:
           res = DerivationTypeSeries.resolve(ci);
           break;
-        case VariantType.schemeID:
+        case VariantType.SCHEME_ID:
           res = VariantTypeSeries.resolve(ci);
           break;
-        case RelatedVersionType.schemeID:
+        case RelatedVersionType.SCHEME_ID:
           res = RelatedVersionTypeSeries.resolve(ci);
           break;
-        case BibliographicCitationType.schemeID:
+        case BibliographicCitationType.SCHEME_ID:
           res = BibliographicCitationTypeSeries.resolve(ci);
           break;
-        case PublicationStatus.schemeID:
+        case PublicationStatus.SCHEME_ID:
           res = PublicationStatusSeries.resolve(ci);
           break;
-        case PublishingRole.schemeID:
+        case PublishingRole.SCHEME_ID:
           res = PublishingRoleSeries.resolve(ci);
           break;
-        case Language.schemeID:
+        case Language.SCHEME_ID:
           res = LanguageSeries.resolve(ci);
           break;
-        case IKnowledgeArtifactCategory.schemeID:
+        case IKnowledgeArtifactCategory.SCHEME_ID:
           res = KnowledgeArtifactCategorySeries.resolve(ci);
           break;
-        case SummarizationType.schemeID:
+        case SummarizationType.SCHEME_ID:
           res = SummarizationTypeSeries.resolve(ci);
           break;
-        case KnowledgeRepresentationLanguage.schemeID:
+        case KnowledgeRepresentationLanguage.SCHEME_ID:
           res = KnowledgeRepresentationLanguageSeries.resolve(ci);
           break;
-        case KnowledgeRepresentationLanguageProfile.schemeID:
+        case KnowledgeRepresentationLanguageProfile.SCHEME_ID:
           res = KnowledgeRepresentationLanguageProfileSeries.resolve(ci);
           break;
-        case SerializationFormat.schemeID:
+        case SerializationFormat.SCHEME_ID:
           res = SerializationFormatSeries.resolve(ci);
           break;
-        case Lexicon.schemeID:
+        case Lexicon.SCHEME_ID:
           res = LexiconSeries.resolve(ci);
           break;
-        case KnowledgeRepresentationLanguageSerialization.schemeID:
+        case KnowledgeRepresentationLanguageSerialization.SCHEME_ID:
           res = KnowledgeRepresentationLanguageSerializationSeries.resolve(ci);
           break;
-        case KnowledgeRepresentationLanguageRole.schemeID:
+        case KnowledgeRepresentationLanguageRole.SCHEME_ID:
           res = KnowledgeRepresentationLanguageRoleSeries.resolve(ci);
           break;
         default:

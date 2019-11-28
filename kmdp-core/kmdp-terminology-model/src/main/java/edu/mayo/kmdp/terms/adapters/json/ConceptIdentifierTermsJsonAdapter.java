@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 
-public abstract class ConceptIdentifierTermsJsonAdapter {
+public interface ConceptIdentifierTermsJsonAdapter {
 
-  public static class Serializer
+  class Serializer
       extends AbstractTermsJsonAdapter.AbstractSerializer<ConceptIdentifier> {
     @Override
     public void serialize(ConceptIdentifier v, JsonGenerator gen, SerializerProvider serializers)
@@ -20,7 +20,7 @@ public abstract class ConceptIdentifierTermsJsonAdapter {
 
   }
 
-  public static class Deserializer
+  class Deserializer
       extends AbstractTermsJsonAdapter.AbstractDeserializer<ConceptIdentifier> {
 
     @Override

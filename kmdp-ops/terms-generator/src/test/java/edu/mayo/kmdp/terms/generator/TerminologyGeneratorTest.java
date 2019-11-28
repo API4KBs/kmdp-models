@@ -134,7 +134,7 @@ public class TerminologyGeneratorTest {
 
       Class scheme = getNamedClass("org.foo.test.SCH1", target);
 
-      Field ns = scheme.getField("schemeID");
+      Field ns = scheme.getField("SCHEME_ID");
       assertEquals("concept_scheme1", ns.get(null));
 
       Object code = scheme.getEnumConstants()[0];

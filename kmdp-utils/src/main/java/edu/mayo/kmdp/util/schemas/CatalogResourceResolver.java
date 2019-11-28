@@ -17,11 +17,11 @@ package edu.mayo.kmdp.util.schemas;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
-import org.slf4j.LoggerFactory;
+import org.apache.xml.resolver.tools.CatalogResolver;
 import org.slf4j.Logger;
-import org.apache.xerces.dom.DOMInputImpl;
-import org.apache.xerces.util.XMLCatalogResolver;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
@@ -29,12 +29,11 @@ public class CatalogResourceResolver implements LSResourceResolver {
 
   private static final Logger logger = LoggerFactory.getLogger(CatalogResourceResolver.class);
 
-  private XMLCatalogResolver resolver;
+  private CatalogResolver resolver;
 
-  public CatalogResourceResolver(XMLCatalogResolver resolver) {
+  public CatalogResourceResolver(CatalogResolver resolver) {
     this.resolver = resolver;
   }
-
 
   @Override
   public LSInput resolveResource(String type,
@@ -48,13 +47,13 @@ public class CatalogResourceResolver implements LSResourceResolver {
         if (baseURI != null && systemId != null) {
           return null;
         }
-        path = resolver.resolveURI(namespaceURI);
+        path = resolver.getCatalog().resolveURI(namespaceURI);
         if (path == null) {
           return null;
         }
         InputStream is = new URL(path).openStream();
 
-        return new DOMInputImpl(publicId,
+        return new InnerDOMInputImpl(publicId,
             systemId,
             baseURI,
             is,
@@ -66,5 +65,107 @@ public class CatalogResourceResolver implements LSResourceResolver {
     return null;
   }
 
+  private class InnerDOMInputImpl implements LSInput {
+
+    private String publicId;
+    private String systemId;
+    private InputStream byteStream;
+    private String baseURI;
+    private String encoding;
+    private Reader characterStream;
+    private String stringData;
+    private boolean certifiedText = false;
+
+    InnerDOMInputImpl(String publicId, String systemId,
+        String baseSystemId, InputStream byteStream,
+        String encoding) {
+
+      this.publicId = publicId;
+      this.systemId = systemId;
+      this.baseURI = baseSystemId;
+      this.byteStream = byteStream;
+      this.encoding = encoding;
+    }
+
+    @Override
+    public String getPublicId() {
+      return publicId;
+    }
+
+    @Override
+    public String getSystemId() {
+      return systemId;
+    }
+
+    @Override
+    public void setSystemId(String systemId) {
+      this.systemId = systemId;
+    }
+
+    @Override
+    public void setPublicId(String publicId) {
+      this.publicId = publicId;
+    }
+
+    @Override
+    public void setByteStream(InputStream byteStream) {
+      this.byteStream = byteStream;
+    }
+
+    @Override
+    public void setBaseURI(String baseSystemId) {
+      this.baseURI = baseSystemId;
+    }
+
+    @Override
+    public void setEncoding(String encoding) {
+      this.encoding = encoding;
+    }
+
+    @Override
+    public InputStream getByteStream() {
+      return byteStream;
+    }
+
+    @Override
+    public String getBaseURI() {
+      return baseURI;
+    }
+
+    @Override
+    public String getEncoding() {
+      return encoding;
+    }
+
+    @Override
+    public Reader getCharacterStream() {
+      return characterStream;
+    }
+
+    @Override
+    public void setCharacterStream(Reader charStream) {
+      this.characterStream = charStream;
+    }
+
+    @Override
+    public String getStringData() {
+      return stringData;
+    }
+
+    @Override
+    public void setStringData(String stringData) {
+      this.stringData = stringData;
+    }
+
+    @Override
+    public boolean getCertifiedText() {
+      return certifiedText;
+    }
+
+    @Override
+    public void setCertifiedText(boolean certifiedText) {
+      this.certifiedText = certifiedText;
+    }
+  }
 }
 

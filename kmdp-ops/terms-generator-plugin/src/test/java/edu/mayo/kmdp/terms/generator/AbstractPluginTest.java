@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 abstract class AbstractPluginTest {
 
   TermsGeneratorPlugin initPlugin(File genSrc, List<String> owlPath) {

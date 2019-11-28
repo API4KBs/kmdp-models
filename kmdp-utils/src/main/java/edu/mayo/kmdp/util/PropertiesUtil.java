@@ -17,6 +17,7 @@ package edu.mayo.kmdp.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Function;
@@ -47,9 +48,14 @@ public class PropertiesUtil {
 
   public static Optional<Object> pObject(String name, Properties p) {
     try {
-      return p.containsKey(name) ? Optional.of(Class.forName(p.getProperty(name)).newInstance())
+      return p.containsKey(name)
+          ? Optional.of(Class.forName(p.getProperty(name)).getConstructor().newInstance())
           : Optional.empty();
-    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+    } catch (InstantiationException
+        | IllegalAccessException
+        | ClassNotFoundException
+        | NoSuchMethodException
+        | InvocationTargetException e) {
       logger.error(e.getMessage(),e);
       return Optional.empty();
     }

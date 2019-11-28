@@ -19,16 +19,11 @@ import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class GenericURITermsJsonAdapter {
+public interface GenericURITermsJsonAdapter {
 
-  static final Logger logger = LoggerFactory.getLogger(GenericURITermsJsonAdapter.class);
+  Logger logger = LoggerFactory.getLogger(GenericURITermsJsonAdapter.class);
 
-
-  protected GenericURITermsJsonAdapter() {
-    // nothing to do
-  }
-
-  public static class GenericURISerializer
+  class GenericURISerializer
       extends URITermsJsonAdapter.Serializer<ConceptIdentifier> {
 
     protected GenericURISerializer() {
@@ -37,7 +32,7 @@ public abstract class GenericURITermsJsonAdapter {
 
   }
 
-  public static class GenericURIDeserializer
+  class GenericURIDeserializer
       extends URITermsJsonAdapter.Deserializer<ConceptIdentifier> {
 
     protected GenericURIDeserializer() {

@@ -59,10 +59,6 @@ class TypeProvider {
 
     return type;
   }
-//
-//  public Model resolveType(String typeName) {
-//    return find(typeName,swaggers);
-//  }
 
 
   Type getParameterType(Parameter parameter) {

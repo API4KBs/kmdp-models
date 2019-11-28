@@ -10,8 +10,8 @@ import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{seriesName}}.JsonDeserializer.class )
 public interface {{intfName}} extends ControlledTerm, VersionableTerm<{{intfName}}, {{seriesName}}> {
 
-  String schemeName = "{{conceptScheme.label}}";
-  String schemeID = "{{conceptSchemeTag}}";
+  String SCHEME_NAME = "{{conceptScheme.label}}";
+  String SCHEME_ID = "{{conceptSchemeTag}}";
 
   String seriesIdentifier = "{{seriesNamespace}}";
   URIIdentifier seriesUri = new URIIdentifier()
@@ -19,8 +19,8 @@ public interface {{intfName}} extends ControlledTerm, VersionableTerm<{{intfName
 
   NamespaceIdentifier seriesNamespace = new NamespaceIdentifier()
       .withId(seriesUri.getUri())
-      .withLabel(schemeName)
-      .withTag(schemeID);
+      .withLabel(SCHEME_NAME)
+      .withTag(SCHEME_ID);
 
   default URIIdentifier getSeriesUri() {
     return seriesUri;

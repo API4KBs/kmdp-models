@@ -33,10 +33,10 @@ import org.omg.spec.api4kp._1_0.Answer;
 import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 
-public class AnswerTest {
+class AnswerTest {
 
   @Test
-  public void testConstruction() {
+  void testConstruction() {
     Answer<String> ans = Answer.of("foo");
 
     assertEquals("foo", ans.getOptionalValue().orElse("Missing"));
@@ -55,7 +55,7 @@ public class AnswerTest {
   }
 
   @Test
-  public void testSimpleChaining() {
+  void testSimpleChaining() {
     Answer<String> ans = Answer.of("foo");
 
     Answer<Integer> iAns = ans
@@ -66,7 +66,7 @@ public class AnswerTest {
   }
 
   @Test
-  public void testChaining() {
+  void testChaining() {
     Answer<String> ans = Answer.of("foo");
 
     Answer<Integer> iAns = ans
@@ -76,7 +76,7 @@ public class AnswerTest {
   }
 
   @Test
-  public void testCode() {
+  void testCode() {
     Answer<String> ans1 = Answer.of(202, "foo", Collections.emptyMap());
     Answer<String> ans2 = Answer.of(ResponseCode.OK.getTag(), "foo", Collections.emptyMap());
     Answer<String> ans3 = Answer.of(ResponseCode.OK, "foo", Collections.emptyMap());
@@ -88,7 +88,7 @@ public class AnswerTest {
 
 
   @Test
-  public void testMeta() {
+  void testMeta() {
     String backLink = "http://goto.here/123";
     Map<String, List<String>> headers = new HashMap<>();
     headers.put("Link", Collections.singletonList(backLink));
@@ -99,7 +99,7 @@ public class AnswerTest {
   }
 
   @Test
-  public void testExplanationConstruction() {
+  void testExplanationConstruction() {
     String msg = "This is the history";
     Answer<String> ans = Answer.of(ResponseCode.OK, "foo").withExplanation(msg);
     assertEquals(msg, ans.printExplanation());
@@ -108,14 +108,15 @@ public class AnswerTest {
 
   @Test
   //TODO this is clunky, because the map/flatMap operations on KnowledgeCarrier are still TODOs
-  public void testWithKCarrier() {
+  @SuppressWarnings("deprecation")
+  void testWithKCarrier() {
     Answer<? extends KnowledgeCarrier> ans = Answer.of(AbstractCarrier.ofNaturalLanguageRep("Foo"));
 
     ans = ans.map(
         (kc) -> kc.map( (self) -> KnowledgeCarrier.ofNaturalLanguageRep(
             "mapped " + ((ExpressionCarrier)self).getSerializedExpression() ) ) );
 
-    KnowledgeCarrier kc = ans.getOptionalValue().get();
+    KnowledgeCarrier kc = ans.orElse(null);
     assertNotNull(kc);
     assertEquals( "mapped Foo", ((ExpressionCarrier) kc).getSerializedExpression());
   }

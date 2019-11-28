@@ -58,17 +58,17 @@ public class JsonRestWSUtils {
         case DSTU2:
           objectMapper.registerModule(
               (Module) Class.forName("edu.mayo.kmdp.util.fhir.fhir2.FHIR2JacksonModule")
-                  .newInstance());
+                  .getConstructor().newInstance());
           break;
         case DSTU2HL7:
           objectMapper.registerModule(
               (Module) Class.forName("edu.mayo.kmdp.util.fhir.fhir2_hl7.FHIR2HL7JacksonModule")
-                  .newInstance());
+                  .getConstructor().newInstance());
           break;
         case STU3:
           objectMapper.registerModule(
               (Module) Class.forName("edu.mayo.kmdp.util.fhir.fhir3.FHIR3JacksonModule")
-                  .newInstance());
+                  .getConstructor().newInstance());
           break;
         case NONE:
         default:

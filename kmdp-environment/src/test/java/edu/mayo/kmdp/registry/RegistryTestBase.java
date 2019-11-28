@@ -27,7 +27,8 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
 import org.apache.jena.vocabulary.XSD;
-import org.apache.xerces.util.XMLCatalogResolver;
+import org.apache.xml.resolver.CatalogManager;
+import org.apache.xml.resolver.tools.CatalogResolver;
 
 public class RegistryTestBase {
 
@@ -45,10 +46,15 @@ public class RegistryTestBase {
 
 
   static Model initRegistry(String catalogVersion) {
-    XMLCatalogResolver xcat = new XMLCatalogResolver(
-        new String[]{Registry.class.getResource(Registry.getCatalogVersion(catalogVersion)).toString()});
+    CatalogManager catalogManager = new CatalogManager();
+    catalogManager.setCatalogFiles(
+        Registry.class.getResource(Registry.getCatalogVersion(catalogVersion)).toString());
+    catalogManager.setUseStaticCatalog(false);
+    catalogManager.setIgnoreMissingProperties(true);
+    CatalogResolver xcat = new CatalogResolver(catalogManager);
+
     try {
-      String path = xcat.resolveURI(REGISTRY_URI);
+      String path = xcat.getCatalog().resolveURI(REGISTRY_URI);
       assertNotNull(path);
       path = path.replace("file:","");
       Model registry = ModelFactory.createOntologyModel()

@@ -20,6 +20,7 @@ import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
 import java.util.Properties;
 
+@SuppressWarnings("unchecked")
 public class EnumGenerationConfig extends
     ConfigProperties<EnumGenerationConfig, EnumGenerationConfig.EnumGenerationParams> {
 
@@ -86,14 +87,14 @@ public class EnumGenerationConfig extends
         Boolean.class,
         false));
 
-    private Opt opt;
+    private Opt<EnumGenerationParams> opt;
 
-    EnumGenerationParams(Opt opt) {
+    EnumGenerationParams(Opt<EnumGenerationParams> opt) {
       this.opt = opt;
     }
 
     @Override
-    public Opt getOption() {
+    public Opt<EnumGenerationParams> getOption() {
       return opt;
     }
 

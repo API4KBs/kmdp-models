@@ -243,7 +243,7 @@ public class AbstractCarrier {
    * @deprecated until reworked
    * @param mapper
    * @param <U>
-   * @return
+   * @return the result of the function application
    */
   // Rewrite as proper map/flatMap
   @Deprecated
@@ -255,7 +255,7 @@ public class AbstractCarrier {
    * @deprecated until reworked
    * @param mapper
    * @param <U>
-   * @return
+   * @return the result of the function mapping
    */
   // Rewrite as proper map/flatMap
   @Deprecated

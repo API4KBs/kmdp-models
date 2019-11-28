@@ -228,9 +228,7 @@ public class Answer<T> extends Explainer {
   }
 
   public List<String> getMetas(String key) {
-    return meta.containsKey(key)
-        ? meta.get(key)
-        : Collections.emptyList();
+    return meta.getOrDefault(key, Collections.emptyList());
   }
 
   public Collection<String> listMeta() {
@@ -264,9 +262,9 @@ public class Answer<T> extends Explainer {
     super.addExplanation(msg);
 
     String key = "urn:uuid:" + UUID.randomUUID().toString();
-    this.getMeta().put(Explainer.EXPL_HEADER, Arrays
-        .asList("<" + key + ">;rel=\"" + Explainer.PROV_KEY+ "\";"));
-    this.getMeta().put(key, Arrays.asList(msg));
+    this.getMeta().put(Explainer.EXPL_HEADER,
+        Collections.singletonList("<" + key + ">;rel=\"" + Explainer.PROV_KEY + "\";"));
+    this.getMeta().put(key, Collections.singletonList(msg));
 
     return this;
   }
@@ -345,7 +343,7 @@ public class Answer<T> extends Explainer {
   protected OutcomeStrategy<T> selectHandler(ResponseCode code) {
     if (isSuccess()) {
       return SuccessOutcomeStrategy.getInstance();
-    } else if (Integer.valueOf(code.getTag()) >= 300) {
+    } else if (Integer.parseInt(code.getTag()) >= 300) {
       return FailureOutcomeStrategy.getInstance();
     } else {
       return SuccessOutcomeStrategy.getInstance();
@@ -367,6 +365,7 @@ public class Answer<T> extends Explainer {
 
     protected static final SuccessOutcomeStrategy<?> instance = new SuccessOutcomeStrategy<>();
 
+    @SuppressWarnings("unchecked")
     public static <T> SuccessOutcomeStrategy<T> getInstance() {
       return (SuccessOutcomeStrategy<T>) instance;
     }
@@ -419,6 +418,7 @@ public class Answer<T> extends Explainer {
 
     protected static final FailureOutcomeStrategy<?> instance = new FailureOutcomeStrategy<>();
 
+    @SuppressWarnings("unchecked")
     public static <T> FailureOutcomeStrategy<T> getInstance() {
       return (FailureOutcomeStrategy<T>) instance;
     }

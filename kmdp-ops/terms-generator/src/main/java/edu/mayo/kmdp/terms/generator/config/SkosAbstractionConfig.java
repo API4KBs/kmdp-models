@@ -44,7 +44,7 @@ public class SkosAbstractionConfig extends
 
     ENFORCE_CLOSURE(Opt.of(
         "enforceClosure",
-        "false",
+        Boolean.FALSE.toString(),
         "Enforce the non-standard rule broader(Concept,Top) and topConceptOf(Top,Scheme) => inScheme(Concept,Scheme)",
         Boolean.class,
         false)),
@@ -56,13 +56,13 @@ public class SkosAbstractionConfig extends
         false)),
     REASON(Opt.of(
         "reason",
-        "false",
+        Boolean.FALSE.toString(),
         "Runs a DL reasoner on the SKOS ontology before performing the abstraction",
         Boolean.class,
         false)),
     ENFORCE_VERSION(Opt.of(
         "enforceVersion",
-        "false",
+        Boolean.FALSE.toString(),
         "If true, concept schemes must have a version, stated using owl:versionIRI",
         Boolean.class,
         false)),
@@ -85,14 +85,14 @@ public class SkosAbstractionConfig extends
         URI.class,
         false));
 
-    private Opt opt;
+    private Opt<SkosAbstractionParameters> opt;
 
-    SkosAbstractionParameters(Opt opt) {
+    SkosAbstractionParameters(Opt<SkosAbstractionParameters> opt) {
       this.opt = opt;
     }
 
     @Override
-    public Opt getOption() {
+    public Opt<SkosAbstractionParameters> getOption() {
       return opt;
     }
 

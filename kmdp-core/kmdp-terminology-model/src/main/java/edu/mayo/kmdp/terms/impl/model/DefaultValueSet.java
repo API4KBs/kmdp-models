@@ -17,21 +17,18 @@ package edu.mayo.kmdp.terms.impl.model;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ValueSet;
-
 import java.net.URI;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unchecked")
 public class DefaultValueSet<T extends Enum<T> & Term> extends AbstractValueSet implements
     ValueSet {
 
   private EnumSet<T> concepts;
 
-  public DefaultValueSet(String id, String name, Class<T> type, T... concepts) {
-    this(id, name, URI.create("urn:oid:" + id), type, concepts);
-  }
-
+  @SuppressWarnings("unchecked")
   public DefaultValueSet(String id, String name, URI uri, Class<T> type, T... concepts) {
     super(id, name, uri);
     switch (concepts.length) {
@@ -46,22 +43,22 @@ public class DefaultValueSet<T extends Enum<T> & Term> extends AbstractValueSet 
     }
   }
 
-  public DefaultValueSet(String id, String name, Class<T> type, T pivot, T... concepts) {
-    this(id, name, URI.create("urn:oid:" + id), type, pivot, concepts);
-  }
-
+  @SuppressWarnings("unchecked")
   public DefaultValueSet(String id, String name, URI uri, Class<T> type, T pivot, T... concepts) {
     this(id, name, uri, type, concepts);
     setPivotalConcept(pivot);
     init(pivot, concepts);
   }
 
+  @SuppressWarnings("unchecked")
   private void init(T pivot, T... concepts) {
     this.concepts = EnumSet.of(pivot, concepts);
   }
 
+  @Override
+  @SuppressWarnings("unchecked")
   public boolean contains(Term cd) {
-    return this.concepts.contains(cd);
+    return this.concepts.contains((T) cd);
   }
 
   @Override

@@ -16,6 +16,7 @@ public interface Versionable<T extends Versionable<T>> {
 
   VersionedIdentifier getVersionIdentifier();
 
+  @SuppressWarnings("unchecked")
   default T snapshot() {
     return (T) this;
   }

@@ -31,7 +31,7 @@ public class TermsHelper {
    * Instantiates a SNOMED-CT term
    * @param label
    * @param code
-   * @return
+   * @return a Term from SNOMED
    */
   public static ConceptIdentifier sct(String label, String code) {
     return new ConceptIdentifier()
@@ -70,7 +70,7 @@ public class TermsHelper {
    * Instantiates a Mayo Clinic local term
    * @param label
    * @param code
-   * @return
+   * @return a Test Term from a fictitious concept scheme
    */
   public static ConceptIdentifier mayo(String label, String code) {
     return new ConceptIdentifier()

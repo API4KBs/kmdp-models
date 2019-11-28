@@ -88,7 +88,7 @@
       <plugin>
         <groupId>edu.mayo.kmdp</groupId>
         <artifactId>terms-owl-to-skos-plugin</artifactId>
-        <version>4.0.1</version>
+        <version>${project.version}</version>
         <configuration>
           <outputDirectory>${skosDir}</outputDirectory>
           <catalogURLs>

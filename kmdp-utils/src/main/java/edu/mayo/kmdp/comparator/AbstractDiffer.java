@@ -43,8 +43,6 @@ public abstract class AbstractDiffer<T> extends Contrastor<T> {
     Diff diff = diff(subject, base);
     List<Change> delta = diff.getChanges();
 
-    System.out.println(diff.prettyPrint());
-
     if (delta.isEmpty()) {
       return 0;
     }

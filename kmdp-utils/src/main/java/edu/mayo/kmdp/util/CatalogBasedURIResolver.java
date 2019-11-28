@@ -16,7 +16,6 @@
 package edu.mayo.kmdp.util;
 
 import static edu.mayo.kmdp.util.URIUtil.asURL;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,9 +31,9 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.lib.RelativeURIResolver;
-import org.slf4j.LoggerFactory;
+import org.apache.xml.resolver.tools.CatalogResolver;
 import org.slf4j.Logger;
-import org.apache.xerces.util.XMLCatalogResolver;
+import org.slf4j.LoggerFactory;
 
 public class CatalogBasedURIResolver implements RelativeURIResolver {
 
@@ -42,7 +41,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
 
   private String loc;
 
-  private XMLCatalogResolver xcat;
+  private CatalogResolver xcat;
 
   public String getLoc() {
     return loc;
@@ -58,11 +57,11 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
   }
 
   public CatalogBasedURIResolver(URL catalog) {
-    xcat = catalogResolver(catalog);
+    xcat = XMLUtil.catalogResolver(catalog);
   }
 
   public CatalogBasedURIResolver(String... catalog) {
-    xcat = catalogResolver(catalog);
+    xcat = XMLUtil.catalogResolver(catalog);
   }
 
   @Override
@@ -78,7 +77,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
     }
 
     try {
-      return xcat.resolvePublic(href, href);
+      return xcat.getCatalog().resolvePublic(href, href);
     } catch (IOException e) {
       return null;
     }
@@ -100,7 +99,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
   @Override
   public Source resolve(String href, String base) throws TransformerException {
     try {
-      String resolved = xcat.resolvePublic(href, href);
+      String resolved = xcat.getCatalog().resolvePublic(href, href);
       File f = new File(new URL(resolved).toURI());
       assert f.exists();
       FileInputStream fis = new FileInputStream(f);
@@ -120,7 +119,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
    * Leverages an XML Catalog for customizations
    * @param path
    * @param catalogURL
-   * @return
+   * @return The InputStream the catalog resource points to, if any
    */
   public static Optional<InputStream> resolveFilePath(String path, URL catalogURL) {
     return resolveFilePathToURL(path, catalogURL).flatMap(CatalogBasedURIResolver::openStream);
@@ -140,7 +139,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
    * Leverages an XML Catalog for customizations
    * @param path
    * @param catalogURL
-   * @return
+   * @return The catalog-mapped URL, if any
    */
   public static Optional<URL> resolveFilePathToURL(String path, URL catalogURL) {
     File f = new File(FileUtil.asPlatformSpecific(path));
@@ -193,9 +192,9 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
   }
 
   private static Optional<URL> tryResolveFromCatalog(String path, URL catalogURL) {
-    XMLCatalogResolver resolver = XMLUtil.catalogResolver(catalogURL);
+    CatalogResolver resolver = XMLUtil.catalogResolver(catalogURL);
     try {
-      String resolved = resolver.resolveURI(path);
+      String resolved = resolver.getCatalog().resolveURI(path);
       if (resolved != null) {
         return resolveFilePathToURL(resolved, catalogURL);
       }
@@ -217,7 +216,7 @@ public class CatalogBasedURIResolver implements RelativeURIResolver {
   /**
    * Catalog-less version, typically used to look up catalogs in the first place :)
    * @param path
-   * @return
+   * @return The URL of the file the relative path maps to, if any
    */
   public static Optional<URL> resolveFilePathToURL(String path) {
     return resolveFilePathToURL(path, null);

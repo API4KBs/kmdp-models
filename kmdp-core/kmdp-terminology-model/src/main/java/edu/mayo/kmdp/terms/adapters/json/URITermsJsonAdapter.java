@@ -20,15 +20,11 @@ import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class URITermsJsonAdapter {
+public interface URITermsJsonAdapter {
 
-  static final Logger logger = LoggerFactory.getLogger(URITermsJsonAdapter.class);
+  Logger logger = LoggerFactory.getLogger(URITermsJsonAdapter.class);
 
-  protected URITermsJsonAdapter() {
-    // don't instantiate
-  }
-
-  public static class Serializer<T extends Term>
+  class Serializer<T extends Term>
       extends AbstractTermsJsonAdapter.AbstractSerializer<T> {
     protected Serializer() {
       // nothing to do
@@ -50,7 +46,7 @@ public abstract class URITermsJsonAdapter {
     }
   }
 
-  public abstract static class Deserializer<T extends Term>
+  abstract class Deserializer<T extends Term>
       extends AbstractTermsJsonAdapter.AbstractDeserializer<T> {
 
     @Override
@@ -73,6 +69,7 @@ public abstract class URITermsJsonAdapter {
           .orElse(null);
     }
 
+    @SuppressWarnings("unchecked")
     private T resolveInSeries(T t, URI uri) {
       if (t instanceof Series) {
         Series<? extends Versionable> s = ((Series<? extends Versionable>) t);

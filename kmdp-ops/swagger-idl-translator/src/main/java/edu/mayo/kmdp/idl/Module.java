@@ -19,7 +19,6 @@ package edu.mayo.kmdp.idl;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.NameUtils.IdentifierType;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;

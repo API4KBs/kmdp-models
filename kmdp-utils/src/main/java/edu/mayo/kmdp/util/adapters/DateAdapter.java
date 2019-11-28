@@ -18,8 +18,6 @@ package edu.mayo.kmdp.util.adapters;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.util.Date;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class DateAdapter extends XmlAdapter<String, Date> {

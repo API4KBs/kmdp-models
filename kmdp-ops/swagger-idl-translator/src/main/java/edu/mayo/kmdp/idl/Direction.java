@@ -24,6 +24,7 @@ public enum Direction {
     this.externalForm = txt;
   }
 
+  @Override
   public String toString() {
     return externalForm;
   }

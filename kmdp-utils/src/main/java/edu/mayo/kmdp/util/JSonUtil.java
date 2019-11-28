@@ -92,7 +92,6 @@ public class JSonUtil {
     try {
       return Optional.ofNullable(objectMapper.readValue(data, klass));
     } catch (IOException e) {
-      e.printStackTrace();
       logger.error(e.getMessage(),e);
       return Optional.empty();
     }
@@ -168,7 +167,6 @@ public class JSonUtil {
       }
       return Optional.of(baos);
     } catch (IOException e) {
-      e.printStackTrace();
       logger.error(e.getMessage(),e);
       return Optional.empty();
     }
@@ -275,7 +273,6 @@ public class JSonUtil {
     try {
       return Optional.of(new ObjectMapper().readValue(json, type));
     } catch (IOException e) {
-      e.printStackTrace();
       logger.error(e.getMessage(),e);
       return Optional.empty();
     }

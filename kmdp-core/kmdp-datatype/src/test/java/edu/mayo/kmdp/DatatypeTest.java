@@ -41,8 +41,8 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Optional;
 
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
+import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;

@@ -27,6 +27,7 @@ import org.w3c.dom.Node;
 public abstract class AbstractFHIRXmlAdapter<R> extends XmlAdapter<Object, R> {
 
   @Override
+  @SuppressWarnings("unchecked")
   public R unmarshal(Object v) {
     if (!(v instanceof Element)) {
       return null;
@@ -34,8 +35,11 @@ public abstract class AbstractFHIRXmlAdapter<R> extends XmlAdapter<Object, R> {
     byte[] b = XMLUtil.asElementStream(((Element) v).getChildNodes())
         .filter(n -> n.getNodeType() == Node.ELEMENT_NODE)
         .findAny()
-        .map(XMLUtil::toByteArray).orElse(null);
-
+        .map(XMLUtil::toByteArray)
+        .orElse(null);
+    if (b == null) {
+      return null;
+    }
     IBaseResource br = parseResource(new InputStreamReader(new ByteArrayInputStream(b)));
     return (R) br;
   }

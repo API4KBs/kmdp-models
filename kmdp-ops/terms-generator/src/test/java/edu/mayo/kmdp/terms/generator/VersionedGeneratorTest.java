@@ -73,6 +73,7 @@ public class VersionedGeneratorTest {
 
 
   @Test
+  @SuppressWarnings({"deprecation","unchecked"})
   public void testClassCompilationWithVersionedPackage() {
     try {
       File folder = tmp.toFile();
@@ -157,7 +158,7 @@ public class VersionedGeneratorTest {
       assertTrue(version.isPresent());
       assertTrue(version.get() instanceof VersionableTerm);
       VersionableTerm vt = (VersionableTerm) version.get();
-      assertTrue(vt.getVersionIdentifier().getEstablishedOn().equals(effectiveDate));
+      assertEquals(vt.getVersionIdentifier().getEstablishedOn(), effectiveDate);
 
     } catch (Exception e) {
       e.printStackTrace();

@@ -1,10 +1,8 @@
 package edu.mayo.kmdp.terms;
 
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import java.net.URI;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 

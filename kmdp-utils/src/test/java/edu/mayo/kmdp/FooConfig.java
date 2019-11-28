@@ -17,6 +17,7 @@ package edu.mayo.kmdp;
 
 import java.util.Properties;
 
+@SuppressWarnings("unchecked")
 public class FooConfig extends ConfigProperties<FooConfig, FooConfig.BarOpts> {
 
   private static final Properties defaults = defaulted(BarOpts.class);
@@ -35,7 +36,6 @@ public class FooConfig extends ConfigProperties<FooConfig, FooConfig.BarOpts> {
     A(Opt.of("_a", "defaultA", "A", String.class, false)),
     B(Opt.of("_b", "true", "B", Boolean.class, false)),
     C(Opt.of("_c", "42", "C", Integer.class, false));
-
 
     private Opt<BarOpts> opt;
 

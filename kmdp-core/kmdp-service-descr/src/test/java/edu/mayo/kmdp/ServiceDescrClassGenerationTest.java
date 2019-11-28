@@ -17,8 +17,8 @@ package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static edu.mayo.kmdp.util.FileUtil.streamChildFiles;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
+import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,7 +32,6 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
