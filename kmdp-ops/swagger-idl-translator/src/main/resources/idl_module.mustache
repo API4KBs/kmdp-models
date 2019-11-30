@@ -5,6 +5,7 @@ struct {{typeName}} {
     {{type.fullyQualifiedName}} {{name}};
   {{/fields}}
 };
+typedef sequence<{{typeName}}> {{typeName}}List;
 {{/structs}}
 {{#subModules}}
 {{> idl_module}}
@@ -12,9 +13,9 @@ struct {{typeName}} {
 {{#interfaces}}
 interface {{name}} {
   {{#operations}}
-  {{returnType.fullyQualifiedName}} {{name}} (
+  {{returnType.fullyQualifiedName}}{{#returnType.isCollection}}List{{/returnType.isCollection}} {{name}} (
     {{#inputs}}
-      {{direction}} {{type.fullyQualifiedName}} {{name}} {{^-last}}, {{/-last}}
+      {{direction}} {{type.fullyQualifiedName}}{{#type.isCollection}}List{{/type.isCollection}} {{name}} {{^-last}}, {{/-last}}
     {{/inputs}}
   );
   {{/operations}}

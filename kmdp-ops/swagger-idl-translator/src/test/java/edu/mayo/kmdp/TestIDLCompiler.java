@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,20 +32,23 @@ public class TestIDLCompiler {
   }
 
 
-  public static String tryCompile(File outputDir, File... sourceIDLFiles) {
+  public static String tryCompile(File outputDir, List<File> sourceIDLFiles) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     PrintStream err = System.err;
     System.setErr(new PrintStream(baos));
 
-    String sources = Arrays.stream(sourceIDLFiles)
-        .map(File::getAbsolutePath)
-        .map(p ->  p)
-        .collect(Collectors.joining(" "));
+    int numSources = sourceIDLFiles.size();
+    int numArgs = 6;
+    String[] args = new String[numArgs];
+    args[0] = "-td";
+    args[1] = outputDir.getAbsolutePath();
+    args[2] = "-emitAll";
+    args[3] = "-i";
+    args[4] = sourceIDLFiles.get(0).getParentFile().getAbsolutePath();
+    args[5] = sourceIDLFiles.get(numSources-1).getAbsolutePath();
 
-    String target = outputDir.getAbsolutePath();
-
-    compiler.start(new String[] {"-td" , target, sources});
+    compiler.start(args);
 
     System.setErr(err);
     return baos.toString();
@@ -55,12 +58,22 @@ public class TestIDLCompiler {
     // nothing to do
   }
 
-  public static String tryCompileSource(File tmpRoot, String idlSource) {
-    File src = new File(tmpRoot, "test.idl");
+  public static String tryCompileSource(File tmpRoot, List<String> idlSources) {
     File target = new File(tmpRoot, "output");
     if (target.mkdir()) {
-      FileUtil.write(idlSource, src);
-      return tryCompile(target, src);
+      List<File> sources = idlSources.stream().map(idlSource -> {
+        int j = idlSources.indexOf(idlSource);
+        String currFileName = "test" + j + ".idl";
+        String content = idlSource;
+        if (j > 0) {
+          String prevFileName = "test" + (j-1) + ".idl";
+          content = "#include <" + prevFileName + ">\n" + content;
+        }
+        File src = new File(tmpRoot, currFileName);
+        FileUtil.write(content, src);
+        return src;
+      }).collect(Collectors.toList());
+      return tryCompile(target, sources);
     } else {
       return "Unable to create target folder";
     }

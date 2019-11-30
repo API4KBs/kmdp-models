@@ -23,7 +23,7 @@ public class Type {
   private String name;
   private String packageName;
   private String fullyQualifiedName;
-  private boolean collection = false;
+  private boolean collection;
   private Struct struct;
 
   public Type(String type) {

@@ -21,20 +21,25 @@ import edu.mayo.kmdp.idl.Module;
 import edu.mayo.kmdp.util.FileUtil;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class IDLSerializer {
 
   protected IDLSerializer() {}
 
-  public static String serialize(Module m) {
+  public static List<String> serialize(Module m) {
     Template tmpl = Mustache.compiler()
         .withLoader(name -> new StringReader(load(name)))
         .compile(load("idl_module"));
 
-    StringWriter sw = new StringWriter();
-    tmpl.execute(m, sw);
-
-    return sw.toString();
+    return m.getSubModules().stream()
+        .map(sub -> {
+          StringWriter sw = new StringWriter();
+          tmpl.execute(sub, sw);
+          return sw.toString();
+        })
+        .collect(Collectors.toList());
   }
 
   private static String load(String name) {

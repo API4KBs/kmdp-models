@@ -42,9 +42,6 @@ public class Operation {
   }
 
   public Operation addInput(Parameter param) {
-    if (inputs.containsKey(param.getName())) {
-      throw new UnsupportedOperationException("Cannot merge parameters yet");
-    }
     inputs.put(param.getName(), param);
     return this;
   }

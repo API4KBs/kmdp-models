@@ -13,6 +13,6 @@ public class IDLNameUtil {
   }
 
   public static String toFQName(String packageName, String name) {
-    return "::ROOT::" + packageName.replace(".","::") + "::" + name;
+    return "::" + packageName.replace(".","::") + "::" + name;
   }
 }

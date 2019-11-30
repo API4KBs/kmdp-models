@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class SwaggerToIDLTranslator {
   private static final Logger logger = LoggerFactory.getLogger(SwaggerToIDLTranslator.class);
 
 
-  public Optional<String> translate(List<InputStream> inputs) {
+  public List<String> translate(List<InputStream> inputs) {
     return doTranslate(
         inputs.stream()
             .map(FileUtil::read)
@@ -56,12 +57,12 @@ public class SwaggerToIDLTranslator {
             .collect(Collectors.toList()));
   }
 
-  private Optional<String> doTranslate(List<Swagger> swaggers) {
+  private List<String> doTranslate(List<Swagger> swaggers) {
     Swagger swagger = swaggers.get(0);
 
     Optional<Module> root = initModule(swagger.getBasePath());
     if (!root.isPresent()) {
-      return Optional.empty();
+      return Collections.emptyList();
     }
 
     TypeProvider provider = new TypeProvider(swaggers, root.get());
@@ -70,7 +71,8 @@ public class SwaggerToIDLTranslator {
         .map(m -> this.withOperations(m, swagger, provider))
         .map(m -> this.withStructs(m, swagger, provider))
         .map(m -> new ModuleSorter().sort(m))
-        .map(IDLSerializer::serialize);
+        .map(IDLSerializer::serialize)
+        .orElse(Collections.emptyList());
   }
 
 

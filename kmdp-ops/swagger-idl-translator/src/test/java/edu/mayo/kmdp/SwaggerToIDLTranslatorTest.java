@@ -16,6 +16,7 @@
 package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.util.CodeGenTestBase;
@@ -51,13 +52,13 @@ public class SwaggerToIDLTranslatorTest {
     File out = new File(tmp.toFile(),"out");
     assertTrue(out.mkdir());
 
-    Optional<String> target = new SwaggerToIDLTranslator()
+    List<String> target = new SwaggerToIDLTranslator()
         .translate(sources);
-    assertTrue(target.isPresent());
+    assertFalse(target.isEmpty());
 
-    System.out.println(target.get());
+    target.forEach(s -> System.out.println("\n\n" + s));
 
-    String errs = TestIDLCompiler.tryCompileSource(gen, target.orElse(""));
+    String errs = TestIDLCompiler.tryCompileSource(gen, target);
     assertEquals("", errs, errs);
     CodeGenTestBase.ensureSuccessCompile(gen,gen,out);
 
