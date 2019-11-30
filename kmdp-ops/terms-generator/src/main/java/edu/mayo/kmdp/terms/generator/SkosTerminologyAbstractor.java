@@ -24,7 +24,7 @@ import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractio
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.internal.ConceptTermImpl;
 import edu.mayo.kmdp.terms.generator.internal.MutableConceptScheme;
-import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
+import edu.mayo.kmdp.util.graph.HierarchySorter;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.StreamUtil;
