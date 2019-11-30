@@ -15,9 +15,11 @@
  */
 package edu.mayo.kmdp.idl;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +34,7 @@ public class Struct {
   public Struct(String name, String packageName) {
     this.typeName = name;
     if (packageName != null) {
-      this.packages = Arrays.asList(packageName.split(","));
+      this.packages = Arrays.asList(packageName.split("\\."));
     }
   }
 
@@ -80,6 +82,10 @@ public class Struct {
     return "Struct{" +
         "typeName='" + typeName + '\'' +
         '}';
+  }
+
+  public Deque<String> getPackageStack() {
+    return new ArrayDeque<>(packages);
   }
 
   public static class Field {

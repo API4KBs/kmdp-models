@@ -11,4 +11,8 @@ public class IDLNameUtil {
   public static String toIdentifier(String s) {
     return NameUtils.camelCase(s);
   }
+
+  public static String toFQName(String packageName, String name) {
+    return "::ROOT::" + packageName.replace(".","::") + "::" + name;
+  }
 }

@@ -1,29 +1,23 @@
 module {{name}} {
-
 {{#structs}}
 struct {{typeName}} {
   {{#fields}}
-    {{type.name}} {{name}};
+    {{type.fullyQualifiedName}} {{name}};
   {{/fields}}
 };
 {{/structs}}
-
 {{#subModules}}
 {{> idl_module}}
 {{/subModules}}
-
 {{#interfaces}}
 interface {{name}} {
-
   {{#operations}}
-  {{returnType.name}} {{name}} (
+  {{returnType.fullyQualifiedName}} {{name}} (
     {{#inputs}}
-      {{direction}} {{type.name}} {{name}} {{^-last}}, {{/-last}}
+      {{direction}} {{type.fullyQualifiedName}} {{name}} {{^-last}}, {{/-last}}
     {{/inputs}}
   );
-
   {{/operations}}
-
 };
 {{/interfaces}}
 }; // {{name}}

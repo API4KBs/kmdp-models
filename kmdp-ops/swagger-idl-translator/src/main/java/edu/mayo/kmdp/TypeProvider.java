@@ -2,13 +2,13 @@ package edu.mayo.kmdp;
 
 import edu.mayo.kmdp.idl.Module;
 import edu.mayo.kmdp.idl.Struct;
-import edu.mayo.kmdp.idl.Struct.Field;
 import edu.mayo.kmdp.idl.Type;
-import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
+import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
 import io.swagger.models.ComposedModel;
 import io.swagger.models.Model;
+import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
 import io.swagger.models.RefModel;
 import io.swagger.models.Response;
@@ -22,12 +22,8 @@ import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 class TypeProvider {
 
@@ -47,17 +43,35 @@ class TypeProvider {
       return new Type(primitiveMap(type.getName()), type.isCollection());
     }
 
-    Struct struct = new Struct(type.getName(), type.getPackageName());
     Model model = find(type.getName(), swaggers);
+
+    String packageName = getNamespace(model)
+        .map(NameUtils::namespaceURIStringToPackage)
+        .orElse("");
+    Struct struct = new Struct(type.getName(), packageName);
 
     if (model.getProperties() != null) {
       model.getProperties().forEach(
           (key, prop) -> struct.addField(key, toIDLType(prop)));
     }
 
-    context.addStruct(struct);
+    context.insertStruct(struct);
+    type.linkStruct(struct);
 
     return type;
+  }
+
+  private Optional<String> getNamespace(Model model) {
+    if (model instanceof ModelImpl) {
+      ModelImpl m = (ModelImpl) model;
+      if (m.getXml() != null) {
+        return Optional.ofNullable(m.getXml().getNamespace());
+      }
+    } else if (model instanceof ComposedModel) {
+      ComposedModel cm = (ComposedModel) model;
+      return getNamespace(cm);
+    }
+    return Optional.empty();
   }
 
 
@@ -171,28 +185,4 @@ class TypeProvider {
     return mapped;
   }
 
-  public void sortTypeDeclarations(Module m) {
-    HierarchySorter<Struct> sorter = new HierarchySorter<>();
-
-    List<Struct> sortedStructs = sorter.linearize(
-        m.getStructs(),
-        getDependencies(m.getStructMap()));
-
-    m.getStructMap().clear();
-    sortedStructs.forEach(m::addStruct);
-  }
-
-  private Map<Struct, Set<Struct>> getDependencies(Map<String, Struct> structs) {
-    Map<Struct, Set<Struct>> deps = new HashMap<>();
-    for (Struct s : structs.values()) {
-      for (Field f : s.getFields()) {
-        String fName = f.getType().getName();
-        if (structs.containsKey(fName)) {
-          deps.computeIfAbsent(s, x -> new HashSet<>())
-              .add(structs.get(fName));
-        }
-      }
-    }
-    return deps;
-  }
 }

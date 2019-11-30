@@ -19,6 +19,7 @@ package edu.mayo.kmdp.idl;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.NameUtils.IdentifierType;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -65,9 +66,30 @@ public class Module {
     return NameUtils.nameToIdentifier(tag, IdentifierType.CLASS);
   }
 
-  public Module addStruct(Struct struct) {
-    structs.put(struct.getTypeName(),struct);
+  public Module insertStruct(Struct struct) {
+    insertStruct(struct, struct.getPackageStack());
     return this;
+  }
+
+  public Module addStruct(Struct struct) {
+    this.structs.put(struct.getTypeName(),struct);
+    return this;
+  }
+
+  private void insertStruct(Struct struct, Deque<String> packageStack) {
+    if (packageStack.isEmpty()) {
+      this.structs.put(struct.getTypeName(),struct);
+    } else {
+      String pack = packageStack.pop();
+      Module sub;
+      if (subModules.containsKey(pack)) {
+        sub = subModules.get(pack);
+      } else {
+        sub = new Module(pack);
+        addModule(sub);
+      }
+      sub.insertStruct(struct,packageStack);
+    }
   }
 
 

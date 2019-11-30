@@ -21,19 +21,11 @@
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-terminology-content</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-datatype</artifactId>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-service-descr</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>terms-generator</artifactId>
     </dependency>
 
     <dependency>

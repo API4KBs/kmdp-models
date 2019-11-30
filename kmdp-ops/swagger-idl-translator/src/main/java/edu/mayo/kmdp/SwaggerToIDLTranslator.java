@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,6 +69,7 @@ public class SwaggerToIDLTranslator {
     return root
         .map(m -> this.withOperations(m, swagger, provider))
         .map(m -> this.withStructs(m, swagger, provider))
+        .map(m -> new ModuleSorter().sort(m))
         .map(IDLSerializer::serialize);
   }
 
@@ -75,9 +77,6 @@ public class SwaggerToIDLTranslator {
   private Module withStructs(Module m, Swagger swagger, TypeProvider provider) {
     swagger.getDefinitions()
         .forEach((name, model) -> provider.registerType(new Type(name)));
-
-    provider.sortTypeDeclarations(m);
-
     return m;
   }
 
@@ -147,9 +146,10 @@ public class SwaggerToIDLTranslator {
       return Optional.empty();
     }
 
-    List<String> packageNames =
+    List<String> packageNames = new LinkedList<>(
         Arrays.stream(packageName.split("\\."))
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
+    packageNames.add(0,"ROOT");
 
     return Optional.ofNullable(
         buildModuleChain(
