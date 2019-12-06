@@ -16,8 +16,50 @@
 package edu.mayo.kmdp.id;
 
 
-public interface VersionedIdentifier extends Identifier {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.zafarkhaja.semver.Version;
+import java.util.Date;
+import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
+
+public interface VersionedIdentifier extends Identifier, Comparable<VersionedIdentifier> {
 
   String getVersion();
+
+  Date getEstablishedOn();
+
+  @JsonIgnore
+  default VersionTagType getVersioning() {
+    return VersionTagType.GENERIC;
+  }
+
+  @Override
+  default int compareTo(VersionedIdentifier o) {
+    if (getVersioning() != null && getVersioning() == o.getVersioning()) {
+      switch (getVersioning()) {
+        case SEM_VER:
+          return compareAsSemVer(this, o);
+        case TIMESTAMP:
+          return compareAsDate(this, o);
+        case SEQUENTIAL:
+          return compareAsNumber(this,o);
+        case GENERIC:
+        default:
+      }
+    }
+    return getVersion().compareTo(o.getVersion());
+  }
+
+  default int compareAsNumber(VersionedIdentifier i, VersionedIdentifier o) {
+    return Integer.parseInt(i.getVersion()) - Integer.parseInt(o.getVersion());
+  }
+
+  default int compareAsDate(VersionedIdentifier i, VersionedIdentifier o) {
+    return i.getEstablishedOn().compareTo(o.getEstablishedOn());
+  }
+
+  default int compareAsSemVer(VersionedIdentifier i, VersionedIdentifier o) {
+    return Version.valueOf(i.getVersion())
+        .compareTo(Version.valueOf(o.getVersion()));
+  }
 
 }

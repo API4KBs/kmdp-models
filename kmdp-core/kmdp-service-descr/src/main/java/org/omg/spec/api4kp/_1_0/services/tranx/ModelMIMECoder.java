@@ -16,21 +16,30 @@
 package org.omg.spec.api4kp._1_0.services.tranx;
 
 import static edu.mayo.kmdp.util.Util.isEmpty;
+import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TXT;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
-import edu.mayo.ontology.taxonomies.krprofile._20190801.KnowledgeRepresentationLanguageProfile;
-import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
-import edu.mayo.ontology.taxonomies.lexicon._20190801.Lexicon;
+import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfileSeries;
+import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
+import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ModelMIMECoder {
+
+  private static Logger logger = LoggerFactory.getLogger(ModelMIMECoder.class);
 
   protected ModelMIMECoder() {
   }
@@ -76,69 +85,201 @@ public class ModelMIMECoder {
     return sb.toString();
   }
 
+  public static Optional<SyntacticRepresentation> decode(final String mime,
+      final KnowledgeRepresentationLanguage defaultLanguage) {
+    return decode(mime)
+        .map(rep -> {
+          if (rep.getLanguage() == null) {
+            rep.setLanguage(defaultLanguage);
+          }
+          return rep;
+        });
+  }
+
   public static Optional<SyntacticRepresentation> decode(String mime) {
+    return decompose(mime)
+        .map(t -> {
+          SyntacticRepresentation rep = new SyntacticRepresentation();
+
+          if (!isEmpty(t.langVerTag)) {
+            KnowledgeRepresentationLanguageSeries.resolve(t.versionedLangTag)
+                .ifPresent(rep::setLanguage);
+          } else {
+            String tag = t.langTag + "-";
+            Optional<KnowledgeRepresentationLanguage> lang = Arrays
+                .stream(KnowledgeRepresentationLanguageSeries.values())
+                .map(KnowledgeRepresentationLanguage::getTag)
+                .filter(x -> x.startsWith(tag))
+                .findFirst()
+                .flatMap(KnowledgeRepresentationLanguageSeries::resolve);
+            lang.ifPresent(rep::setLanguage);
+            if (!lang.isPresent()) {
+              SerializationFormatSeries.resolve(t.langTag)
+                  .ifPresent(rep::setFormat);
+            }
+          }
+
+          if (!isEmpty(t.profTag)) {
+            KnowledgeRepresentationLanguageProfileSeries.resolve(t.profTag)
+                .ifPresent(rep::setProfile);
+          }
+
+          if (!isEmpty(t.serialTag)) {
+            KnowledgeRepresentationLanguageSerializationSeries.resolve(t.serialTag)
+                .ifPresent(rep::setSerialization);
+          }
+
+          if (rep.getFormat() == null) {
+            rep.setFormat(SerializationFormatSeries.resolve(t.formatTag).orElse(TXT));
+          }
+
+          if (!isEmpty(t.lexTags)) {
+            Arrays.stream(t.lexTags.split(","))
+                .forEach(l -> LexiconSeries.resolve(l)
+                    .ifPresent(rep::withLexicon));
+          }
+
+          return rep;
+        });
+  }
+
+  private static class LangTags {
+
+    String langTag;
+    String langVerTag;
+    String versionedLangTag;
+    String profTag;
+    String serialTag;
+    String formatTag;
+    String lexTags;
+  }
+
+  private static Optional<LangTags> decompose(String mime) {
     if (Util.isEmpty(mime)) {
       return Optional.empty();
     }
-
     Matcher matcher = rxPattern.matcher(mime);
     if (!matcher.matches()) {
       return Optional.empty();
     }
 
-    SyntacticRepresentation rep = new SyntacticRepresentation();
-
-    String langTag = isEmpty(matcher.group(1)) ? "" : matcher.group(1).trim();
-    String langVerTag = isEmpty(matcher.group(2)) ? "" : matcher.group(2).trim()
+    LangTags tags = new LangTags();
+    tags.langTag = isEmpty(matcher.group(1)) ? "" : matcher.group(1).trim();
+    tags.langVerTag = isEmpty(matcher.group(2)) ? "" : matcher.group(2).trim()
         .replace("-", "");
-    String versionedLangTag = langTag + (isEmpty(langVerTag) ? "" : ("-" + langVerTag));
+    tags.versionedLangTag =
+        tags.langTag + (isEmpty(tags.langVerTag) ? "" : ("-" + tags.langVerTag));
 
-    String profTag = isEmpty(matcher.group(3)) ? "" : matcher.group(3).trim()
+    tags.profTag = isEmpty(matcher.group(3)) ? "" : matcher.group(3).trim()
         .replace("]", "")
         .replace("[", "");
 
-    String serialTag = isEmpty(matcher.group(4)) ? "" : matcher.group(4).trim()
+    tags.serialTag = isEmpty(matcher.group(4)) ? "" : matcher.group(4).trim()
         .replaceAll("\\+", "");
 
-    String formatTag = Util.isEmpty(matcher.group(4)) ? "" : matcher.group(4)
+    tags.formatTag = Util.isEmpty(matcher.group(4)) ? "" : matcher.group(4)
         .trim().replaceAll("\\+", "");
 
-    String lexTags = isEmpty(matcher.group(5)) ? "" : matcher.group(5).trim()
+    tags.lexTags = isEmpty(matcher.group(5)) ? "" : matcher.group(5).trim()
         .replace("}", "")
         .replace("{", "")
         .replace(";lex=", "");
 
-    if (!isEmpty(langVerTag)) {
-      KnowledgeRepresentationLanguage.resolve(versionedLangTag)
-          .ifPresent(rep::setLanguage);
-    } else {
-      String tag = langTag + "-";
-      Arrays.stream(KnowledgeRepresentationLanguage.values())
-          .map(KnowledgeRepresentationLanguage::getTag)
-          .filter(t -> t.startsWith(tag))
-          .findFirst()
-          .flatMap(KnowledgeRepresentationLanguage::resolve)
-          .ifPresent(rep::setLanguage);
+    return Optional.of(tags);
+  }
+
+
+  public static List<String> splitCodes(String xAccept) {
+    if (Util.isEmpty(xAccept)) {
+      return Collections.emptyList();
+    }
+    return Arrays.stream(xAccept.split(","))
+        .map(String::trim)
+        .map(WeightedCode::new)
+        .sorted()
+        .map(x -> x.code)
+        .collect(Collectors.toList());
+  }
+
+  public static Optional<String> toModelCode(String s,
+      KnowledgeRepresentationLanguage defaultLanguage) {
+    int index = s.indexOf('/');
+    if (index < 0) {
+      return Optional.empty();
+    }
+    String space = s.substring(0, index);
+    switch (space) {
+      case "application":
+      case "text":
+        String c = "model/" + s.substring(index + 1);
+        return decode(c, defaultLanguage)
+            .map(ModelMIMECoder::encode);
+      case "model":
+        return Optional.of(s);
+      case "*/*":
+        return Optional.of(s);
+      case "image":
+      case "audio":
+      case "video":
+      case "example":
+      case "font":
+      default:
+        logger.error("[Defensive] : Unsupported MIME type : {}", s);
+        return Optional.empty();
+    }
+  }
+
+  public static class WeightedCode implements Comparable<WeightedCode> {
+
+    String code;
+    float w;
+
+    public WeightedCode(String wcode) {
+      int index = wcode.lastIndexOf(';');
+      if (index > 0) {
+        code = wcode.substring(0, index);
+        w = Float.parseFloat(wcode.substring(index + 1).replace("q=", ""));
+      } else {
+        code = wcode;
+        w = 1.0f;
+      }
     }
 
-    if (!isEmpty(profTag)) {
-      KnowledgeRepresentationLanguageProfile.resolve(profTag)
-          .ifPresent(rep::setProfile);
+    @Override
+    public int compareTo(WeightedCode o) {
+      if (!code.equals(o.code)) {
+        return 0;
+      }
+      float delta = o.w - w;
+      if (Math.abs(delta) < 0.001) {
+        return 0;
+      } else {
+        return delta > 0 ? 1 : -1;
+      }
     }
 
-    if (!isEmpty(serialTag)) {
-      KnowledgeRepresentationLanguageSerialization.resolve(serialTag)
-          .ifPresent(rep::setSerialization);
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof WeightedCode)) {
+        return false;
+      }
+
+      WeightedCode that = (WeightedCode) o;
+
+      if (Math.abs(w-that.w) > 0.001) {
+        return false;
+      }
+      return code.equals(that.code);
     }
 
-    rep.setFormat(SerializationFormat.resolve(formatTag).orElse(SerializationFormat.TXT));
-
-    if (!isEmpty(lexTags)) {
-      Arrays.stream(lexTags.split(","))
-          .forEach(l -> Lexicon.resolve(l)
-              .ifPresent(rep::withLexicon));
+    @Override
+    public int hashCode() {
+      int result = code.hashCode();
+      result = 31 * result + (w != +0.0f ? Float.floatToIntBits(w) : 0);
+      return result;
     }
-
-    return Optional.of(rep);
   }
 }

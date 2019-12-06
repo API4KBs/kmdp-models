@@ -62,6 +62,33 @@ public class XSDtoYAMLTranslatorTest {
     assertNotNull(model);
   }
 
+  @Test
+  public void testXMLNamespaceWithInheritance() {
+    String source = "/xsd/metadata/surrogate/surrogate.xsd";
+
+    URL xslt = XSDtoYAMLTranslatorTest.class.getResource("/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl");
+    URL catalog = XSDtoYAMLTranslatorTest.class.getResource("/catalog-yaml.xml");
+    URL sourceUrl = XSDtoYAMLTranslatorTest.class.getResource(source);
+
+    String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl,
+        xslt,
+        new XSLTConfig()
+            .with(XSLTOptions.CATALOGS, catalog.toString())));
+    //System.out.println(out);
+
+    Swagger model = parseValidate(out);
+    assertNotNull(model);
+
+    Model m = model.getDefinitions().get("KnowledgeAssetInfo");
+    assertTrue(m instanceof ComposedModel);
+    Model child = ((ComposedModel) m).getChild();
+    assertTrue(child instanceof ModelImpl);
+    ModelImpl childImpl = (ModelImpl) child;
+    assertNotNull(childImpl.getXml());
+    assertEquals("http://kmdp.mock.edu/metadata/surrogate",
+        childImpl.getXml().getNamespace());
+  }
+
 
   @Test
   public void testWithXSDDynamicallyResolved() {

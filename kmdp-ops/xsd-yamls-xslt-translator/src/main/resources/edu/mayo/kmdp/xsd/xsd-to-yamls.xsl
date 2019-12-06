@@ -17,7 +17,6 @@
 
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:fn="http://www.w3.org/2005/xpath-functions"
   xmlns:x2y="http://www.mayo.edu/kmdp/xsd2yamls" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog:uri" version="3.0">
 
@@ -71,7 +70,13 @@
 
       <xsl:call-template name="xmlBinding">
         <xsl:with-param name="isAttribute" select="false()"/>
-        <xsl:with-param name="indent" select="$indent"/>
+        <xsl:with-param name="indent"
+          select="
+            if ($isExtension) then
+              ($indent + 2 * $tab)
+            else
+              ($indent)"
+        />
         <xsl:with-param name="type" select="$type"/>
       </xsl:call-template>
 
@@ -320,8 +325,9 @@
   </xsl:template>
 
   <xsl:template name="innerSimpleTypes">
+
     <xsl:for-each
-      select="//xs:simpleType[exists(xs:restriction[@base = 'xs:string']/xs:enumeration)]">
+      select="//xs:simpleType[exists(xs:restriction[@base = 'xs:string'])]">
       <xsl:variable name="indent" select="$tab" as="xs:integer"/>
       <xsl:variable name="type" select="xs:QName(@name)" as="xs:QName"/>
 
@@ -333,15 +339,18 @@
       <xsl:text>type: string</xsl:text>
       <xsl:text>&#xA;</xsl:text>
 
-      <xsl:value-of select="x2y:blanks($indent + $tab)"/>
-      <xsl:text>enum:</xsl:text>
-      <xsl:text>&#xA;</xsl:text>
-
-      <xsl:for-each select=".//xs:enumeration">
-        <xsl:value-of select="x2y:blanks($indent + 2 * $tab)"/>
-        <xsl:value-of select="concat('- ', @value)"/>
+      <xsl:if test="exists(.//xs:enumeration)">
+        <xsl:value-of select="x2y:blanks($indent + $tab)"/>
+        <xsl:text>enum:</xsl:text>
         <xsl:text>&#xA;</xsl:text>
-      </xsl:for-each>
+
+
+        <xsl:for-each select=".//xs:enumeration">
+          <xsl:value-of select="x2y:blanks($indent + 2 * $tab)"/>
+          <xsl:value-of select="concat('- ', @value)"/>
+          <xsl:text>&#xA;</xsl:text>
+        </xsl:for-each>
+      </xsl:if>
 
 
       <xsl:call-template name="xmlBinding">

@@ -70,6 +70,7 @@ public abstract class AbstractFHIRJsonAdapter<
   }
 
   // Will parse as either Resource, or - in case of Datatypes - as a wrapping Parameter
+  @SuppressWarnings("unchecked")
   protected R tryParseAsResource(JsonNode jn) {
     if (isResource(jn)) {
       return (R) getParser().parseResource(jn.toString());
@@ -90,7 +91,7 @@ public abstract class AbstractFHIRJsonAdapter<
     return getParser().parseResource(paramClass, parent.toString());
   }
 
-
+  @SuppressWarnings("unchecked")
   protected String trySerializeType(D t) {
     // wrap in P to serialize
     P p = paramConstructor.get();

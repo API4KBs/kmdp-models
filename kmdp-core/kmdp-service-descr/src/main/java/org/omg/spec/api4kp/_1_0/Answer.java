@@ -16,10 +16,12 @@
 package org.omg.spec.api4kp._1_0;
 
 
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
+import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,13 +31,17 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import org.apache.http.HttpHeaders;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Monadic class supporting KMDP API functional-style chaining
@@ -49,7 +55,7 @@ import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
  */
 public class Answer<T> extends Explainer {
 
-  protected ResponseCode codedOutcome = ResponseCode.NotImplemented;
+  protected ResponseCode codedOutcome = ResponseCodeSeries.NotImplemented;
   protected OutcomeStrategy<T> handler;
   protected T value;
 
@@ -58,6 +64,10 @@ public class Answer<T> extends Explainer {
   private static Logger logger = LoggerFactory.getLogger(Answer.class);
 
   /* Constructors (lifters) */
+
+  public static Answer<Void> succeed() {
+    return Answer.of(ResponseCodeSeries.OK);
+  }
 
   public static <X> Answer<X> unsupported() {
     return failed(new UnsupportedOperationException("Not Implemented"));
@@ -71,6 +81,12 @@ public class Answer<T> extends Explainer {
         .withExplanation(t.getError().getMessage());
   }
 
+  public static <X> Answer<X> failed() {
+    return failed(new ServerSideException(ResponseCodeSeries.InternalServerError,
+        Collections.emptyMap(),
+        new byte[0]));
+  }
+
   public static <X> Answer<X> failed(Throwable t) {
     return new Answer<X>()
         .withCodedOutcome(mapCode(t))
@@ -81,17 +97,17 @@ public class Answer<T> extends Explainer {
 
   public static <X> Answer<X> of(X value) {
     return new Answer<X>()
-        .withCodedOutcome(ResponseCode.OK)
+        .withCodedOutcome(ResponseCodeSeries.OK)
         .withMeta(new HashMap<>())
         .withValue(value)
-        .withExplanation("OK : Lift " + value.toString());
+        .withExplanation("(#TODO): " + value);
   }
 
   public static <X> Answer<X> of(Optional<X> value) {
     return value
         .map(Answer::of)
         .orElse(new Answer<X>()
-            .withCodedOutcome(ResponseCode.NotFound)
+            .withCodedOutcome(ResponseCodeSeries.NotFound)
             .withMeta(new HashMap<>())
             .withValue(null)
             .withExplanation("Optional empty"));
@@ -103,6 +119,14 @@ public class Answer<T> extends Explainer {
 
   public static <X> Answer<X> of(Integer responseCode, X value) {
     return of(responseCode.toString(),value,new HashMap<>());
+  }
+
+  public static Answer<Void> of() {
+    return of(ResponseCodeSeries.OK);
+  }
+
+  public static Answer<Void> of(ResponseCode responseCode) {
+    return of(responseCode.getTag(),null, new HashMap<>());
   }
 
   public static <X> Answer<X> of(ResponseCode responseCode, X value) {
@@ -125,6 +149,38 @@ public class Answer<T> extends Explainer {
         .withExplanation(meta);
   }
 
+  public static <X> Answer<X> referTo(URI location, boolean brandNew) {
+    Map<String,List<String>> headers = new HashMap<>();
+    headers.put(HttpHeaders.LOCATION, Collections.singletonList(location.toString()));
+    return of(
+        brandNew ? ResponseCodeSeries.Created : ResponseCodeSeries.SeeOther,
+        null,
+        headers);
+  }
+
+  public static <T> Collector<Answer<T>, List<Answer<T>>, Answer<List<T>>> toList() {
+    return toList(ans -> true);
+  }
+
+  public static <T> Collector<Answer<T>, List<Answer<T>>, Answer<List<T>>> toList(
+      Predicate<T> filter) {
+    return Collector.of(
+        ArrayList::new,
+        (list, member) -> {
+          if (member.isSuccess() && member.map(filter::test).orElse(false)) {
+            list.add(member);
+          }
+        },
+        (left, right) -> {
+          left.addAll(right);
+          return left;
+        },
+        answerList -> Answer.of(answerList.stream()
+            .map(Answer::get)
+            .collect(Collectors.toList()))
+    );
+  }
+
 
   /* Binders */
 
@@ -139,6 +195,12 @@ public class Answer<T> extends Explainer {
   public <U> Answer<U> map(Function<? super T, ? extends U> mapper) {
     return getHandler().map(this, mapper);
   }
+
+  public void ifPresent(Consumer<? super T> consumer) {
+    if (value != null)
+      consumer.accept(value);
+  }
+
 
   public static <U> Answer<U> first(List<U> coll) {
     return coll.isEmpty()
@@ -173,6 +235,14 @@ public class Answer<T> extends Explainer {
     return Optional.ofNullable(getValue());
   }
 
+  public T get() {
+    if (value == null) {
+      throw new NoSuchElementException("No value present");
+    }
+    return value;
+  }
+
+
   public T orElse(T alt) {
     return getOptionalValue().orElse(alt);
   }
@@ -189,9 +259,37 @@ public class Answer<T> extends Explainer {
     if (ans == null) {
       return Stream.empty();
     }
-    return Util.trimStream(ans.getOptionalValue());
+    return StreamUtil.trimStream(ans.getOptionalValue());
   }
 
+  public static <X, T> Stream<T> aggregate(Collection<X> delegates,
+      Function<X, Answer<List<T>>> mapper) {
+    return delegates.stream()
+        .map(mapper)
+        .map(a -> a.orElse(Collections.emptyList()))
+        .flatMap(Collection::stream);
+  }
+
+  public static <X> Optional<X> anyAble(Collection<X> delegates, Predicate<X> filter) {
+    return delegates.stream()
+        .filter(filter)
+        .findAny();
+  }
+
+  public static <X,Y> Answer<Y> anyDo(Collection<X> delegates, Function<X,Answer<Y>> mapper) {
+    return delegates.stream()
+        .map(mapper)
+        .filter(Answer::isSuccess)
+        .findAny()
+        .orElse(failed(new UnsupportedOperationException()));
+  }
+
+  public static <X, T> Answer<T> delegateTo(Optional<X> delegate,
+      Function<X, Answer<T>> fun) {
+    return delegate
+        .map(fun)
+        .orElse(Answer.unsupported());
+  }
 
   public ResponseCode getOutcomeType() {
     return codedOutcome;
@@ -227,9 +325,7 @@ public class Answer<T> extends Explainer {
   }
 
   public List<String> getMetas(String key) {
-    return meta.containsKey(key)
-        ? meta.get(key)
-        : Collections.emptyList();
+    return meta.getOrDefault(key, Collections.emptyList());
   }
 
   public Collection<String> listMeta() {
@@ -240,7 +336,7 @@ public class Answer<T> extends Explainer {
   /* Internal utilities */
 
   protected static ResponseCode resolveCode(String responseCode) {
-    return ResponseCode.resolve(responseCode)
+    return ResponseCodeSeries.resolve(responseCode)
         .orElseThrow(() -> new IllegalStateException(
             "Unable to resolve unexpected HTTP status code " + responseCode));
   }
@@ -263,9 +359,9 @@ public class Answer<T> extends Explainer {
     super.addExplanation(msg);
 
     String key = "urn:uuid:" + UUID.randomUUID().toString();
-    this.getMeta().put(Explainer.EXPL_HEADER, Arrays
-        .asList("<" + key + ">;rel=\"" + Explainer.PROV_KEY+ "\";"));
-    this.getMeta().put(key, Arrays.asList(msg));
+    this.getMeta().put(Explainer.EXPL_HEADER,
+        Collections.singletonList("<" + key + ">;rel=\"" + Explainer.PROV_KEY + "\";"));
+    this.getMeta().put(key, Collections.singletonList(msg));
 
     return this;
   }
@@ -336,15 +432,15 @@ public class Answer<T> extends Explainer {
   /* Maps exceptions to status codes */
   protected static ResponseCode mapCode(Throwable t) {
     if (t instanceof UnsupportedOperationException) {
-      return ResponseCode.NotImplemented;
+      return ResponseCodeSeries.NotImplemented;
     }
-    return ResponseCode.InternalServerError;
+    return ResponseCodeSeries.InternalServerError;
   }
 
   protected OutcomeStrategy<T> selectHandler(ResponseCode code) {
     if (isSuccess()) {
       return SuccessOutcomeStrategy.getInstance();
-    } else if (Integer.valueOf(code.getTag()) >= 300) {
+    } else if (Integer.parseInt(code.getTag()) >= 300) {
       return FailureOutcomeStrategy.getInstance();
     } else {
       return SuccessOutcomeStrategy.getInstance();
@@ -366,6 +462,7 @@ public class Answer<T> extends Explainer {
 
     protected static final SuccessOutcomeStrategy<?> instance = new SuccessOutcomeStrategy<>();
 
+    @SuppressWarnings("unchecked")
     public static <T> SuccessOutcomeStrategy<T> getInstance() {
       return (SuccessOutcomeStrategy<T>) instance;
     }
@@ -418,6 +515,7 @@ public class Answer<T> extends Explainer {
 
     protected static final FailureOutcomeStrategy<?> instance = new FailureOutcomeStrategy<>();
 
+    @SuppressWarnings("unchecked")
     public static <T> FailureOutcomeStrategy<T> getInstance() {
       return (FailureOutcomeStrategy<T>) instance;
     }

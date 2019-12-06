@@ -1,0 +1,24 @@
+module {{name}} {
+{{#structs}}
+struct {{typeName}} {
+  {{#fields}}
+    {{type.fullyQualifiedName}} {{name}};
+  {{/fields}}
+};
+typedef sequence<{{typeName}}> {{typeName}}List;
+{{/structs}}
+{{#subModules}}
+{{> idl_module}}
+{{/subModules}}
+{{#interfaces}}
+interface {{name}} {
+  {{#operations}}
+  {{returnType.fullyQualifiedName}}{{#returnType.isCollection}}List{{/returnType.isCollection}} {{name}} (
+    {{#inputs}}
+      {{direction}} {{type.fullyQualifiedName}}{{#type.isCollection}}List{{/type.isCollection}} {{name}} {{^-last}}, {{/-last}}
+    {{/inputs}}
+  );
+  {{/operations}}
+};
+{{/interfaces}}
+}; // {{name}}

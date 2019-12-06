@@ -54,17 +54,19 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     return param.getOption().getName();
   }
 
+  @SuppressWarnings("unchecked")
   public <T> T getTyped(O param) {
     return getTyped(param, (Class<T>) param.getOption().getType());
   }
 
+  @SuppressWarnings("unchecked")
   public <T> T getTyped(O param, Class<T> type) {
     try {
       String s = get(param).orElse(null);
       if (s == null) {
         return null;
       } else if (type.equals(Class.class)) {
-        return (T) Class.forName(s).newInstance();
+        return (T) Class.forName(s).getConstructor().newInstance();
       } else if (type.isEnum()) {
         return asEnum(type,s);
       } else {
@@ -76,10 +78,12 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     }
   }
 
+  @SuppressWarnings("unchecked")
   private <T extends Enum,X> X asEnum(Class<X> type, String s) {
     return (X) Enum.valueOf(((Class<T>) type),s);
   }
 
+  @SuppressWarnings("unchecked")
   public P with(O param, Object value) {
     if (value == null) {
       return (P) this;
@@ -88,6 +92,7 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     return (P) this;
   }
 
+  @SuppressWarnings("unchecked")
   public P withOptional(O param, Object value) {
     if (value != null) {
       return with(param, value);
@@ -119,6 +124,7 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
 
   public abstract O[] properties();
 
+  @SuppressWarnings("unchecked")
   public P from(Properties p) {
     this.putAll(p);
     return (P) this;

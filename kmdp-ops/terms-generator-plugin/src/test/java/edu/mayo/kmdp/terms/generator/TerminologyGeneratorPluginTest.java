@@ -27,8 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
-import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.plugin.TermsGeneratorPlugin;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
@@ -40,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -48,7 +47,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-public class TerminologyGeneratorPluginTest {
+class TerminologyGeneratorPluginTest extends AbstractPluginTest {
 
   @TempDir
   Path tmp;
@@ -73,7 +72,9 @@ public class TerminologyGeneratorPluginTest {
 
   @Test
   public void testPlugin() {
-    TermsGeneratorPlugin plugin = initPlugin(new File(genSource.getAbsolutePath() + "/xsd"));
+    TermsGeneratorPlugin plugin = initPlugin(
+        new File(genSource.getAbsolutePath() + "/xsd"),
+        Collections.singletonList(owlPath));
     plugin.setSourceCatalogPaths(
         Collections.singletonList(
             TerminologyGeneratorPluginTest.class.getResource("/test-catalog.xml").getPath()));
@@ -82,7 +83,6 @@ public class TerminologyGeneratorPluginTest {
     testWithJaxb();
 
     ensureSuccessCompile(genSource, genSource, target);
-
 
     try {
       Class<?> info = getNamedClass("org.tempuri.test.Info", target);
@@ -93,11 +93,19 @@ public class TerminologyGeneratorPluginTest {
       Class<?> cito = fld.getType();
 
       assertNotNull(cito);
-      assertEquals("Cito", cito.getSimpleName());
-      assertTrue(cito.isEnum());
+      assertEquals("ICito", cito.getSimpleName());
+      assertTrue(cito.isInterface());
 
-      assertEquals(44, cito.getEnumConstants().length);
+      Method setter = info.getMethod("setFoo",cito);
+      assertNotNull(setter);
 
+      Class<?> citoImpl = getNamedClass("terms.test.org.cito.Cito", target);
+      assertNotNull(citoImpl);
+      assertTrue(citoImpl.isEnum());
+      Class[] intfs = citoImpl.getInterfaces();
+      assertEquals(1,intfs.length);
+
+      assertEquals(44, citoImpl.getEnumConstants().length);
     } catch (Exception e) {
       e.printStackTrace();
       fail(e.getMessage());
@@ -159,20 +167,5 @@ public class TerminologyGeneratorPluginTest {
         .map((model) -> model.write(baos));
 
     return baos.toByteArray();
-  }
-
-
-  private TermsGeneratorPlugin initPlugin(File genSrc) {
-    TermsGeneratorPlugin plugin = new TermsGeneratorPlugin();
-
-    plugin.setReason(false);
-    plugin.setJaxb(true);
-    plugin.setJsonAdapter(MockTermsJsonAdapter.class.getName());
-    plugin.setXmlAdapter(MockTermsXMLAdapter.class.getName());
-    plugin.setOutputDirectory(genSrc);
-    plugin.setOwlFiles(Collections.singletonList(owlPath));
-    plugin.setSourceCatalogPaths(Collections.singletonList("/test-catalog.xml"));
-
-    return plugin;
   }
 }

@@ -23,7 +23,7 @@
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
+      <artifactId>junit-jupiter</artifactId>
     </dependency>
 
     <dependency>
@@ -42,11 +42,7 @@
       <artifactId>org.protege.xmlcatalog</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-      <scope>test</scope>
-    </dependency>
+
 
   </dependencies>
 </project>

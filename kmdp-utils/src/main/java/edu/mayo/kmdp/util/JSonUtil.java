@@ -62,7 +62,7 @@ public class JSonUtil {
     return props()
         .set(INCLUDES, JsonInclude.Include.NON_EMPTY)
         .set(PRETTYPRINT, true)
-        .set(DATEFORMAT, DateAdapter.PATTERN).get();
+        .set(DATEFORMAT, DateTimeUtil.DEFAULT_DATE_PATTERN).get();
   }
 
   public static Optional<JsonNode> readJson(InputStream data) {
@@ -79,7 +79,7 @@ public class JSonUtil {
     return data != null ? readJson(data.getBytes()) : Optional.empty();
   }
 
-  public static <T> Optional<T> readJson(String data, Class<T> klass) {
+  public static <T> Optional<T> readJson(String data, Class<? extends T> klass) {
     return data != null ? readJson(data.getBytes(), klass) : Optional.empty();
   }
 
@@ -87,7 +87,7 @@ public class JSonUtil {
     return readJson(new ByteArrayInputStream(data));
   }
 
-  public static <T> Optional<T> readJson(InputStream data, Class<T> klass) {
+  public static <T> Optional<T> readJson(InputStream data, Class<? extends T> klass) {
     ObjectMapper objectMapper = configureMapper(new ObjectMapper(), defaultProperties());
     try {
       return Optional.ofNullable(objectMapper.readValue(data, klass));
@@ -98,7 +98,7 @@ public class JSonUtil {
   }
 
 
-  public static <T> Optional<T> readJson(byte[] data, Class<T> klass) {
+  public static <T> Optional<T> readJson(byte[] data, Class<? extends T> klass) {
     return readJson(new ByteArrayInputStream(data), klass);
   }
 
@@ -193,7 +193,7 @@ public class JSonUtil {
     objectMapper.setSerializationInclusion(pEnum(INCLUDES, p, JsonInclude.Include::valueOf)
         .orElse(JsonInclude.Include.USE_DEFAULTS));
     objectMapper.setDateFormat(pCustom(DATEFORMAT, p, SimpleDateFormat::new)
-        .orElse(new SimpleDateFormat(DateAdapter.PATTERN)));
+        .orElse(new SimpleDateFormat(DateTimeUtil.DEFAULT_DATE_PATTERN)));
     objectMapper.configure(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID, true);
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -269,7 +269,7 @@ public class JSonUtil {
   }
 
   public static <T> Optional<T> parseJson(String json,
-      Class<T> type) {
+      Class<? extends T> type) {
     try {
       return Optional.of(new ObjectMapper().readValue(json, type));
     } catch (IOException e) {
@@ -279,7 +279,7 @@ public class JSonUtil {
   }
 
   public static <T> Optional<T> tryParseJson(String json,
-      Class<T> type) {
+      Class<? extends T> type) {
     try {
       return Optional.of(new ObjectMapper().readValue(json, type));
     } catch (IOException e) {
@@ -297,7 +297,7 @@ public class JSonUtil {
     }
   }
 
-  public static <T> Optional<T> parseJson(String json, Module mod, Class<T> klass) {
+  public static <T> Optional<T> parseJson(String json, Module mod, Class<? extends T> klass) {
     try {
       ObjectMapper mapper = new ObjectMapper();
       configure(mapper, mod, defaultProperties());
@@ -310,11 +310,11 @@ public class JSonUtil {
   }
 
 
-  public static <T> Optional<List<T>> parseJsonList(InputStream data, Class<T> memberKlass) {
+  public static <T> Optional<List<T>> parseJsonList(InputStream data, Class<? extends T> memberKlass) {
     return parseJsonList(data, null, memberKlass);
   }
 
-  public static <T> Optional<List<T>> parseJsonList(InputStream data, Module m, Class<T> memberKlass) {
+  public static <T> Optional<List<T>> parseJsonList(InputStream data, Module m, Class<? extends T> memberKlass) {
     ObjectMapper objectMapper = configure(new ObjectMapper(), m, defaultProperties());
     try {
       return Optional.of(Arrays.asList(objectMapper.readValue(data, asArrayOf(memberKlass))));

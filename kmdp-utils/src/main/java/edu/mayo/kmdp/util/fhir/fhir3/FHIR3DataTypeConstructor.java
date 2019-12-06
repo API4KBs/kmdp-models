@@ -46,9 +46,9 @@ public class FHIR3DataTypeConstructor {
   // Used so often it deserves a constant
   private static final String VALUE = "value";
 
-
+  @SuppressWarnings("unchecked")
   public static Optional<Type> construct(DataElement schema, Object data) {
-    return data instanceof Map
+    return data instanceof Map<?,?>
         ? constructFromMap(schema, (Map<String, Object>) data)
         : constructFromSimple(schema, data);
   }

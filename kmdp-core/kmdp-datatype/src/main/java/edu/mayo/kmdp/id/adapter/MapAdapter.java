@@ -75,7 +75,6 @@ public class MapAdapter extends XmlAdapter<Map, Map> {
     return URIUtil.asUri(k.toString())
         .flatMap(URIUtil::toQName)
         .orElse(new QName(k.toString()));
-
   }
 
 }

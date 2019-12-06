@@ -88,7 +88,7 @@
       <plugin>
         <groupId>edu.mayo.kmdp</groupId>
         <artifactId>terms-owl-to-skos-plugin</artifactId>
-        <version>4.0.1</version>
+        <version>${project.version}</version>
         <configuration>
           <outputDirectory>${skosDir}</outputDirectory>
           <catalogURLs>
@@ -98,7 +98,7 @@
           <profile>SKOS</profile>
         </configuration>
         <executions>
-
+          
           <execution>
             <id>lang-lang-skos</id>
             <phase>generate-sources</phase>
@@ -873,11 +873,6 @@
             <artifactId>API4KP</artifactId>
             <version>${api4kp.version}</version>
           </dependency>
-          <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>${xerces.version}</version>
-          </dependency>
         </dependencies>
       </plugin>
 
@@ -891,10 +886,12 @@
           <jaxb>true</jaxb>
           <jsonld>true</jsonld>
           <json>true</json>
+          <versionPattern>.*\/(.*)\/$</versionPattern>
           <sourceCatalogPaths>
             <sourceCatalogPath>${ontologyDir}${s}catalog.xml</sourceCatalogPath>
           </sourceCatalogPaths>
           <catalogNamespace>https://ontology.mayo.edu/taxonomies</catalogNamespace>
+          <jsonAdapter>edu.mayo.kmdp.terms.adapters.json.URITermsJsonAdapter</jsonAdapter>
         </configuration>
         <executions>
           <execution>
@@ -1004,8 +1001,7 @@
                   <dir>${project.build.directory}/generated-sources/xsd</dir>
                   <includes>**/*.xsd</includes>
                   <excludes>**/*.openapi.xsd</excludes>
-                  <stylesheet>${project.build.directory}/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl
-                  </stylesheet>
+                  <stylesheet>${project.build.directory}/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl</stylesheet>
                   <fileMappers>
                     <fileMapper
                       implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
@@ -1016,9 +1012,7 @@
                   <parameters>
                     <parameter>
                       <name>CATALOGS</name>
-                      <value>
-                        file:/${project.build.directory}/generated-sources/xsd/api4kp-catalog.xml
-                      </value>
+                      <value>file:/${project.build.directory}/generated-sources/xsd/api4kp-catalog.xml</value>
                     </parameter>
                   </parameters>
                 </transformationSet>

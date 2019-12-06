@@ -161,8 +161,7 @@
                   <transformationSet>
                     <dir>${uml-directory}</dir>
                     <includes>${uml-model}</includes>
-                    <stylesheet>${project.build.directory}/edu/mayo/kmdp/xmi-to-jxb-jsonld.xsl
-                    </stylesheet>
+                    <stylesheet>${project.build.directory}/edu/mayo/kmdp/xmi-to-jxb-jsonld.xsl</stylesheet>
                     <fileMappers>
                       <!-- The stylesheet generates XSD files independently (one per UML package) using the xslt:result-document feature.
                       The 'main' output does not contain XSD information, but (optionally) logging information -->

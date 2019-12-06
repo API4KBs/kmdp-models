@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://test/generator#"
+     xml:base="http://test/generator"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:www="https://www.hl7.org/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://test/generator#">
+        <owl:versionIRI rdf:resource="http://test/generator/SNAPSHOT"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#prefLabel -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- https://www.hl7.org/oid -->
+
+    <owl:AnnotationProperty rdf:about="https://www.hl7.org/oid"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#broader -->
+
+    <owl:ObjectProperty rdf:about="http://www.w3.org/2004/02/skos/core#broader"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#inScheme -->
+
+    <owl:ObjectProperty rdf:about="http://www.w3.org/2004/02/skos/core#inScheme"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#notation -->
+
+    <owl:DatatypeProperty rdf:about="http://www.w3.org/2004/02/skos/core#notation"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://test/generator#NestedSpecificConcept -->
+
+    <owl:Class rdf:about="http://test/generator#NestedSpecificConcept">
+        <rdfs:subClassOf rdf:resource="http://test/generator#SpecificConcept"/>
+    </owl:Class>
+    
+
+
+    <!-- http://test/generator#SpecificConcept -->
+
+    <owl:Class rdf:about="http://test/generator#SpecificConcept">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#Concept -->
+
+    <owl:Class rdf:about="http://www.w3.org/2004/02/skos/core#Concept"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#ConceptScheme -->
+
+    <owl:Class rdf:about="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://test/generator#concept_scheme1 -->
+
+    <owl:NamedIndividual rdf:about="http://test/generator#concept_scheme1">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+        <skos:prefLabel>SCH1</skos:prefLabel>
+        <www:oid>0.0.0.0</www:oid>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://test/generator#nested_specific_concept -->
+
+    <owl:NamedIndividual rdf:about="http://test/generator#nested_specific_concept">
+        <rdf:type rdf:resource="http://test/generator#NestedSpecificConcept"/>
+        <skos:broader rdf:resource="http://test/generator#specific_concept"/>
+        <skos:inScheme rdf:resource="http://test/generator#concept_scheme1"/>
+        <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">12345</skos:notation>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://test/generator#specific_concept -->
+
+    <owl:NamedIndividual rdf:about="http://test/generator#specific_concept">
+        <rdf:type rdf:resource="http://test/generator#SpecificConcept"/>
+        <skos:broader rdf:resource="http://www.w3.org/2004/02/skos/core#topConcept"/>
+        <skos:inScheme rdf:resource="http://test/generator#concept_scheme1"/>
+        <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">6789</skos:notation>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://test/generator#sub_sub_concept -->
+
+    <owl:NamedIndividual rdf:about="http://test/generator#new_sub_sub_concept">
+        <rdf:type rdf:resource="http://test/generator#NestedSpecificConcept"/>
+        <skos:broader rdf:resource="http://test/generator#nested_specific_concept"/>
+        <skos:inScheme rdf:resource="http://test/generator#concept_scheme1"/>
+        <skos:notation>new_sub_sub_concept</skos:notation>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#topConcept -->
+
+    <owl:NamedIndividual rdf:about="http://www.w3.org/2004/02/skos/core#topConcept">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+

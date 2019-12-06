@@ -15,8 +15,9 @@
  */
 package edu.mayo.kmdp.util.ws;
 
-import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
+import edu.mayo.kmdp.util.StreamUtil;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -26,9 +27,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.omg.spec.api4kp._1_0.Answer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -128,7 +129,7 @@ public class ResponseHelper {
     return delegates.stream()
         .map(mapper)
         .map(ResponseHelper::get)
-        .flatMap(Util::trimStream)
+        .flatMap(StreamUtil::trimStream)
         .findAny();
   }
 
@@ -159,7 +160,7 @@ public class ResponseHelper {
     return succeed(
         responses
             .map(ResponseHelper::get)
-            .flatMap(Util::trimStream)
+            .flatMap(StreamUtil::trimStream)
             .collect(Collectors.toList()));
   }
 
@@ -196,5 +197,11 @@ public class ResponseHelper {
       logger.error(nfe.getMessage(),nfe);
       return HttpStatus.INTERNAL_SERVER_ERROR;
     }
+  }
+
+  public static <T> ResponseEntity<T> redirectTo(URI locator) {
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.setLocation(locator);
+    return new ResponseEntity<>(null,httpHeaders,HttpStatus.SEE_OTHER);
   }
 }

@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.terms.generator.plugin;
 
 import edu.mayo.kmdp.terms.generator.CatalogGenerator;
+import edu.mayo.kmdp.terms.generator.CatalogGenerator.CatalogEntry;
 import edu.mayo.kmdp.terms.generator.JavaEnumTermsGenerator;
 import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor;
 import edu.mayo.kmdp.terms.generator.XSDEnumTermsGenerator;
@@ -22,6 +23,8 @@ import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationP
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
+import edu.mayo.kmdp.terms.generator.internal.VersionedConceptGraph;
 import edu.mayo.kmdp.terms.generator.util.OntologyLoader;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
 import edu.mayo.kmdp.util.Util;
@@ -34,7 +37,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -83,6 +85,32 @@ public class TermsGeneratorPlugin extends AbstractMojo {
 
   public void setEnforceClosure(boolean enforceClosure) {
     this.enforceClosure = enforceClosure;
+  }
+
+  /**
+   * @parameter default-value="false"
+   */
+  private boolean enforceVersion = false;
+
+  public boolean isEnforceVersion() {
+    return enforceVersion;
+  }
+
+  public void setEnforceVersion(boolean enforceVersion) {
+    this.enforceVersion = enforceVersion;
+  }
+
+  /**
+   * @parameter default-value="false"
+   */
+  private String versionPattern;
+
+  public String getVersionPattern() {
+    return versionPattern;
+  }
+
+  public void setVersionPattern(String versionPattern) {
+    this.versionPattern = versionPattern;
   }
 
   /**
@@ -315,9 +343,7 @@ public class TermsGeneratorPlugin extends AbstractMojo {
 
     final List<String> catalogs = alignCatalogs(sourceCatalogPaths, files);
 
-    Collection<CatalogGenerator.CatalogEntry> entries = files.stream()
-        .flatMap(f -> this.transform(f, catalogs.get(files.indexOf(f))))
-        .collect(Collectors.toList());
+    Collection<CatalogGenerator.CatalogEntry> entries = this.transform(files, catalogs);
 
     if (catalogNamespace != null) {
       new CatalogGenerator().generate(catalogNamespace, entries, xsdOutputDirectory, catalogName);
@@ -340,30 +366,26 @@ public class TermsGeneratorPlugin extends AbstractMojo {
     return catalogs;
   }
 
-  private Stream<CatalogGenerator.CatalogEntry> transform(String source, String sourceCatalogPath) {
-    OWLOntology ontology = null;
-    try {
-      IRI[] ignoreds = getIgnoredIRIs() == null
-          ? new IRI[0]
-          : getIgnoredIRIs().stream()
-              .map(IRI::create)
-              .collect(Collectors.toList())
-              .toArray(new IRI[getIgnoredIRIs().size()]);
-      ontology = new OntologyLoader().loadOntology(
-          new String[]{source},
-          getSourceCatalog(sourceCatalogPath).orElse(null),
-          ignoreds);
-    } catch (OWLOntologyCreationException e) {
-      return Stream.empty();
+  private List<CatalogEntry> transform(List<String> sources, List<String> sourceCatalogPaths) {
+    if (sources.size() != sourceCatalogPaths.size()) {
+      logger.error("Each OWL file to be processed should have a corresponding catalog");
     }
 
-    SkosAbstractionConfig cfg = new SkosAbstractionConfig()
-        .with(SkosAbstractionParameters.REASON, this.reason)
-        .with(SkosAbstractionParameters.ENFORCE_CLOSURE, enforceClosure)
-        .with(SkosAbstractionParameters.CLOSURE_MODE, closureMode)
-        .with(SkosAbstractionParameters.TAG_TYPE, tagFormat);
-    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
-        .traverse(ontology, cfg);
+    VersionedConceptGraph graph = null;
+    for (int j = 0; j < sources.size(); j++) {
+      try {
+        OWLOntology ontology = readSource(sources.get(j),sourceCatalogPaths.get(j));
+        ConceptGraph g = analyze(ontology);
+        if (graph == null) {
+          graph = new VersionedConceptGraph(g);
+        } else {
+          graph.merge(g);
+        }
+      } catch (OWLOntologyCreationException e) {
+        logger.error(e.getMessage(),e);
+        return Collections.emptyList();
+      }
+    }
 
     if (!outputDirectory.exists()) {
       outputDirectory.mkdirs();
@@ -379,13 +401,45 @@ public class TermsGeneratorPlugin extends AbstractMojo {
       opts.with(EnumGenerationParams.PACKAGE_NAME, packageName);
     }
 
-    new JavaEnumTermsGenerator().generate(graph, opts, outputDirectory);
+    JavaEnumTermsGenerator bjg =
+        new JavaEnumTermsGenerator();
+    bjg.generate(graph, opts, outputDirectory);
     if (isJaxb()) {
-      new XSDEnumTermsGenerator().generate(graph, opts, xsdOutputDirectory);
+      new XSDEnumTermsGenerator(bjg).generate(graph, opts, xsdOutputDirectory);
     }
 
-    return graph.getConceptSchemes().stream()
-        .map(CatalogGenerator.CatalogEntry::new);
+    return graph != null
+        ? graph.getConceptSchemes().stream()
+        .map(CatalogGenerator.CatalogEntry::new)
+        .collect(Collectors.toList())
+        : Collections.emptyList();
+  }
+
+  private ConceptGraph analyze(OWLOntology ontology) {
+    SkosAbstractionConfig cfg = new SkosAbstractionConfig()
+        .with(SkosAbstractionParameters.REASON, this.reason)
+        .with(SkosAbstractionParameters.ENFORCE_CLOSURE, enforceClosure)
+        .with(SkosAbstractionParameters.CLOSURE_MODE, closureMode)
+        .with(SkosAbstractionParameters.ENFORCE_VERSION, enforceVersion)
+        .with(SkosAbstractionParameters.VERSION_PATTERN, versionPattern)
+        .with(SkosAbstractionParameters.TAG_TYPE, tagFormat);
+    return new SkosTerminologyAbstractor()
+        .traverse(ontology, cfg);
+  }
+
+  private OWLOntology readSource(String source, String sourceCatalogPath)
+      throws OWLOntologyCreationException {
+
+    IRI[] ignoreds = getIgnoredIRIs() == null
+        ? new IRI[0]
+        : getIgnoredIRIs().stream()
+            .map(IRI::create)
+            .collect(Collectors.toList())
+            .toArray(new IRI[getIgnoredIRIs().size()]);
+    return new OntologyLoader().loadOntology(
+        new String[]{source},
+        getSourceCatalog(sourceCatalogPath).orElse(null),
+        ignoreds);
   }
 
   private Optional<OWLOntologyIRIMapper> getSourceCatalog(String sourceCatalogPath) {

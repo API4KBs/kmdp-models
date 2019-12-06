@@ -21,6 +21,7 @@ import static edu.mayo.kmdp.terms.util.JenaUtil.detectVersionIRI;
 
 import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
 import edu.mayo.kmdp.util.JenaUtil;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.InputStream;
 import java.net.URI;
@@ -38,8 +39,8 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class MireotExtractor {
@@ -84,7 +85,7 @@ public class MireotExtractor {
     return Optional.ofNullable(
         extract(source, rootEntityUri, baseUri, cfg).stream()
             .map(x -> fetchResource(source, URI.create(x.getURI()), baseUri))
-            .flatMap(Util::trimStream)
+            .flatMap(StreamUtil::trimStream)
             .reduce(ModelFactory.createDefaultModel(), Model::add));
   }
 

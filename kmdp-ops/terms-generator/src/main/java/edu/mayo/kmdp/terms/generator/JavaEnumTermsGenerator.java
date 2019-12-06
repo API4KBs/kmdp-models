@@ -18,18 +18,29 @@ package edu.mayo.kmdp.terms.generator;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
-
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 public class JavaEnumTermsGenerator extends BaseEnumGenerator {
 
-  public void generate(SkosTerminologyAbstractor.ConceptGraph conceptGraph,
+  private static final String EXTENSION = ".java";
+
+  public JavaEnumTermsGenerator() {
+    super();
+  }
+
+  public JavaEnumTermsGenerator(BaseEnumGenerator other) {
+    super(other);
+  }
+
+  public void generate(ConceptGraph conceptGraph,
       File outputDir) {
     this.generate(conceptGraph, new EnumGenerationConfig(), outputDir);
   }
 
-  public void generate(SkosTerminologyAbstractor.ConceptGraph conceptGraph,
+  public void generate(ConceptGraph conceptGraph,
       EnumGenerationConfig options,
       File outputDir) {
     if (outputDir != null && ! outputDir.exists()) {
@@ -39,20 +50,35 @@ public class JavaEnumTermsGenerator extends BaseEnumGenerator {
     this.generateConcepts(conceptGraph, options, outputDir);
   }
 
-  protected void generateConcepts(SkosTerminologyAbstractor.ConceptGraph conceptGraph,
+  protected void generateConcepts(
+      ConceptGraph conceptGraph,
       EnumGenerationConfig options,
       File outputDir) {
 
+    Map<Integer,Map<String,Object>> contextCache = new HashMap<>();
+
     for (ConceptScheme<Term> conceptScheme : conceptGraph.getConceptSchemes()) {
-
       Map<String, Object> context = getContext(conceptScheme, options, conceptGraph);
-
-      String mainText = fromTemplate("concepts-java", context);
-
-      this.writeToFile(mainText,
-          getFile(outputDir, context, ".java"));
+      contextCache.put(conceptScheme.hashCode(),context);
+      this.writeToFile(fromTemplate("concepts-java", context),
+          getFile(outputDir, context, EXTENSION));
     }
 
+    for (ConceptScheme<Term> conceptScheme : conceptGraph.getDistinctConceptSchemes()) {
+      Map<String, Object> context = contextCache.get(conceptScheme.hashCode());
+
+      this.writeToFile(fromTemplate("concepts-java-interface", context),
+          getFile(outputDir,
+              (String) context.get("intfPackageName"),
+              (String) context.get("intfName"),
+              EXTENSION));
+
+      this.writeToFile(fromTemplate("concepts-java-series", context),
+          getFile(outputDir,
+              (String) context.get("intfPackageName"),
+              (String) context.get("seriesName"),
+              EXTENSION));
+    }
   }
 
 

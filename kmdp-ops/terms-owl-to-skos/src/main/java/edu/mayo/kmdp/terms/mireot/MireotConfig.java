@@ -77,14 +77,14 @@ public class MireotConfig extends ConfigProperties<MireotConfig, MireotParameter
     ))
     ;
 
-    private Opt opt;
+    private Opt<MireotParameters> opt;
 
-    MireotParameters( Opt opt ) {
+    MireotParameters( Opt<MireotParameters> opt ) {
       this.opt = opt;
     }
 
     @Override
-    public Opt getOption() {
+    public Opt<MireotParameters> getOption() {
       return opt;
     }
 

@@ -43,5 +43,9 @@ public class Interface {
   public Collection<Operation> getOperations() {
     return operations.values();
   }
+
+  public void merge(Interface existing) {
+    existing.getOperations().forEach(this::addOperation);
+  }
 }
 

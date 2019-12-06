@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptGraph;
-import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptTerm;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
+import edu.mayo.kmdp.terms.generator.internal.ConceptTermImpl;
 import edu.mayo.kmdp.terms.mireot.EntityTypes;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
@@ -34,19 +34,14 @@ import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import java.net.URI;
-import java.net.URL;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
-import ru.avicomp.ontapi.OntManagers;
 import ru.avicomp.ontapi.OntologyManager;
 
 public class NotationTest {
@@ -75,7 +70,7 @@ public class NotationTest {
   private Term getAndCheck(ConceptGraph graph) {
     assertEquals(1, graph.getConceptSchemes().size());
 
-    ConceptTerm trm = (ConceptTerm) graph.getConceptSchemes().iterator().next().getConcepts()
+    ConceptTermImpl trm = (ConceptTermImpl) graph.getConceptSchemes().iterator().next().getConcepts()
         .findFirst().orElse(null);
     assertNotNull(trm);
 

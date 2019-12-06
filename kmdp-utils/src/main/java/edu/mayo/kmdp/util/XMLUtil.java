@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -59,9 +60,10 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import net.sf.saxon.lib.FeatureKeys;
 import net.sf.saxon.lib.StandardErrorListener;
-import org.slf4j.LoggerFactory;
+import org.apache.xml.resolver.CatalogManager;
+import org.apache.xml.resolver.tools.CatalogResolver;
 import org.slf4j.Logger;
-import org.apache.xerces.util.XMLCatalogResolver;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -69,6 +71,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 
 public class XMLUtil {
   
@@ -172,11 +176,13 @@ public class XMLUtil {
       return;
     }
     NodeList nodeList = node.getChildNodes();
-    for (int i = 0; i < nodeList.getLength(); i++) {
+    int i = 0;
+    while (i < nodeList.getLength()) {
       Node childNode = nodeList.item(i);
       if (childNode.getNodeType() == Node.TEXT_NODE && isEmpty(childNode.getNodeValue())) {
         childNode.getParentNode().removeChild(childNode);
-        i--;
+      } else {
+        i++;
       }
       removeEmptyNodes(childNode);
     }
@@ -207,8 +213,11 @@ public class XMLUtil {
   public static boolean validate(Source source, URI lang) {
     return getSchemas(lang).map(schema -> {
           try {
-            Validator validator = getSecureValidator(schema);
-            validator.validate(source);
+            Optional<Validator> validator = getSecureValidator(schema);
+            if (!validator.isPresent()) {
+              return false;
+            }
+            validator.get().validate(source);
           } catch (SAXException | IOException e) {
             logger.error(e.getMessage(),e);
             return false;
@@ -225,8 +234,11 @@ public class XMLUtil {
 
   public static boolean validate(Source source, Schema schema) {
     try {
-      Validator validator = getSecureValidator(schema);
-      validator.validate(source);
+      Optional<Validator> validator = getSecureValidator(schema);
+      if (!validator.isPresent()) {
+        return false;
+      }
+      validator.get().validate(source);
       return true;
     } catch (SAXException | IOException e) {
       logger.error(e.getMessage(),e);
@@ -239,10 +251,10 @@ public class XMLUtil {
    * @return A Schema for the language and its sublanguages
    */
   public static Optional<Schema> getSchemas(URI... langs) {
-    XMLCatalogResolver cat = catalogResolver(
+    CatalogResolver cat = catalogResolver(
         Arrays.stream(langs)
             .map(Registry::getCatalog)
-            .flatMap(Util::trimStream)
+            .flatMap(StreamUtil::trimStream)
             .map(XMLUtil.class::getResource)
             .toArray(URL[]::new));
 
@@ -252,7 +264,7 @@ public class XMLUtil {
         throw new IllegalStateException(
             "Defensive Programming: Unable to locate schema for language " + langs[0]);
       }
-      String mainSchema = cat.resolveURI(schemaBaseUrl.get());
+      String mainSchema = cat.getCatalog().resolveURI(schemaBaseUrl.get());
       URL url = new URL(mainSchema);
       return getSchemas(url, cat);
     } catch (IOException e) {
@@ -261,21 +273,27 @@ public class XMLUtil {
     }
   }
 
-  public static XMLCatalogResolver catalogResolver(URL... catalogs) {
-    return new XMLCatalogResolver(Arrays.stream(catalogs)
-        .map(URL::toString).toArray(String[]::new));
+  public static CatalogResolver catalogResolver(URL... catalogs) {
+    CatalogManager manager = new CatalogManager();
+    manager.setUseStaticCatalog(false);
+    manager.setIgnoreMissingProperties(true);
+    manager.setCatalogFiles(
+        Arrays.stream(catalogs)
+        .map(URL::toString)
+            .collect(Collectors.joining(";")));
+    return new CatalogResolver(manager);
   }
 
-  public static XMLCatalogResolver catalogResolver(String... catalogRelativePaths) {
-    return new XMLCatalogResolver(Arrays.stream(catalogRelativePaths)
+  public static CatalogResolver catalogResolver(String... catalogRelativePaths) {
+    return catalogResolver(
+        Arrays.stream(catalogRelativePaths)
         .map(XMLUtil::asFileURL)
-        .map(URL::toString)
-        .toArray(String[]::new));
+            .toArray(URL[]::new));
   }
 
   public static Optional<Schema> getSchemas(final URL mainSchemaURL,
-      final XMLCatalogResolver catalogResolver) {
-    SchemaFactory sFactory = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
+      final CatalogResolver catalogResolver) {
+    SchemaFactory sFactory = getSchemaFactory();
     sFactory.setResourceResolver(new CatalogResourceResolver(catalogResolver));
 
     try {
@@ -284,6 +302,10 @@ public class XMLUtil {
       logger.error(e.getMessage(),e);
     }
     return Optional.empty();
+  }
+
+  private static SchemaFactory getSchemaFactory() {
+    return SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
   }
 
 
@@ -490,7 +512,7 @@ public class XMLUtil {
   private static TransformerFactory getSecureTransformerFactory()
       throws TransformerConfigurationException {
     TransformerFactory factory = TransformerFactory.newInstance();
-    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    factory.setFeature("http://javax.xml.XMLConstants/feature/secure-processing", true);
     factory.setFeature(FeatureKeys.ALLOW_EXTERNAL_FUNCTIONS,true);
     return factory;
   }
@@ -498,13 +520,22 @@ public class XMLUtil {
   public static DocumentBuilderFactory getSecureDocumentBuilderFactory()
       throws ParserConfigurationException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING,true);
+    factory.setFeature("http://javax.xml.XMLConstants/feature/secure-processing",true);
+    factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);
     factory.setNamespaceAware(true);
     return factory;
   }
 
-  public static Validator getSecureValidator(Schema schema) {
-    return schema.newValidator();
+  public static Optional<Validator> getSecureValidator(Schema schema) {
+    try {
+      Validator validator = schema.newValidator();
+      validator.setProperty("http://javax.xml.XMLConstants/property/accessExternalSchema", "");
+      validator.setProperty("http://javax.xml.XMLConstants/property/accessExternalDTD", "");
+      return Optional.of(validator);
+    } catch (SAXNotRecognizedException | SAXNotSupportedException e) {
+      logger.error(e.getMessage(), e);
+      return Optional.empty();
+    }
   }
 
 

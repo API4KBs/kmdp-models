@@ -31,12 +31,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Util {
 
@@ -245,10 +245,10 @@ public class Util {
         : Optional.empty();
   }
 
-  public static <T,X> Stream<T> streamAs(X instance, Class<T> type) {
-    return as(instance,type)
-        .map(Stream::of)
-        .orElseGet(Stream::empty);
+  public static <T> Function<Object,Optional<T>> as(Class<T> type) {
+    return x -> type.isInstance(x)
+        ? Optional.of(type.cast(x))
+        : Optional.empty();
   }
 
   private static class Entry {
@@ -322,8 +322,5 @@ public class Util {
     return str.replaceAll("[^\\x20-\\x7e]", "");
   }
 
-  public static <T> Stream<T> trimStream(Optional<T> opt) {
-    return opt.map(Stream::of).orElseGet(Stream::empty);
-  }
 
 }

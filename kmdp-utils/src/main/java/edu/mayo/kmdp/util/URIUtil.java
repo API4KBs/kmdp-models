@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.w3c.dom.Element;
 
-import javax.management.RuntimeErrorException;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -52,8 +51,8 @@ public class URIUtil {
           fragment);
     } catch (URISyntaxException e) {
       logger.error(e.getMessage(),e);
-      throw new RuntimeErrorException(new Error(e.getMessage()));
     }
+    return uri;
   }
 
   public static String normalizeURIString(URI uri) {

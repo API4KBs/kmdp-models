@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp.util.ws;
 
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -65,8 +65,8 @@ public abstract class AbstractApiClientFactory {
       protected void handleError(ClientHttpResponse response, HttpStatus statusCode)
           throws IOException {
         throw new ServerSideException(
-            ResponseCode.resolve(Integer.toString(response.getRawStatusCode()))
-                .orElse(ResponseCode.InternalServerError),
+            ResponseCodeSeries.resolve(Integer.toString(response.getRawStatusCode()))
+                .orElse(ResponseCodeSeries.InternalServerError),
             response.getHeaders(),
             getResponseBody(response));
       }

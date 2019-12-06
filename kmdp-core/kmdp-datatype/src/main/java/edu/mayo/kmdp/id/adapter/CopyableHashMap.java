@@ -31,16 +31,18 @@ public class CopyableHashMap<K, V, M extends CopyableHashMap<K,V,M>> extends Has
     super(src);
   }
 
+  @SuppressWarnings("unchecked")
   public M addEntry(K key, V value) {
     super.put(key,value);
     return (M) this;
   }
 
+  @SuppressWarnings("unchecked")
   public java.lang.Object copyTo(ObjectLocator locator, java.lang.Object target,
       CopyStrategy strategy) {
     if (target instanceof Map) {
       Map targetMap = (Map) target;
-      this.forEach((k, v) -> targetMap.put(k, strategy.copy(locator, v)));
+      this.forEach((k, v) -> targetMap.put((Object) k, (Object) strategy.copy(locator, v)));
     }
     return target;
   }

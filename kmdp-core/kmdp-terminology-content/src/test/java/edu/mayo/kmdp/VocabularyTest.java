@@ -17,6 +17,7 @@ package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.util.Util.ensureUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,6 +27,7 @@ import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._20190801.Knowled
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
 import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._20190801.KnowledgeAssetRole;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique._20190801.KnowledgeProcessingTechnique;
@@ -196,12 +198,16 @@ public class VocabularyTest {
 
   @Test
   public void testGeneratedEnumsVersion() {
-    Optional<UUID> uid = ensureUUID(KnowledgeAssetCategory.schemeID);
+    Optional<UUID> uid = ensureUUID(KnowledgeAssetCategory.SCHEME_ID);
     assertTrue(uid.isPresent());
 
     assertNotNull(KnowledgeAssetCategory.schemeURI.getVersionId());
-    assertEquals(uid.get().toString(),
-        KnowledgeAssetCategory.schemeURI.getVersionId().getFragment());
+
+    String seriesId = KnowledgeAssetCategory.schemeURI.getUri().toString();
+    String versionId = KnowledgeAssetCategory.schemeURI.getVersionId().toString();
+    String version = versionId.replace(seriesId,"").replace("/","");
+    assertEquals(version, KnowledgeAssetCategory.schemeURI.getVersion());
+    assertEquals(version, KnowledgeAssetCategory.namespace.getVersion());
   }
 
   @Test
@@ -214,6 +220,15 @@ public class VocabularyTest {
             .orElse(null));
 
     assertNotNull(KnowledgeRepresentationLanguageProfile.CQL_Essentials);
+  }
+
+  @Test
+  void testGracefulFailonUnknown() {
+    assertFalse(KnowledgeAssetRoleSeries.resolveUUID(UUID.randomUUID()).isPresent());
+    assertFalse(KnowledgeAssetRole.resolveUUID(UUID.randomUUID()).isPresent());
+    assertFalse(KnowledgeAssetRole.resolve(UUID.randomUUID().toString()).isPresent());
+    assertFalse(KnowledgeAssetRole.resolveTag(UUID.randomUUID().toString()).isPresent());
+    assertFalse(KnowledgeAssetRole.resolveId("urn:uuid:" + UUID.randomUUID().toString()).isPresent());
   }
 
 }

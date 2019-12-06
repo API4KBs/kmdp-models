@@ -30,7 +30,7 @@ public interface URIId extends VersionedIdentifier {
   @Override
   @JsonIgnore
   default String getVersion() {
-    return DatatypeHelper.versionOf(getVersionId());
+    return DatatypeHelper.versionOf(this);
   }
 
   @Override

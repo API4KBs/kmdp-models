@@ -22,23 +22,22 @@ import static org.junit.jupiter.api.Assertions.fail;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
-import edu.mayo.kmdp.util.JenaUtil;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLOntology;
-import ru.avicomp.ontapi.OntManagers;
 import ru.avicomp.ontapi.OntologyManager;
 
 public class ReferentTest {
 
   @Test
   public void testReferent() {
-    SkosTerminologyAbstractor.ConceptGraph graph = doGenerate();
+    ConceptGraph graph = doGenerate();
     Optional<Term> trm = graph.getConceptSchemes().stream()
         .findFirst()
         .flatMap((cs) -> cs.getConcepts().filter((t) -> t.getLabel().contains("Parent")).findFirst());
@@ -48,7 +47,7 @@ public class ReferentTest {
   }
 
 
-  public static SkosTerminologyAbstractor.ConceptGraph doGenerate() {
+  public static ConceptGraph doGenerate() {
 
     String owlPath = "/singleClass.rdf";
 

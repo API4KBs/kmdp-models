@@ -37,6 +37,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.javers</groupId>
+      <artifactId>javers-core</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-test-utils</artifactId>
       <scope>test</scope>
@@ -45,7 +50,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -171,6 +175,11 @@
             <groupId>edu.mayo.kmdp</groupId>
             <artifactId>kmdp-terminology-content</artifactId>
             <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
           </dependency>
         </dependencies>
       </plugin>

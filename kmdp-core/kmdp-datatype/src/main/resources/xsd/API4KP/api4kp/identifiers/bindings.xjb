@@ -9,6 +9,8 @@
     <jxb:serializable uid="0001"/>
     <xjc:javaType name="java.util.Date" xmlType="xsd:date"
       adapter="edu.mayo.kmdp.util.adapters.DateAdapter"/>
+    <xjc:javaType name="java.util.Date" xmlType="xsd:dateTime"
+      adapter="edu.mayo.kmdp.util.adapters.DateAdapter"/>
     <xjc:javaType name="java.net.URI" xmlType="xsd:anyURI"
       adapter="edu.mayo.kmdp.util.adapters.URIAdapter"/>
   </jxb:globalBindings>

@@ -19,10 +19,9 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
-public class InternalTerm extends ConceptIdentifier {
+public class InternalTerm extends TermImpl {
 
   protected ConceptScheme<Term> scheme;
   protected String comment;
@@ -35,10 +34,16 @@ public class InternalTerm extends ConceptIdentifier {
     this.setComment(Util.isEmpty(comment) ? label : comment);
     this.scheme = scheme;
     this.conceptId = conceptURI;
+
     if (scheme != null) {
-      this.namespace = new NamespaceIdentifier()
-          .withId(scheme.getId())
-          .withVersion(scheme.getVersion());
+      this.namespace =
+          new NamespaceIdentifier()
+              .withId(scheme.getId())
+              .withLabel(scheme.getLabel())
+              .withTag(scheme.getTag())
+              .withVersioning(scheme.getVersioning())
+              .withEstablishedOn(scheme.getEstablishedOn())
+              .withVersion(scheme.getVersion());
     }
   }
 

@@ -15,23 +15,54 @@
  */
 package edu.mayo.kmdp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.util.CodeGenTestBase;
+import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class SwaggerToIDLTranslatorTest {
 
+  @TempDir
+  public Path tmp;
+
+  final static String karSource = "/openapi/v2/org/omg/spec/api4kp/3.0.0/knowledgeArtifactRepository.yaml";
+  final static String dataTypeSource = "/yaml/API4KP/api4kp/identifiers/identifiers.yaml";
+  final static String repoSource = "/yaml/API4KP/api4kp/services/repository/repository.yaml";
+
+
   @Test
   public void testArtifactAPI() {
-    String source = "/openapi/v2/org/omg/spec/api4kp/2.0.0/knowledgeArtifactRepository.yaml";
-    InputStream input = SwaggerToIDLTranslatorTest.class.getResourceAsStream(source);
+    List<InputStream> sources = Stream.of(karSource, dataTypeSource, repoSource)
+        .map(SwaggerToIDLTranslatorTest.class::getResourceAsStream)
+        .collect(Collectors.toList());
 
-    Optional<String> target = (new SwaggerToIDLTranslator()
-        .translate(input));
+    File gen = new File(tmp.toFile(),"gen");
+    assertTrue(gen.mkdir());
+    File out = new File(tmp.toFile(),"out");
+    assertTrue(out.mkdir());
 
-    assertTrue(target.isPresent());
+    List<String> target = new SwaggerToIDLTranslator()
+        .translate(sources);
+    assertFalse(target.isEmpty());
+
+    target.forEach(s -> System.out.println("\n\n" + s));
+
+    String errs = TestIDLCompiler.tryCompileSource(gen, target);
+    assertEquals("", errs, errs);
+    CodeGenTestBase.ensureSuccessCompile(gen,gen,out);
+
+    CodeGenTestBase.showDirContent(tmp.toFile(),true);
   }
 
 }

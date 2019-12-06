@@ -15,21 +15,20 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import edu.mayo.kmdp.terms.example.SCH1;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.mayo.kmdp.terms.example.SomeBean;
+import edu.mayo.kmdp.terms.example.sch1.SCH1;
 import edu.mayo.kmdp.util.JSonLDUtil;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JenaUtil;
-import org.apache.jena.rdf.model.Model;
-import org.junit.jupiter.api.Test;
-
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.apache.jena.rdf.model.Model;
+import org.junit.jupiter.api.Test;
 
 public class JSONLDSerializationTest {
 
@@ -51,9 +50,9 @@ public class JSONLDSerializationTest {
 
     assertTrue(model.isPresent());
 
-    assertEquals(4, (int) JenaUtil.sizeOf(model.get()));
+    System.out.println(JenaUtil.asString(model.get()));
+    assertEquals(34, (int) JenaUtil.sizeOf(model.get()));
 
-//    model.map(JenaUtil::toSystemOut);
 
   }
 }

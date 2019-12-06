@@ -20,6 +20,7 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import java.net.URI;
+import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
@@ -31,6 +32,16 @@ public class AnonymousConceptScheme extends NamespaceIdentifier implements Conce
   private URI versionId;
 
   public AnonymousConceptScheme() {
+  }
+
+  public AnonymousConceptScheme(String schemeId, String versionTag,
+      String schemeName, URI schemeURI, URI schemeVersionURI, Date pubDate) {
+    this.withId(schemeURI)
+        .withLabel(schemeName)
+        .withTag(schemeId)
+        .withVersion(versionTag)
+        .withEstablishedOn(pubDate);
+    this.versionId = schemeVersionURI;
   }
 
   public AnonymousConceptScheme(String schemeId, String schemeName, URI schemeURI,

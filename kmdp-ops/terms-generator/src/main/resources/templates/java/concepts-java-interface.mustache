@@ -1,0 +1,32 @@
+package {{intfPackageName}};
+
+import edu.mayo.kmdp.terms.ControlledTerm;
+import edu.mayo.kmdp.terms.VersionableTerm;
+import java.net.URI;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+
+@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( {{seriesName}}.Adapter.class )
+@com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{seriesName}}.JsonDeserializer.class )
+public interface {{intfName}} extends ControlledTerm, VersionableTerm<{{intfName}}, {{seriesName}}> {
+
+  String SCHEME_NAME = "{{conceptScheme.label}}";
+  String SCHEME_ID = "{{conceptSchemeTag}}";
+
+  String seriesIdentifier = "{{seriesNamespace}}";
+  URIIdentifier seriesUri = new URIIdentifier()
+    .withUri( URI.create( "{{seriesNamespace}}" ) );
+
+  NamespaceIdentifier seriesNamespace = new NamespaceIdentifier()
+      .withId(seriesUri.getUri())
+      .withLabel(SCHEME_NAME)
+      .withTag(SCHEME_ID);
+
+  default URIIdentifier getSeriesUri() {
+    return seriesUri;
+  }
+
+  @Override
+  public NamespaceIdentifier getNamespace();
+
+}

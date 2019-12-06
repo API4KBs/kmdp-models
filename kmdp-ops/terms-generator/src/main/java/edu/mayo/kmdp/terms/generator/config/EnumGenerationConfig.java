@@ -20,6 +20,7 @@ import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
 import java.util.Properties;
 
+@SuppressWarnings("unchecked")
 public class EnumGenerationConfig extends
     ConfigProperties<EnumGenerationConfig, EnumGenerationConfig.EnumGenerationParams> {
 
@@ -68,25 +69,32 @@ public class EnumGenerationConfig extends
         false)),
     XML_ADAPTER(Opt.of(
         "baseXmlAdapter",
-        "edu.mayo.kmdp.terms.TermsXMLAdapter",
+        "edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter",
         "Base class that controls the XML serialization of terminologies",
         String.class,
         false)),
     JSON_ADAPTER(Opt.of(
         "baseJsonAdapter",
-        "edu.mayo.kmdp.terms.TermsJsonAdapter.Deserializer",
+        "edu.mayo.kmdp.terms.adapters.json.ConceptIdentifierTermsJsonAdapter",
         "Base class that controls the JSON serialization of terminologies",
         String.class,
+        false)),
+    UUID_INDEX(Opt.of(
+        "indexByUUID",
+        "true",
+        "Uses UUID-based identifiers for indexing. "
+            + "Must be true when using UUIDBasedDeserializer as JSON Adapter.",
+        Boolean.class,
         false));
 
-    private Opt opt;
+    private Opt<EnumGenerationParams> opt;
 
-    EnumGenerationParams(Opt opt) {
+    EnumGenerationParams(Opt<EnumGenerationParams> opt) {
       this.opt = opt;
     }
 
     @Override
-    public Opt getOption() {
+    public Opt<EnumGenerationParams> getOption() {
       return opt;
     }
 

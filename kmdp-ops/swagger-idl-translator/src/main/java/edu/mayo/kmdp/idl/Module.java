@@ -16,17 +16,20 @@
 package edu.mayo.kmdp.idl;
 
 
+import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.NameUtils.IdentifierType;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Deque;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class Module {
 
   private String name;
-  private Map<String,Module> subModules = new HashMap<>();
-  private Map<String,Struct> structs = new HashMap<>();
-  private Map<String,Interface> interfaces = new HashMap<>();
+  private Map<String,Module> subModules = new LinkedHashMap<>();
+  private Map<String,Struct> structs = new LinkedHashMap<>();
+  private Map<String,Interface> interfaces = new LinkedHashMap<>();
 
   public Module(String name) {
     this.name = name;
@@ -45,16 +48,50 @@ public class Module {
   }
 
   public Optional<Interface> getInterface(String tag) {
-    return Optional.ofNullable(interfaces.get(tag));
+    return Optional.ofNullable(interfaces.get(tag2Name(tag)));
   }
 
-  public Module addInterface(Interface itf) {
+  public Interface addInterface( String tag) {
+    Interface itf = new Interface(tag2Name(tag));
+
     if (interfaces.containsKey(itf.getName())) {
-      throw new UnsupportedOperationException("Cannot merge interfaces yet");
+      Interface existing = interfaces.get(itf.getName());
+      itf.merge(existing);
     }
     interfaces.put(itf.getName(),itf);
+    return itf;
+  }
+
+  private String tag2Name(String tag) {
+    return NameUtils.nameToIdentifier(tag, IdentifierType.CLASS);
+  }
+
+  public Module insertStruct(Struct struct) {
+    insertStruct(struct, struct.getPackageStack());
     return this;
   }
+
+  public Module addStruct(Struct struct) {
+    this.structs.put(struct.getTypeName(),struct);
+    return this;
+  }
+
+  private void insertStruct(Struct struct, Deque<String> packageStack) {
+    if (packageStack.isEmpty()) {
+      this.structs.put(struct.getTypeName(),struct);
+    } else {
+      String pack = packageStack.pop();
+      Module sub;
+      if (subModules.containsKey(pack)) {
+        sub = subModules.get(pack);
+      } else {
+        sub = new Module(pack);
+        addModule(sub);
+      }
+      sub.insertStruct(struct,packageStack);
+    }
+  }
+
 
   public String getName() {
     return name;
@@ -68,7 +105,11 @@ public class Module {
     this.subModules = subModules;
   }
 
-  public Map<String, Struct> getStructs() {
+  public Collection<Struct> getStructs() {
+    return structs.values();
+  }
+
+  public Map<String,Struct> getStructMap() {
     return structs;
   }
 

@@ -15,28 +15,28 @@
  */
 package edu.mayo.kmdp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.SwaggerTestUtil;
 import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Swagger;
+import java.io.InputStream;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.datatypes.Map;
 
-import java.io.InputStream;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class MapDatatypeTest {
-
 
   private static final Map custoMap = new Map();
 
   @BeforeAll
+  @SuppressWarnings("unchecked")
   public static void buildMap() {
     custoMap.put("x", 1);
     custoMap.put("y", "2a");
@@ -45,13 +45,13 @@ public class MapDatatypeTest {
 
   @Test
   public void testMapSerializationJson() {
-
-//    JSonUtil.printOutJson(custoMap);
     Optional<String> str = JSonUtil.printJson(custoMap);
     assertTrue(str.isPresent());
 
-    assertEquals("1", JSonUtil.jString("x", JSonUtil.readJson(str.get().getBytes()).get()).get());
-    assertEquals("2a", JSonUtil.jString("y", JSonUtil.readJson(str.get().getBytes()).get()).get());
+    JsonNode jTree = str.flatMap(JSonUtil::readJson).orElse(null);
+
+    assertEquals("1", JSonUtil.jString("x", jTree).orElse(""));
+    assertEquals("2a", JSonUtil.jString("y", jTree).orElse(""));
   }
 
 
@@ -62,6 +62,7 @@ public class MapDatatypeTest {
     assertNotNull(in);
 
     Swagger sw = SwaggerTestUtil.parse(in);
+    assertNotNull(sw);
     assertNotNull(sw.getDefinitions());
 
     Model mapModel = sw.getDefinitions().get("Map");

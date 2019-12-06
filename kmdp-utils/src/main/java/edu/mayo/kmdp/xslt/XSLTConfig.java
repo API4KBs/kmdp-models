@@ -16,7 +16,6 @@
 package edu.mayo.kmdp.xslt;
 
 import edu.mayo.kmdp.ConfigProperties;
-
 import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
 import java.util.Properties;
@@ -64,14 +63,14 @@ public class XSLTConfig extends ConfigProperties<XSLTConfig, XSLTConfig.XSLTOpti
 
     public enum OUTPUT {XML, TXT}
 
-    private Opt opt;
+    private Opt<XSLTOptions> opt;
 
-    XSLTOptions(Opt opt) {
+    XSLTOptions(Opt<XSLTOptions> opt) {
       this.opt = opt;
     }
 
     @Override
-    public Opt getOption() {
+    public Opt<XSLTOptions> getOption() {
       return opt;
     }
   }

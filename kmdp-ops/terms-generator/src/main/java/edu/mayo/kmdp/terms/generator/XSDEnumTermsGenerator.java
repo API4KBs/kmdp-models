@@ -20,13 +20,21 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
-
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import java.io.File;
 import java.util.Map;
 
 public class XSDEnumTermsGenerator extends BaseEnumGenerator {
 
-  public void generate(SkosTerminologyAbstractor.ConceptGraph conceptGraph,
+  public XSDEnumTermsGenerator() {
+    super();
+  }
+
+  public XSDEnumTermsGenerator(BaseEnumGenerator other) {
+    super(other);
+  }
+
+  public void generate(ConceptGraph conceptGraph,
       EnumGenerationConfig options,
       File outputDir) {
     outputDir.mkdirs();
@@ -34,7 +42,7 @@ public class XSDEnumTermsGenerator extends BaseEnumGenerator {
     this.generateConcepts(conceptGraph, options, outputDir);
   }
 
-  protected void generateConcepts(SkosTerminologyAbstractor.ConceptGraph conceptGraph,
+  protected void generateConcepts(ConceptGraph conceptGraph,
       EnumGenerationConfig options,
       File outputDir) {
 

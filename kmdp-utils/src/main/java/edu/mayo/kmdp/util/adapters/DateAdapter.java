@@ -15,19 +15,14 @@
  */
 package edu.mayo.kmdp.util.adapters;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import java.util.Date;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
 
 public class DateAdapter extends XmlAdapter<String, Date> {
 
-  private static final Logger logger = LoggerFactory.getLogger(DateAdapter.class);
-
-  public static final String PATTERN = "yyyy-MM-dd";
+  private static final String XML_DATETIME_PATTERN = "yyyy-MM-dd'T'hh:mm:ss";
 
   private static DateAdapter instance = new DateAdapter();
 
@@ -35,35 +30,20 @@ public class DateAdapter extends XmlAdapter<String, Date> {
     return instance;
   }
 
-  SimpleDateFormat sdf = new SimpleDateFormat(PATTERN);
-
   public Date unmarshal(String v) {
     return read(v);
   }
 
   public Date read(String v) {
-    try {
-      return sdf.parse(v);
-    } catch (ParseException e) {
-      logger.error(e.getMessage(),e);
-      return null;
-    }
+    return DateTimeUtil.parseDate(v, XML_DATETIME_PATTERN);
   }
 
   public String write(Date v) {
-    return v != null ? sdf.format(v) : null;
+    return v != null ? DateTimeUtil.format(v, XML_DATETIME_PATTERN) : null;
   }
 
   public String marshal(Date v) {
     return write(v);
   }
 
-  public boolean isDate(String s) {
-    try {
-      sdf.parse(s);
-      return true;
-    } catch (ParseException e) {
-      return false;
-    }
-  }
 }

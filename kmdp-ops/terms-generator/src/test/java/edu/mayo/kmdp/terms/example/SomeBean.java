@@ -18,17 +18,21 @@ package edu.mayo.kmdp.terms.example;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.databind.util.Converter;
 import de.escalon.hypermedia.hydra.mapping.Expose;
 import de.escalon.hypermedia.hydra.mapping.Vocab;
-
+import edu.mayo.kmdp.terms.example.sch1.ISCH1;
+import edu.mayo.kmdp.terms.example.sch1.SCH1Series;
+import java.net.URI;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.net.URI;
-import java.util.Set;
 
 @Expose("http://org.foo.test/Some/Bean")
 @Vocab("http://my/base/voc#")
@@ -44,27 +48,31 @@ public class SomeBean {
   @XmlTransient
   private URI id = URI.create("http://my/individual/ID107");
 
-  @XmlJavaTypeAdapter(value = SCH1.Adapter.class)
-  private SCH1 schone;
+  @XmlJavaTypeAdapter(value = SCH1Series.Adapter.class)
+  @com.fasterxml.jackson.databind.annotation.JsonSerialize(
+      using = SCH1Series.JsonSerializer.class)
+  @com.fasterxml.jackson.databind.annotation.JsonDeserialize(
+      using = SCH1Series.JsonDeserializer.class)
+  private ISCH1 schone;
 
   @XmlTransient
-  private Set<SCH1> schones;
+  private Set<ISCH1> schones;
 
   @Expose("http://org.foo/xyz")
-  public SCH1 getSchone() {
+   public ISCH1 getSchone() {
     return schone;
   }
 
-  public void setSchone(SCH1 schone) {
+  public void setSchone(ISCH1 schone) {
     this.schone = schone;
   }
 
   @Expose("http://org.foo/xyz")
-  public Set<SCH1> getSchones() {
+  public Set<ISCH1> getSchones() {
     return schones;
   }
 
-  public void setSchones(Set<SCH1> schones) {
+  public void setSchones(Set<ISCH1> schones) {
     this.schones = schones;
   }
 
@@ -84,4 +92,5 @@ public class SomeBean {
         ", schones=" + schones +
         '}';
   }
+
 }

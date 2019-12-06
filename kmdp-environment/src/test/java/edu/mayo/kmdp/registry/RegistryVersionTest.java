@@ -36,7 +36,7 @@ public class RegistryVersionTest extends RegistryTestBase {
 
   @Test
   public void testOlderVersion() {
-    Model registry = initRegistry("v20190801");
+    Model registry = initRegistry("20190801");
     assertTrue(checkLanguage("http://www.w3.org/2002/07/owl",
         registry));
     assertFalse(checkLanguage("https://graphql.github.io/graphql-spec/June2018/",

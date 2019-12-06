@@ -30,7 +30,8 @@ import java.util.Set;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.reasoner.ReasonerRegistry;
-import org.apache.xerces.util.XMLCatalogResolver;
+import org.apache.xml.resolver.CatalogManager;
+import org.apache.xml.resolver.tools.CatalogResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ public class Registry {
   public static final String MAYO_ASSETS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/assets/";
   public static final String BASE_UUID_URN = "urn:uuid:";
 
-  private static XMLCatalogResolver xcat;
+  private static CatalogResolver xcat;
 
   private static Logger logger = LoggerFactory.getLogger(Registry.class);
 
@@ -54,14 +55,18 @@ public class Registry {
   }
 
   static {
-    xcat = new XMLCatalogResolver(
-        new String[]{Registry.class.getResource(getCatalogRef()).toString()});
+    CatalogManager catalogManager = new CatalogManager();
+    catalogManager.setCatalogFiles(
+        Registry.class.getResource(getCatalogRef()).toString());
+    catalogManager.setUseStaticCatalog(false);
+    catalogManager.setIgnoreMissingProperties(true);
+    xcat = new CatalogResolver(catalogManager);
 
     String xmlPrefixesQry = RegistryUtil.read("/xmlNSprefixes.sparql");
     String xmlSchemasQry = RegistryUtil.read("/xmlSchemas.sparql");
 
     try {
-      String path = xcat.resolveURI(REGISTRY_URI);
+      String path = xcat.getCatalog().resolveURI(REGISTRY_URI);
 
       Model registryGraph = ModelFactory.createOntologyModel()
           .read(openStream(path), null);
@@ -146,7 +151,8 @@ public class Registry {
 
   public static Optional<String> getCatalog(URI lang) {
     try {
-      return Optional.ofNullable(xcat.resolvePublic(lang.toString(), null))
+      return Optional.ofNullable(xcat.getCatalog()
+          .resolvePublic(lang.toString(), lang.toString()))
           .map(URI::create)
           .map(URI::getPath)
           .map(path -> "/xsd" + path);

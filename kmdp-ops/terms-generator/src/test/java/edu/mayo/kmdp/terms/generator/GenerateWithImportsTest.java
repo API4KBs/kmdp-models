@@ -18,7 +18,6 @@ package edu.mayo.kmdp.terms.generator;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -28,12 +27,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
-import edu.mayo.kmdp.terms.generator.SkosTerminologyAbstractor.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
@@ -41,13 +40,12 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 public class GenerateWithImportsTest {
 
-  private static SkosTerminologyAbstractor.ConceptGraph graph;
+  private static ConceptGraph graph;
 
   @TempDir
   public Path tmp;
@@ -65,7 +63,7 @@ public class GenerateWithImportsTest {
             .with(EnumGenerationParams.JSON_ADAPTER, MockTermsJsonAdapter.class.getName())
             .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
         src);
-    showDirContent(tmp.toFile(), true);
+    //showDirContent(tmp.toFile(), true);
 
     ensureSuccessCompile(src, src, target);
 
@@ -75,7 +73,9 @@ public class GenerateWithImportsTest {
         target);
     assertTrue(supScheme.isEnum());
 
-    Object t = subScheme.getEnumConstants()[0];
+    Object t = Arrays.stream(subScheme.getEnumConstants())
+        .filter(x -> ((Enum)x).name().contains("Some"))
+        .findAny().orElse(null);
     assertTrue(t instanceof Term);
 
     try {
@@ -115,8 +115,10 @@ public class GenerateWithImportsTest {
             .with(EnumGenerationParams.JSON_ADAPTER, MockTermsJsonAdapter.class.getName())
             .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
         src);
-    showDirContent(tmp.toFile(), true);
 
+    //showDirContent(tmp.toFile(), true);
+
+    //printSourceFile(new File(tmp.toFile(),"/src/org/foo/child/Sub_Scheme.java"),System.out);
     ensureSuccessCompile(src, src, target);
 
     Class<?> subScheme = getNamedClass("org.foo.child.Sub_Scheme", target);
@@ -135,10 +137,16 @@ public class GenerateWithImportsTest {
       Object t1 = subScheme.getEnumConstants()[0];
       String tag1 = (String) t1.getClass().getMethod("getTag").invoke(t1);
 
-      Object t2 = subScheme.getEnumConstants()[1];
+      Object t2 = Arrays.stream(subScheme.getEnumConstants())
+          .filter(x -> ((Enum)x).name().contains("Some"))
+          .findAny().orElse(null);
+      assertNotNull(t2);
       String tag2 = (String) t2.getClass().getMethod("getTag").invoke(t2);
 
-      Object t3 = subScheme.getEnumConstants()[2];
+      Object t3 = Arrays.stream(subScheme.getEnumConstants())
+          .filter(x -> ((Enum)x).name().contains("Another"))
+          .findAny().orElse(null);
+      assertNotNull(t3);
       String tag3 = (String) t3.getClass().getMethod("getTag").invoke(t3);
 
       assertTrue("000".equals(tag1));
@@ -177,7 +185,7 @@ public class GenerateWithImportsTest {
 
 
 
-  public static SkosTerminologyAbstractor.ConceptGraph doGenerate(CLOSURE_MODE closureMode) {
+  public static ConceptGraph doGenerate(CLOSURE_MODE closureMode) {
     try {
       OWLOntologyManager owlOntologyManager = TestHelper.initOWLManager();
 

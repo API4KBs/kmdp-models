@@ -18,7 +18,6 @@ package edu.mayo.kmdp.terms.generator;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static edu.mayo.kmdp.util.Util.uuid;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -31,12 +30,12 @@ import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
+import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
-import edu.mayo.kmdp.util.NameUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -49,17 +48,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
-import ru.avicomp.ontapi.OntManagers;
 import ru.avicomp.ontapi.OntologyManager;
 
 
-public class Owl2Skos2TermsTest {
+class Owl2Skos2TermsTest {
 
   @TempDir
   public Path tmp;
 
   @Test
-  public void testOWLtoTerms() throws IOException {
+  void testOWLtoTerms() {
     File folder = tmp.toFile();
 
     String owlPath = "/cito.rdf";
@@ -99,7 +97,8 @@ public class Owl2Skos2TermsTest {
     Optional<OWLOntology> skosOntology = skosModel.map(Model::getGraph)
         .map(manager::addOntology);
 
-    SkosTerminologyAbstractor.ConceptGraph graph = new SkosTerminologyAbstractor()
+    assertTrue(skosOntology.isPresent());
+    ConceptGraph graph = new SkosTerminologyAbstractor()
         .traverse(skosOntology.get(),new SkosAbstractionConfig()
             .with(SkosAbstractionParameters.REASON,false));
 
@@ -109,22 +108,22 @@ public class Owl2Skos2TermsTest {
             .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
         src);
 
-    showDirContent(folder);
+//    showDirContent(folder);
     ensureSuccessCompile(src, src, tgt);
 
     try {
       Class<?> scheme = getNamedClass("foo.skos.test.cito.Cito", tgt);
       assertTrue(scheme.isEnum());
 
-      Field ns = scheme.getField("schemeID");
+      Field ns = scheme.getField("SCHEME_ID");
       assertEquals(uuid("Cito").toString(), ns.get(null));
 
-      Term cd = Term.class.cast(scheme.getEnumConstants()[0]);
+      Term cd = (Term) scheme.getEnumConstants()[0];
       assertEquals("cites", cd.getTag());
 
 
     } catch (IllegalAccessException | NoSuchFieldException e) {
-      e.printStackTrace();
+      fail(e.getMessage());
     }
 
   }
