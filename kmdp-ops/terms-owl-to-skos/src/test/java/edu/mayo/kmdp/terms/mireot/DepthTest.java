@@ -15,7 +15,8 @@
  */
 package edu.mayo.kmdp.terms.mireot;
 
-import static org.junit.Assert.assertFalse;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;

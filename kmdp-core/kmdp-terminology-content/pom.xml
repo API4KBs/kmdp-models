@@ -873,11 +873,6 @@
             <artifactId>API4KP</artifactId>
             <version>${api4kp.version}</version>
           </dependency>
-          <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>${xerces.version}</version>
-          </dependency>
         </dependencies>
       </plugin>
 

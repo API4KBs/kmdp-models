@@ -16,7 +16,7 @@
 package edu.mayo.kmdp.util.ws;
 
 import edu.mayo.kmdp.util.StreamUtil;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
+import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;

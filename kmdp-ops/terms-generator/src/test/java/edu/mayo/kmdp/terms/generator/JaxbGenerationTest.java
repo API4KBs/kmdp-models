@@ -59,14 +59,12 @@ import javax.xml.validation.Schema;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
 import org.omg.spec.api4kp._1_0.identifiers.ObjectFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.w3c.dom.Document;
 
-@EnableRuleMigrationSupport
 public class JaxbGenerationTest {
 
   @TempDir
