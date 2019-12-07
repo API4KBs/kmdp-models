@@ -76,8 +76,8 @@ public class RegistryOntologyTest extends RegistryTestBase {
 
     List<Map<String, String>> ans = askQuery(qry, registry);
     Map<String,String> ids = ans.stream().collect(Collectors.toMap(
-        (res) -> res.get("L"),
-        (res) -> res.get("Id") + "-" + res.get("Ver")
+        res -> res.get("L"),
+        res -> res.get("Id") + "-" + res.get("Ver")
     ));
 
     assertEquals("ccpm-v1",
@@ -98,8 +98,8 @@ public class RegistryOntologyTest extends RegistryTestBase {
 
     List<Map<String, String>> ans = askQuery(qry, registry);
     Map<String,String> ids = ans.stream().collect(Collectors.toMap(
-        (res) -> res.get("L"),
-        (res) -> res.get("Id") +
+        res -> res.get("L"),
+        res -> res.get("Id") +
             (isEmpty(res.get("Ver")) ? "" : ("-" + res.get("Ver")))
     ));
 
@@ -130,8 +130,8 @@ public class RegistryOntologyTest extends RegistryTestBase {
     List<Map<String, String>> ans = askQuery(qry, registry);
 
     Map<String,String> ids = ans.stream().collect(Collectors.toMap(
-        (res) -> res.get("SerId"),
-        (res) -> res.get("LangId")
+        res -> res.get("SerId"),
+        res -> res.get("LangId")
     ));
 
     assertEquals("cmmn", ids.get("cmmn-v11+xml"));
@@ -157,7 +157,7 @@ public class RegistryOntologyTest extends RegistryTestBase {
     List<Map<String, String>> ans = askQuery(qry, registry);
 
     Map<String, Set<String>> uses = new HashMap<>();
-    ans.forEach((m) -> {
+    ans.forEach(m -> {
           String lang = m.get("LangNS");
           assertNotNull(lang);
           if (!uses.containsKey(lang)) {
@@ -175,7 +175,7 @@ public class RegistryOntologyTest extends RegistryTestBase {
     assertTrue(fhirLexica.contains("http://snomed.info/sct/900000000000207008/version/20180731"));
     assertTrue(fhirLexica.contains("https://www.nlm.nih.gov/research/umls/rxnorm/"));
 
-    assertEquals(7, uses.keySet().size());
+    assertEquals(8, uses.keySet().size());
 
     assertEquals(18,
         uses.getOrDefault("https://www.omg.org/spec/API4KP/1.0/surrogate", new HashSet<>()).size());
@@ -201,7 +201,7 @@ public class RegistryOntologyTest extends RegistryTestBase {
     List<Map<String, String>> ans = askQuery(qry, registry);
 
     Map<String, Set<String>> formats = new HashMap<>();
-    ans.forEach((m) -> {
+    ans.forEach(m -> {
           String lang = m.get("LangId");
           assertNotNull(lang);
           if (!formats.containsKey(lang)) {
@@ -238,8 +238,8 @@ public class RegistryOntologyTest extends RegistryTestBase {
 
     List<Map<String, String>> ans = askQuery(qry, registry);
     Map<String,String> grams = ans.stream().collect(Collectors.toMap(
-        (res) -> res.get("G"),
-        (res) -> res.get("LangId")
+        res -> res.get("G"),
+        res -> res.get("LangId")
     ));
     assertEquals( "cmmn",
         grams.get("http://www.omg.org/spec/CMMN/20151109/MODEL"));

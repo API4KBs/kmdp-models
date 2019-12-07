@@ -17,45 +17,48 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.name;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.kmdp.metadata.annotations.ComplexApplicability;
-import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.metadata.annotations.SimpleApplicability;
-import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
-import edu.mayo.kmdp.metadata.surrogate.Derivative;
-import edu.mayo.kmdp.metadata.surrogate.InlinedRepresentation;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
-import edu.mayo.kmdp.metadata.surrogate.Publication;
-import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
+import edu.mayo.kmdp.metadata.v2.surrogate.Derivative;
+import edu.mayo.kmdp.metadata.v2.surrogate.InlinedRepresentation;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.ObjectFactory;
+import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
+import edu.mayo.kmdp.metadata.v2.surrogate.Representation;
+import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateHelper;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.ComplexApplicability;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleApplicability;
 import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
-import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype._20190801.DerivationType;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries;
+import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import java.util.Collections;
 import java.util.Optional;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.SimpleIdentifier;
 
-public class MetadataTest {
+public class KnowledgeAssetSurrogateTest {
 
 
   @Test
   void testKS() {
-    KnowledgeAssetCategory br = KnowledgeAssetCategory.Rules_Policies_And_Guidelines;
+    KnowledgeAssetCategory br = KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withAssetId(uri("http://foo.bar", "234"))
+        .withAssetId(uri("http://foo.bar/4523", "234"))
         .withName("Foo")
         .withFormalCategory(br)
-        .withLifecycle(new Publication().withPublicationStatus(PublicationStatus.Draft))
+        .withLifecycle(new Publication().withPublicationStatus(PublicationStatusSeries.Draft))
         .withSubject(new SimpleAnnotation().withExpr(TermsHelper.sct("mock", "123")));
 
     checkRoundTrip(ks);
@@ -69,7 +72,7 @@ public class MetadataTest {
         .withApplicableIn(new SimpleApplicability()
             .withSituation(TermsHelper.mayo("Example Situation", "x123"))
         );
-
+    assertNotNull(ks);
     ks = checkRoundTrip(ks);
     assertEquals("x123", ((SimpleApplicability) ks.getApplicableIn()).getSituation().getTag());
   }
@@ -86,25 +89,25 @@ public class MetadataTest {
         .withAssetId(uri("http://foo.bar", "234"))
         .withName("Foo")
 
-        .withFormalCategory(KnowledgeAssetCategory.Rules_Policies_And_Guidelines)
-        .withFormalType(KnowledgeAssetType.Clinical_Rule)
+        .withFormalCategory(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines)
+        .withFormalType(KnowledgeAssetTypeSeries.Clinical_Rule)
 
         .withName("My Favorite Rule")
         .withDescription("When and Whether to Recommend What")
 
-        .withLifecycle(new Publication().withPublicationStatus(PublicationStatus.Draft))
+        .withLifecycle(new Publication().withPublicationStatus(PublicationStatusSeries.Draft))
 
         .withCarriers(new ComputableKnowledgeArtifact()
             .withArtifactId(uri("urn:to:do"))
             .withName("Bar")
             .withRepresentation(new Representation()
-                .withLanguage(KnowledgeRepresentationLanguage.KNART_1_3))
+                .withLanguage(KnowledgeRepresentationLanguageSeries.KNART_1_3))
             // carrier + external catalog is not perfect
             .withSecondaryId(name("poc:RUL-12345"))
             .withInlined(new InlinedRepresentation()
                 .withExpr("IF so and so DO nothing"))
             .withRelated(new Derivative()
-                .withRel(DerivationType.Derived_From)
+                .withRel(DerivationTypeSeries.Derived_From)
                 // should I have an inverse flag here?
                 .withTgt(new ComputableKnowledgeArtifact()
                     .withArtifactId(uri("urn:TODO"))
@@ -114,7 +117,7 @@ public class MetadataTest {
 
     checkRoundTrip(ks);
 
-    assertEquals(KnowledgeAssetCategory.Rules_Policies_And_Guidelines,
+    assertEquals(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines,
         ks.getFormalCategory().get(0));
   }
 
@@ -127,19 +130,17 @@ public class MetadataTest {
         of::createKnowledgeAsset,
         JaxbUtil.defaultProperties()
             .with(JaxbOptions.SCHEMA_LOCATION,
-                "http://kmdp.mayo.edu/metadata/surrogate /xsd/metadata/surrogate/surrogate.xsd"))
+                "http://kmdp.mayo.edu/metadata/v2/surrogate /xsd/metadata/v2/surrogate/surrogate.xsd"))
         .flatMap(Util::asString)
         .orElse("");
     assertFalse(Util.isEmpty(str));
 
-    assertTrue(str.contains("xmlns:surr=\"http://kmdp.mayo.edu/metadata/surrogate\""));
+    assertTrue(str.contains("xmlns:surr=\"http://kmdp.mayo.edu/metadata/v2/surrogate\""));
 
     Optional<Schema> schema = SurrogateHelper.getSchema();
     assertTrue(schema.isPresent());
 
-    schema.ifPresent(sc ->
-        assertTrue(
-            XMLUtil.validate(str, sc)));
+    assertTrue(schema.map(s -> XMLUtil.validate(str, s)).orElse(false));
 
     KnowledgeAsset rec = XMLUtil.loadXMLDocument(str)
         .flatMap(dox -> JaxbUtil.unmarshall(ObjectFactory.class, KnowledgeAsset.class, dox))

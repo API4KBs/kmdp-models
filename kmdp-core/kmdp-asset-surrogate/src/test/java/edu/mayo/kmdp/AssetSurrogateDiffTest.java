@@ -1,15 +1,15 @@
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.SurrogateBuilder.id;
+import static edu.mayo.kmdp.metadata.v2.surrogate.SurrogateBuilder.id;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import edu.mayo.kmdp.comparator.AbstractDiffer.Mode;
 import edu.mayo.kmdp.comparator.Contrastor.Comparison;
-import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.Publication;
-import edu.mayo.kmdp.surrogate.SurrogateDiffer;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.BasicAnnotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
+import edu.mayo.kmdp.comparator.AbstractDiffer.Mode;
+import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateDiffer;
 import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries;
 import java.net.URI;
@@ -18,15 +18,16 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 
-public class MetadataDiffTest {
+public class AssetSurrogateDiffTest {
 
+  static final String VERSION_ZERO = "0.0.0";
 
   @Test
   void testBasicDiffer() {
     SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
 
     KnowledgeAsset base = new KnowledgeAsset()
-        .withAssetId(id(UUID.randomUUID(), "0.0.0"));
+        .withAssetId(id(UUID.randomUUID(), VERSION_ZERO));
 
     KnowledgeAsset mod = ((KnowledgeAsset) base.clone())
         .withName("Test")
@@ -42,7 +43,7 @@ public class MetadataDiffTest {
     SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
 
     KnowledgeAsset base = new KnowledgeAsset()
-        .withAssetId(id(UUID.randomUUID(), "0.0.0"))
+        .withAssetId(id(UUID.randomUUID(), VERSION_ZERO))
         .withFormalType(Clinical_Rule)
         .withLifecycle(new Publication()
             .withCreatedOn(new Date())
@@ -65,7 +66,7 @@ public class MetadataDiffTest {
     ConceptIdentifier trm = TermsHelper.mayo("Foo", "1234");
 
     KnowledgeAsset base = new KnowledgeAsset()
-        .withAssetId(id(UUID.randomUUID(), "0.0.0"))
+        .withAssetId(id(UUID.randomUUID(), VERSION_ZERO))
         .withSubject(new BasicAnnotation()
             .withRel((ConceptIdentifier) trm.clone()));
 
@@ -86,7 +87,7 @@ public class MetadataDiffTest {
     ConceptIdentifier trm = TermsHelper.mayo("Foo", "1234");
 
     KnowledgeAsset base = new KnowledgeAsset()
-        .withAssetId(id(UUID.randomUUID(), "0.0.0"))
+        .withAssetId(id(UUID.randomUUID(), VERSION_ZERO))
         .withSubject(new BasicAnnotation()
             .withRel((ConceptIdentifier) trm.clone()));
 

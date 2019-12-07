@@ -20,6 +20,7 @@
     <module>kmdp-terminology-model</module>
     <module>kmdp-terminology-content</module>
     <module>kmdp-asset-metadata</module>
+    <module>kmdp-asset-surrogate</module>
   </modules>
 
   <name>KMDP :: Languages (Meta)Models, Grammars and Schemas</name>

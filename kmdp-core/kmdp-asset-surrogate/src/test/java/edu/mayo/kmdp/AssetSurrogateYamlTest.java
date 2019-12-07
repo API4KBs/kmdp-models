@@ -15,18 +15,18 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.util.SwaggerTestUtil.parseValidateGroup;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
 import io.swagger.models.Swagger;
 import org.junit.jupiter.api.Test;
 
-public class MetadataYamlTest {
+import static edu.mayo.kmdp.util.SwaggerTestUtil.parseValidateGroup;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class AssetSurrogateYamlTest {
 
   @Test
   public void testSchemaGeneration() {
-    Swagger model = parseValidateGroup("/yaml/metadata/surrogate/surrogate.yaml");
+    Swagger model = parseValidateGroup("/yaml/metadata/v2/surrogate/surrogate.yaml");
 
     assertTrue(model.getDefinitions().containsKey(KnowledgeAsset.class.getSimpleName()));
   }

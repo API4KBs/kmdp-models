@@ -73,7 +73,7 @@ public class TermsSerializationTest {
 
     String json = JSonUtil
         .writeJson(f)
-        .flatMap(Util::asString).get();
+        .flatMap(Util::asString).orElse("");
 
     assertTrue(json.contains(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getTag()));
     assertTrue(json.contains(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getLabel()));
