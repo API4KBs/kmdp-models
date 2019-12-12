@@ -30,6 +30,10 @@ cd kmdp-environment
 sed -i "s|<version>..org\.omg\.spec:API4KP:jar\.version.</version>|<version>\$\{api4kp.version\}</version>|" pom.xml
 cd ..
 
+cd kmdp-environment
+sed -i "s|<version>..org\.omg\.spec:API4KP:jar\.version.</version>|<version>\$\{api4kp.version\}</version>|" pom.xml
+cd ..
+
 cd kmdp-core
 sed -i "s|<version>..org\.omg\.spec:API4KP:jar\.version.</version>|<version>\$\{api4kp.version\}</version>|" pom.xml
 cd ..
@@ -66,6 +70,10 @@ mvn versions:update-child-modules
 ## cannot set parent version to a range with maven 3.3.9 / maven versions 2.7
 ## mvn versions:update-parent -DparentVersion="($2,)"
 sed -i -r "/<parent>/,/<\/parent>/ s|<version>([0-9]+\.[0-9]+\.[0-9]+)</version>|<version>[$1,$2]</version> |" pom.xml
+
+cd kmdp-environment
+sed -i "s|<version>..api4kp\.version.</version>|<version>\$\{org.omg.spec:API4KP:jar.version\}</version>|" pom.xml
+cd ..
 
 cd kmdp-environment
 sed -i "s|<version>..api4kp\.version.</version>|<version>\$\{org.omg.spec:API4KP:jar.version\}</version>|" pom.xml
