@@ -15,7 +15,15 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.util.SwaggerTestUtil.parseValidate;
+import static java.util.stream.Collectors.toSet;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import edu.mayo.kmdp.util.FileUtil;
+import edu.mayo.kmdp.util.SwaggerTestUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.xslt.XSLTConfig;
 import edu.mayo.kmdp.xslt.XSLTConfig.XSLTOptions;
@@ -27,20 +35,10 @@ import io.swagger.models.Swagger;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import static edu.mayo.kmdp.util.SwaggerTestUtil.parseValidate;
-import static java.util.stream.Collectors.toSet;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
 
 public class XSDtoYAMLTranslatorTest {
 
@@ -56,7 +54,6 @@ public class XSDtoYAMLTranslatorTest {
         xslt,
         new XSLTConfig()
             .with(XSLTOptions.CATALOGS, catalog.toString())));
-    //System.out.println(out);
 
     Swagger model = parseValidate(out);
     assertNotNull(model);
@@ -74,7 +71,6 @@ public class XSDtoYAMLTranslatorTest {
         xslt,
         new XSLTConfig()
             .with(XSLTOptions.CATALOGS, catalog.toString())));
-    //System.out.println(out);
 
     Swagger model = parseValidate(out);
     assertNotNull(model);
@@ -104,7 +100,6 @@ public class XSDtoYAMLTranslatorTest {
         xslt,
         new XSLTConfig()
             .with(XSLTOptions.CATALOGS, catalog.toString())));
-    //System.out.println(out);
 
     Swagger model = parseValidate(out);
     assertNotNull(model.getDefinitions());
@@ -120,7 +115,6 @@ public class XSDtoYAMLTranslatorTest {
     String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl,
         xslt,
         new XSLTConfig()));
-    //System.out.println(out);
 
     Swagger model = parseValidate(out);
     assertNotNull(model.getDefinitions());
@@ -134,7 +128,6 @@ public class XSDtoYAMLTranslatorTest {
     URL sourceUrl = XSDtoYAMLTranslatorTest.class.getResource(source);
 
     String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl, xslt, new XSLTConfig()));
-    //System.out.println(out);
 
     Swagger model = parseValidate(out);
     assertNotNull(model.getDefinitions());
@@ -156,7 +149,6 @@ public class XSDtoYAMLTranslatorTest {
 
     String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl, xslt, new XSLTConfig()));
 
-//		System.out.println( out );
     Swagger model = parseValidate(out);
 
     Model opDef = model.getDefinitions().get("OperationalDefinition");
@@ -184,7 +176,6 @@ public class XSDtoYAMLTranslatorTest {
 
     String out = wrap(XMLUtil.applyXSLTSimple(sourceUrl, xslt, new XSLTConfig()));
 
-    //System.out.println(out);
     Swagger model = parseValidate(out);
 
     Model tag = model.getDefinitions().get("SemVerTag");
@@ -204,7 +195,7 @@ public class XSDtoYAMLTranslatorTest {
 
     Property minor = tag.getProperties().get("minor");
     assertNotNull(minor);
-    assertTrue(minor.getXml() != null);
+    assertNotNull(minor.getXml());
     assertTrue(minor.getXml().getAttribute());
     assertEquals("string", minor.getType());
   }
@@ -222,7 +213,7 @@ public class XSDtoYAMLTranslatorTest {
       fail("Unable to open sample data");
     }
 
-    Swagger model = parseValidate(data.get());
+    Swagger model = data.map(SwaggerTestUtil::parseValidate).orElse(new Swagger());
     Model pet = model.getDefinitions().get("Test");
     assertEquals(Stream.of("id", "name", "tag", "vals").collect(toSet()),
         pet.getProperties().keySet());

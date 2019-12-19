@@ -63,8 +63,24 @@ public class SurrogateBuilder {
   }
 
   public static SurrogateBuilder newSurrogate(URIIdentifier assetId, boolean root) {
-    return new SurrogateBuilder(assetId, root);
+    return new SurrogateBuilder(assetId, root)
+        .withCanonicalSurrogate(assetId);
   }
+
+  private SurrogateBuilder withCanonicalSurrogate(URIIdentifier assetId) {
+    URIIdentifier surrogateId = SurrogateBuilder.id(
+        Util.uuid(assetId.getUri().toString()),
+        "1.0.0"
+    );
+    get().withSurrogate(
+        new ComputableKnowledgeArtifact()
+            .withArtifactId(surrogateId)
+            .withRepresentation(new Representation()
+                .withLanguage(KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate))
+    );
+    return this;
+  }
+
 
   public SurrogateBuilder withName(String name, String descr) {
     surrogate.withName(name)

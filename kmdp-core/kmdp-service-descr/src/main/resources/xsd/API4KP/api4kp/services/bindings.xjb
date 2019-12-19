@@ -13,7 +13,7 @@
   <jxb:bindings schemaLocation="services.xsd">
     <namespace:prefix name="api"/>
     <jxb:bindings node="//xsd:complexType[@name='KnowledgeCarrier']">
-      <inheritance:extends>org.omg.spec.api4kp._1_0.AbstractCarrier</inheritance:extends>
+      <inheritance:implements>org.omg.spec.api4kp._1_0.AbstractCarrier</inheritance:implements>
     </jxb:bindings>
   </jxb:bindings>
 

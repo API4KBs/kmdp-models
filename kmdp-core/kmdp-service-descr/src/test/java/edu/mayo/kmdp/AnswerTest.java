@@ -106,18 +106,16 @@ class AnswerTest {
 
 
   @Test
-  //TODO this is clunky, because the map/flatMap operations on KnowledgeCarrier are still TODOs
-  @SuppressWarnings("deprecation")
   void testWithKCarrier() {
     Answer<? extends KnowledgeCarrier> ans = Answer.of(AbstractCarrier.ofNaturalLanguageRep("Foo"));
 
     ans = ans.map(
-        (kc) -> kc.map( (self) -> KnowledgeCarrier.ofNaturalLanguageRep(
-            "mapped " + ((ExpressionCarrier)self).getSerializedExpression() ) ) );
+        kc -> AbstractCarrier.ofNaturalLanguageRep(
+            "mapped " + ((ExpressionCarrier) kc).getSerializedExpression()));
 
     KnowledgeCarrier kc = ans.orElse(null);
     assertNotNull(kc);
-    assertEquals( "mapped Foo", ((ExpressionCarrier) kc).getSerializedExpression());
+    assertEquals("mapped Foo", ((ExpressionCarrier) kc).getSerializedExpression());
   }
 
 }

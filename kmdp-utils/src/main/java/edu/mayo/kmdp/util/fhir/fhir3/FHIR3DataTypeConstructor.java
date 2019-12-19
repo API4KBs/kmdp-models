@@ -19,8 +19,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.BooleanType;
 import org.hl7.fhir.dstu3.model.CodeType;
@@ -29,13 +27,18 @@ import org.hl7.fhir.dstu3.model.DataElement;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.DateType;
 import org.hl7.fhir.dstu3.model.DecimalType;
+import org.hl7.fhir.dstu3.model.ElementDefinition;
+import org.hl7.fhir.dstu3.model.ElementDefinition.TypeRefComponent;
 import org.hl7.fhir.dstu3.model.Enumerations;
+import org.hl7.fhir.dstu3.model.Enumerations.DataType;
 import org.hl7.fhir.dstu3.model.IntegerType;
 import org.hl7.fhir.dstu3.model.Quantity;
 import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.dstu3.model.TimeType;
 import org.hl7.fhir.dstu3.model.Type;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FHIR3DataTypeConstructor {
 
@@ -363,4 +366,14 @@ public class FHIR3DataTypeConstructor {
         : null;
   }
 
+  @Deprecated
+  //TODO
+  public static Optional<DataElement> getType() {
+    return Optional.ofNullable(
+        new DataElement().addElement(
+            new ElementDefinition().addType(
+                new TypeRefComponent().setCode(DataType.QUANTITY.toCode())
+            )
+        ));
+  }
 }

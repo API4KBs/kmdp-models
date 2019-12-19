@@ -1,6 +1,6 @@
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.SurrogateBuilder.id;
+import static edu.mayo.kmdp.SurrogateBuilder.assetId;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -26,7 +26,7 @@ public class MetadataDiffTest {
     SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
 
     KnowledgeAsset base = new KnowledgeAsset()
-        .withAssetId(id(UUID.randomUUID(), "0.0.0"));
+        .withAssetId(assetId(UUID.randomUUID(), "0.0.0"));
 
     KnowledgeAsset mod = ((KnowledgeAsset) base.clone())
         .withName("Test")
@@ -42,7 +42,7 @@ public class MetadataDiffTest {
     SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
 
     KnowledgeAsset base = new KnowledgeAsset()
-        .withAssetId(id(UUID.randomUUID(), "0.0.0"))
+        .withAssetId(assetId(UUID.randomUUID(), "0.0.0"))
         .withFormalType(Clinical_Rule)
         .withLifecycle(new Publication()
             .withCreatedOn(new Date())
@@ -65,7 +65,7 @@ public class MetadataDiffTest {
     ConceptIdentifier trm = TermsHelper.mayo("Foo", "1234");
 
     KnowledgeAsset base = new KnowledgeAsset()
-        .withAssetId(id(UUID.randomUUID(), "0.0.0"))
+        .withAssetId(assetId(UUID.randomUUID(), "0.0.0"))
         .withSubject(new BasicAnnotation()
             .withRel((ConceptIdentifier) trm.clone()));
 
@@ -86,7 +86,7 @@ public class MetadataDiffTest {
     ConceptIdentifier trm = TermsHelper.mayo("Foo", "1234");
 
     KnowledgeAsset base = new KnowledgeAsset()
-        .withAssetId(id(UUID.randomUUID(), "0.0.0"))
+        .withAssetId(assetId(UUID.randomUUID(), "0.0.0"))
         .withSubject(new BasicAnnotation()
             .withRel((ConceptIdentifier) trm.clone()));
 

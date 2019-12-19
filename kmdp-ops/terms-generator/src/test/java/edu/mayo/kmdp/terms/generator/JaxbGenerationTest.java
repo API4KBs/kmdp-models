@@ -41,6 +41,7 @@ import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -56,7 +57,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.validation.Schema;
-import org.apache.tools.ant.filters.StringInputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._1_0.identifiers.ObjectFactory;
@@ -237,8 +237,8 @@ public class JaxbGenerationTest {
         .with(EnumGenerationParams.JSON_ADAPTER, MockTermsJsonAdapter.class.getName())
         .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName());
 
-    deploy(new StringInputStream(parentXSD), src, "/parent.xsd");
-    deploy(new StringInputStream(bindings), src, "/bindings.xjb");
+    deploy(new ByteArrayInputStream(parentXSD.getBytes()), src, "/parent.xsd");
+    deploy(new ByteArrayInputStream(bindings.getBytes()), src, "/bindings.xjb");
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
     deploy(src, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd");
     deploy(src, "/xsd/api4kp-catalog.xml");

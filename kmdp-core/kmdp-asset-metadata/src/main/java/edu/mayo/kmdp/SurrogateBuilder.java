@@ -70,7 +70,22 @@ public class SurrogateBuilder {
   }
 
   public static SurrogateBuilder newSurrogate(URIIdentifier assetId, boolean root) {
-    return new SurrogateBuilder(assetId, root);
+    return new SurrogateBuilder(assetId, root)
+        .withCanonicalSurrogate(assetId);
+  }
+
+  private SurrogateBuilder withCanonicalSurrogate(URIIdentifier assetId) {
+    URIIdentifier surrogateId = SurrogateBuilder.assetId(
+        Util.uuid(assetId.getUri().toString()),
+        "1.0.0"
+    );
+    get().withSurrogate(
+        new ComputableKnowledgeArtifact()
+            .withArtifactId(surrogateId)
+            .withRepresentation(new Representation()
+                .withLanguage(KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate))
+    );
+    return this;
   }
 
   public SurrogateBuilder withName(String name, String descr) {
@@ -220,7 +235,7 @@ public class SurrogateBuilder {
   public SurrogateBuilder withInlinedFhirPath(String expr) {
     if (get().getCarriers().isEmpty()) {
       get().withCarriers(new ComputableKnowledgeArtifact()
-          .withArtifactId(id(expr != null ? Util.uuid(expr) : UUID.randomUUID(),"LATEST"))
+          .withArtifactId(assetId(expr != null ? Util.uuid(expr) : UUID.randomUUID(),"LATEST"))
           .withRepresentation(new Representation()
               .withLanguage(KnowledgeRepresentationLanguageSeries.FHIRPath_STU1)
               .withFormat(SerializationFormatSeries.TXT))
@@ -277,11 +292,11 @@ public class SurrogateBuilder {
     return surrogate;
   }
 
-  public static URIIdentifier id(String uuid, String versionTag) {
+  public static URIIdentifier assetId(String uuid, String versionTag) {
     return uri(construct(validate(uuid)),
         versionTag);
   }
-  public static URIIdentifier id(UUID uuid, String versionTag) {
+  public static URIIdentifier assetId(UUID uuid, String versionTag) {
     return uri(construct(uuid.toString()),
         versionTag);
   }

@@ -186,10 +186,10 @@ public class SurrogateHelper {
       return Stream.empty();
     }
     return Stream.concat(
-        Stream.of(rep),
+        role == null ? Stream.of(rep) : Stream.empty(),
         rep.getWith() != null
             ? rep.getWith().stream()
-            .filter(sub -> role == null || sub.getRole() == role
+            .filter(sub -> role == null || sub.getRole().asEnum() == role
                 || sub.getRole().hasAncestor(role))
             .flatMap(sub -> expandRepresentation(sub.getSubLanguage(), role))
             : Stream.empty());
