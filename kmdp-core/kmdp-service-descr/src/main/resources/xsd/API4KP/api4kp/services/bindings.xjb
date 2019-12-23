@@ -15,6 +15,9 @@
     <jxb:bindings node="//xsd:complexType[@name='KnowledgeCarrier']">
       <inheritance:implements>org.omg.spec.api4kp._1_0.AbstractCarrier</inheritance:implements>
     </jxb:bindings>
+    <jxb:bindings node="//xsd:complexType[@name='CompositeKnowledgeCarrier']">
+      <inheritance:implements>org.omg.spec.api4kp._1_0.ClosedComposite$lt;org.omg.spec.api4kp._1_0.services.KnowledgeCarrier, org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier&gt;</inheritance:implements>
+    </jxb:bindings>
   </jxb:bindings>
 
   <jxb:bindings schemaLocation="inference/inference.xsd">
