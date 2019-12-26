@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public class DateAdapter extends XmlAdapter<String, Date> {
 
-  private static final String XML_DATETIME_PATTERN = "yyyy-MM-dd'T'hh:mm:ss";
+  private static final String XML_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 
   private static DateAdapter instance = new DateAdapter();
 
