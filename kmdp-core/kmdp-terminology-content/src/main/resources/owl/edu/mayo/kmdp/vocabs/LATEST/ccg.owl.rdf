@@ -1,0 +1,290 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://ontology.mayo.edu/ontologies/CCG/"
+     xml:base="http://ontology.mayo.edu/ontologies/CCG/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:terms="http://purl.org/dc/terms/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:ccg="http://ontology.mayo.edu/ontologies/CCG/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <owl:Ontology rdf:about="http://ontology.mayo.edu/ontologies/CCG/">
+        <owl:versionIRI rdf:resource="http://ontology.mayo.edu/ontologies/SNAPSHOT/CCG/"/>
+        <owl:imports rdf:resource="http://ontology.mayo.edu/ontologies/SNAPSHOT/clinicalknowledgeassets/"/>
+        <rdfs:comment>Clinical Concept Glossary Ontology</rdfs:comment>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#definition -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#definition"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp/uses-concept -->
+
+    <owl:ObjectProperty rdf:about="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/CCG/ClinicalConceptOperationalDefinition -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/CCG/ClinicalConceptOperationalDefinition">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalknowledgeassets/ClinicalKnowledgeAsset"/>
+        <rdfs:subClassOf rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/OperationalConceptDefinition"/>
+        <rdfs:label>clinical concept operational definition</rdfs:label>
+        <skos:definition>Operational definition that defines some clinical concept</skos:definition>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/CCG/CognitivelyAssistedConceptDefinition -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/CCG/CognitivelyAssistedConceptDefinition">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/CCG/ConceptGlossaryEntry"/>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+                        <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/ComputationalTechnique"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+                        <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/NaturalisticTechnique"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+        <rdfs:label>cognitively assisted concept definition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/CCG/ConceptGlossaryEntry -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/CCG/ConceptGlossaryEntry">
+        <rdfs:subClassOf rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/OperationalConceptDefinition"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+                <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp/KnowledgeProcessingTechnique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label>concept glossary entry</rdfs:label>
+        <skos:definition>Operational Definition of a Concept that is based on one or more explicit knowledge processing technique</skos:definition>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/CCG/HumanResolutionConceptDefinition -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/CCG/HumanResolutionConceptDefinition">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/CCG/ConceptGlossaryEntry"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+                <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/NaturalisticTechnique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label>human resolution concept definition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/CCG/InteractiveConceptDefinition -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/CCG/InteractiveConceptDefinition">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/CCG/ConceptGlossaryEntry"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+                <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/InteractiveTechnique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label>interactive concept definition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/CCG/KnowledgeBasedConceptDefinition -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/CCG/KnowledgeBasedConceptDefinition">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/CCG/ConceptGlossaryEntry"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+                <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/ComputationalTechnique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label>computable knowledge based concept definition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/CCG/LogicBasedConceptDefinition -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/CCG/LogicBasedConceptDefinition">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/CCG/KnowledgeBasedConceptDefinition"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+                <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/QualitativeTechnique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label>logic based concept definition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/CCG/NLPBasedConceptDefinition -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/CCG/NLPBasedConceptDefinition">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/CCG/KnowledgeBasedConceptDefinition"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+                <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/NLPTechnique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label>NLP based concept definition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/CCG/ServiceBasedDefinition -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/CCG/ServiceBasedDefinition">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/CCG/ConceptGlossaryEntry"/>
+        <rdfs:subClassOf rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/ServiceProfile"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+                <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/QueryTechnique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label>service-based concept definition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/CCG/StatisticalConceptDefinition -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/CCG/StatisticalConceptDefinition">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/CCG/KnowledgeBasedConceptDefinition"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.omg.org/spec/API4KP/api4kp/uses-concept"/>
+                <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/QuantitativeTechnique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label>statistical concept definition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalknowledgeassets/ClinicalKnowledgeAsset -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalknowledgeassets/ClinicalKnowledgeAsset"/>
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp/KnowledgeProcessingTechnique -->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp/KnowledgeProcessingTechnique"/>
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp-kao/ComputationalTechnique -->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp-kao/ComputationalTechnique"/>
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp-kao/InteractiveTechnique -->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp-kao/InteractiveTechnique"/>
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp-kao/NLPTechnique -->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp-kao/NLPTechnique"/>
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp-kao/NaturalisticTechnique -->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp-kao/NaturalisticTechnique"/>
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp-kao/OperationalConceptDefinition -->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp-kao/OperationalConceptDefinition"/>
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp-kao/QualitativeTechnique -->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp-kao/QualitativeTechnique"/>
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp-kao/QuantitativeTechnique -->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp-kao/QuantitativeTechnique"/>
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp-kao/QueryTechnique -->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp-kao/QueryTechnique"/>
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp-kao/ServiceProfile -->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp-kao/ServiceProfile"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+

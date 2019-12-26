@@ -4,6 +4,10 @@
 - Implement CompositeKnowledgeCarrier
 - Improve Answer API 
 
+** Version 5.1.0
+
+Migrate DecisionType and ConceptResolutionType ontologies 
+
 ** Version 5.0.4 **
 
 - Series pattern for terms:

@@ -866,6 +866,60 @@
             </configuration>
           </execution>
 
+          <execution>
+            <id>ccg-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlSourceURLs>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/CCG/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/CCG/</owlSourceURL>
+              </owlSourceURLs>
+
+              <owlNamespace>http://ontology.mayo.edu/ontologies/CCG/</owlNamespace>
+              <targetURI>http://ontology.mayo.edu/ontologies/CCG/ConceptGlossaryEntry</targetURI>
+              <minDepth>1</minDepth>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/ccgEntries</skosNamespace>
+              <schemeName>ConceptDefinitionTypes</schemeName>
+              <topConceptName>ConceptDefinitionType</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>ccg.skos.rdf</skosOutputFile>
+                <skosOutputFile>ccg_20190801.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>dmn-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlSourceURLs>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/decisionmodels/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/decisionmodels/</owlSourceURL>
+              </owlSourceURLs>
+
+              <owlNamespace>http://ontology.mayo.edu/ontologies/decisionmodels/</owlNamespace>
+              <targetURI>http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept</targetURI>
+              <minDepth>1</minDepth>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/DecisionType</skosNamespace>
+              <schemeName>DecisionTypes</schemeName>
+              <topConceptName>DecisionType</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>dmn.skos.rdf</skosOutputFile>
+                <skosOutputFile>dmn_20190801.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+
         </executions>
         <dependencies>
           <dependency>

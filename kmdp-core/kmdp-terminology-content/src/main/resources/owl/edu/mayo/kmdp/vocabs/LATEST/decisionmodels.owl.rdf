@@ -1,0 +1,329 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://ontology.mayo.edu/ontologies/decisionmodels/"
+     xml:base="http://ontology.mayo.edu/ontologies/decisionmodels/"
+     xmlns:dmn="http://promsns.org/def/dmn#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:dmo="http://promsns.org/def/dmo#"
+     xmlns:ex="http://example.com/ns/dec#"
+     xmlns:kao="http://ckm.ontology.mayo.edu/ontology/KAO#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:know="http://www.omg.org/spec/API4KP/core#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/">
+        <owl:versionIRI rdf:resource="http://ontology.mayo.edu/ontologies/SNAPSHOT/decisionmodels/"/>
+        <rdfs:comment>Ontology of Types of Decision Models</rdfs:comment>
+    </owl:Ontology>
+
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.omg.org/spec/API4KP/core#archetypes -->
+
+    <owl:ObjectProperty rdf:about="http://www.omg.org/spec/API4KP/core#archetypes"/>
+    
+
+
+    <!-- http://www.omg.org/spec/API4KP/core#defined-by -->
+
+    <owl:ObjectProperty rdf:about="http://www.omg.org/spec/API4KP/core#defined-by"/>
+    
+
+
+    <!-- http://www.omg.org/spec/API4KP/core#part-of -->
+
+    <owl:ObjectProperty rdf:about="http://www.omg.org/spec/API4KP/core#part-of"/>
+    
+
+
+    <!-- http://www.omg.org/spec/API4KP/core#represented-by -->
+
+    <owl:ObjectProperty rdf:about="http://www.omg.org/spec/API4KP/core#represented-by"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://www.omg.org/spec/API4KP/api4kp-kao/DecisionModel-->
+
+    <owl:Class rdf:about="https://www.omg.org/spec/API4KP/api4kp-kao/DecisionModel"/>
+    
+
+
+    <!-- http://example.com/ns/dec#Decision_making -->
+
+    <owl:Class rdf:about="http://example.com/ns/dec#Decision_making"/>
+    
+
+
+    <!-- http://example.com/ns/dec#Situation -->
+
+    <owl:Class rdf:about="http://example.com/ns/dec#Situation"/>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/ActionableDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/ActionableDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:comment>Decision about what action or intervention is next, based on the current state. The outcome of the decision is the intent to do something in the future</rdfs:comment>
+        <rdfs:label>Actionable Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/AggregationDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/AggregationDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:comment>Decision that requires to synthesizes or reduces a set of given pieces of information of the same kind into a single piece of information</rdfs:comment>
+        <rdfs:label>Aggregation Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:comment>Decision that (answers a question that) aims to gain more information about some state of affairs - past, present or future.</rdfs:comment>
+        <rdfs:label>Assessment Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/BinaryDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/BinaryDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/ChoiceDecision"/>
+        <rdfs:comment>Choice between two complementary options</rdfs:comment>
+        <rdfs:label>Binary Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/BooleanDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/BooleanDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/BinaryDecision"/>
+        <rdfs:comment>Binary decision where the options are &apos;yes&apos; vs &apos;no&apos;, or &apos;true&apos; vs &apos;false&apos;</rdfs:comment>
+        <rdfs:label>Boolean Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/ChoiceDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/ChoiceDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/SelectionDecision"/>
+        <rdfs:comment>Selection Decision that requires to select one and only one of the alternatives</rdfs:comment>
+        <rdfs:label>Choice Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/ComputableDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/ComputableDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:comment>Decision that can have a model based on computable techniques, and such that can be faithfully expressed in a machine-executable language</rdfs:comment>
+        <rdfs:label>Computable Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/CorrelationDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/CorrelationDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:comment>Decision based on the mutual temporal correlation between multiple pieces of information</rdfs:comment>
+        <rdfs:label>Temporal Correlation Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept">
+        <rdfs:subClassOf rdf:resource="http://promsns.org/def/dmo#DMSituation"/>
+        <rdfs:subClassOf rdf:resource="http://www.omg.org/spec/API4KP/core#DefinedConcept"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.omg.org/spec/API4KP/core#archetypes"/>
+                <owl:someValuesFrom rdf:resource="http://example.com/ns/dec#Situation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.omg.org/spec/API4KP/core#archetypes"/>
+                <owl:someValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.omg.org/spec/API4KP/core#part-of"/>
+                        <owl:someValuesFrom rdf:resource="http://example.com/ns/dec#Decision_making"/>
+                    </owl:Restriction>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment>Decision (Concepts) can be framed in terms of dmo:DMSituation : &quot;...an abstract concept that puts together the main DM elements ... a DM problem .. a set of alternatives .. and can also contain a set of Criteria ...&quot;</rdfs:comment>
+        <rdfs:comment>Decision Concepts archetype dec:Decision Situations (which in turn are consistent with the DOLCE notion of Situation): a logical state of affairs where a problem can be solved by means of a decision making process.
+
+Decision Making Processes, in turn, can be archetyped by means of decision making tasks (a kind of knowledge processing task). 
+Decision Making tasks can be defined by means of atomic cognitive process models (aka decision making task models), which extend decision models</rdfs:comment>
+        <rdfs:comment>Some Decision (Concepts) can be defined by &apos;Decision Modes&apos;, a kind of knowledge asset, and possibly expressed using the OMG DMN language.</rdfs:comment>
+        <rdfs:label>decision concept</rdfs:label>
+        <rdfs:seeAlso>https://github.com/nicholascar/dmo-ont</rdfs:seeAlso>
+        <rdfs:seeAlso>https://github.com/nicholascar/do-ont</rdfs:seeAlso>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/DefeaterDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/DefeaterDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <owl:disjointWith rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/EnablerDecision"/>
+        <rdfs:comment>Binary (boolean) Decision such that, when occurrences are resolved to &quot;true&quot; in a given situation, will defeat the purpose of making other &quot;defeated&quot; decisions</rdfs:comment>
+        <rdfs:label>Defeater Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/EnablerDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/EnablerDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:comment>Binary (boolean) Decision such that, when occurrences are resolved to &quot;false&quot; in a given situation, will defeat the purpose of making another otherwise &quot;enabled&quot; decision.</rdfs:comment>
+        <rdfs:comment>The opposite of a Defeater decision</rdfs:comment>
+        <rdfs:label>Enabler Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/ImplicitDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/ImplicitDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:comment>Decision that is made for the purpose of informing another decision, and as such does not need to be communicated explicitly.</rdfs:comment>
+        <rdfs:label>Implicit Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/InteractiveDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/InteractiveDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:comment>Decision such that its decision making process will require the exchange of information between two or more agents, possibly following some established protocol</rdfs:comment>
+        <rdfs:label>Interactive Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/NaturalisticDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/NaturalisticDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:complementOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/ComputableDecision"/>
+            </owl:Class>
+        </rdfs:subClassOf>
+        <rdfs:comment>Decision that cannot be modeled and faithfully expressed in a computable way. As such, the decision making processes it abstracts generally require a human agent to be performed successfully</rdfs:comment>
+        <rdfs:label>Naturalistic Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/PivotalDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/PivotalDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/CorrelationDecision"/>
+        <rdfs:comment>Correlation decision which has one explicit &quot;anchor concept&quot;, to which all other input concepts are related</rdfs:comment>
+        <rdfs:label>Pivotal Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/SelectionDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/SelectionDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:comment>Decision that implies the selection of one or more elements out of a finite, explicitly enumerated set of categorical alternatives, each one of which can be evaluated independently, as well as compared to each other.</rdfs:comment>
+        <rdfs:label>Selection Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/decisionmodels/SharedDecision -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/SharedDecision">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+        <rdfs:comment>Decision that is intended to be made by two or more decision makers, i.e. such that the answer to the decision making process will result from the consensus of two or more agents</rdfs:comment>
+        <rdfs:label>Shared Decision</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://promsns.org/def/dmn#Decision -->
+
+    <owl:Class rdf:about="http://promsns.org/def/dmn#Decision"/>
+    
+
+
+    <!-- http://promsns.org/def/dmo#DMSituation -->
+
+    <owl:Class rdf:about="http://promsns.org/def/dmo#DMSituation"/>
+    
+
+
+    <!-- http://www.omg.org/spec/API4KP/core#DefinedConcept -->
+
+    <owl:Class rdf:about="http://www.omg.org/spec/API4KP/core#DefinedConcept"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.omg.org/spec/API4KP/core#defined-by"/>
+        <owl:someValuesFrom rdf:resource="https://www.omg.org/spec/API4KP/api4kp-kao/DecisionModel"/>
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+    </owl:Restriction>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.omg.org/spec/API4KP/core#represented-by"/>
+        <owl:someValuesFrom rdf:resource="http://promsns.org/def/dmn#Decision"/>
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/decisionmodels/DecisionConcept"/>
+    </owl:Restriction>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+

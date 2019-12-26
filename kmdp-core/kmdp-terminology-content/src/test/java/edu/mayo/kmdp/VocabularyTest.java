@@ -25,7 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations._20190801.KnowledgeProcessingOperation;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel._20190801.ParsingLevel;
+import edu.mayo.ontology.taxonomies.ccgentries._20190801.ConceptDefinitionType;
 import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
+import edu.mayo.ontology.taxonomies.kao.decisiontype._20190801.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole._20190801.KnowledgeAssetRole;
@@ -88,6 +90,8 @@ public class VocabularyTest {
     assertNotNull(PublicationStatus.Draft);
     assertNotNull(MIMEType.Application_Pdf);
     assertNotNull(AnnotationRelType.Defines);
+    assertNotNull(DecisionType.Aggregation_Decision);
+    assertNotNull(ConceptDefinitionType.Interactive_Concept_Definition);
   }
 
   @Test

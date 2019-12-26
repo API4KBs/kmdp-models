@@ -15,8 +15,8 @@
  */
 package edu.mayo.kmdp;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._1_0.PlatformComponentHelper.asParamDefinitions;
 
 import com.fasterxml.jackson.databind.JsonNode;
