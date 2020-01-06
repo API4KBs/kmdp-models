@@ -154,7 +154,7 @@ public class SurrogateHelper {
       ConceptIdentifier rel) {
     return asset.getSubject().stream()
         .flatMap(StreamUtil.filterAs(SimpleAnnotation.class))
-        .filter(ann -> rel == null || rel.getConceptUUID().equals(ann.getRel().getConceptUUID()))
+        .filter(ann -> rel == null || rel.sameAs(ann.getRel()))
         .map(SimpleAnnotation::getExpr)
         .findAny();
   }

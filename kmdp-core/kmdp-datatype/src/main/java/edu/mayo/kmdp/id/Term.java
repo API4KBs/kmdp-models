@@ -48,4 +48,12 @@ public interface Term extends LexicalIdentifier, Serializable {
   default QualifiedId asQualified() {
     return toQualifiedIdentifier(asConcept().getRef());
   }
+
+  default boolean sameAs(Term other) {
+    if (this.getConceptUUID() != null && other.getConceptUUID() != null) {
+      return this.getConceptUUID().equals(other.getConceptUUID());
+    }
+    return this.getConceptId() != null
+        && this.getConceptId().equals(other.getConceptId());
+  }
 }

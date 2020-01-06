@@ -17,6 +17,7 @@ package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.terms.TermsHelper;
 import org.junit.jupiter.api.Test;
@@ -36,5 +37,12 @@ public class TermsTest {
 
   }
 
+  @Test
+  public void testEqualityBySameness() {
+    ConceptIdentifier c1 = TermsHelper.sct("f1", "x");
+    ConceptIdentifier c2 = TermsHelper.sct("f1", "x");
+
+    assertTrue(c1.sameAs(c2));
+  }
 
 }
