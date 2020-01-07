@@ -67,7 +67,21 @@ class DateTimeUtilTest {
     String s = DateAdapter.instance().write(d);
     assertNotNull(s);
 
-    assertEquals("2019-08-01T12:00:00", s);
+    assertEquals("2019-08-01T00:00:00", s);
+  }
+
+  @Test
+  public void testFullDate() {
+    Date d = DateTimeUtil.parseDateTime(
+        "2019-08-06T22:16:54Z",
+        "yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+    assertNotNull(d);
+
+    String s = DateAdapter.instance().write(d);
+    assertNotNull(s);
+
+    assertEquals("2019-08-06T22:16:54", s);
   }
 
 }

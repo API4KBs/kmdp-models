@@ -29,6 +29,8 @@ import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations.KnowledgeProcessi
 import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations.KnowledgeProcessingOperationSeries;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevel;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
+import edu.mayo.ontology.taxonomies.ccgentries.ConceptDefinitionTypeSeries;
+import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRole;
@@ -97,6 +99,8 @@ public class VersionAgnosticVocabularyTest {
     assertNotNull(KnowledgeAssetRoleSeries.Operational_Concept_Definition);
     assertNotNull(PublicationEventTypeSeries.Authoring);
     assertNotNull(AnnotationRelTypeSeries.Defines);
+    assertNotNull(DecisionTypeSeries.Aggregation_Decision);
+    assertNotNull(ConceptDefinitionTypeSeries.Interactive_Concept_Definition);
   }
 
 
@@ -177,4 +181,10 @@ public class VersionAgnosticVocabularyTest {
     assertEquals("2019-08-01",DateTimeUtil.format(effectiveDate));
   }
 
+
+  @Test
+  public void testKnownVersions() {
+    assertEquals(2, DecisionTypeSeries.schemeVersions.size());
   }
+
+}

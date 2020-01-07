@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.util;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class DateTimeUtil {
 
   public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
+  public static final String DEFAULT_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
   protected DateTimeUtil() {
 
@@ -113,5 +115,29 @@ public class DateTimeUtil {
     return asList.stream()
         .map(d -> parseDate(d, pattern))
         .collect(Collectors.toList());
+  }
+
+  public static Optional<Date> tryParseDateTime(String dateStr, String pattern) {
+    if (Util.isEmpty(dateStr)) {
+      return Optional.empty();
+    }
+    try {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+      LocalDateTime localDate = LocalDateTime.parse(dateStr, formatter);
+      Date date = Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
+      return Optional.of(date);
+    } catch (DateTimeParseException dtpe) {
+      return Optional.empty();
+    }
+  }
+
+  public static Date parseDateTime(String dateStr, String pattern) {
+    return tryParseDateTime(dateStr,pattern)
+        .orElse(null);
+  }
+
+  public static Date parseDateTime(String dateStr) {
+    return tryParseDateTime(dateStr,DEFAULT_DATETIME_PATTERN)
+        .orElse(null);
   }
 }

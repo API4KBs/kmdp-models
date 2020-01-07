@@ -112,6 +112,7 @@ public class XMLUtil {
     try {
       DocumentBuilder builder = getSecureBuilder();
       Document dox = builder.parse(source);
+      dox.normalizeDocument();
       return Optional.of(dox);
     } catch (SAXException | IOException | ParserConfigurationException e) {
       logger.error(e.getMessage(),e);
@@ -171,7 +172,7 @@ public class XMLUtil {
    * Cleanup : removes empty nodes from an XML document
    * @param node The node to be pruned
    */
-  private static void removeEmptyNodes(Node node) {
+  public static void removeEmptyNodes(Node node) {
     if (node == null) {
       return;
     }

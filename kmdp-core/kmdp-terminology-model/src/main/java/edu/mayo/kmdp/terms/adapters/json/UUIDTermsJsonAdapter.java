@@ -45,7 +45,7 @@ public interface UUIDTermsJsonAdapter {
     @Override
     protected Optional<T> resolveUUID(UUID uuid) {
       return Arrays.stream(getValues())
-          .filter(x -> x.getConceptUUID().equals(uuid))
+          .filter(x -> uuid.equals(x.getConceptUUID()))
           .findFirst();
     }
 

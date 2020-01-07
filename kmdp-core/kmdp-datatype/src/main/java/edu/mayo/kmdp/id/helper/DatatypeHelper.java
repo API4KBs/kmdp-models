@@ -313,6 +313,12 @@ public class DatatypeHelper {
     }
   }
 
+  public static URIIdentifier toURIIDentifier(String versionedId) {
+    Matcher m = VERSIONS_RX.matcher(versionedId);
+    m.matches();
+    return vuri(m.group(1) + m.group(2),versionedId);
+  }
+
   public static String seedUUIDentifier(String seed) {
     return UUID.nameUUIDFromBytes(seed.getBytes()).toString();
   }
