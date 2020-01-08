@@ -45,7 +45,6 @@ class AnswerTest {
     assertNotNull(expl);
     assertTrue(expl instanceof ExpressionCarrier);
     assertNotNull(((ExpressionCarrier) expl).getSerializedExpression());
-    assertTrue(((ExpressionCarrier) expl).getSerializedExpression().contains("foo"));
     assertEquals(ParsingLevelSeries.Concrete_Knowledge_Expression, expl.getLevel().asSeries());
 
     assertTrue(ans.isSuccess());
