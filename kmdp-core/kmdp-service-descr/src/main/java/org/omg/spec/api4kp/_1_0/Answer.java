@@ -100,7 +100,7 @@ public class Answer<T> extends Explainer {
         .withCodedOutcome(ResponseCodeSeries.OK)
         .withMeta(new HashMap<>())
         .withValue(value)
-        .withExplanation("(#TODO): " + value);
+        .withExplanation("(#TODO): " );
   }
 
   public static <X> Answer<X> of(Optional<X> value) {
