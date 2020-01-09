@@ -5,7 +5,7 @@
   <parent>
     <artifactId>kmdp-impl</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
-    <version>5.1.0</version>
+    <version>6.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -73,7 +73,7 @@
 
                   <artifactId>API4KP</artifactId>
                   <groupId>org.omg.spec</groupId>
-                  <version>${api4kp.version}</version>
+                  <version>${org.omg.spec:API4KP:jar.version}</version>
 
                   <type>jar</type>
                   <overWrite>false</overWrite>
