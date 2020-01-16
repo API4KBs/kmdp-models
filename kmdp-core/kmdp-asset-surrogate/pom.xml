@@ -10,13 +10,13 @@
     <version>6.0.0</version>
   </parent>
 
-  <name>KMDP :: Lang :: API4KP :: Knowledge Resource Surrogate Model</name>
+  <name>KMDP :: Lang :: API4KP :: Knowledge Resource Surrogate Model v2</name>
 
-  <artifactId>kmdp-asset-metadata</artifactId>
+  <artifactId>kmdp-asset-surrogate</artifactId>
 
   <properties>
-    <uml-model>metadata.uml</uml-model>
-    <xsd-name>metadata/surrogate/surrogate.xsd</xsd-name>
+    <uml-model>metadata2.uml</uml-model>
+    <xsd-name>metadata/v2/surrogate/surrogate.xsd</xsd-name>
     <s>${file.separator}</s>
   </properties>
 
@@ -66,7 +66,6 @@
       <scope>test</scope>
     </dependency>
 
-
   </dependencies>
 
 
@@ -107,7 +106,7 @@
               <goal>unpack</goal>
             </goals>
             <configuration>
-              <excludes>**/metadata2.uml</excludes>
+              <excludes>**/metadata.uml</excludes>
             </configuration>
           </execution>
         </executions>
@@ -163,7 +162,7 @@
                 </schema>
                 <schema>
                   <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/metadata</directory>
+                    <directory>${project.build.outputDirectory}/xsd/metadata/v2</directory>
                     <includes>
                       <include>**/*.xsd</include>
                     </includes>

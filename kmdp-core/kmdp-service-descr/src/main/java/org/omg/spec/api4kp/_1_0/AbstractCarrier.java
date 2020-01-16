@@ -38,9 +38,9 @@ import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.w3c.dom.Document;
 
-public class AbstractCarrier {
+public interface AbstractCarrier {
 
-  public static KnowledgeCarrier ofNaturalLanguageRep(String s) {
+  static KnowledgeCarrier ofNaturalLanguageRep(String s) {
     return new org.omg.spec.api4kp._1_0.services.resources.ExpressionCarrier()
         .withSerializedExpression(s)
         .withLevel(ParsingLevelSeries.Concrete_Knowledge_Expression)
@@ -50,128 +50,128 @@ public class AbstractCarrier {
                 SerializationFormatSeries.TXT));
   }
 
-  public static KnowledgeCarrier of(byte[] encoded) {
+  static KnowledgeCarrier of(byte[] encoded) {
     return new org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier()
         .withEncodedExpression(encoded)
         .withLevel(ParsingLevelSeries.Encoded_Knowledge_Expression);
   }
 
-  public static KnowledgeCarrier of(InputStream stream) {
+  static KnowledgeCarrier of(InputStream stream) {
     return new org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier()
         .withEncodedExpression(FileUtil.readBytes(stream).orElse(new byte[0]))
         .withLevel(ParsingLevelSeries.Encoded_Knowledge_Expression);
   }
 
-  public static KnowledgeCarrier of(String serialized) {
+  static KnowledgeCarrier of(String serialized) {
     return new org.omg.spec.api4kp._1_0.services.resources.ExpressionCarrier()
         .withSerializedExpression(serialized)
         .withLevel(ParsingLevelSeries.Concrete_Knowledge_Expression);
   }
 
-  public static KnowledgeCarrier of(Document dox) {
+  static KnowledgeCarrier of(Document dox) {
     return new org.omg.spec.api4kp._1_0.services.resources.DocumentCarrier()
         .withStructuredExpression(dox)
         .withLevel(ParsingLevelSeries.Parsed_Knowedge_Expression);
   }
 
-  public static KnowledgeCarrier of(JsonNode jdox) {
+  static KnowledgeCarrier of(JsonNode jdox) {
     return new org.omg.spec.api4kp._1_0.services.resources.DocumentCarrier()
         .withStructuredExpression(jdox)
         .withLevel(ParsingLevelSeries.Parsed_Knowedge_Expression);
   }
 
-  public static KnowledgeCarrier ofAst(Object ast) {
+  static KnowledgeCarrier ofAst(Object ast) {
     return new ASTCarrier().withParsedExpression(ast)
         .withLevel(ParsingLevelSeries.Abstract_Knowledge_Expression);
   }
 
-  public static KnowledgeCarrier of(byte[] encoded, SyntacticRepresentation rep) {
+  static KnowledgeCarrier of(byte[] encoded, SyntacticRepresentation rep) {
     return of(encoded)
         .withRepresentation(rep);
   }
 
-  public static KnowledgeCarrier of(InputStream stream, SyntacticRepresentation rep) {
+  static KnowledgeCarrier of(InputStream stream, SyntacticRepresentation rep) {
     return of(stream)
         .withRepresentation(rep);
   }
 
-  public static KnowledgeCarrier of(String serialized, SyntacticRepresentation rep) {
+  static KnowledgeCarrier of(String serialized, SyntacticRepresentation rep) {
     return of(serialized)
         .withRepresentation(rep);
   }
 
-  public static KnowledgeCarrier of(Document dox, SyntacticRepresentation rep) {
+  static KnowledgeCarrier of(Document dox, SyntacticRepresentation rep) {
     return of(dox)
         .withRepresentation(rep);
   }
 
-  public static KnowledgeCarrier of(JsonNode jdox, SyntacticRepresentation rep) {
+  static KnowledgeCarrier of(JsonNode jdox, SyntacticRepresentation rep) {
     return of(jdox)
         .withRepresentation(rep);
   }
 
-  public static KnowledgeCarrier ofAst(Object ast, SyntacticRepresentation rep) {
+  static KnowledgeCarrier ofAst(Object ast, SyntacticRepresentation rep) {
     return ofAst(ast)
         .withRepresentation(rep);
   }
 
-  public static SyntacticRepresentation rep(SyntacticRepresentation src) {
+  static SyntacticRepresentation rep(SyntacticRepresentation src) {
     SyntacticRepresentation rep = new org.omg.spec.api4kp._1_0.services.resources.SyntacticRepresentation();
     src.copyTo(rep);
     return rep;
   }
 
-  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language) {
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language) {
     return rep(language, null, null, null, null);
   }
 
-  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageSerialization serialization) {
     return rep(language, serialization, null, null, null);
   }
 
-  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       SerializationFormat format) {
     return rep(language, format, null, null);
   }
 
-  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format) {
     return rep(language, serialization, format, null, null);
   }
 
   // Should the object be unified?
-  public static SyntacticRepresentation rep(Representation meta) {
+  static SyntacticRepresentation rep(Representation meta) {
     return rep(meta.getLanguage(), meta.getSerialization(), meta.getFormat(), null, null);
   }
 
-  public static SyntacticRepresentation canonicalRepresentationOf(KnowledgeAsset asset) {
+  static SyntacticRepresentation canonicalRepresentationOf(KnowledgeAsset asset) {
     return rep(SurrogateHelper.canonicalRepresentationOf(asset));
   }
 
 
-  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageSerialization ser,
       SerializationFormat format,
       String charset) {
     return rep(language, ser, format, charset, null);
   }
 
-  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       SerializationFormat format,
       String charset) {
     return rep(language, format, charset, null);
   }
 
-  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       SerializationFormat format,
       String charset,
       String encoding) {
     return rep(language, null, format, charset, encoding);
   }
 
-  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format,
       String charset,
@@ -179,14 +179,14 @@ public class AbstractCarrier {
     return rep(language, null, serialization, format, charset, encoding);
   }
 
-  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageProfile profile,
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format) {
     return rep(language, profile, serialization, format, null, null);
   }
 
-  public static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageProfile profile,
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format,
@@ -201,66 +201,33 @@ public class AbstractCarrier {
         .withEncoding(encoding);
   }
 
-  public static SyntacticRepresentation rep(SerializationFormat format, String charset,
+  static SyntacticRepresentation rep(SerializationFormat format, String charset,
       String encoding) {
     return rep(null, format, charset, encoding);
   }
 
-  public static SyntacticRepresentation rep(String charset, String encoding) {
+  static SyntacticRepresentation rep(String charset, String encoding) {
     return rep(null, null, charset, encoding);
   }
 
-  public static SyntacticRepresentation rep(String encoding) {
+  static SyntacticRepresentation rep(String encoding) {
     return rep(null, null, null, null, encoding);
   }
-
-  protected Object copyTo(ObjectLocator locator, Object target, CopyStrategy strategy) {
-    return target != null && locator != null && strategy != null
-        ? target
-        : null ;
-  }
-
-  public <T> Optional<T> as(Class<T> type) {
+  
+  default  <T> Optional<T> as(Class<T> type) {
     return
         (this instanceof ASTCarrier
             && type.isInstance(((ASTCarrier) this).getParsedExpression()))
             ? Optional.ofNullable(type.cast(((ASTCarrier) this).getParsedExpression()))
             : Optional.empty();
   }
-
-
-  public <T> Optional<T> asParseTree(Class<T> type) {
+  
+  default  <T> Optional<T> asParseTree(Class<T> type) {
     return
         (this instanceof DocumentCarrier
             && type.isInstance(((DocumentCarrier) this).getStructuredExpression()))
             ? Optional.ofNullable(type.cast(((DocumentCarrier) this).getStructuredExpression()))
             : Optional.empty();
-  }
-
-
-
-  /**
-   * @deprecated until reworked
-   * @param mapper
-   * @param <U>
-   * @return the result of the function application
-   */
-  // Rewrite as proper map/flatMap
-  @Deprecated
-  public <U> U flatMap(Function<? super KnowledgeCarrier, U> mapper) {
-    return mapper.apply((KnowledgeCarrier) this);
-  }
-
-  /**
-   * @deprecated until reworked
-   * @param mapper
-   * @param <U>
-   * @return the result of the function mapping
-   */
-  // Rewrite as proper map/flatMap
-  @Deprecated
-  public <U extends KnowledgeCarrier> U map(Function<? super AbstractCarrier, U> mapper) {
-    return mapper.apply(this);
   }
 
 }

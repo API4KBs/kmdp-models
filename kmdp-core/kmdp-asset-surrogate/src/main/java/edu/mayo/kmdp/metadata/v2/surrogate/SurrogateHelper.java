@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp;
+package edu.mayo.kmdp.metadata.v2.surrogate;
 
 
-import edu.mayo.kmdp.metadata.annotations.Annotation;
-import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
-import edu.mayo.kmdp.metadata.annotations.ComplexAnnotation;
-import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
-import edu.mayo.kmdp.metadata.annotations.MultiwordAnnotation;
-import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.metadata.surrogate.Association;
-import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
-import edu.mayo.kmdp.metadata.surrogate.Dependency;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
-import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.BasicAnnotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.ComplexAnnotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.DatatypeAnnotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.MultiwordAnnotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
@@ -55,7 +48,7 @@ public class SurrogateHelper {
 
   public static Optional<Schema> getSchema() {
     return XMLUtil.getSchemas(
-        SurrogateHelper.class.getResource("/xsd/metadata/surrogate/surrogate.xsd"),
+        SurrogateHelper.class.getResource("/xsd/metadata/v2/surrogate/surrogate.xsd"),
         XMLUtil.catalogResolver("/xsd/km-metadata-catalog.xml", "/xsd/terms-catalog.xml"));
   }
 
@@ -90,20 +83,20 @@ public class SurrogateHelper {
   public static Annotation rootToFragment(Annotation anno) {
     Class<? extends Annotation> annoType = anno.getClass();
     if (annoType.getPackage()
-        .equals(edu.mayo.kmdp.metadata.annotations.resources.ObjectFactory.class.getPackage())) {
-      if (annoType.equals(edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation.class)) {
+        .equals(edu.mayo.kmdp.metadata.v2.surrogate.annotations.resources.ObjectFactory.class.getPackage())) {
+      if (annoType.equals(edu.mayo.kmdp.metadata.v2.surrogate.annotations.resources.SimpleAnnotation.class)) {
         return (Annotation) anno.copyTo(new SimpleAnnotation());
       } else if (annoType
-          .equals(edu.mayo.kmdp.metadata.annotations.resources.MultiwordAnnotation.class)) {
+          .equals(edu.mayo.kmdp.metadata.v2.surrogate.annotations.resources.MultiwordAnnotation.class)) {
         return (Annotation) anno.copyTo(new MultiwordAnnotation());
       } else if (annoType
-          .equals(edu.mayo.kmdp.metadata.annotations.resources.ComplexAnnotation.class)) {
+          .equals(edu.mayo.kmdp.metadata.v2.surrogate.annotations.resources.ComplexAnnotation.class)) {
         return (Annotation) anno.copyTo(new ComplexAnnotation());
       } else if (annoType
-          .equals(edu.mayo.kmdp.metadata.annotations.resources.BasicAnnotation.class)) {
+          .equals(edu.mayo.kmdp.metadata.v2.surrogate.annotations.resources.BasicAnnotation.class)) {
         return (Annotation) anno.copyTo(new BasicAnnotation());
       } else if (annoType
-          .equals(edu.mayo.kmdp.metadata.annotations.resources.DatatypeAnnotation.class)) {
+          .equals(edu.mayo.kmdp.metadata.v2.surrogate.annotations.resources.DatatypeAnnotation.class)) {
         return (Annotation) anno.copyTo(new DatatypeAnnotation());
       }
     }
@@ -146,7 +139,7 @@ public class SurrogateHelper {
         .map(dependency -> (Dependency) dependency)
         .filter(dependency -> TRAVERSE_DEPS.contains(dependency.getRel().asEnum()))
         .map(Association::getTgt)
-        .map(x -> (edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset) x)
+        .map(x -> (edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset) x)
         .collect(Collectors.toSet());
   }
 
@@ -154,7 +147,7 @@ public class SurrogateHelper {
       ConceptIdentifier rel) {
     return asset.getSubject().stream()
         .flatMap(StreamUtil.filterAs(SimpleAnnotation.class))
-        .filter(ann -> rel == null || rel.sameAs(ann.getRel()))
+        .filter(ann -> rel == null || rel.getConceptUUID().equals(ann.getRel().getConceptUUID()))
         .map(SimpleAnnotation::getExpr)
         .findAny();
   }

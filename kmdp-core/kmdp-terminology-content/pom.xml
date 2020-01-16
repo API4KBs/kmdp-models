@@ -1036,6 +1036,17 @@
               </artifactItems>
             </configuration>
           </execution>
+
+          <execution>
+            <id>unpack-xmi</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <excludes>**/metadata*.uml</excludes>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 

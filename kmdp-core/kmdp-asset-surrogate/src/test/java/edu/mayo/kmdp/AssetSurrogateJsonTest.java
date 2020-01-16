@@ -21,21 +21,21 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.metadata.annotations.SimpleApplicability;
-import edu.mayo.kmdp.metadata.surrogate.Citation;
-import edu.mayo.kmdp.metadata.surrogate.Component;
-import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
-import edu.mayo.kmdp.metadata.surrogate.Dependency;
-import edu.mayo.kmdp.metadata.surrogate.Derivative;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.Party;
-import edu.mayo.kmdp.metadata.surrogate.Publication;
-import edu.mayo.kmdp.metadata.surrogate.Representation;
-import edu.mayo.kmdp.metadata.surrogate.SubLanguage;
-import edu.mayo.kmdp.metadata.surrogate.Summary;
-import edu.mayo.kmdp.metadata.surrogate.Variant;
-import edu.mayo.kmdp.metadata.surrogate.Version;
+import edu.mayo.kmdp.metadata.v2.surrogate.Citation;
+import edu.mayo.kmdp.metadata.v2.surrogate.Component;
+import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
+import edu.mayo.kmdp.metadata.v2.surrogate.Dependency;
+import edu.mayo.kmdp.metadata.v2.surrogate.Derivative;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.Party;
+import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
+import edu.mayo.kmdp.metadata.v2.surrogate.Representation;
+import edu.mayo.kmdp.metadata.v2.surrogate.SubLanguage;
+import edu.mayo.kmdp.metadata.v2.surrogate.Summary;
+import edu.mayo.kmdp.metadata.v2.surrogate.Variant;
+import edu.mayo.kmdp.metadata.v2.surrogate.Version;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleApplicability;
 import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
@@ -61,12 +61,11 @@ import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSe
 import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfileSeries;
 import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
-import java.io.InputStream;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 
-public class MetadataJSonTest {
+public class AssetSurrogateJsonTest {
 
   @Test
   void testAssetCore() {
@@ -80,7 +79,7 @@ public class MetadataJSonTest {
   @Test
   void testApplicability() {
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withAssetId(uri("http://foo.bar/789", "0001"))
+        .withAssetId(uri("http://foo.bar/54123", "001"))
         .withApplicableIn(new SimpleApplicability()
             .withSituation(TermsHelper.mayo("Example Situation","x123"))
         );
@@ -95,7 +94,7 @@ public class MetadataJSonTest {
   @Test
   void testRelated() {
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withAssetId(uri("http://foo./xyz", "1.0.0"))
+        .withAssetId(uri("http://foo.bar/random", "0.0.12"))
         .withRelated(new Dependency()
             .withRel(DependencyTypeSeries.Depends_On)
             .withTgt(new KnowledgeAsset())
@@ -112,7 +111,7 @@ public class MetadataJSonTest {
   @Test
   void testSeriesSerialization() {
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withAssetId(uri("http://foo.bar/5435", "142412"))
+        .withAssetId(uri("http://foo.bar/7443", "142412"))
         .withFormalCategory(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines.getLatest());
 
     String x = toJson(ks);
@@ -171,14 +170,6 @@ public class MetadataJSonTest {
     assertNotNull(ks);
   }
 
-  @Test
-  void testParseLegacySurrogate() {
-    InputStream in = MetadataJSonTest.class.getResourceAsStream("/exampleSurr.json");
-
-    KnowledgeAsset ks = JSonUtil.readJson(in,KnowledgeAsset.class).orElse(null);
-    assertNotNull(ks);
-  }
-
 
   @Test
   void testSerialization() {
@@ -226,6 +217,5 @@ public class MetadataJSonTest {
 
     return json;
   }
-
 
 }

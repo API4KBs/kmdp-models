@@ -14,7 +14,7 @@
     <namespace:prefix name="dtt"/>
 
     <jxb:bindings node="//xsd:complexType[@name='Map']">
-      <inheritance:extends>edu.mayo.kmdp.id.adapter.CopyableHashMap</inheritance:extends>
+      <inheritance:extends>edu.mayo.kmdp.id.adapter.CopyableHashMap&lt;String,Object,Map&gt;</inheritance:extends>
       <ci:code>
         public Map( Map m ) { super( m ); }
         public Map() { super(); }

@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp;
+package edu.mayo.kmdp.metadata.v2.surrogate;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries.English;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries.Operational_Concept_Definition;
 
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.metadata.annotations.SimpleApplicability;
-import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
-import edu.mayo.kmdp.metadata.surrogate.Dependency;
-import edu.mayo.kmdp.metadata.surrogate.InlinedRepresentation;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.Representation;
-import edu.mayo.kmdp.metadata.surrogate.SubLanguage;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleApplicability;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategory;
@@ -62,7 +55,7 @@ public class SurrogateBuilder {
   }
 
   protected KnowledgeAsset newInstance(boolean root) {
-    return root ? new edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset() : new KnowledgeAsset();
+    return root ? new edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset() : new KnowledgeAsset();
   }
 
   public static SurrogateBuilder newSurrogate(URIIdentifier assetId) {
@@ -75,7 +68,7 @@ public class SurrogateBuilder {
   }
 
   private SurrogateBuilder withCanonicalSurrogate(URIIdentifier assetId) {
-    URIIdentifier surrogateId = SurrogateBuilder.assetId(
+    URIIdentifier surrogateId = SurrogateBuilder.id(
         Util.uuid(assetId.getUri().toString()),
         "1.0.0"
     );
@@ -87,6 +80,7 @@ public class SurrogateBuilder {
     );
     return this;
   }
+
 
   public SurrogateBuilder withName(String name, String descr) {
     surrogate.withName(name)
@@ -235,7 +229,7 @@ public class SurrogateBuilder {
   public SurrogateBuilder withInlinedFhirPath(String expr) {
     if (get().getCarriers().isEmpty()) {
       get().withCarriers(new ComputableKnowledgeArtifact()
-          .withArtifactId(assetId(expr != null ? Util.uuid(expr) : UUID.randomUUID(),"LATEST"))
+          .withArtifactId(id(expr != null ? Util.uuid(expr) : UUID.randomUUID(),"LATEST"))
           .withRepresentation(new Representation()
               .withLanguage(KnowledgeRepresentationLanguageSeries.FHIRPath_STU1)
               .withFormat(SerializationFormatSeries.TXT))
@@ -292,11 +286,11 @@ public class SurrogateBuilder {
     return surrogate;
   }
 
-  public static URIIdentifier assetId(String uuid, String versionTag) {
+  public static URIIdentifier id(String uuid, String versionTag) {
     return uri(construct(validate(uuid)),
         versionTag);
   }
-  public static URIIdentifier assetId(UUID uuid, String versionTag) {
+  public static URIIdentifier id(UUID uuid, String versionTag) {
     return uri(construct(uuid.toString()),
         versionTag);
   }

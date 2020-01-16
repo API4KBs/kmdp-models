@@ -99,6 +99,18 @@ public class XMLUtil {
    * @param source The serialized XML document
    * @return a Document, if successful
    */
+  public static Optional<Document> loadXMLDocument(String source) {
+    if (Util.isEmpty(source)) {
+      return Optional.empty();
+    }
+    return loadXMLDocument(source.getBytes());
+  }
+
+  /**
+   * Loads a Document from a Byte Array, capturing exceptions
+   * @param source The serialized XML document
+   * @return a Document, if successful
+   */
   public static Optional<Document> loadXMLDocument(byte[] source) {
     return loadXMLDocument(new ByteArrayInputStream(source));
   }
