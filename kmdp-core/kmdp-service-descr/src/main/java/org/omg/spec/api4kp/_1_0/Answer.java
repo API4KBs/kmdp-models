@@ -39,6 +39,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.http.HttpHeaders;
+import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -190,6 +191,10 @@ public class Answer<T> extends Explainer {
 
   public <U> Answer<U> flatOpt(Function<? super T, Optional<U>> mapper) {
     return getHandler().flatOpt(this, mapper);
+  }
+
+  public Answer<KnowledgeCarrier> flatK(Function<? super KnowledgeCarrier, Answer<KnowledgeCarrier>> mapper) {
+    return getHandler().flatK(this, mapper);
   }
 
   public <U> Answer<U> map(Function<? super T, ? extends U> mapper) {
@@ -456,6 +461,7 @@ public class Answer<T> extends Explainer {
 
     <U> Answer<U> flatOpt(Answer<T> tAnswer, Function<? super T, Optional<U>> mapper);
 
+    Answer<KnowledgeCarrier> flatK(Answer<T> srcAnswer, Function<? super KnowledgeCarrier, Answer<KnowledgeCarrier>> mapper);
   }
 
   public static class SuccessOutcomeStrategy<T> implements OutcomeStrategy<T> {
@@ -488,8 +494,9 @@ public class Answer<T> extends Explainer {
         return mapper.apply(srcAnswer.value)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
+
       } catch (Exception e) {
-        logger.error(e.getMessage(),e);
+        logger.error(e.getMessage(), e);
         return Answer.<U>failed(e)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
@@ -505,6 +512,29 @@ public class Answer<T> extends Explainer {
       } catch (Exception e) {
         logger.error(e.getMessage(),e);
         return Answer.<U>failed(e)
+            .withAddedMeta(srcAnswer.meta)
+            .withAddedExplanation(srcAnswer.explanation);
+      }
+    }
+
+    @Override
+    public Answer<KnowledgeCarrier> flatK(
+        Answer<T> srcAnswer,
+        Function<? super KnowledgeCarrier, Answer<KnowledgeCarrier>> mapper) {
+      try {
+        if (srcAnswer.value instanceof CompositeKnowledgeCarrier) {
+          CompositeKnowledgeCarrier ckc = (CompositeKnowledgeCarrier) srcAnswer.value;
+          return (ckc.visit(mapper)
+              .withAddedMeta(srcAnswer.meta)
+              .withAddedExplanation(srcAnswer.explanation));
+        } else {
+          return mapper.apply((KnowledgeCarrier) srcAnswer.value)
+            .withAddedMeta(srcAnswer.meta)
+              .withAddedExplanation(srcAnswer.explanation);
+        }
+      } catch (Exception e) {
+        logger.error(e.getMessage(), e);
+        return Answer.<KnowledgeCarrier>failed(e)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
       }
@@ -542,6 +572,14 @@ public class Answer<T> extends Explainer {
           .withCodedOutcome(tAnswer.getCodedOutcome())
           .withExplanation(tAnswer.explanation)
           .withMeta(tAnswer.meta);
+    }
+
+    @Override
+    public Answer<KnowledgeCarrier> flatK(Answer<T> srcAnswer, Function<? super KnowledgeCarrier, Answer<KnowledgeCarrier>> mapper) {
+      return new Answer<KnowledgeCarrier>()
+          .withCodedOutcome(srcAnswer.getCodedOutcome())
+          .withExplanation(srcAnswer.explanation)
+          .withMeta(srcAnswer.meta);
     }
   }
 

@@ -28,11 +28,11 @@ import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSe
 import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfile;
 import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerialization;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import org.jvnet.jaxb2_commons.lang.CopyStrategy;
-import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import org.omg.spec.api4kp._1_0.services.ASTCarrier;
+import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
@@ -213,7 +213,7 @@ public interface AbstractCarrier {
   static SyntacticRepresentation rep(String encoding) {
     return rep(null, null, null, null, encoding);
   }
-  
+
   default  <T> Optional<T> as(Class<T> type) {
     return
         (this instanceof ASTCarrier
