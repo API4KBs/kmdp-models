@@ -160,7 +160,7 @@ public class SurrogateBuilder {
     }
 
     if (subject != null) {
-      this.withAnnotation(AnnotationRelTypeSeries.Has_Subject.asConcept(), subject);
+      this.withAnnotation(AnnotationRelTypeSeries.Has_Primary_Subject.asConcept(), subject);
     }
 
     Arrays.stream(inputs).forEach(input ->

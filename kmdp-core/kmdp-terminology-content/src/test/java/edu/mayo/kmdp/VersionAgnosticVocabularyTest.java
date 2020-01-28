@@ -173,7 +173,7 @@ public class VersionAgnosticVocabularyTest {
 
   @Test
   public void testHistory() {
-    Date effectiveDate = KnowledgeRepresentationLanguageSeries.DMN_1_2
+    Date effectiveDate = KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines
         .asOf(DateTimeUtil.parseDate("2019-09-15"))
         .map(Versionable::getVersionEstablishedOn)
         .orElse(null);

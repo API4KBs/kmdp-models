@@ -50,14 +50,15 @@ public class RegistryOntologyTest extends RegistryTestBase {
         "SELECT ?L " +
         " " +
         "WHERE { " +
-        "   ?L a know:ConstructedLanguage. " +
+        "   ?L a api4kp:ConstructedLanguage. " +
         "}";
 
     List<Map<String, String>> ans = askQuery(qry, registry);
-    Collection<String> langs = ans.stream().map(Map::values).reduce(new HashSet<>(), (s1, s2) -> {
-      s1.addAll(s2);
-      return s1;
-    });
+    Collection<String> langs = ans.stream().map(Map::values)
+        .reduce(new HashSet<>(), (s1, s2) -> {
+          s1.addAll(s2);
+          return s1;
+        });
 
     assertTrue(langs.contains("https://www.omg.org/spec/DMN/1.2/"));
     assertTrue(langs.contains("http://www.w3.org/ns/owl-profile/QL"));
@@ -69,8 +70,8 @@ public class RegistryOntologyTest extends RegistryTestBase {
         "SELECT ?L ?Id ?Ver " +
         " " +
         "WHERE { " +
-        "   ?L a know:ConstructedLanguage;"
-        + "   dc:identifier ?Id; "
+        "   ?L a api4kp:ConstructedLanguage;"
+        + "   dct:identifier ?Id; "
         + "   owl:versionInfo ?Ver. " +
         "}";
 
@@ -91,8 +92,8 @@ public class RegistryOntologyTest extends RegistryTestBase {
         "SELECT ?L ?Id ?Ver " +
         " " +
         "WHERE { " +
-        "   ?L a know:ConstructedLanguage;"
-        + "   dc:identifier ?Id. "
+        "   ?L a api4kp:ConstructedLanguage;"
+        + "   dct:identifier ?Id. "
         + "   OPTIONAL { ?L owl:versionInfo ?Ver }" +
         "}";
 
@@ -121,10 +122,10 @@ public class RegistryOntologyTest extends RegistryTestBase {
         "SELECT ?L ?Ser ?LangId ?SerId " +
         " " +
         "WHERE { " +
-        "   ?L a know:ConstructedLanguage;"
-        + "   dc:identifier ?LangId; "
+        "   ?L a api4kp:ConstructedLanguage;"
+        + "   dct:identifier ?LangId; "
         + "   dol:supportsSerialization ?Ser. "
-        + " ?Ser dc:identifier ?SerId. "
+        + " ?Ser dct:identifier ?SerId. "
         + "}";
 
     List<Map<String, String>> ans = askQuery(qry, registry);
@@ -148,10 +149,10 @@ public class RegistryOntologyTest extends RegistryTestBase {
         "SELECT ?LangNS ?LexNS " +
         " " +
         "WHERE { " +
-        "   ?LangNS a know:ConstructedLanguage; "
-        + "   know:uses-lexicon ?LexNS. "
+        "   ?LangNS a api4kp:ConstructedLanguage; "
+        + "   api4kp:uses-lexicon ?LexNS. "
         + ""
-        + " ?LexNS dc:identifier ?LexId."
+        + " ?LexNS dct:identifier ?LexId."
         + "}";
 
     List<Map<String, String>> ans = askQuery(qry, registry);
@@ -188,14 +189,14 @@ public class RegistryOntologyTest extends RegistryTestBase {
         "SELECT ?LangId ?FmtId " +
         " " +
         "WHERE { " +
-        "   ?L a know:ConstructedLanguage; "
-        + "   dc:identifier ?LangId; "
+        "   ?L a api4kp:ConstructedLanguage; "
+        + "   dct:identifier ?LangId; "
         + "   dol:supportsSerialization ?Ser. "
         + ""
-        + " ?Ser know:depends-on ?Fmt."
+        + " ?Ser api4kp:depends-on ?Fmt."
         + ""
-        + " ?Fmt a know:MetaFormat; "
-        + "   dc:identifier ?FmtId "
+        + " ?Fmt a api4kp:MetaFormat; "
+        + "   dct:identifier ?FmtId "
         + "}";
 
     List<Map<String, String>> ans = askQuery(qry, registry);
@@ -231,8 +232,8 @@ public class RegistryOntologyTest extends RegistryTestBase {
         "SELECT ?LangId ?G " +
         " " +
         "WHERE { " +
-        "   ?L a know:ConstructedLanguage; "
-        + "   dc:identifier ?LangId; "
+        "   ?L a api4kp:ConstructedLanguage; "
+        + "   dct:identifier ?LangId; "
         + "   dol:supportsSerialization ?G. "
         + "}";
 

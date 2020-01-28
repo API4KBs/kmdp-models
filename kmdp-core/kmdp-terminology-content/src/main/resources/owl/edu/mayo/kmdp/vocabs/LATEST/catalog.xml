@@ -13,17 +13,21 @@
     uri="/ontologies/API4KP/LATEST/api4kp-kao.rdf"
     name="https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-kao/"/>
 
+  <uri id="API4KP-KRR"
+    uri="/ontologies/API4KP/LATEST/api4kp-krr.rdf"
+    name="https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-krr/"/>
+
   <uri id="CKAO"
-    uri="/ontologies/API4KP/LATEST/informative/ckao.rdf"
-    name="http://ontology.mayo.edu/ontologies/SNAPSHOT/clinicalknowledgeassets/"/>
+    uri="/ontologies/API4KP/LATEST/informative/api4kp-ckao.rdf"
+    name="https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-ckao/"/>
 
   <uri id="API4KP-KMDO"
-    uri="/ontologies/API4KP/LATEST/informative/kmdo.rdf"
-    name="http://ontology.mayo.edu/ontologies/SNAPSHOT/knowledgemanagementdelivery/"/>
+    uri="/ontologies/API4KP/LATEST/informative/api4kp-kmdo.rdf"
+    name="https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-kmdo/"/>
 
   <uri id="API4KP-Registry"
     uri="/ontologies/API4KP/LATEST/informative/api4kp-registry.rdf"
-    name="http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/"/>
+    name="https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-registry/"/>
 
   <uri id="DMN"
     uri="decisionmodels.owl.rdf"
