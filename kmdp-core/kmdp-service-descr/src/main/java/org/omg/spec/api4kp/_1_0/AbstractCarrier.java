@@ -27,12 +27,10 @@ import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfile;
 import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerialization;
+import edu.mayo.ontology.taxonomies.lexicon.Lexicon;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import org.omg.spec.api4kp._1_0.services.ASTCarrier;
-import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
@@ -123,6 +121,11 @@ public interface AbstractCarrier {
 
   static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language) {
     return rep(language, null, null, null, null);
+  }
+
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language, Lexicon... vocabs) {
+    return rep(language, null, null, null, null)
+        .withLexicon(vocabs);
   }
 
   static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,

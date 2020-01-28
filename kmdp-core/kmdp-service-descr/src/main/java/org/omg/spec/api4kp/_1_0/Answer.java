@@ -39,7 +39,6 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.http.HttpHeaders;
-import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -193,8 +192,8 @@ public class Answer<T> extends Explainer {
     return getHandler().flatOpt(this, mapper);
   }
 
-  public Answer<KnowledgeCarrier> flatK(Function<? super KnowledgeCarrier, Answer<KnowledgeCarrier>> mapper) {
-    return getHandler().flatK(this, mapper);
+  public <U> Answer<U> reduce(Function<Composite<? super T,?,?>, Answer<U>> mapper) {
+    return getHandler().reduce(this, mapper);
   }
 
   public <U> Answer<U> map(Function<? super T, ? extends U> mapper) {
@@ -461,7 +460,7 @@ public class Answer<T> extends Explainer {
 
     <U> Answer<U> flatOpt(Answer<T> tAnswer, Function<? super T, Optional<U>> mapper);
 
-    Answer<KnowledgeCarrier> flatK(Answer<T> srcAnswer, Function<? super KnowledgeCarrier, Answer<KnowledgeCarrier>> mapper);
+    <U> Answer<U> reduce(Answer<T> srcAnswer, Function<Composite<? super T,?,?>,Answer<U>> reducer);
   }
 
   public static class SuccessOutcomeStrategy<T> implements OutcomeStrategy<T> {
@@ -491,9 +490,17 @@ public class Answer<T> extends Explainer {
     @Override
     public <U> Answer<U> flatMap(Answer<T> srcAnswer, Function<? super T, Answer<U>> mapper) {
       try {
-        return mapper.apply(srcAnswer.value)
-            .withAddedMeta(srcAnswer.meta)
-            .withAddedExplanation(srcAnswer.explanation);
+        if (srcAnswer.value instanceof ClosedComposite) {
+          ClosedComposite<T,?,?> ckc = (ClosedComposite<T,?,?>) srcAnswer.value;
+          Function closedMapper = mapper;
+          return (Answer<U>) ckc.visit(closedMapper)
+              .withAddedMeta(srcAnswer.meta)
+              .withAddedExplanation(srcAnswer.explanation);
+        } else {
+          return mapper.apply(srcAnswer.value)
+              .withAddedMeta(srcAnswer.meta)
+              .withAddedExplanation(srcAnswer.explanation);
+        }
 
       } catch (Exception e) {
         logger.error(e.getMessage(), e);
@@ -518,27 +525,21 @@ public class Answer<T> extends Explainer {
     }
 
     @Override
-    public Answer<KnowledgeCarrier> flatK(
-        Answer<T> srcAnswer,
-        Function<? super KnowledgeCarrier, Answer<KnowledgeCarrier>> mapper) {
+    public <U> Answer<U> reduce(Answer<T> srcAnswer,
+        Function<Composite<? super T, ?, ?>, Answer<U>> mapper) {
       try {
-        if (srcAnswer.value instanceof CompositeKnowledgeCarrier) {
-          CompositeKnowledgeCarrier ckc = (CompositeKnowledgeCarrier) srcAnswer.value;
-          return (ckc.visit(mapper)
-              .withAddedMeta(srcAnswer.meta)
-              .withAddedExplanation(srcAnswer.explanation));
-        } else {
-          return mapper.apply((KnowledgeCarrier) srcAnswer.value)
+        Composite<? super T, ?, ?> ckc = (Composite<? super T, ?, ?>) srcAnswer.value;
+        return mapper.apply(ckc)
             .withAddedMeta(srcAnswer.meta)
-              .withAddedExplanation(srcAnswer.explanation);
-        }
+            .withAddedExplanation(srcAnswer.explanation);
       } catch (Exception e) {
         logger.error(e.getMessage(), e);
-        return Answer.<KnowledgeCarrier>failed(e)
+        return Answer.<U>failed(e)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
       }
     }
+
   }
 
   public static class FailureOutcomeStrategy<T> implements OutcomeStrategy<T> {
@@ -575,8 +576,9 @@ public class Answer<T> extends Explainer {
     }
 
     @Override
-    public Answer<KnowledgeCarrier> flatK(Answer<T> srcAnswer, Function<? super KnowledgeCarrier, Answer<KnowledgeCarrier>> mapper) {
-      return new Answer<KnowledgeCarrier>()
+    public <U> Answer<U> reduce(Answer<T> srcAnswer,
+        Function<Composite<? super T, ?, ?>, Answer<U>> mapper) {
+      return new Answer<U>()
           .withCodedOutcome(srcAnswer.getCodedOutcome())
           .withExplanation(srcAnswer.explanation)
           .withMeta(srcAnswer.meta);
