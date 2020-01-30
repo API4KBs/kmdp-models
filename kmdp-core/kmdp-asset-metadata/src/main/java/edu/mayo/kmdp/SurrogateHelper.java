@@ -16,6 +16,7 @@
 package edu.mayo.kmdp;
 
 
+import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.metadata.annotations.ComplexAnnotation;
@@ -40,6 +41,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.validation.Schema;
@@ -117,36 +120,39 @@ public class SurrogateHelper {
           DependencyTypeSeries.Depends_On),
           DependencyTypeSeries.class);
 
-  public static Set<KnowledgeAsset> closure(KnowledgeAsset resource) {
-    return closure(resource, true);
+  public static Set<KnowledgeAsset> closure(KnowledgeAsset resource, BiFunction<UUID, String,KnowledgeAsset> resolver) {
+    return closure(resource, true, resolver);
   }
 
-  public static Set<KnowledgeAsset> closure(KnowledgeAsset resource, boolean includeSelf) {
+  public static Set<KnowledgeAsset> closure(KnowledgeAsset resource, boolean includeSelf, BiFunction<UUID, String,KnowledgeAsset> resolver) {
     HashSet<KnowledgeAsset> closure = new HashSet<>();
-    closure(resource, closure);
+    closure(resource, closure, resolver);
     if (includeSelf) {
       closure.add(resource);
     }
     return closure;
   }
 
-  private static void closure(KnowledgeAsset resource, HashSet<KnowledgeAsset> collector) {
-    Set<KnowledgeAsset> deps = dependencies(resource);
+  private static void closure(KnowledgeAsset resource, HashSet<KnowledgeAsset> collector, BiFunction<UUID, String,KnowledgeAsset> resolver) {
+    Set<KnowledgeAsset> deps = dependencies(resource, resolver);
     for (KnowledgeAsset dep : deps) {
       if (!collector.contains(dep)) {
         collector.add(dep);
-        closure(dep, collector);
+        closure(dep, collector, resolver);
       }
     }
   }
 
-  private static Set<KnowledgeAsset> dependencies(KnowledgeResource resource) {
+  private static Set<KnowledgeAsset> dependencies(KnowledgeResource resource, BiFunction<UUID, String,KnowledgeAsset> resolver) {
     return resource.getRelated().stream()
         .filter(dependency -> dependency instanceof Dependency)
         .map(dependency -> (Dependency) dependency)
         .filter(dependency -> TRAVERSE_DEPS.contains(dependency.getRel().asEnum()))
         .map(Association::getTgt)
         .map(x -> (edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset) x)
+        .map(KnowledgeAsset::getAssetId)
+        .map(DatatypeHelper::toVersionIdentifier)
+        .map(vid -> resolver.apply(UUID.fromString(vid.getTag()), vid.getVersion()))
         .collect(Collectors.toSet());
   }
 
