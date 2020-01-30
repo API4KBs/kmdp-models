@@ -143,4 +143,19 @@ public class DatatypeTest {
     URIIdentifier uid = DatatypeHelper.uri("http://foo.bar", "baz", "1");
     assertEquals(URI.create("http://foo.bar/baz"), uid.getUri());
   }
+
+
+  @Test
+  public void toURIIDentifier() {
+    String versionedId = "http://foo.bar/baz/versions/1.2.0";
+    String unversionedId = "http://foo.bar/baz";
+    URIIdentifier uid = DatatypeHelper.toURIIDentifier(versionedId);
+    assertEquals("http://foo.bar/baz", uid.getUri().toString());
+    assertEquals("1.2.0", uid.getVersion());
+    assertEquals(versionedId, uid.getVersionId().toString());
+
+    uid = DatatypeHelper.toURIIDentifier(unversionedId);
+    assertEquals("http://foo.bar/baz", uid.getUri().toString());
+    assertNull(uid.getVersionId());
+  }
 }

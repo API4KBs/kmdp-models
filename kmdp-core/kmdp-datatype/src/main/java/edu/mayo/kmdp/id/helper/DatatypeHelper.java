@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.id.helper;
 
@@ -113,7 +111,6 @@ public class DatatypeHelper {
     return URI.create(uri);
   }
 
-
   public static URIIdentifier uri(final String id, final String versionTag) {
     return new URIIdentifier()
         .withUri(URI.create(id))
@@ -196,7 +193,7 @@ public class DatatypeHelper {
     if (ver == null) {
       ver = NameUtils.strip(versionedIdentifier.getUri().toString(),
           versionedIdentifier.getVersionId().toString(),
-          '/','#');
+          '/', '#');
     }
     return ver;
   }
@@ -313,10 +310,20 @@ public class DatatypeHelper {
     }
   }
 
+  /**
+   * Create a URIIdentifier from the versionedId in the String. If the versionedId is not
+   * actually versioned, create URIIdentifer with null version.
+   *
+   * @param versionedId URI String
+   * @return URIIdentifier from the versionedId
+   */
   public static URIIdentifier toURIIDentifier(String versionedId) {
     Matcher m = VERSIONS_RX.matcher(versionedId);
-    m.matches();
-    return vuri(m.group(1) + m.group(2),versionedId);
+    if (m.matches()) {
+      return vuri(m.group(1) + m.group(2), versionedId);
+    } else {
+      return vuri(versionedId, null);
+    }
   }
 
   public static String seedUUIDentifier(String seed) {
@@ -387,7 +394,6 @@ public class DatatypeHelper {
     return Collections.unmodifiableMap(Arrays.stream(values)
         .collect(Collectors.toConcurrentMap(Term::getConceptUUID, Function.identity())));
   }
-
 
 
   public static Optional<String> encodeConcept(Term trm) {
