@@ -1,21 +1,20 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp;
 
 
+import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
@@ -120,11 +119,19 @@ public class SurrogateHelper {
           DependencyTypeSeries.Depends_On),
           DependencyTypeSeries.class);
 
-  public static Set<KnowledgeAsset> closure(KnowledgeAsset resource, BiFunction<UUID, String,KnowledgeAsset> resolver) {
+
+  public static Set<KnowledgeAsset> closure(KnowledgeAsset resource, boolean includeSelf) {
+    return closure(resource, includeSelf,
+        (assetId, vTag) -> Optional.empty());
+  }
+
+  public static Set<KnowledgeAsset> closure(KnowledgeAsset resource,
+      BiFunction<UUID, String, Optional<KnowledgeAsset>> resolver) {
     return closure(resource, true, resolver);
   }
 
-  public static Set<KnowledgeAsset> closure(KnowledgeAsset resource, boolean includeSelf, BiFunction<UUID, String,KnowledgeAsset> resolver) {
+  public static Set<KnowledgeAsset> closure(KnowledgeAsset resource, boolean includeSelf,
+      BiFunction<UUID, String, Optional<KnowledgeAsset>> resolver) {
     HashSet<KnowledgeAsset> closure = new HashSet<>();
     closure(resource, closure, resolver);
     if (includeSelf) {
@@ -133,7 +140,8 @@ public class SurrogateHelper {
     return closure;
   }
 
-  private static void closure(KnowledgeAsset resource, HashSet<KnowledgeAsset> collector, BiFunction<UUID, String,KnowledgeAsset> resolver) {
+  private static void closure(KnowledgeAsset resource, HashSet<KnowledgeAsset> collector,
+      BiFunction<UUID, String, Optional<KnowledgeAsset>> resolver) {
     Set<KnowledgeAsset> deps = dependencies(resource, resolver);
     for (KnowledgeAsset dep : deps) {
       if (!collector.contains(dep)) {
@@ -143,17 +151,19 @@ public class SurrogateHelper {
     }
   }
 
-  private static Set<KnowledgeAsset> dependencies(KnowledgeResource resource, BiFunction<UUID, String,KnowledgeAsset> resolver) {
+  private static Set<KnowledgeAsset> dependencies(KnowledgeResource resource,
+      BiFunction<UUID, String, Optional<KnowledgeAsset>> resolver) {
     return resource.getRelated().stream()
         .filter(dependency -> dependency instanceof Dependency)
         .map(dependency -> (Dependency) dependency)
         .filter(dependency -> TRAVERSE_DEPS.contains(dependency.getRel().asEnum()))
         .map(Association::getTgt)
         .map(x -> (edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset) x)
-        .map(KnowledgeAsset::getAssetId)
-        .map(DatatypeHelper::toVersionIdentifier)
-        .map(vid -> resolver.apply(UUID.fromString(vid.getTag()), vid.getVersion()))
-        .collect(Collectors.toSet());
+        .map(x -> {
+          VersionedIdentifier vid = DatatypeHelper.toVersionIdentifier(x.getAssetId());
+          return resolver.apply(UUID.fromString(vid.getTag()), vid.getVersion())
+              .orElse(x);
+        }).collect(Collectors.toSet());
   }
 
   public static Optional<ConceptIdentifier> getSimpleAnnotationValue(KnowledgeAsset asset,
