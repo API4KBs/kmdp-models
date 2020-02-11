@@ -16,8 +16,10 @@
 package edu.mayo.kmdp;
 
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
 import org.junit.jupiter.api.Test;
 
@@ -36,11 +38,11 @@ public class XSDCompilationTest {
     KnowledgeAssetCategory kac = KnowledgeAssetCategory.Plans_Processes_Pathways_And_Protocol_Definitions;
     assertEquals(6, KnowledgeAssetCategory.values().length);
 
-    KnowledgeAssetType kat = KnowledgeAssetType.Clinical_Rule;
-    assertEquals("http://ontology.mayo.edu/ontologies/clinicalknowledgeassets/ClinicalRule", kat.getRef().toString());
+    KnowledgeAssetType kat = KnowledgeAssetTypeSeries.Clinical_Rule;
+    assertEquals("https://www.omg.org/spec/API4KP/api4kp-ckao/ClinicalRule", kat.getRef().toString());
 
-    KnowledgeRepresentationLanguage dmn = KnowledgeRepresentationLanguage.DMN_1_1;
-    KnowledgeRepresentationLanguage dmn2 = KnowledgeRepresentationLanguage.DMN_1_2;
+    KnowledgeRepresentationLanguage dmn = KnowledgeRepresentationLanguageSeries.DMN_1_1;
+    KnowledgeRepresentationLanguage dmn2 = KnowledgeRepresentationLanguageSeries.DMN_1_2;
     assertEquals("https://www.omg.org/spec/DMN/1.1/", dmn.getRef().toString());
     assertEquals("https://www.omg.org/spec/DMN/1.2/", dmn2.getRef().toString());
   }

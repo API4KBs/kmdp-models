@@ -20,6 +20,8 @@ import edu.mayo.kmdp.SurrogateHelper;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.util.FileUtil;
+import edu.mayo.kmdp.util.JSonUtil;
+import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
 import edu.mayo.ontology.taxonomies.krformat.SerializationFormat;
 import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
@@ -27,13 +29,14 @@ import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfile;
 import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerialization;
+import edu.mayo.ontology.taxonomies.lexicon.Lexicon;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import org.omg.spec.api4kp._1_0.services.ASTCarrier;
-import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
+import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
 import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
+import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.w3c.dom.Document;
@@ -123,6 +126,11 @@ public interface AbstractCarrier {
 
   static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language) {
     return rep(language, null, null, null, null);
+  }
+
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language, Lexicon... vocabs) {
+    return rep(language, null, null, null, null)
+        .withLexicon(vocabs);
   }
 
   static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
@@ -230,4 +238,32 @@ public interface AbstractCarrier {
             : Optional.empty();
   }
 
+  /**
+   * Attempts to return a String representation of the carried Knowledge.
+   *  - Returns the Artifact if already encoded or serialized.
+   *  - Attempts to serialize JSON and XML based parse trees
+   *  - Other Parse Trees are not supported at the moment.
+   *
+   * General AST and ASG are excluded since they may have graph nature, which may lead
+   * to infinite recursion when trying to construct a String.
+   * Consider using 'lowering' operations to ensure success before invoking this method.
+   * @return An optional 'toString' representation of the carried Knowledge Artifact
+   */
+  default Optional<String> asString() {
+    if (this instanceof ExpressionCarrier) {
+      return Optional.ofNullable(((ExpressionCarrier) this).getSerializedExpression());
+    } else if (this instanceof BinaryCarrier) {
+      return Optional.of(new String(((BinaryCarrier) this).getEncodedExpression()));
+    } else if (this instanceof DocumentCarrier) {
+      DocumentCarrier doc = (DocumentCarrier) this;
+      if (doc.getStructuredExpression() instanceof Document) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        XMLUtil.streamXMLNode((Document) doc.getStructuredExpression(), baos);
+        return Optional.of(new String(baos.toByteArray()));
+      } else if (doc.getStructuredExpression() instanceof JsonNode) {
+        return JSonUtil.writeJsonAsString(doc.getStructuredExpression());
+      }
+    }
+    return Optional.empty();
+  }
 }

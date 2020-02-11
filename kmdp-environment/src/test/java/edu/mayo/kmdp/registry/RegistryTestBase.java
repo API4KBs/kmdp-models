@@ -20,8 +20,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
+import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.reasoner.rulesys.BasicForwardRuleReasoner;
+import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
+import org.apache.jena.reasoner.rulesys.OWLMicroReasoner;
+import org.apache.jena.reasoner.rulesys.RDFSFBRuleReasoner;
+import org.apache.jena.reasoner.rulesys.RDFSFBRuleReasonerFactory;
+import org.apache.jena.reasoner.rulesys.RDFSRuleReasoner;
+import org.apache.jena.reasoner.rulesys.RDFSRuleReasonerFactory;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
@@ -41,11 +49,17 @@ public class RegistryTestBase {
       "PREFIX dct: <http://purl.org/dc/terms/> \n" +
       "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
       "PREFIX olex: <http://www.w3.org/ns/lemon/ontolex#> \n" +
+      "PREFIX api4kp: <https://www.omg.org/spec/API4KP/api4kp/> \n" +
+      // for compatibility only:
       "PREFIX know: <https://www.omg.org/spec/API4KP/api4kp/> \n" +
       "PREFIX dol: <http://www.omg.org/spec/DOL/DOL-terms/> \n";
 
 
   static Model initRegistry(String catalogVersion) {
+    return initRegistry(catalogVersion, REGISTRY_URI);
+  }
+
+  static Model initRegistry(String catalogVersion, String registryUri) {
     CatalogManager catalogManager = new CatalogManager();
     catalogManager.setCatalogFiles(
         Registry.class.getResource(Registry.getCatalogVersion(catalogVersion)).toString());
@@ -54,7 +68,7 @@ public class RegistryTestBase {
     CatalogResolver xcat = new CatalogResolver(catalogManager);
 
     try {
-      String path = xcat.getCatalog().resolveURI(REGISTRY_URI);
+      String path = xcat.getCatalog().resolveURI(registryUri);
       assertNotNull(path);
       path = path.replace("file:","");
       Model registry = ModelFactory.createOntologyModel()

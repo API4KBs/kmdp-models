@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 public class Registry {
 
-  public static final String REGISTRY_URI = "http://ontology.mayo.edu/ontologies/kmdp-registry/";
+  public static final String REGISTRY_URI = "https://www.omg.org/spec/API4KP/api4kp-registry";
 
   public static final String MAYO_ASSETS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/assets/";
   public static final String MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/artifacts/";

@@ -19,12 +19,12 @@ public class CompositeTest {
 
   @Test
   void testCompositeMapping() {
-    CompositeKnowledgeCarrier ckc = new CompositeKnowledgeCarrier()
+    KnowledgeCarrier ckc = new CompositeKnowledgeCarrier()
         .withComponent(AbstractCarrier.of("Foo"))
         .withComponent(AbstractCarrier.of("Bar"));
 
     Answer<KnowledgeCarrier> out = Answer.of(ckc)
-        .flatK(this::upCase);
+        .flatMap(this::upCase);
 
     assertTrue(out.isSuccess());
 

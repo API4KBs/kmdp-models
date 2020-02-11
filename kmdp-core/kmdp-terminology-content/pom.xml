@@ -98,7 +98,7 @@
           <profile>SKOS</profile>
         </configuration>
         <executions>
-          
+
           <execution>
             <id>lang-lang-skos</id>
             <phase>generate-sources</phase>
@@ -106,9 +106,40 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/</owlSourceURL>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-registry/
+                </owlSourceURL>
+              </owlSourceURLs>
+
+              <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-registry/</owlNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/ConstructedLanguage</targetURI>
+              <entityType>INST</entityType>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KRLanguage</skosNamespace>
+              <schemeName>KnowledgeRepresentationLanguages</schemeName>
+              <topConceptName>KnowledgeRepresentationLanguage</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>KRLanguage.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+          <execution>
+            <id>lang-lang-skos-legacy</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}_20190801${s}catalog.xml</catalogURL>
+              </catalogURLs>
+              <owlSourceURLs>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/
+                </owlSourceURL>
               </owlSourceURLs>
 
               <owlNamespace>http://ontology.mayo.edu/ontologies/kmdp-registry/</owlNamespace>
@@ -120,7 +151,6 @@
               <topConceptName>KnowledgeRepresentationLanguage</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>KRLanguage.skos.rdf</skosOutputFile>
                 <skosOutputFile>KRLanguage_20190801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
@@ -134,9 +164,42 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/</owlSourceURL>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-registry/
+                </owlSourceURL>
+              </owlSourceURLs>
+
+              <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-registry/</owlNamespace>
+              <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Profile</targetURI>
+              <entityType>INST</entityType>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KRProfile</skosNamespace>
+              <schemeName>KnowledgeRepresentationLanguageProfiles</schemeName>
+              <topConceptName>KnowledgeRepresentationLanguageProfile</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>KRProfile.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+          <execution>
+            <id>lang-profile-skos-legacy</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}_20190801${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
+              <owlSourceURLs>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/
+                </owlSourceURL>
               </owlSourceURLs>
 
               <owlNamespace>http://ontology.mayo.edu/ontologies/kmdp-registry/</owlNamespace>
@@ -148,11 +211,12 @@
               <topConceptName>KnowledgeRepresentationLanguageProfile</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>KRProfile.skos.rdf</skosOutputFile>
                 <skosOutputFile>KRProfile_20190801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
+
+
           <execution>
             <id>lang-format-skos</id>
             <phase>generate-sources</phase>
@@ -160,9 +224,42 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/</owlSourceURL>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-registry/
+                </owlSourceURL>
+              </owlSourceURLs>
+
+              <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-registry/</owlNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/MetaFormat</targetURI>
+              <entityType>INST</entityType>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KRFormat</skosNamespace>
+              <schemeName>SerializationFormats</schemeName>
+              <topConceptName>SerializationFormat</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>KRFormat.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+          <execution>
+            <id>lang-format-skos-legacy</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}_20190801${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
+              <owlSourceURLs>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/
+                </owlSourceURL>
               </owlSourceURLs>
 
               <owlNamespace>http://ontology.mayo.edu/ontologies/kmdp-registry/</owlNamespace>
@@ -174,11 +271,12 @@
               <topConceptName>SerializationFormat</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>KRFormat.skos.rdf</skosOutputFile>
                 <skosOutputFile>KRFormat_20190801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
+
+
           <execution>
             <id>lang-serial-skos</id>
             <phase>generate-sources</phase>
@@ -186,9 +284,43 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/</owlSourceURL>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-registry/
+                </owlSourceURL>
+              </owlSourceURLs>
+
+              <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-registry/</owlNamespace>
+              <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Serialization</targetURI>
+              <entityType>INST</entityType>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KRSerialization</skosNamespace>
+              <schemeName>KnowledgeRepresentationLanguageSerializations</schemeName>
+              <topConceptName>KnowledgeRepresentationLanguageSerialization</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>KRSerialization.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>lang-serial-skos-legacy</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}_20190801${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
+              <owlSourceURLs>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/
+                </owlSourceURL>
               </owlSourceURLs>
 
               <owlNamespace>http://ontology.mayo.edu/ontologies/kmdp-registry/</owlNamespace>
@@ -200,11 +332,12 @@
               <topConceptName>KnowledgeRepresentationLanguageSerialization</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>KRSerialization.skos.rdf</skosOutputFile>
                 <skosOutputFile>KRSerialization_20190801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
+
+
           <execution>
             <id>lang-lex-skos</id>
             <phase>generate-sources</phase>
@@ -212,8 +345,39 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/kmdp-registry/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-registry/</owlSourceURL>
+              </owlSourceURLs>
+
+              <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-registry/</owlNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/Lexicon</targetURI>
+              <entityType>INST</entityType>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/Lexicon</skosNamespace>
+              <schemeName>Lexica</schemeName>
+              <topConceptName>Lexicon</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>Lexicon.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+          <execution>
+            <id>lang-lex-skos-legacy</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}_20190801${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
+              <owlSourceURLs>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/kmdp-registry/</owlSourceURL>
               </owlSourceURLs>
 
@@ -226,11 +390,11 @@
               <topConceptName>Lexicon</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>Lexicon.skos.rdf</skosOutputFile>
                 <skosOutputFile>Lexicon_20190801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
+
 
           <execution>
             <id>lang2-codes-skos</id>
@@ -245,7 +409,9 @@
               </catalogURLs>
 
               <owlNamespace>https://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/</owlNamespace>
-              <targetURI>https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguage</targetURI>
+              <targetURI>
+                https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguage
+              </targetURI>
               <entityType>INST</entityType>
 
               <skosNamespace>https://ontology.mayo.edu/taxonomies/ISO639-2-LanguageCodes</skosNamespace>
@@ -270,7 +436,9 @@
               </catalogURLs>
 
               <owlNamespace>https://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/</owlNamespace>
-              <targetURI>https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguage</targetURI>
+              <targetURI>
+                https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguage
+              </targetURI>
               <entityType>INST</entityType>
 
               <skosNamespace>https://ontology.mayo.edu/taxonomies/ISO639-1-LanguageCodes</skosNamespace>
@@ -510,6 +678,7 @@
               </skosOutputFiles>
             </configuration>
           </execution>
+
           <execution>
             <id>prov-pub-event</id>
             <phase>generate-sources</phase>
@@ -517,13 +686,17 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/knowledgemanagementdelivery/</owlSourceURL>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/knowledgemanagementdelivery/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-kmdo/</owlSourceURL>
+                <!--                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/knowledgemanagementdelivery/</owlSourceURL>-->
               </owlSourceURLs>
 
-              <owlNamespace>http://ontology.mayo.edu/ontologies/knowledgemanagementdelivery/</owlNamespace>
-              <targetURI>http://ontology.mayo.edu/ontologies/knowledgemanagementdelivery/KnowledgeManagementActivity</targetURI>
+              <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-kmdo/</owlNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp-kmdo/KnowledgeManagementActivity</targetURI>
               <minDepth>1</minDepth>
 
               <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/PublicationEventType</skosNamespace>
@@ -532,7 +705,7 @@
 
               <skosOutputFiles>
                 <skosOutputFile>prov-pub-ev.skos.rdf</skosOutputFile>
-                <skosOutputFile>prov-pub-ev_20190801.skos.rdf</skosOutputFile>
+                <!--                <skosOutputFile>prov-pub-ev_20190801.skos.rdf</skosOutputFile>-->
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -545,13 +718,17 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/knowledgemanagementdelivery/</owlSourceURL>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/knowledgemanagementdelivery/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-kmdo/</owlSourceURL>
+                <!--                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/knowledgemanagementdelivery/</owlSourceURL>-->
               </owlSourceURLs>
 
-              <owlNamespace>http://ontology.mayo.edu/ontologies/knowledgemanagementdelivery/</owlNamespace>
-              <targetURI>http://ontology.mayo.edu/ontologies/knowledgemanagementdelivery/associated-with</targetURI>
+              <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-kmdo/</owlNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp-kmdo/associated-with</targetURI>
               <entityType>OBJ_PROP</entityType>
               <minDepth>1</minDepth>
 
@@ -561,7 +738,7 @@
 
               <skosOutputFiles>
                 <skosOutputFile>ann.skos.rdf</skosOutputFile>
-                <skosOutputFile>ann_20190801.skos.rdf</skosOutputFile>
+                <!--                <skosOutputFile>ann_20190801.skos.rdf</skosOutputFile>-->
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -622,6 +799,7 @@
               </skosOutputFiles>
             </configuration>
           </execution>
+
           <execution>
             <id>kat-skos</id>
             <phase>generate-sources</phase>
@@ -629,9 +807,44 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
               <owlSourceURLs>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/clinicalknowledgeassets/</owlSourceURL>
-                <owlSourceURL>http://ontology.mayo.edu/ontologies/20190801/clinicalknowledgeassets/</owlSourceURL>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-ckao/</owlSourceURL>
+              </owlSourceURLs>
+
+              <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-ckao/</owlNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp-kao/CategorizedKnowledgeAsset</targetURI>
+              <entityType>CLASS</entityType>
+              <minDepth>2</minDepth>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType</skosNamespace>
+              <schemeName>KnowledgeAssetTypes</schemeName>
+              <topConceptName>KnowledgeAssetType</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>kat.skos.rdf</skosOutputFile>
+                <!--                <skosOutputFile>kat_20190801.skos.rdf</skosOutputFile>-->
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+          <execution>
+            <id>kat-skos-legacy</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}_20190801${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
+              <owlSourceURLs>
+                <owlSourceURL>
+                  http://ontology.mayo.edu/ontologies/20190801/clinicalknowledgeassets/
+                </owlSourceURL>
               </owlSourceURLs>
 
               <owlNamespace>http://ontology.mayo.edu/ontologies/clinicalknowledgeassets/</owlNamespace>
@@ -644,7 +857,6 @@
               <topConceptName>KnowledgeAssetType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>kat.skos.rdf</skosOutputFile>
                 <skosOutputFile>kat_20190801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
@@ -1066,7 +1278,8 @@
                   <dir>${project.build.directory}/generated-sources/xsd</dir>
                   <includes>**/*.xsd</includes>
                   <excludes>**/*.openapi.xsd</excludes>
-                  <stylesheet>${project.build.directory}/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl</stylesheet>
+                  <stylesheet>${project.build.directory}/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl
+                  </stylesheet>
                   <fileMappers>
                     <fileMapper
                       implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
@@ -1077,7 +1290,9 @@
                   <parameters>
                     <parameter>
                       <name>CATALOGS</name>
-                      <value>file:/${project.build.directory}/generated-sources/xsd/api4kp-catalog.xml</value>
+                      <value>
+                        file:/${project.build.directory}/generated-sources/xsd/api4kp-catalog.xml
+                      </value>
                     </parameter>
                   </parameters>
                 </transformationSet>

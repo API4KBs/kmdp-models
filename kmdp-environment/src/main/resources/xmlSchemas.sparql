@@ -3,7 +3,7 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX know: <https://www.omg.org/spec/API4KP/api4kp/>
+PREFIX api4kp: <https://www.omg.org/spec/API4KP/api4kp/>
 PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX w3c: <http://www.w3.org/TR/>
@@ -11,11 +11,11 @@ PREFIX dol: <http://www.omg.org/spec/DOL/DOL-terms/>
 
 SELECT ?L ?NS
 WHERE {
-  ?L a know:ConstructedLanguage;
+  ?L a api4kp:ConstructedLanguage;
     dol:supportsSerialization ?NS.
 
-  ?NS know:depends-on ?XMLF.
+  ?NS api4kp:depends-on ?XMLF.
 
-  ?XMLF a know:MetaFormat;
-    dc:source "http://www.w3.org/TR/xml11".
+  ?XMLF a api4kp:MetaFormat;
+    dct:source "http://www.w3.org/TR/xml11".
 }

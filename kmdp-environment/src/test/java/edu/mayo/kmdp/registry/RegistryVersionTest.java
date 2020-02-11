@@ -29,28 +29,28 @@ public class RegistryVersionTest extends RegistryTestBase {
   public void testLatestVersion() {
     Model registry = initRegistry("LATEST");
     assertTrue(checkLanguage("http://www.w3.org/2002/07/owl",
-        registry));
+        registry, "api4kp"));
     assertTrue(checkLanguage("https://graphql.github.io/graphql-spec/June2018/",
-        registry));
+        registry, "api4kp"));
   }
 
   @Test
   public void testOlderVersion() {
-    Model registry = initRegistry("20190801");
+    Model registry = initRegistry("20190801", "http://ontology.mayo.edu/ontologies/kmdp-registry/");
     assertTrue(checkLanguage("http://www.w3.org/2002/07/owl",
-        registry));
+        registry, "know"));
     assertFalse(checkLanguage("https://graphql.github.io/graphql-spec/June2018/",
-        registry));
+        registry, "know"));
   }
 
 
   private boolean checkLanguage(final String langURI,
-      final Model registry) {
+      final Model registry, String prefix) {
     String qry = PREAMBLE +
         "SELECT ?L " +
         " " +
         "WHERE { " +
-        "   ?L a know:ConstructedLanguage. " +
+        "   ?L a " + prefix + ":ConstructedLanguage. " +
         "}";
 
     List<Map<String, String>> ans = askQuery(qry, registry);
