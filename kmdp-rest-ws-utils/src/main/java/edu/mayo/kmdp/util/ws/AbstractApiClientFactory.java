@@ -19,11 +19,13 @@ import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.omg.spec.api4kp._1_0.ServerSideException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -71,7 +73,9 @@ public abstract class AbstractApiClientFactory {
             getResponseBody(response));
       }
     });
+    List<HttpMessageConverter<?>> converters = template.getMessageConverters();
+    converters.add(new HTMLKnowledgeCarrierWrapper());
+    template.setMessageConverters(converters);
     return template;
   }
-
 }
