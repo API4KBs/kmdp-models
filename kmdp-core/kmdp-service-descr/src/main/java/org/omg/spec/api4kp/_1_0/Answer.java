@@ -81,6 +81,12 @@ public class Answer<T> extends Explainer {
         .withExplanation(t.getError().getMessage());
   }
 
+  public static <X> Answer<X> notFound() {
+    return failed(new ServerSideException(ResponseCodeSeries.NotFound,
+        Collections.emptyMap(),
+        new byte[0]));
+  }
+
   public static <X> Answer<X> failed() {
     return failed(new ServerSideException(ResponseCodeSeries.InternalServerError,
         Collections.emptyMap(),
