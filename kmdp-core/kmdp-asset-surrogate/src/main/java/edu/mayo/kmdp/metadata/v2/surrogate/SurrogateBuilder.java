@@ -197,7 +197,7 @@ public class SurrogateBuilder {
       get().withCarriers(new ComputableKnowledgeArtifact().withLocalization(English)
           .withRepresentation(new Representation()
               .withLanguage(KnowledgeRepresentationLanguageSeries.HTML)
-              .withFormat(SerializationFormatSeries.XML_1_1)));
+              .withFormat(SerializationFormatSeries.TXT)));
     }
     return this;
   }

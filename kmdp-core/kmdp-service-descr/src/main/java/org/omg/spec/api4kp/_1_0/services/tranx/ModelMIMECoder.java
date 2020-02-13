@@ -17,6 +17,10 @@ package org.omg.spec.api4kp._1_0.services.tranx;
 
 import static edu.mayo.kmdp.util.Util.isEmpty;
 import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TXT;
+import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.XML_1_1;
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.XHTML;
+import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
@@ -26,20 +30,15 @@ import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSe
 import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfileSeries;
 import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
+import edu.mayo.ontology.taxonomies.mimetype.IMIMEType;
+import edu.mayo.ontology.taxonomies.mimetype.MIMETypeSeries;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ModelMIMECoder {
-
-  private static Logger logger = LoggerFactory.getLogger(ModelMIMECoder.class);
 
   protected ModelMIMECoder() {
   }
@@ -97,7 +96,8 @@ public class ModelMIMECoder {
   }
 
   public static Optional<SyntacticRepresentation> decode(String mime) {
-    return decompose(mime)
+    String formalMime = ensureFormalized(mime);
+    return decompose(formalMime)
         .map(t -> {
           SyntacticRepresentation rep = new SyntacticRepresentation();
 
@@ -124,14 +124,22 @@ public class ModelMIMECoder {
                 .ifPresent(rep::setProfile);
           }
 
-          if (!isEmpty(t.serialTag)) {
+          // currently, serialization meta-format XOR serialization are supported:
+          // prefer the former, try to use the latter if unsuccessful.
+          if (!isEmpty(t.formatTag)) {
+            rep.setFormat(SerializationFormatSeries.resolve(t.formatTag)
+                .orElse(null));
+          }
+
+          if (!isEmpty(t.serialTag) && rep.getFormat() == null) {
             KnowledgeRepresentationLanguageSerializationSeries.resolve(t.serialTag)
                 .ifPresent(rep::setSerialization);
           }
 
           if (rep.getFormat() == null) {
-            rep.setFormat(SerializationFormatSeries.resolve(t.formatTag).orElse(TXT));
+            rep.setFormat(TXT);
           }
+
 
           if (!isEmpty(t.lexTags)) {
             Arrays.stream(t.lexTags.split(","))
@@ -141,6 +149,39 @@ public class ModelMIMECoder {
 
           return rep;
         });
+  }
+
+  private static String ensureFormalized(String mimeCode) {
+    if (Util.isEmpty(mimeCode) || mimeCode.startsWith("model")) {
+      return mimeCode;
+    }
+    return MIMETypeSeries.resolve(mimeCode)
+        .flatMap(ModelMIMECoder::mapKnownMimes)
+        .orElse(mimeCode);
+  }
+
+  /**
+   * Existing MIME codes
+   *  - do not make consistent distinctions between languages, formats, profiles, etc
+   *  - even then, do not apply a consistent encoding strategy
+   *
+   *  This method normalizes some well known MIME codes, encoding the components
+   *  according to the current 'grammar'
+   * @param mimeType an encoded, standard MIME type
+   * @return the formal re-encoding of the input MIME type
+   */
+  private static Optional<String> mapKnownMimes(IMIMEType mimeType) {
+    String mappedMime = null;
+    switch (mimeType.asEnum()) {
+      case HyperText_Markup_Language:
+        mappedMime = ModelMIMECoder.encode(rep(HTML,TXT));
+        break;
+      case Application_Xhtmlxml:
+        mappedMime = ModelMIMECoder.encode(rep(XHTML,XML_1_1));
+        break;
+      default:
+    }
+    return Optional.ofNullable(mappedMime);
   }
 
   private static class LangTags {
@@ -188,46 +229,6 @@ public class ModelMIMECoder {
     return Optional.of(tags);
   }
 
-
-  public static List<String> splitCodes(String xAccept) {
-    if (Util.isEmpty(xAccept)) {
-      return Collections.emptyList();
-    }
-    return Arrays.stream(xAccept.split(","))
-        .map(String::trim)
-        .map(WeightedCode::new)
-        .sorted()
-        .map(x -> x.code)
-        .collect(Collectors.toList());
-  }
-
-  public static Optional<String> toModelCode(String s,
-      KnowledgeRepresentationLanguage defaultLanguage) {
-    int index = s.indexOf('/');
-    if (index < 0) {
-      return Optional.empty();
-    }
-    String space = s.substring(0, index);
-    switch (space) {
-      case "application":
-      case "text":
-        String c = "model/" + s.substring(index + 1);
-        return decode(c, defaultLanguage)
-            .map(ModelMIMECoder::encode);
-      case "model":
-        return Optional.of(s);
-      case "*/*":
-        return Optional.of(s);
-      case "image":
-      case "audio":
-      case "video":
-      case "example":
-      case "font":
-      default:
-        logger.error("[Defensive] : Unsupported MIME type : {}", s);
-        return Optional.empty();
-    }
-  }
 
   public static class WeightedCode implements Comparable<WeightedCode> {
 

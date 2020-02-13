@@ -35,6 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder.decode;
+import static org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder.encode;
 
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -46,7 +48,7 @@ public class MimeCoderTest {
   @Test
   public void testEncode1() {
     SyntacticRepresentation r1 = rep(BPMN_2_0, XML_1_1);
-    assertEquals("model/bpmn-v2+xml", ModelMIMECoder.encode(r1));
+    assertEquals("model/bpmn-v2+xml", encode(r1));
   }
 
   @Test
@@ -54,7 +56,7 @@ public class MimeCoderTest {
     SyntacticRepresentation r2 = rep(DMN_1_1,
         DMN_1_1_XML_Syntax,
         XML_1_1);
-    assertEquals("model/dmn-v11+xml", ModelMIMECoder.encode(r2));
+    assertEquals("model/dmn-v11+xml", encode(r2));
 
   }
 
@@ -64,7 +66,7 @@ public class MimeCoderTest {
         OWL2_RL,
         OWL_Manchester_Syntax,
         TXT);
-    assertEquals("model/owl2-v20121211[RL]+ms", ModelMIMECoder.encode(r3));
+    assertEquals("model/owl2-v20121211[RL]+ms", encode(r3));
   }
 
   @Test
@@ -74,14 +76,14 @@ public class MimeCoderTest {
         RDF_XML_Syntax,
         XML_1_1)
         .withLexicon(SNOMED_CT, LOINC);
-    assertEquals("model/owl2[RL]+rdf/xml;lex={sct,lnc}", ModelMIMECoder.encode(r4, false));
+    assertEquals("model/owl2[RL]+rdf/xml;lex={sct,lnc}", encode(r4, false));
   }
 
 
   @Test
   public void testDecode1() {
     String mime = "model/owl2[QL]+ttl;lex={sct,rxnorm}";
-    Optional<SyntacticRepresentation> rep = ModelMIMECoder.decode(mime);
+    Optional<SyntacticRepresentation> rep = decode(mime);
     if (!rep.isPresent()) {
       fail("Unable to decode " + mime);
     }
@@ -98,33 +100,9 @@ public class MimeCoderTest {
 
 
   @Test
-  public void testRecodeApplicationCode() {
-    String c = "application/xml";
-    Optional<String> m = ModelMIMECoder.toModelCode(c, DMN_1_1);
-    assertTrue(m.isPresent());
-
-    Optional<SyntacticRepresentation> rep = m.flatMap(ModelMIMECoder::decode);
-    assertTrue(rep.isPresent());
-    assertSame(DMN_1_1,rep.get().getLanguage());
-    assertSame(XML_1_1,rep.get().getFormat());
-  }
-
-  @Test
-  public void testRecodeApplicationCode2() {
-    String c = "text/html";
-    Optional<String> m = ModelMIMECoder.toModelCode(c,DMN_1_1);
-    assertTrue(m.isPresent());
-
-    Optional<SyntacticRepresentation> rep = m.flatMap(ModelMIMECoder::decode);
-    assertTrue(rep.isPresent());
-    assertSame(HTML,rep.get().getLanguage());
-    assertSame(TXT,rep.get().getFormat());
-  }
-
-  @Test
   public void testWeights() {
     String c1 = "model/html;q=0.3;lex={sct}";
-    SyntacticRepresentation rep1 = ModelMIMECoder.decode(c1)
+    SyntacticRepresentation rep1 = decode(c1)
         .orElse(new SyntacticRepresentation());
     assertSame(HTML,rep1.getLanguage());
     assertSame(TXT,rep1.getFormat());
@@ -134,11 +112,19 @@ public class MimeCoderTest {
   @Test
   public void testWeights2() {
     String c2 = "model/dmn-v11+xml;q=0.21";
-    SyntacticRepresentation rep2 = ModelMIMECoder.decode(c2)
+    SyntacticRepresentation rep2 = decode(c2)
         .orElse(new SyntacticRepresentation());
     assertSame(DMN_1_1,rep2.getLanguage());
     assertSame(XML_1_1,rep2.getFormat());
   }
 
+  @Test
+  public void testMappingHTML() {
+    String m = "text/html";
+    assertEquals("model/html-v52+text",
+        decode(m)
+            .map(ModelMIMECoder::encode)
+            .orElse(""));
+  }
 
 }
