@@ -45,9 +45,9 @@ public class PlatformComponentHelper {
       return Optional.empty();
     }
     return Optional.of(new org.omg.spec.api4kp._1_0.services.repository.resources.KnowledgeArtifactRepository()
-        .withInstanceId(uri(Registry.BASE_UUID_URN + UUID.randomUUID()))
+        .withInstanceId(uri(Registry.BASE_UUID_URN, UUID.randomUUID().toString(), "0.0.0"))
         .withId(uri(baseNamespace + "/repos/" + identifier))
-        .withAlias(uri(Registry.BASE_UUID_URN + identifier))
+        .withAlias(uri(Registry.BASE_UUID_URN, identifier, "0.0.0"))
         .withName(name)
         .withHref(URI.create(baseUrl + "/repos/" + identifier)));
   }
