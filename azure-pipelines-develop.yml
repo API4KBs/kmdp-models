@@ -89,7 +89,12 @@ steps:
       New-Item -Type Directory -Force "${HOME}/.m2"
       Copy-Item -Force "$(settingsxml.secureFilePath)" "${HOME}/.m2/settings.xml"
 
-# STEP 6 Deploy Maven to AzDo KMD Artifacts
+#STEP 6 Authenticate to KMD
+- task: MavenAuthenticate@0
+  inputs:
+    artifactsFeeds: 'KMD'
+
+# STEP 7 Deploy Maven to AzDo KMD Artifacts
 - task: Maven@3
   displayName: 'Maven Deploy to KMD Artifacts'
   inputs:
