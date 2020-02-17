@@ -75,13 +75,21 @@ steps:
     versionFilePath: pom.xml
     versionTransformation: none
 
-# STEP 4 Authenticate to Maven Feed 
-- task: MavenAuthenticate@0
-  displayName: 'Maven Authenticate'
+# STEP 4 Download secure settings file
+- task: DownloadSecureFile@1
+  name: settingsxml
   inputs:
-    artifactsFeeds: 'KMD'
+    secureFile: settings-dev.xml
 
-# STEP 5 Deploy Maven to AzDo KMD Artifacts
+# STEP 5 Write settings file to server
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      New-Item -Type Directory -Force "${HOME}/.m2"
+      Copy-Item -Force "$(settingsxml.secureFilePath)" "${HOME}/.m2/settings.xml"
+
+# STEP 6 Deploy Maven to AzDo KMD Artifacts
 - task: Maven@3
   displayName: 'Maven Deploy to KMD Artifacts'
   inputs:
