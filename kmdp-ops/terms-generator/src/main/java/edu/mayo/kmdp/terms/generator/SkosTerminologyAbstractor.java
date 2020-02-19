@@ -13,6 +13,7 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import static edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters.VERSION_PATTERN;
 import static edu.mayo.kmdp.util.Util.isUUID;
 
 import edu.mayo.kmdp.id.Term;
@@ -24,12 +25,12 @@ import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractio
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.internal.ConceptTermImpl;
 import edu.mayo.kmdp.terms.generator.internal.MutableConceptScheme;
-import edu.mayo.kmdp.util.graph.HierarchySorter;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
+import edu.mayo.kmdp.util.graph.HierarchySorter;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
@@ -286,7 +287,7 @@ public class SkosTerminologyAbstractor {
     // assume that ontologies use date-oriented version tags
 
     String versionTag = extractVersionTag(version,
-        cfg.getTyped(SkosAbstractionParameters.VERSION_PATTERN))
+        cfg.getTyped(VERSION_PATTERN))
         .orElse(null);
     String dateFormatPattern = cfg.getTyped(SkosAbstractionParameters.DATE_PATTERN);
     Date pubDate = DateTimeUtil.parseDateOrNow(
@@ -350,6 +351,14 @@ public class SkosTerminologyAbstractor {
     String versionUri = model.getOntologyID().getVersionIRI().map(IRI::toString).orElse("");
     String versionFragment = NameUtils.strip(ontoUri, versionUri);
 
+    if (Util.isEmpty(versionFragment) && cfg.get(VERSION_PATTERN).isPresent()) {
+      Matcher m = Pattern.compile(cfg.get(VERSION_PATTERN).orElse("")).matcher(versionUri);
+      if (m.groupCount() == 1 && m.find()) {
+        versionFragment = m.group(1);
+        logger.warn("Ontology version URI coincides with series URI : {} "
+            + "- estimated version tag to be {}", versionUri, versionFragment);
+      }
+    }
     if (Util.isEmpty(versionFragment) && enforceVersion) {
       throw new IllegalArgumentException("Unable to detect required information for " + ontoUri);
     }
@@ -357,10 +366,11 @@ public class SkosTerminologyAbstractor {
     String indURI = ind.getIRI().toString();
     String localId = NameUtils.getTrailingPart(ind.getIRI().toString());
 
+    final String detectedVersion = versionFragment;
     return model.getOntologyID().getVersionIRI()
         .map(v -> IRI
             .create(indURI.substring(0, indURI.lastIndexOf(localId) - 1)
-                + (versionFragment.startsWith("/") ? versionFragment : "/" + versionFragment)
+                + (detectedVersion.startsWith("/") ? detectedVersion : "/" + detectedVersion)
                 + "#" + localId)
             .toURI());
 

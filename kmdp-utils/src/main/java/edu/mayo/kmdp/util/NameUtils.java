@@ -636,6 +636,9 @@ public final class NameUtils {
     if (str == null || from == null || from.isEmpty()) {
       return from;
     }
+    if (str.equals(from)) {
+      return "";
+    }
 
     int i = 0;
     while (i < str.length()) {
@@ -655,6 +658,7 @@ public final class NameUtils {
     if (j < from.length()) {
       delta.append(from.substring(j));
     }
+
     if (Arrays.binarySearch(separators, delta.charAt(0)) >= 0) {
       delta.deleteCharAt(0);
     }
