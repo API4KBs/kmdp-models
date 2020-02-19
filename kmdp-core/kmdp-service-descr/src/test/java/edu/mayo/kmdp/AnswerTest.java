@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.AbstractCarrier;
 import org.omg.spec.api4kp._1_0.Answer;
@@ -116,6 +117,15 @@ class AnswerTest {
     KnowledgeCarrier kc = ans.orElse(null);
     assertNotNull(kc);
     assertEquals("mapped Foo", ((ExpressionCarrier) kc).getSerializedExpression());
+  }
+
+  @Test
+  void testNullableAnswers() {
+    Answer<?> ans = Answer.ofNullable(null);
+    assertTrue(ans.isFailure());
+
+    Answer<?> ans2 = Answer.of(Optional.empty());
+    assertTrue(ans2.isFailure());
   }
 
 }

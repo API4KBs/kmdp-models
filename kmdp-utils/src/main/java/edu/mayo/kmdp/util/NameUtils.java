@@ -629,10 +629,23 @@ public final class NameUtils {
   }
 
 
+  /**
+   * Strips a sub-string S out of a larger string T which is supposed to contain S as substring
+   * After the removal, removes extra 'separator' characters at the boundaries
+   * Example : strip("xyz","|aaxyzbb|", '|') -> aabb
+   *
+   * If the sub-string S appears more than once, only the first occurrence is removed
+   * Example : strip("xyz","xyzaaxyz") -> aaxyz
+   *
+   * If T is actually a sub-string of S, the operation results in the empty string
+   * Example: strip("xyz","xy") -> ""
+   *
+   * @param str the sub-string to be removed
+   * @param from the string from which the sub-string will be removed
+   * @param separators additional characters to remove
+   * @return the result of removing the sub-string from the super-string
+   */
   public static String strip(String str, String from, Character... separators) {
-    int j = 0;
-    StringBuilder delta = new StringBuilder();
-
     if (str == null || from == null || from.isEmpty()) {
       return from;
     }
@@ -640,7 +653,21 @@ public final class NameUtils {
       return "";
     }
 
+    StringBuilder delta = diffStr(str, from);
+
+    if (Arrays.binarySearch(separators, delta.charAt(0)) >= 0) {
+      delta.deleteCharAt(0);
+    }
+    if (Arrays.binarySearch(separators, delta.charAt(delta.length()-1)) >= 0) {
+      delta.deleteCharAt(delta.length()-1);
+    }
+    return delta.toString();
+  }
+
+  private static StringBuilder diffStr(String str, String from) {
+    int j = 0;
     int i = 0;
+    StringBuilder delta = new StringBuilder();
     while (i < str.length()) {
       if (j == from.length()) {
         break;
@@ -658,14 +685,7 @@ public final class NameUtils {
     if (j < from.length()) {
       delta.append(from.substring(j));
     }
-
-    if (Arrays.binarySearch(separators, delta.charAt(0)) >= 0) {
-      delta.deleteCharAt(0);
-    }
-    if (Arrays.binarySearch(separators, delta.charAt(delta.length()-1)) >= 0) {
-      delta.deleteCharAt(delta.length()-1);
-    }
-    return delta.toString();
+    return delta;
   }
 
 

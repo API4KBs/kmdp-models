@@ -55,7 +55,7 @@ public class HTMLKnowledgeCarrierWrapper implements HttpMessageConverter<Knowled
 
   @Override
   public void write(KnowledgeCarrier knowledgeCarrier, MediaType contentType,
-      HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+      HttpOutputMessage outputMessage) throws IOException {
     if (HTML.sameAs(knowledgeCarrier.getRepresentation().getLanguage())) {
      String html = knowledgeCarrier.asString()
          .orElseThrow(() -> new HttpMessageNotWritableException(

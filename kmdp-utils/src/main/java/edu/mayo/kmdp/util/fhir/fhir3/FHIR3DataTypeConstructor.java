@@ -27,10 +27,7 @@ import org.hl7.fhir.dstu3.model.DataElement;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.DateType;
 import org.hl7.fhir.dstu3.model.DecimalType;
-import org.hl7.fhir.dstu3.model.ElementDefinition;
-import org.hl7.fhir.dstu3.model.ElementDefinition.TypeRefComponent;
 import org.hl7.fhir.dstu3.model.Enumerations;
-import org.hl7.fhir.dstu3.model.Enumerations.DataType;
 import org.hl7.fhir.dstu3.model.IntegerType;
 import org.hl7.fhir.dstu3.model.Quantity;
 import org.hl7.fhir.dstu3.model.StringType;
@@ -366,14 +363,4 @@ public class FHIR3DataTypeConstructor {
         : null;
   }
 
-  @Deprecated
-  //TODO
-  public static Optional<DataElement> getType() {
-    return Optional.ofNullable(
-        new DataElement().addElement(
-            new ElementDefinition().addType(
-                new TypeRefComponent().setCode(DataType.QUANTITY.toCode())
-            )
-        ));
-  }
 }
