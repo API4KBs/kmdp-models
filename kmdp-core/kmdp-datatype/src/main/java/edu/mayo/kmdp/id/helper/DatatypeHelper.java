@@ -115,7 +115,13 @@ public class DatatypeHelper {
     return new URIIdentifier()
         .withUri(URI.create(id))
         .withVersionId(
-            Util.isEmpty(versionTag) ? null : URI.create(id + "/versions/" + versionTag));
+            Util.isEmpty(versionTag) ? null : URI.create(id + getVersionSeparator(id) + versionTag));
+  }
+
+  private static String getVersionSeparator(String id) {
+    return id.startsWith(BASE_UUID_URN)
+        ? ":"
+        : "/versions/";
   }
 
 

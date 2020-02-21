@@ -109,6 +109,10 @@ public class Answer<T> extends Explainer {
         .withExplanation("(#TODO): " );
   }
 
+  public static <X> Answer<X> ofNullable(X value) {
+    return Answer.of(Optional.ofNullable(value));
+  }
+
   public static <X> Answer<X> of(Optional<X> value) {
     return value
         .map(Answer::of)

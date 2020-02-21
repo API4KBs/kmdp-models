@@ -30,5 +30,5 @@ import javax.inject.Qualifier;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KPSupport {
 
-  KnowledgeRepresentationLanguageSeries value();
+  KnowledgeRepresentationLanguageSeries[] value();
 }

@@ -218,4 +218,34 @@ public class SurrogateHelper {
         .collect(Collectors.toSet());
   }
 
+  /**
+   * Helper method that looks for any ComputableKnowledgeArtifact among the Artifacts
+   * referenced in a Knowledge Asset Surrogate
+   * @param surr  The Surrogate of the Asset for which a Computable Manifestation is requested
+   * @return  Any Computable Variant of the asset, if present
+   */
+  public static Optional<ComputableKnowledgeArtifact> getComputableCarrier(
+      KnowledgeAsset surr) {
+    return surr.getCarriers().stream()
+        .flatMap(StreamUtil.filterAs(ComputableKnowledgeArtifact.class))
+        .findAny();
+  }
+
+  /**
+   * Helper method that looks for the ComputableKnowledgeArtifact with a given ID and version
+   * among the Artifact referenced in a Knowledge Asset Surrogate
+   * @param artifactId The ID of the Computable Artifact to retrieve
+   * @param artifactVersionTag The version Tag of the Computable Artifact to retrieve
+   * @param surr  The Surrogate of the Asset for which a Computable Manifestation is requested
+   * @return  The Computable Variant of the asset with the given ID and version, if present
+   */
+  public static Optional<ComputableKnowledgeArtifact> getComputableCarrier(UUID artifactId,
+      String artifactVersionTag,
+      KnowledgeAsset surr) {
+    return surr.getCarriers().stream()
+        .filter(a -> a.getArtifactId().getTag().equals(artifactId.toString())
+            && a.getArtifactId().getVersion().equals(artifactVersionTag))
+        .flatMap(StreamUtil.filterAs(ComputableKnowledgeArtifact.class))
+        .findAny();
+  }
 }
