@@ -118,7 +118,13 @@ public class DatatypeHelper {
             Util.isEmpty(versionTag) ? null : URI.create(id + getVersionSeparator(id) + versionTag));
   }
 
-  private static String getVersionSeparator(String id) {
+  /**
+   * Returns the default id/version separator based on the URI pattern
+   * urn:uuid use ":", while http-based URIs use "/versions"
+   * @param id the URI for which to get the id/version separator
+   * @return the string used to separate the id from the version tag for this kind of id
+   */
+  public static String getVersionSeparator(String id) {
     return id.startsWith(BASE_UUID_URN)
         ? ":"
         : "/versions/";
