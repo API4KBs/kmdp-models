@@ -84,12 +84,12 @@ steps:
   inputs:
     artifactsFeeds: 'KMD'
 
-# Maven Clean Test
+# Maven Clean Package
 - task: Maven@3
-  displayName: 'Maven Clean Test'
+  displayName: 'Maven Clean Package'
   inputs:
     mavenPomFile: 'pom.xml'
-    goals: 'clean test'
+    goals: 'clean package'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
