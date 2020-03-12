@@ -16,7 +16,7 @@
 
   <properties>
     <uml-model>api4kp.uml</uml-model>
-    <uml-included-packages>api4kp,identifiers,datatypes</uml-included-packages>
+    <uml-included-packages>api4kp,identifiers,id,datatypes</uml-included-packages>
     <s>${file.separator}</s>
   </properties>
 
