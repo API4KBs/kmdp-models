@@ -19,7 +19,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import edu.mayo.kmdp.util.fhir.AbstractFHIRXmlAdapter;
 import java.io.InputStreamReader;
-import org.hl7.fhir.instance.model.BaseResource;
+import org.hl7.fhir.dstu2.model.BaseResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 public class FHIR2HL7XmlAdapter extends AbstractFHIRXmlAdapter<BaseResource> {

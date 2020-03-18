@@ -29,11 +29,11 @@ import edu.mayo.kmdp.util.fhir.fhir2_hl7.FHIR2HL7JsonUtil;
 import edu.mayo.kmdp.util.fhir.fhir3.FHIR3JsonUtil;
 import edu.mayo.kmdp.util.ws.JsonRestWSUtils.WithFHIR;
 import java.io.ByteArrayOutputStream;
+import org.hl7.fhir.dstu2.model.MedicationStatement;
+import org.hl7.fhir.dstu2.model.MedicationStatement.MedicationStatementDosageComponent;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Observation;
-import org.hl7.fhir.instance.model.MedicationStatement;
-import org.hl7.fhir.instance.model.MedicationStatement.MedicationStatementDosageComponent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -77,8 +77,8 @@ public class FHIRSerializationTest {
 
   private MedicationStatement getFHIR2HL7Resource() {
     return (MedicationStatement) new MedicationStatement()
-        .setMedication(new org.hl7.fhir.instance.model.CodeableConcept()
-            .addCoding(new org.hl7.fhir.instance.model.Coding()
+        .setMedication(new org.hl7.fhir.dstu2.model.CodeableConcept()
+            .addCoding(new org.hl7.fhir.dstu2.model.Coding()
                 .setCode("aspirin")))
         .addDosage(new MedicationStatementDosageComponent()
             .setText("Not too much"))

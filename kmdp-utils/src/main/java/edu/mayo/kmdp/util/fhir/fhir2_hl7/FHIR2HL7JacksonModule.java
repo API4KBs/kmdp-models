@@ -17,7 +17,7 @@ package edu.mayo.kmdp.util.fhir.fhir2_hl7;
 
 import com.fasterxml.jackson.core.Version;
 import edu.mayo.kmdp.util.fhir.AbstractFHIRJacksonModule;
-import org.hl7.fhir.instance.model.Base;
+import org.hl7.fhir.dstu2.model.Base;
 
 public class FHIR2HL7JacksonModule extends AbstractFHIRJacksonModule<Base> {
 

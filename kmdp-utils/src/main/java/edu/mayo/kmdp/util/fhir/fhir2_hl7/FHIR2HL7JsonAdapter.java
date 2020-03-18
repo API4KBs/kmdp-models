@@ -28,14 +28,14 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import edu.mayo.kmdp.util.fhir.AbstractFHIRJsonAdapter;
 import java.io.IOException;
 import java.util.List;
-import org.hl7.fhir.instance.model.Base;
-import org.hl7.fhir.instance.model.Bundle;
-import org.hl7.fhir.instance.model.Bundle.BundleEntryComponent;
-import org.hl7.fhir.instance.model.Bundle.BundleType;
-import org.hl7.fhir.instance.model.DomainResource;
-import org.hl7.fhir.instance.model.Parameters;
-import org.hl7.fhir.instance.model.Resource;
-import org.hl7.fhir.instance.model.Type;
+import org.hl7.fhir.dstu2.model.Base;
+import org.hl7.fhir.dstu2.model.Bundle;
+import org.hl7.fhir.dstu2.model.Bundle.BundleEntryComponent;
+import org.hl7.fhir.dstu2.model.Bundle.BundleType;
+import org.hl7.fhir.dstu2.model.DomainResource;
+import org.hl7.fhir.dstu2.model.Parameters;
+import org.hl7.fhir.dstu2.model.Resource;
+import org.hl7.fhir.dstu2.model.Type;
 import org.hl7.fhir.instance.model.api.IBase;
 
 public class FHIR2HL7JsonAdapter extends

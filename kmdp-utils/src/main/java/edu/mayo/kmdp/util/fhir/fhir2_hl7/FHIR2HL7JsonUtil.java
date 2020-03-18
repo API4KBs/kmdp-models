@@ -18,7 +18,7 @@ package edu.mayo.kmdp.util.fhir.fhir2_hl7;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import edu.mayo.kmdp.util.fhir.AbstractFHIRJsonUtil;
-import org.hl7.fhir.instance.model.Resource;
+import org.hl7.fhir.dstu2.model.Resource;
 
 public class FHIR2HL7JsonUtil extends AbstractFHIRJsonUtil<Resource> {
 
