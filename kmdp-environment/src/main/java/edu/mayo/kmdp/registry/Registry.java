@@ -40,8 +40,10 @@ public class Registry {
   public static final String REGISTRY_URI = "https://www.omg.org/spec/API4KP/api4kp-registry";
 
   public static final String MAYO_ASSETS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/assets/";
+  public static final URI MAYO_ASSETS_BASE_URI_URI = URI.create(MAYO_ASSETS_BASE_URI);
   public static final String MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/artifacts/";
   public static final String BASE_UUID_URN = "urn:uuid:";
+  public static final URI BASE_UUID_URN_URI = URI.create(BASE_UUID_URN);
 
   private static CatalogResolver xcat;
 

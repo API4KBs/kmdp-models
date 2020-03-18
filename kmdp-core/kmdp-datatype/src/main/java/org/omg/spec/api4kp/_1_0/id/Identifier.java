@@ -6,7 +6,10 @@ import java.util.Date;
 public interface Identifier {
   String getTag();
 
+  // TODO: what is URI for formats?
+  // TODO: ask Davide how to make Enums in UML Designer
   default URI getFormat() {
+
     return null;
   }
 
@@ -14,6 +17,8 @@ public interface Identifier {
 
   Date getEstablishedOn();
 
-  URI getDenotes();
+  default URI denotes() { return getResourceId(); }
+
+  URI getResourceId();
 
 }

@@ -10,7 +10,11 @@
     <namespace:prefix name="id"/>
 
     <jxb:bindings node="//xsd:complexType[@name='ResourceIdentifier']">
-      <inheritance:implements>org.omg.spec.api4kp._1_0.id.Identifier</inheritance:implements>
+      <inheritance:implements>org.omg.spec.api4kp._1_0.id.SemanticIdentifier</inheritance:implements>
+    </jxb:bindings>
+
+    <jxb:bindings node="//xsd:complexType[@name='ConceptIdentifier']">
+      <inheritance:implements>org.omg.spec.api4kp._1_0.id.Term</inheritance:implements>
     </jxb:bindings>
 
   </jxb:bindings>

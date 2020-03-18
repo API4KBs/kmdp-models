@@ -75,7 +75,6 @@ public class DatatypeTest {
     assertEquals("42", vid.getVersion());
     assertEquals(IDFormats.OID.asURI(), vid.getFormat());
     assertEquals("1.3.6.1", vid.getTag());
-
   }
 
   @Test

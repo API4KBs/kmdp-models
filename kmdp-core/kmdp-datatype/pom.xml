@@ -70,6 +70,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github.zafarkhaja</groupId>
+      <artifactId>java-semver</artifactId>
+      <version>0.9.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-test-utils</artifactId>
       <scope>test</scope>
