@@ -57,10 +57,13 @@ public class SwaggerToIDLTranslatorTest {
         .translate(sources);
     assertFalse(target.isEmpty());
 
-    target.forEach(s -> System.out.println("\n\n" + s));
+    // target.forEach(s -> System.out.println("\n\n" + s));
 
     String errs = TestIDLCompiler.tryCompileSource(gen, target);
     assertEquals("", errs, errs);
+
+    // CodeGenTestBase.showDirContent(tmp.toFile(),true);
+
     CodeGenTestBase.ensureSuccessCompile(gen,gen,out);
 
     CodeGenTestBase.showDirContent(tmp.toFile(),true);

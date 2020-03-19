@@ -95,7 +95,10 @@ public class ServiceDescrCompilationTest {
 
       assertFalse(tp.getClass() == t2.getClass());
 
-      assertEquals(t2, tp);
+      Transrepresentator t3 = new Transrepresentator();
+      tp.copyTo(t3);
+
+      assertEquals(t2, t3);
       assertEquals(tp.getTxions(), t2.getTxions());
 
     } catch (Exception e) {

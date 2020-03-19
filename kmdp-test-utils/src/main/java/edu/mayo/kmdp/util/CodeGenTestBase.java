@@ -39,9 +39,9 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import javax.validation.constraints.NotNull;
-import org.slf4j.LoggerFactory;
+import org.jvnet.mjiip.v_2.XJC2Mojo;
 import org.slf4j.Logger;
-import org.jvnet.mjiip.v_2_2.XJC22Mojo;
+import org.slf4j.LoggerFactory;
 
 public abstract class CodeGenTestBase {
 
@@ -77,6 +77,7 @@ public abstract class CodeGenTestBase {
 
     boolean success = true;
     for (Diagnostic diag : diagnostics) {
+      System.err.println(diag);
       if (logger.isWarnEnabled()) {
         logger.warn(String.format("%s : %s", diag.getKind(), diag));
       }
@@ -211,7 +212,7 @@ public abstract class CodeGenTestBase {
 
     checkAndRegisterCatalog(catalog, opts);
 
-    XJC22Mojo mojo = configureMojo(opts, episode, withAnnotations, withExtensions);
+    XJC2Mojo mojo = configureMojo(opts, episode, withAnnotations, withExtensions);
 
     try {
       int n = mojo.getArgs().size();
@@ -222,9 +223,9 @@ public abstract class CodeGenTestBase {
     }
   }
 
-  private static XJC22Mojo configureMojo(Options opts, File episode, boolean withAnnotations,
+  private static XJC2Mojo configureMojo(Options opts, File episode, boolean withAnnotations,
       boolean withExtensions) {
-    XJC22Mojo mojo = new XJC22Mojo();
+    XJC2Mojo mojo = new XJC2Mojo();
     mojo.setVerbose(false);
     mojo.setExtension(true);
 
@@ -257,7 +258,7 @@ public abstract class CodeGenTestBase {
         fail("Catalog File Not Found : " + catalog);
       }
       try {
-        opts.addCatalog(catalog);
+        opts.entityResolver = XMLUtil.catalogResolver(catalog.toURI().toURL());
       } catch (IOException e) {
         logger.error(e.getMessage(),e);
         fail(e.getMessage());

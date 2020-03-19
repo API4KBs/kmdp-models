@@ -22,6 +22,7 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initGenSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
+import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -57,6 +58,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.validation.Schema;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._1_0.identifiers.ObjectFactory;
@@ -249,23 +251,25 @@ public class JaxbGenerationTest {
 //		printSourceFile( new File( src.getAbsolutePath() + "/test/generator/v20180210/SCH1.xsd"), System.out );
 //		printSourceFile( new File( src.getAbsolutePath() + "/test/generator/v20180210/SCH1.java"), System.out );
 
-    //showDirContent(folder);
+    showDirContent(folder,true);
 
     applyJaxb(singletonList(new File(src.getAbsolutePath() + "/parent.xsd")),
         singletonList(new File(src.getAbsolutePath())),
         gen,
         new File(src.getAbsolutePath() + "/xsd/api4kp-catalog.xml"));
 
+    showDirContent(folder,true);
+
     purge(gen);
 
-    //showDirContent(folder);
+    showDirContent(folder,true);
 
 //		printSourceFile( new File( src.getAbsolutePath() + "/org/tempuri/parent/Info.java"), System.out );
 //		printSourceFile( new File( src.getAbsolutePath() + "/org/tempuri/parent/ObjectFactory.java"), System.out );
 
     ensureSuccessCompile(src, gen, tgt);
 
-    //showDirContent(folder);
+    showDirContent(folder,true);
 
     return tgt;
   }
@@ -274,8 +278,10 @@ public class JaxbGenerationTest {
     // In real scenarios, one would pass the episode file and the dependency to the already compiled datatypes.
     // For testing purposes, we let JaxB regenerate the files, then delete them before compilation
     File omg = new File(gen.getAbsolutePath() + "/org/omg");
-    assertTrue(omg.isDirectory());
-    FileUtil.delete(omg);
+    if (omg.exists()) {
+      assertTrue(omg.isDirectory());
+      FileUtil.delete(omg);
+    }
   }
 
 

@@ -1,6 +1,6 @@
 package edu.mayo.kmdp;
 
-import com.sun.tools.corba.se.idl.toJavaPortable.Compile;
+import com.sun.tools.corba.ee.idl.toJavaPortable.Compile;
 import edu.mayo.kmdp.util.FileUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,8 +20,10 @@ public class TestIDLCompiler {
 
   static {
     try {
-      Class<Compile> compileClass = Compile.class;
-      Constructor<Compile> constructor = compileClass.getDeclaredConstructor();
+      Class<Compile> compileClass
+          = Compile.class;
+      Constructor<Compile> constructor
+          = compileClass.getDeclaredConstructor();
       constructor.setAccessible(true);
 
       compiler = constructor.newInstance();
@@ -31,7 +33,6 @@ public class TestIDLCompiler {
     }
   }
 
-
   public static String tryCompile(File outputDir, List<File> sourceIDLFiles) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -39,14 +40,28 @@ public class TestIDLCompiler {
     System.setErr(new PrintStream(baos));
 
     int numSources = sourceIDLFiles.size();
-    int numArgs = 6;
+    int numArgs = 9;
     String[] args = new String[numArgs];
-    args[0] = "-td";
-    args[1] = outputDir.getAbsolutePath();
-    args[2] = "-emitAll";
-    args[3] = "-i";
-    args[4] = sourceIDLFiles.get(0).getParentFile().getAbsolutePath();
-    args[5] = sourceIDLFiles.get(numSources-1).getAbsolutePath();
+
+    args[0] = "-emitAll";
+
+    args[1] = "-i";
+    args[2] = sourceIDLFiles.stream()
+        .map(File::getParentFile)
+        .map(File::getAbsolutePath)
+        .collect(Collectors.toSet())
+        .stream()
+        .collect(Collectors.joining(System.getProperty ("path.separator")));
+
+    args[3] = "-v";
+
+    args[4] = "-corba";
+    args[5] = "3.0";
+
+    args[6] = "-td";
+    args[7] = outputDir.getAbsolutePath();
+
+    args[8] = sourceIDLFiles.get(numSources-1).getAbsolutePath();
 
     compiler.start(args);
 

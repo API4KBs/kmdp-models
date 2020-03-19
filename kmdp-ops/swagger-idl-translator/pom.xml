@@ -7,8 +7,12 @@
   <parent>
     <groupId>edu.mayo.kmdp</groupId>
     <artifactId>kmdp-ops</artifactId>
-    <version>6.1.0-SNAPSHOT</version>
+    <version>7.0.0-SNAPSHOT</version>
   </parent>
+
+  <properties>
+    <gf.corba.version>4.2.1</gf.corba.version>
+  </properties>
 
   <artifactId>swagger-idl-translator</artifactId>
 
@@ -52,6 +56,19 @@
       <groupId>com.github.olivergondza</groupId>
       <artifactId>maven-jdk-tools-wrapper</artifactId>
       <version>0.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.corba</groupId>
+      <artifactId>idlj</artifactId>
+      <version>${gf.corba.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.corba</groupId>
+      <artifactId>glassfish-corba-omgapi</artifactId>
+      <version>${gf.corba.version}</version>
       <scope>test</scope>
     </dependency>
 

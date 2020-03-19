@@ -17,7 +17,7 @@ package edu.mayo.kmdp.id.adapter;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.jvnet.jaxb2_commons.lang.CopyStrategy;
+import org.jvnet.jaxb2_commons.lang.CopyStrategy2;
 import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 
 // May not be necessary if copyTo is not enabled
@@ -39,10 +39,10 @@ public class CopyableHashMap<K, V, M extends CopyableHashMap<K,V,M>> extends Has
 
   @SuppressWarnings("unchecked")
   public java.lang.Object copyTo(ObjectLocator locator, java.lang.Object target,
-      CopyStrategy strategy) {
+      CopyStrategy2 strategy) {
     if (target instanceof Map) {
       Map targetMap = (Map) target;
-      this.forEach((k, v) -> targetMap.put((Object) k, (Object) strategy.copy(locator, v)));
+      this.forEach((k, v) -> targetMap.put((Object) k, (Object) strategy.copy(locator, v, true)));
     }
     return target;
   }
