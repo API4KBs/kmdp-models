@@ -5,15 +5,16 @@ import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.omg.spec.api4kp._1_0.id.VersionTagType;
 
+/**
+ * Handle versionIdentifier data.
+ */
 public interface VersionIdentifier extends Identifier {
 
   String VERSIONS = "/versions/";
-  Pattern SEMVER_RX = Pattern.compile("^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$");
+  Pattern SEMVER_RX = Pattern.compile("^(\\d+\\.)(\\d+\\.)(\\*|\\d+)$");
 
   String getVersionTag();
 
@@ -26,21 +27,22 @@ public interface VersionIdentifier extends Identifier {
     return URI.create(uri + getVersionSeparator(uri.toString()) + getVersionTag());
   }
 
-  URI getNamespace();
-
-  UUID getUuid();
-
+  /**
+   * return the version type based on the format of the string
+   *
+   * @return VersionTagType enum for the format
+   */
   default VersionTagType getVersionFormat() {
     String versionTag = getVersionTag();
+    Matcher matcher = SEMVER_RX.matcher(versionTag);
+    if (matcher.matches()) {
+      return VersionTagType.SEM_VER;
+    }
     if (versionTag.matches("\\d+")) {
       return VersionTagType.SEQUENTIAL;
     }
     if (DateTimeUtil.isDate(versionTag)) {
       return VersionTagType.TIMESTAMP;
-    }
-    Matcher matcher = SEMVER_RX.matcher(versionTag);
-    if (matcher.matches()) {
-      return VersionTagType.SEM_VER;
     } else {
       return VersionTagType.GENERIC;
     }

@@ -120,7 +120,7 @@ public class TermTest {
     assertEquals(expectedResourceId, cid.getResourceId());
   }
 
- @Test
+  @Test
   public void testSimpleID() {
     Identifier id = Term.newId("thisId");
 
@@ -142,12 +142,14 @@ public class TermTest {
   @Test
   public void testQNameID() {
     String tag = "1.3.6.1";
-    String expectedQname = MAYO_ASSETS_BASE_URI + ":" + tag;
+    String expectedQname = "{" + MAYO_ASSETS_BASE_URI + "}_" + tag;
     ScopedIdentifier qid = Term.newId(MAYO_ASSETS_BASE_URI_URI, tag);
 
     assertEquals(MAYO_ASSETS_BASE_URI_URI, qid.getNamespace());
     assertEquals("1.3.6.1", qid.getTag());
-    assertEquals(QName.valueOf(expectedQname), qid.getQName());
+    assertEquals(expectedQname, qid.getQName().toString());
+    assertEquals("_1.3.6.1", qid.getQName().getLocalPart());
+    assertEquals(MAYO_ASSETS_BASE_URI, qid.getQName().getNamespaceURI());
     assertNotNull(qid.getUuid());
     assertNotNull(qid.getResourceId());
   }
@@ -155,11 +157,13 @@ public class TermTest {
   @Test
   public void testQNameID_URN() {
     String tag = "1.3.6.1";
-    String expectedQname = BASE_UUID_URN + ":" + tag;
+    String expectedQname = "{" + BASE_UUID_URN + "}_" + tag;
     ScopedIdentifier qid = Term.newId(BASE_UUID_URN_URI, tag);
     assertEquals(BASE_UUID_URN_URI, qid.getNamespace());
     assertEquals("1.3.6.1", qid.getTag());
-    assertEquals(QName.valueOf(expectedQname), qid.getQName());
+    assertEquals("_1.3.6.1", qid.getQName().getLocalPart());
+    assertEquals(expectedQname, qid.getQName().toString());
+    assertEquals(BASE_UUID_URN, qid.getQName().getNamespaceURI());
     assertNotNull(qid.getUuid());
     assertNotNull(qid.getResourceId());
   }
@@ -192,15 +196,6 @@ public class TermTest {
     ConceptIdentifier trm = (ConceptIdentifier) Term
         .newId("234", UUID.randomUUID(), URI.create("http://id/1"),
             URI.create("http://foo.bar/234"), null, "1", null, null);
-//    new ConceptIdentifier()
-//        .withReferentId(URI.create("http://foo.bar/234"))
-////        .withLabel("aaaa")
-//        .withTag("234")
-//        .withNamespace(URI.create("http://id/1"))
-//        .withTag("id")
-//        .withVersionTag("1")
-//        .withUuid(UUID.randomUUID())
-//        .withResourceId(SemanticIdentifier.getResourceId("234", URI.create("http://id/1")));
 
     ObjectFactory of = new ObjectFactory();
     String xml = JaxbUtil.marshall(Collections.singleton(of.getClass()),

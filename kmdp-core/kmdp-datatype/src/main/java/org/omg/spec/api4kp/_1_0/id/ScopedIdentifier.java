@@ -13,20 +13,22 @@ public interface ScopedIdentifier extends Identifier {
 
   /**
    * compose QName given namespace and tag
-   * @return
+   * @return QName
    */
   default QName getQName() {
-    verifyData(getTag(), getNamespace());
-    return QName.valueOf(getNamespace() + ":" + getTag());
-  }
-
-  default void verifyData(String tag, URI namespace){
+    String tag = getTag();
     if(Util.isEmpty(tag)) {
       throw new IllegalStateException("Tag is required to compose QName");
+    } else {
+      // verify tag format -- cannot start with digit
+      if(Character.isDigit(tag.charAt(0))) {
+        tag = "_" + tag;
+      }
     }
-    // TODO: if no namespace, compose from resourceId instead of error?
-    if(Util.isEmpty(namespace.toString())) {
-      throw new IllegalStateException("Namespace is required to compose QName");
+    if(null != getNamespace()) {
+      return new QName(getNamespace().toString(), tag);
+    } else {
+      return new QName(tag);
     }
   }
 

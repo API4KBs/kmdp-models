@@ -18,8 +18,6 @@ import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
-import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,16 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
-import edu.mayo.kmdp.util.JaxbUtil;
-import edu.mayo.kmdp.util.XMLUtil;
-import java.io.ByteArrayOutputStream;
 import java.net.URI;
-import java.util.Collections;
+import java.net.URISyntaxException;
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
-import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 
 
@@ -72,6 +66,23 @@ public class DatatypeTest {
   }
 
   @Test
+  public void testSemanticBuilderAssetIdStringVersion() {
+    UUID uuid = UUID.randomUUID();
+    URI expectedId = URI.create(MAYO_ASSETS_BASE_URI + uuid);
+    URI versionId = URI.create(
+        MAYO_ASSETS_BASE_URI + uuid + VersionIdentifier.VERSIONS + "1.0.0");
+    ResourceIdentifier id = (ResourceIdentifier) SemanticIdentifier
+        .newId(MAYO_ASSETS_BASE_URI_URI, uuid, "1.0.0", "testing");
+
+    assertNotNull(id);
+    assertEquals("testing", id.getName());
+    assertEquals(MAYO_ASSETS_BASE_URI_URI, id.getNamespace());
+    assertEquals(uuid, id.getUuid());
+    assertEquals(expectedId, id.getResourceId());
+    assertEquals(versionId, id.getVersionId());
+  }
+
+  @Test
   public void testSemanticBuilderResourceIdURN() {
     UUID uuid = UUID.randomUUID();
     Version version = Version.valueOf("1.0.0");
@@ -88,6 +99,27 @@ public class DatatypeTest {
     assertEquals(expectedId, id.getResourceId());
     assertEquals(versionId, id.getVersionId());
     assertEquals(version.toString(), id.getVersionTag());
+    assertNull(id.getEstablishedOn());
+    assertNull(id.getNamespace());
+  }
+
+  @Test
+  public void testSemanticBuilderResourceIdVersionStringURN() {
+    UUID uuid = UUID.randomUUID();
+    String version = "1.0.0";
+    String name = "Testing";
+    URI expectedId = URI.create(BASE_UUID_URN + uuid);
+    URI versionId = URI.create(BASE_UUID_URN + uuid + ":" + version);
+    ResourceIdentifier id = (ResourceIdentifier) SemanticIdentifier.newId(uuid, version, name);
+
+    assertNotNull(id);
+    assertEquals(name, id.getName());
+    // uuid, tag and resourceId are required
+    assertEquals(uuid, id.getUuid());
+    assertEquals(uuid.toString(), id.getTag());
+    assertEquals(expectedId, id.getResourceId());
+    assertEquals(versionId, id.getVersionId());
+    assertEquals(version, id.getVersionTag());
     assertNull(id.getEstablishedOn());
     assertNull(id.getNamespace());
   }
@@ -239,15 +271,29 @@ public class DatatypeTest {
   @Test
   public void testQNameID() {
     String tag = "1.3.6.1";
-    String expectedQname = MAYO_ASSETS_BASE_URI + ":" + tag;
     ScopedIdentifier qid = SemanticIdentifier.newId(MAYO_ASSETS_BASE_URI_URI, tag);
 
     assertEquals(MAYO_ASSETS_BASE_URI_URI, qid.getNamespace());
     assertEquals("1.3.6.1", qid.getTag());
-    assertEquals(QName.valueOf(expectedQname), qid.getQName());
+    assertEquals("_1.3.6.1", qid.getQName().getLocalPart());
+    assertEquals(MAYO_ASSETS_BASE_URI, qid.getQName().getNamespaceURI());
     assertNotNull(qid.getUuid());
     assertNotNull(qid.getResourceId());
   }
+
+  @Test
+  public void testQNameNullNamespace() {
+    String tag = "1.3.6.1";
+    ScopedIdentifier qid = SemanticIdentifier.newId(tag);
+
+    assertNull(qid.getNamespace());
+    assertEquals("1.3.6.1", qid.getTag());
+    assertNotNull(qid.getUuid());
+    assertNotNull(qid.getResourceId());
+    assertEquals("_1.3.6.1", qid.getQName().getLocalPart());
+    assertEquals("", qid.getQName().getNamespaceURI());
+  }
+
 
   @Test
   public void testQNameID_URN() {
@@ -256,7 +302,8 @@ public class DatatypeTest {
     ScopedIdentifier qid = SemanticIdentifier.newId(BASE_UUID_URN_URI, tag);
     assertEquals(BASE_UUID_URN_URI, qid.getNamespace());
     assertEquals("1.3.6.1", qid.getTag());
-    assertEquals(QName.valueOf(expectedQname), qid.getQName());
+    assertEquals("_1.3.6.1", qid.getQName().getLocalPart());
+    assertEquals(BASE_UUID_URN, qid.getQName().getNamespaceURI());
     assertNotNull(qid.getUuid());
     assertNotNull(qid.getResourceId());
   }
@@ -346,6 +393,8 @@ public class DatatypeTest {
 
 
     assertTrue(VersionTagType.SEM_VER.equals(semanticVersion.getVersionFormat()));
+    assertNotNull(semanticVersion.getSemanticVersionTag());
+    assertEquals("1.0.0", semanticVersion.getSemanticVersionTag().toString());
     assertFalse(VersionTagType.SEQUENTIAL.equals(semanticVersion.getVersionFormat()));
     assertFalse(VersionTagType.TIMESTAMP.equals(semanticVersion.getVersionFormat()));
     assertFalse(VersionTagType.GENERIC.equals(semanticVersion.getVersionFormat()));
@@ -369,7 +418,6 @@ public class DatatypeTest {
     assertFalse(VersionTagType.SEQUENTIAL.equals(timestampVersion.getVersionFormat()));
     assertFalse(VersionTagType.SEM_VER.equals(timestampVersion.getVersionFormat()));
     assertFalse(VersionTagType.TIMESTAMP.equals(timestampVersion.getVersionFormat()));
-
 
     assertTrue(VersionTagType.GENERIC.equals(genericVersion.getVersionFormat()));
     assertFalse(VersionTagType.SEQUENTIAL.equals(genericVersion.getVersionFormat()));
@@ -397,18 +445,15 @@ public class DatatypeTest {
     ResourceIdentifier timestampVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, timestamp.toString());
     ResourceIdentifier genericVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, other);
 
-
     assertTrue(VersionTagType.SEM_VER.equals(semanticVersion.getVersionFormat()));
     assertFalse(VersionTagType.SEQUENTIAL.equals(semanticVersion.getVersionFormat()));
     assertFalse(VersionTagType.TIMESTAMP.equals(semanticVersion.getVersionFormat()));
     assertFalse(VersionTagType.GENERIC.equals(semanticVersion.getVersionFormat()));
 
-
     assertTrue(VersionTagType.SEQUENTIAL.equals(sequentialVersion.getVersionFormat()));
     assertFalse(VersionTagType.SEM_VER.equals(sequentialVersion.getVersionFormat()));
     assertFalse(VersionTagType.TIMESTAMP.equals(sequentialVersion.getVersionFormat()));
     assertFalse(VersionTagType.GENERIC.equals(sequentialVersion.getVersionFormat()));
-
 
     assertTrue(VersionTagType.TIMESTAMP.equals(dateFormatVersion.getVersionFormat()));
     assertFalse(VersionTagType.SEQUENTIAL.equals(dateFormatVersion.getVersionFormat()));

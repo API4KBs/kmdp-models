@@ -50,7 +50,7 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
   static Term newId(UUID uuid) {
     SemanticIdentifier.checkUUID(uuid);
     // compose required resourceId from uuid
-    URI resourceId = SemanticIdentifier.getResourceId(uuid);
+    URI resourceId = SemanticIdentifier.toResourceId(uuid);
     return new ConceptIdentifier()
         // generate required tag from uuid
         // set required fields
@@ -68,63 +68,59 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
         .withNamespace(namespace)
         .withLocale(locale)
         .withVersionTag(versionTag)
-        .withResourceId(SemanticIdentifier.getResourceId(tag, namespace, uuid))
+        .withResourceId(SemanticIdentifier.toResourceId(tag, namespace, uuid))
         .withName(name)
         .withEstablishedOn(establishedDate);
   }
 
   static Term newId(String tag) {
     checkTag(tag);
-    URI resourceId = SemanticIdentifier.getResourceId(tag);
+    URI resourceId = SemanticIdentifier.toResourceId(tag);
     return new ConceptIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
         // generate required UUID from resourceId
-        .withUuid(UniversalIdentifier.getUUID(tag, resourceId));
+        .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
 
   static Term newId(URI namespace, String tag) {
     checkTag(tag);
-    URI resourceId = SemanticIdentifier.getResourceId(tag, namespace);
+    URI resourceId = SemanticIdentifier.toResourceId(tag, namespace);
     return new ConceptIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
         .withNamespace(namespace)
         // generate required UUID from resourceId
-        .withUuid(UniversalIdentifier.getUUID(tag, resourceId));
-  }
-
-  static Term newId(String tag, Version version) {
-    checkTag(tag);
-    URI resourceId = SemanticIdentifier.getResourceId(tag);
-    return new ConceptIdentifier()
-        .withTag(tag)
-        .withResourceId(resourceId)
-        // generate required UUID from resourceId
-        .withUuid(UniversalIdentifier.getUUID(tag, resourceId))
-        .withVersionTag(version.toString());
+        .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
 
   static Term newId(URI namespace, String tag, Version version) {
-    URI resourceId = SemanticIdentifier.getResourceId(tag, namespace);
+    return newId(namespace, tag, version.toString());
+  }
+
+  static Term newId(URI namespace, String tag, String versionTag) {
+    URI resourceId = SemanticIdentifier.toResourceId(tag, namespace);
     return new ConceptIdentifier()
-        .withVersionTag(version.toString())
+        .withVersionTag(versionTag)
         // set required fields
         .withTag(tag)
         .withResourceId(resourceId)
-        .withUuid(UniversalIdentifier.getUUID(tag, resourceId))
+        .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
         .withNamespace(namespace);
   }
 
+  static Term newId(String tag, Version version) {
+    return newId(tag, version.toString());
+  }
 
-  static VersionIdentifier newId(String tag, String versionTag) {
+  static Term newId(String tag, String versionTag) {
     checkTag(tag);
-    URI resourceId = SemanticIdentifier.getResourceId(tag);
-    return new ResourceIdentifier()
+    URI resourceId = SemanticIdentifier.toResourceId(tag);
+    return new ConceptIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
         // generate required UUID from resourceId
-        .withUuid(UniversalIdentifier.getUUID(tag, resourceId))
+        .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
         .withVersionTag(versionTag);
   }
 

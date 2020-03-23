@@ -9,7 +9,7 @@ public interface UniversalIdentifier extends Identifier {
 
   UUID getUuid();
 
-  static UUID getUUID(String tag, URI resourceId) {
+  static UUID toUUID(String tag, URI resourceId) {
     if(tag != null) {
       return Util.ensureUUIDFormat(tag)
           .map(UUID::fromString)

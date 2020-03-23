@@ -3,7 +3,6 @@ package org.omg.spec.api4kp._1_0.id;
 import static edu.mayo.kmdp.util.Util.isOID;
 import static edu.mayo.kmdp.util.Util.isUUID;
 
-import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Date;
 
