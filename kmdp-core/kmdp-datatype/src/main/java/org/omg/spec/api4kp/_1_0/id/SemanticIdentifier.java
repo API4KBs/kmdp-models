@@ -9,22 +9,24 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Factory class for generating ResourceIdentifiers.
- * resourceIdentifier will be composed of parts provided
- * uuid or tag must be provided at a minimum
+ * Factory class for generating ResourceIdentifiers. resourceIdentifier will be composed of parts
+ * provided uuid or tag must be provided at a minimum
  *
  * •	an explicit uuid can be the tag, if no other tag is provided
  * •	resourceId can be constructed from either tag or uuid, plus the namespace/base uri
- * •	if a uuid is not provided explicitly,  we can use UUID.namedUUIDfromBytes().
+ * •	if a uuid is not provided explicitly, we can use UUID.namedUUIDfromBytes().
  *    using resourceId.toString.getBytes since resourceId is a URI
+ *    TODO: should allow for resourceId to be provided? Or always construct?
+ *    TODO: Since namespace is defaulted when not provided, also set on the Identifier?
+ *
  */
-public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier, UniversalIdentifier {
+public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
+    UniversalIdentifier {
 
   /**
-   * Create ResourceIdentifier for the UUID provided.
-   * Will generate tag and resourceId as required values.
+   * Create ResourceIdentifier for the UUID provided. Will generate tag and resourceId as required
+   * values.
    *
-   * @param uuid
    * @return ResourceIdentifier
    */
   static SemanticIdentifier newId(UUID uuid) {
@@ -40,12 +42,9 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
-   * Generate ResourceIdentifier from namespace, tag and version.
-   * Required UUID will be generated from composed resourceId
+   * Generate ResourceIdentifier from namespace, tag and version. Required UUID will be generated
+   * from composed resourceId
    *
-   * @param namespace
-   * @param tag
-   * @param version
    * @return ResourceIdentifier
    */
   static SemanticIdentifier newId(URI namespace, String tag, Version version) {
@@ -55,13 +54,13 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         // set required fields
         .withTag(tag)
         .withResourceId(resourceId)
-        .withUuid(UUID.nameUUIDFromBytes(resourceId.toString().getBytes()))
+        .withUuid(UniversalIdentifier.getUUID(tag, resourceId))
         .withNamespace(namespace);
   }
 
   /**
-   * Create ResourceIdentifier from namespace, UUID, version and name.
-   * Required tag will be generated from UUID.
+   * Create ResourceIdentifier from namespace, UUID, version and name. Required tag will be
+   * generated from UUID.
    *
    * @param namespace namespace used to compose the resourceId
    * @param uuid used to compose resourceId and create required tag value
@@ -88,9 +87,6 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * Will generate required tag from uuid
    * Will default namespace
    *
-   * @param uuid
-   * @param version
-   * @param name
    * @return ResourceIdentifier
    */
   static SemanticIdentifier newId(UUID uuid, Version version, String name) {
@@ -108,19 +104,15 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   /**
    * compose ResourceIdentifier from the given parts
    *
-   * @param namespace
-   * @param tag
-   * @param uuid
-   * @param version
-   * @param name
    * @return ResourceIdentifier
    */
-  static SemanticIdentifier newId(URI namespace, String tag, UUID uuid, Version version, String name) {
+  static SemanticIdentifier newId(URI namespace, String tag, UUID uuid, Version version,
+      String name) {
     checkUUID(uuid);
-    if(null == tag) {
+    if (null == tag) {
       // default to uuid or error?
       tag = uuid.toString();
-  }
+    }
     return new ResourceIdentifier()
         .withUuid(uuid)
         .withTag(tag)
@@ -133,17 +125,12 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   /**
    * Generate ResourceIdentifier with all the attributes
    *
-   * @param namespace
-   * @param tag
-   * @param uuid
-   * @param version
-   * @param name
-   * @param establishedOn
    * @return ResourceIdentifier
    */
-  static SemanticIdentifier newId(URI namespace, String tag, UUID uuid, Version version, String name, Date establishedOn) {
+  static SemanticIdentifier newId(URI namespace, String tag, UUID uuid, Version version,
+      String name, Date establishedOn) {
     checkUUID(uuid);
-    if(null == tag) {
+    if (null == tag) {
       // default to uuid
       tag = uuid.toString();
     }
@@ -158,11 +145,8 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
-   * Compose ResourceIdentifier from provided parts
-   * UUID will be generated from resourceIdentifier
+   * Compose ResourceIdentifier from provided parts UUID will be generated from resourceIdentifier
    *
-   * @param namespace
-   * @param tag
    * @return ResourceIdentifier with required values
    */
   static SemanticIdentifier newId(URI namespace, String tag) {
@@ -174,14 +158,11 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withNamespace(namespace)
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.getUUID(tag, resourceId));
-    }
+  }
 
   /**
-   * Generate resourceIdentifier for tag
-   * Will default to URN
-   * will generate uuid from resourceId
+   * Generate resourceIdentifier for tag Will default to URN will generate uuid from resourceId
    *
-   * @param tag
    * @return ResourceIdentifier with required values set
    */
   static SemanticIdentifier newId(String tag) {
@@ -195,12 +176,9 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
-   * Create a ResourceIdentifier from the parts given.
-   * ResourceId will be composed of default URN URI and tag
-   * UUID will be generated from resourceId
+   * Create a ResourceIdentifier from the parts given. ResourceId will be composed of default URN
+   * URI and tag UUID will be generated from resourceId
    *
-   * @param tag
-   * @param version
    * @return ResourceIdentifier with all required attributes set
    */
   static SemanticIdentifier newId(String tag, Version version) {
@@ -226,19 +204,54 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
-   * Compose the ResourceId.
-   * By default will use namespace and tag.
-   * If tag is not provided, will use UUID with namespace.
+   * Pointer for client/server interaction.
    *
-   * @param tag
    * @param namespace
-   * @param uuid
+   * @param tag
+   * @return Pointer with required resourceId, tag and UUID set
+   */
+  static SemanticIdentifier newIdAsPointer(URI namespace, String tag) {
+    checkTag(tag);
+    URI resourceId = getResourceId(tag, namespace);
+    return new Pointer()
+        .withNamespace(namespace)
+        .withTag(tag)
+        .withResourceId(resourceId)
+        .withUuid(UniversalIdentifier.getUUID(tag, resourceId));
+  }
+
+  /**
+   * Pointer for client/server interaction.
+   *
+   * @param namespace resource namespace
+   * @param tag resource tag
+   * @param description human readable description of the resource
+   * @param locator use for cases when the resource URI cannot be dereferenced or the server wants
+   * to point the client to a specific location where the denoted resource is available
+   * @return Pointer with required resourceid, tag, UUID and all other values provided set
+   */
+  static SemanticIdentifier newIdAsPointer(URI namespace, String tag, String description, URI locator) {
+    checkTag(tag);
+    URI resourceId = getResourceId(tag, namespace);
+    return new Pointer()
+        .withNamespace(namespace)
+        .withTag(tag)
+        .withResourceId(resourceId)
+        .withUuid(UniversalIdentifier.getUUID(tag, resourceId))
+        .withDescription(description)
+        .withLocator(locator);
+  }
+
+  /**
+   * Compose the ResourceId. By default will use namespace and tag. If tag is not provided, will use
+   * UUID with namespace.
+   *
    * @return resourceId URI
    */
   static URI getResourceId(String tag, URI namespace, UUID uuid) {
-    if(tag != null) {
+    if (tag != null) {
       return URI.create(namespace + tag);
-    } else if(uuid != null) {
+    } else if (uuid != null) {
       return Util.ensureUUID(uuid.toString())
           .map(uuid1 -> URI.create(namespace + uuid1.toString()))
           .orElseThrow(() -> new IllegalStateException("Invalid UUID Format"));
@@ -248,11 +261,9 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
-   * For the getResourceId methods that do not have a namespace provided,
-   * the namespace will default the URN style.
+   * For the getResourceId methods that do not have a namespace provided, the namespace will default
+   * the URN style.
    *
-   * @param tag
-   * @param uuid
    * @return ResourceId
    */
   static URI getResourceId(String tag, UUID uuid) {
@@ -275,7 +286,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return resourceId URI
    */
   static URI getResourceId(String tag, URI namespace) {
-    if(tag != null) {
+    if (tag != null) {
       return getResourceId(tag, namespace, null);
     } else {
       throw new IllegalStateException("Tag required for ResourceId");
@@ -283,14 +294,14 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   static void checkTag(String tag) {
-    if(Util.isEmpty(tag)) {
+    if (Util.isEmpty(tag)) {
       throw new IllegalStateException("Missing required tag for Identifier");
     }
   }
 
   static void checkUUID(UUID uuid) {
-    if(Util.isEmpty(uuid.toString()) ||
-    !Util.isUUID(uuid.toString())) {
+    if (Util.isEmpty(uuid.toString()) ||
+        !Util.isUUID(uuid.toString())) {
       throw new IllegalStateException("Missing required UUID for Identifier");
     }
   }

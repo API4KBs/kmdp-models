@@ -45,6 +45,9 @@ public class Util {
   private static final Pattern uuidPattern = Pattern.compile(
       "^([A-Fa-f0-9]{8})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{12})$");
 
+  private static final Pattern oidPattern = Pattern.compile(
+      "^([0-2])((\\.0)|(\\.[1-9][0-9]*))*$");
+
   private Util() {}
 
   public static URL resolveResource(String path) {
@@ -283,7 +286,6 @@ public class Util {
     }
   }
 
-
   public static Optional<String> ensureUUIDFormat(String tag) {
     Matcher matcher = uuidPattern.matcher(tag);
     String id = tag.replace("-", "");
@@ -322,5 +324,8 @@ public class Util {
     return str.replaceAll("[^\\x20-\\x7e]", "");
   }
 
+  public static boolean isOID(String tag) {
+    return oidPattern.matcher(tag).matches();
+  }
 
 }

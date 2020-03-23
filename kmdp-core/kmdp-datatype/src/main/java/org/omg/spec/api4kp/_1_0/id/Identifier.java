@@ -1,16 +1,26 @@
 package org.omg.spec.api4kp._1_0.id;
 
+import static edu.mayo.kmdp.util.Util.isOID;
+import static edu.mayo.kmdp.util.Util.isUUID;
+
+import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Date;
 
 public interface Identifier {
   String getTag();
 
-  // TODO: what is URI for formats?
-  // TODO: ask Davide how to make Enums in UML Designer
-  default URI getFormat() {
-
-    return null;
+  default IdentifierTagType getFormat() {
+    // OID format
+    if(isOID(getTag())) {
+      return IdentifierTagType.OID_VALUE;
+    }
+    // UUID format
+    if(isUUID(getTag())) {
+      return IdentifierTagType.UUID_VALUE;
+    }
+    // default
+    return IdentifierTagType.STRING_VALUE;
   }
 
   String getName();

@@ -21,6 +21,7 @@ import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -222,8 +223,7 @@ public class DatatypeTest {
     Identifier id = SemanticIdentifier.newId("thisId");
 
     assertEquals("thisId", id.getTag());
-    // todo: fix format test
-    assertNull(id.getFormat());
+    assertEquals(IdentifierTagType.STRING_VALUE, id.getFormat());
   }
 
   @Test
@@ -268,63 +268,171 @@ public class DatatypeTest {
     assertEquals("Missing required tag for Identifier", exception.getMessage());
   }
 
-
-  @Test
-  public void testTerm() {
-    Term term = new ConceptIdentifier().withLocale("en-us")
-        .withReferentId(URI.create("http://foo.bar/kinda/123456"))
-        .withTag("123456")
-        .withNamespace(URI.create("http://foo.bar/kinda"))
-        .withVersionTag("1981");
-
-    assertEquals("123456", term.getTag());
-    assertEquals("http://foo.bar/kinda/123456", term.getReferentId().toString());
-    // TODO: what is label expected to be? It is a derived attribute
-//    assertEquals("Foo bar and baz", term.getLabel());
-
-    assertEquals("http://foo.bar/kinda", term.getNamespace().toString());
-    assertEquals("123456", term.getTag());
-    assertEquals("1981", term.getVersionTag());
-  }
-
-  @Test
-  public void testConceptIdentifier() {
-    ConceptIdentifier trm =
-        new ConceptIdentifier()
-            .withReferentId(URI.create("http://foo.bar/234"))
-//        .withLabel("aaaa")
-            .withTag("234")
-            .withNamespace(URI.create("http://id/1"))
-            .withTag("id")
-            .withVersionTag("1")
-            .withUuid(UUID.randomUUID())
-            .withResourceId(SemanticIdentifier.getResourceId("234", URI.create("http://id/1")));
-
-    ObjectFactory of = new ObjectFactory();
-    String xml = JaxbUtil.marshall(Collections.singleton(of.getClass()),
-        trm,
-        of::createConceptIdentifier,
-        JaxbUtil.defaultProperties())
-        .map(ByteArrayOutputStream::toByteArray)
-        .map(String::new)
-        .orElse("");
-
-//    System.out.println(xml);
-    Optional<Schema> schema = getSchemas(
-        DatatypeTest.class.getResource("/xsd/API4KP/api4kp/id/id.xsd"),
-        catalogResolver("/xsd/api4kp-catalog.xml"));
-    assertTrue(schema.isPresent());
-
-    assertTrue(XMLUtil.validate(xml, schema.get()));
-  }
-
-
   @Test
   public void testIDComposition() {
     ResourceIdentifier uid = (ResourceIdentifier) SemanticIdentifier
         .newId(URI.create("http://foo.bar/"), "baz", Version.valueOf("1.1.0"));
     assertEquals(URI.create("http://foo.bar/baz"), uid.getResourceId());
     assertEquals(URI.create("http://foo.bar/baz/versions/1.1.0"), uid.getVersionId());
+  }
+
+  @Test
+  public void testPointerComposition() {
+    URI expectedResourceId = URI.create("http://foo.bar/baz/5.6.4.3");
+    Pointer pid = (Pointer) SemanticIdentifier.newIdAsPointer(URI.create("http://foo.bar/baz/"),
+        "5.6.4.3");
+    assertNotNull(pid);
+    assertEquals(expectedResourceId, pid.getResourceId());
+    assertEquals("5.6.4.3", pid.getTag());
+    assertEquals(UUID.nameUUIDFromBytes(pid.getResourceId().toString().getBytes()), pid.getUuid());
+  }
+
+  @Test
+  public void testPointer() {
+    UUID uuid = UUID.randomUUID();
+    URI expectedResourceId = URI.create("http://foo.bar/baz/"+uuid.toString());
+    Pointer pid = (Pointer) SemanticIdentifier.newIdAsPointer(URI.create("http://foo.bar/baz/"),
+        uuid.toString(), "Resource Description", URI.create("https://internal/locator/"));
+    assertNotNull(pid);
+    assertEquals(expectedResourceId, pid.getResourceId());
+    assertEquals(uuid.toString(), pid.getTag());
+    assertEquals(uuid, pid.getUuid());
+    assertEquals("https://internal/locator/", pid.getLocator().toString());
+    assertEquals("Resource Description", pid.getDescription());
+  }
+
+  @Test
+  public void testIdentifierFormats() {
+    String oidString = "1.5.6.3";
+    UUID uuid = UUID.randomUUID();
+    String random = "15-4";
+    ResourceIdentifier ridOid = (ResourceIdentifier) SemanticIdentifier.newId(oidString);
+    ResourceIdentifier ridUuid = (ResourceIdentifier) SemanticIdentifier.newId(uuid);
+    ResourceIdentifier ridString = (ResourceIdentifier) SemanticIdentifier.newId(random);
+
+
+    assertTrue(IdentifierTagType.OID_VALUE.equals(ridOid.getFormat()));
+    assertFalse(IdentifierTagType.UUID_VALUE.equals(ridOid.getFormat()));
+    assertFalse(IdentifierTagType.STRING_VALUE.equals(ridOid.getFormat()));
+
+    assertTrue(IdentifierTagType.UUID_VALUE.equals(ridUuid.getFormat()));
+    assertFalse(IdentifierTagType.OID_VALUE.equals(ridUuid.getFormat()));
+    assertFalse(IdentifierTagType.STRING_VALUE.equals(ridUuid.getFormat()));
+
+
+    assertTrue(IdentifierTagType.STRING_VALUE.equals(ridString.getFormat()));
+    assertFalse(IdentifierTagType.UUID_VALUE.equals(ridString.getFormat()));
+    assertFalse(IdentifierTagType.OID_VALUE.equals(ridString.getFormat()));
+
+  }
+
+  @Test
+  public void testVersionFormatsVersion() {
+    String oidString = "1.5.6.3";
+    Version semVer = Version.valueOf("1.0.0");
+    String semVerString = "3.5.1";
+    String sequential = "1";
+    // Is there a standard date format?
+    String dateFormat = "2020-03-20";
+    Date timestamp = DateTimeUtil.now();
+    String other = "v3";
+
+    ResourceIdentifier semanticVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, semVer);
+    ResourceIdentifier semStringVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, semVerString);
+    ResourceIdentifier sequentialVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, sequential);
+    ResourceIdentifier dateFormatVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, dateFormat);
+    ResourceIdentifier timestampVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, timestamp.toString());
+    ResourceIdentifier genericVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, other);
+
+
+    assertTrue(VersionTagType.SEM_VER.equals(semanticVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEQUENTIAL.equals(semanticVersion.getVersionFormat()));
+    assertFalse(VersionTagType.TIMESTAMP.equals(semanticVersion.getVersionFormat()));
+    assertFalse(VersionTagType.GENERIC.equals(semanticVersion.getVersionFormat()));
+
+    assertTrue(VersionTagType.SEM_VER.equals(semStringVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEQUENTIAL.equals(semStringVersion.getVersionFormat()));
+    assertFalse(VersionTagType.TIMESTAMP.equals(semStringVersion.getVersionFormat()));
+    assertFalse(VersionTagType.GENERIC.equals(semStringVersion.getVersionFormat()));
+
+    assertTrue(VersionTagType.SEQUENTIAL.equals(sequentialVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEM_VER.equals(sequentialVersion.getVersionFormat()));
+    assertFalse(VersionTagType.TIMESTAMP.equals(sequentialVersion.getVersionFormat()));
+    assertFalse(VersionTagType.GENERIC.equals(sequentialVersion.getVersionFormat()));
+
+    assertTrue(VersionTagType.TIMESTAMP.equals(dateFormatVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEQUENTIAL.equals(dateFormatVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEM_VER.equals(dateFormatVersion.getVersionFormat()));
+    assertFalse(VersionTagType.GENERIC.equals(dateFormatVersion.getVersionFormat()));
+
+    assertTrue(VersionTagType.GENERIC.equals(timestampVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEQUENTIAL.equals(timestampVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEM_VER.equals(timestampVersion.getVersionFormat()));
+    assertFalse(VersionTagType.TIMESTAMP.equals(timestampVersion.getVersionFormat()));
+
+
+    assertTrue(VersionTagType.GENERIC.equals(genericVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEQUENTIAL.equals(genericVersion.getVersionFormat()));
+    assertFalse(VersionTagType.TIMESTAMP.equals(genericVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEM_VER.equals(genericVersion.getVersionFormat()));
+
+  }
+
+  @Test
+  public void testVersionFormatsString() {
+    String oidString = "1.5.6.3";
+    String semVer = "1.0.0";
+    String sequential = "1";
+    // Is there a standard date format?
+    String dateFormat = "2020-03-20";
+    // Should these formats also test to date?
+    String dateFormatGeneric = "20200320-101092";
+    Date timestamp = DateTimeUtil.now();
+    String other = "v3";
+
+    ResourceIdentifier semanticVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, semVer);
+    ResourceIdentifier sequentialVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, sequential);
+    ResourceIdentifier dateFormatVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, dateFormat);
+    ResourceIdentifier dateFormatGenericVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, dateFormatGeneric);
+    ResourceIdentifier timestampVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, timestamp.toString());
+    ResourceIdentifier genericVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, other);
+
+
+    assertTrue(VersionTagType.SEM_VER.equals(semanticVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEQUENTIAL.equals(semanticVersion.getVersionFormat()));
+    assertFalse(VersionTagType.TIMESTAMP.equals(semanticVersion.getVersionFormat()));
+    assertFalse(VersionTagType.GENERIC.equals(semanticVersion.getVersionFormat()));
+
+
+    assertTrue(VersionTagType.SEQUENTIAL.equals(sequentialVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEM_VER.equals(sequentialVersion.getVersionFormat()));
+    assertFalse(VersionTagType.TIMESTAMP.equals(sequentialVersion.getVersionFormat()));
+    assertFalse(VersionTagType.GENERIC.equals(sequentialVersion.getVersionFormat()));
+
+
+    assertTrue(VersionTagType.TIMESTAMP.equals(dateFormatVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEQUENTIAL.equals(dateFormatVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEM_VER.equals(dateFormatVersion.getVersionFormat()));
+    assertFalse(VersionTagType.GENERIC.equals(dateFormatVersion.getVersionFormat()));
+
+
+    assertTrue(VersionTagType.GENERIC.equals(dateFormatGenericVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEQUENTIAL.equals(dateFormatGenericVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEM_VER.equals(dateFormatGenericVersion.getVersionFormat()));
+    assertFalse(VersionTagType.TIMESTAMP.equals(dateFormatGenericVersion.getVersionFormat()));
+
+
+    assertTrue(VersionTagType.GENERIC.equals(timestampVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEQUENTIAL.equals(timestampVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEM_VER.equals(timestampVersion.getVersionFormat()));
+    assertFalse(VersionTagType.TIMESTAMP.equals(timestampVersion.getVersionFormat()));
+
+
+    assertTrue(VersionTagType.GENERIC.equals(genericVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEQUENTIAL.equals(genericVersion.getVersionFormat()));
+    assertFalse(VersionTagType.TIMESTAMP.equals(genericVersion.getVersionFormat()));
+    assertFalse(VersionTagType.SEM_VER.equals(genericVersion.getVersionFormat()));
+
   }
 
 }

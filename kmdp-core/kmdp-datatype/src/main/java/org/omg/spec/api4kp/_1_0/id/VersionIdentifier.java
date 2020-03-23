@@ -30,24 +30,19 @@ public interface VersionIdentifier extends Identifier {
 
   UUID getUuid();
 
-  // TODO: What is URI for version formats???
-  default URI getVersionFormat() {
-    String tag = getTag();
-    if (tag.matches("\\d+")) {
-      System.out.println("is " + VersionTagType.SEQUENTIAL);
-      return null;
+  default VersionTagType getVersionFormat() {
+    String versionTag = getVersionTag();
+    if (versionTag.matches("\\d+")) {
+      return VersionTagType.SEQUENTIAL;
     }
-    if (DateTimeUtil.isDate(tag)) {
-      System.out.println("is " + VersionTagType.TIMESTAMP);
-      return null;
+    if (DateTimeUtil.isDate(versionTag)) {
+      return VersionTagType.TIMESTAMP;
     }
-    Matcher matcher = SEMVER_RX.matcher(tag);
+    Matcher matcher = SEMVER_RX.matcher(versionTag);
     if (matcher.matches()) {
-      System.out.println("is " + VersionTagType.SEM_VER);
-      return null;
+      return VersionTagType.SEM_VER;
     } else {
-      System.out.println("is " + VersionTagType.GENERIC);
-      return null;
+      return VersionTagType.GENERIC;
     }
   }
 
