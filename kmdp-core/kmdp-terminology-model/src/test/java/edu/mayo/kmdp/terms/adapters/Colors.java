@@ -96,6 +96,21 @@ public enum Colors implements IColors {
     return series;
   }
 
+  @Override
+  public URI getNamespaceUri() {
+    return null;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return null;
+  }
+
+  @Override
+  public Date getEstablishedOn() {
+    return null;
+  }
+
   public static class JsonSerializer extends AbstractTermsJsonAdapter.AbstractSerializer<Colors> {
   }
 

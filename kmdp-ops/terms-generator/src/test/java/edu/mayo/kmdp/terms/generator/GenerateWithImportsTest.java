@@ -74,7 +74,7 @@ public class GenerateWithImportsTest {
     assertTrue(supScheme.isEnum());
 
     Object t = Arrays.stream(subScheme.getEnumConstants())
-        .filter(x -> ((Enum)x).name().contains("Some"))
+        .filter(x -> ((Enum<?>)x).name().contains("Some"))
         .findAny().orElse(null);
     assertTrue(t instanceof Term);
 
@@ -138,20 +138,20 @@ public class GenerateWithImportsTest {
       String tag1 = (String) t1.getClass().getMethod("getTag").invoke(t1);
 
       Object t2 = Arrays.stream(subScheme.getEnumConstants())
-          .filter(x -> ((Enum)x).name().contains("Some"))
+          .filter(x -> ((Enum<?>)x).name().contains("Some"))
           .findAny().orElse(null);
       assertNotNull(t2);
       String tag2 = (String) t2.getClass().getMethod("getTag").invoke(t2);
 
       Object t3 = Arrays.stream(subScheme.getEnumConstants())
-          .filter(x -> ((Enum)x).name().contains("Another"))
+          .filter(x -> ((Enum<?>)x).name().contains("Another"))
           .findAny().orElse(null);
       assertNotNull(t3);
       String tag3 = (String) t3.getClass().getMethod("getTag").invoke(t3);
 
-      assertTrue("000".equals(tag1));
-      assertTrue("123".equals(tag2));
-      assertTrue("124".equals(tag3));
+      assertEquals("000", tag1);
+      assertEquals("123", tag2);
+      assertEquals("124", tag3);
 
       Object anx2 = subScheme.getMethod("getAncestors").invoke(t2);
       assertTrue(anx2.getClass().isArray());

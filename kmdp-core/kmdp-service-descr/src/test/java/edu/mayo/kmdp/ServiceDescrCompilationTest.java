@@ -114,12 +114,14 @@ public class ServiceDescrCompilationTest {
 
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.openapi.xsd");
     deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
+    deploy(src, "/xsd/API4KP/api4kp/id/id.xsd");
     deploy(src, "/xsd/API4KP/api4kp/identifiers/bindings.xjb");
     deploy(src, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd");
     deploy(src, "/xsd/API4KP/api4kp/datatypes/bindings.xjb");
 
     deploy(src, "/xsd/terms-bindings.xjb");
 
+    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/kao/languagerole/_20190801/KnowledgeRepresentationLanguageRole.xsd");
     deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krformat/_20190801/SerializationFormat.xsd");
     deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krlanguage/_20190801/KnowledgeRepresentationLanguage.xsd");
     deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krprofile/_20190801/KnowledgeRepresentationLanguageProfile.xsd");

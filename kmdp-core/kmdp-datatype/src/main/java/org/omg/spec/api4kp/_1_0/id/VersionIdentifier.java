@@ -1,27 +1,27 @@
 package org.omg.spec.api4kp._1_0.id;
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
+import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SEMVER_RX;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Handle versionIdentifier data.
  */
 public interface VersionIdentifier extends Identifier {
 
-  String VERSIONS = "/versions/";
-  Pattern SEMVER_RX = Pattern.compile("^(\\d+\\.)(\\d+\\.)(\\*|\\d+)$");
-
   String getVersionTag();
 
+  @JsonIgnore
   default Version getSemanticVersionTag() {
     return Version.valueOf(getVersionTag());
   }
 
+  @JsonIgnore
   default URI getVersionId() {
     URI uri = getResourceId();
     return URI.create(uri + getVersionSeparator(uri.toString()) + getVersionTag());
@@ -32,6 +32,7 @@ public interface VersionIdentifier extends Identifier {
    *
    * @return VersionTagType enum for the format
    */
+  @JsonIgnore
   default VersionTagType getVersionFormat() {
     String versionTag = getVersionTag();
     Matcher matcher = SEMVER_RX.matcher(versionTag);
@@ -55,6 +56,7 @@ public interface VersionIdentifier extends Identifier {
    * @param id the URI for which to get the id/version separator
    * @return the string used to separate the id from the version tag for this kind of id
    */
+  @JsonIgnore
   default String getVersionSeparator(String id) {
     return id.startsWith(BASE_UUID_URN)
         ? ":"

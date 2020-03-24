@@ -18,7 +18,7 @@ package org.omg.spec.api4kp._1_0;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
 import java.util.List;
 import java.util.Map;
-import org.omg.spec.api4kp._1_0.datatypes.Error;
+import org.omg.spec.api4kp._1_0.services.Error;
 
 public class ServerSideException extends RuntimeException {
   private final ResponseCode code;

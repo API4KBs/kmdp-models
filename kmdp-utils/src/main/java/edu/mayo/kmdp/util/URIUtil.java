@@ -147,7 +147,13 @@ public class URIUtil {
       return uri.getFragment();
     } else {
       String str = uri.toString();
-      return str.substring(str.lastIndexOf('/') + 1);
+      if (str.indexOf('/') >= 0) {
+        return str.substring(str.lastIndexOf('/') + 1);
+      }
+      if (str.indexOf(':') >= 0) {
+        return str.substring(str.lastIndexOf(':') + 1);
+      }
     }
+    return uri.getPath();
   }
 }

@@ -15,9 +15,10 @@ package edu.mayo.kmdp.terms.generator;
 
 import static edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters.VERSION_PATTERN;
 import static edu.mayo.kmdp.util.Util.isUUID;
+import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNAPSHOT;
+import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNAPSHOT_DATE_PATTERN;
 
 import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
@@ -293,8 +294,8 @@ public class SkosTerminologyAbstractor {
     Date pubDate = DateTimeUtil.parseDateOrNow(
         versionTag,
         dateFormatPattern);
-    if (versionTag == null || Series.SNAPSHOT.equals(versionTag)) {
-      versionTag = DateTimeUtil.format(pubDate, Series.SNAPSHOT_DATE_PATTERN);
+    if (versionTag == null || SNAPSHOT.equals(versionTag)) {
+      versionTag = DateTimeUtil.format(pubDate, SNAPSHOT_DATE_PATTERN);
     }
 
     MutableConceptScheme mcs = new MutableConceptScheme(uri, version, code, versionTag, label,

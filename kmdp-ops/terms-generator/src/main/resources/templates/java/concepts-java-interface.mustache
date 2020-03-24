@@ -29,4 +29,9 @@ public interface {{intfName}} extends ControlledTerm, VersionableTerm<{{intfName
   @Override
   public NamespaceIdentifier getNamespace();
 
+  @Override
+  default URI getNamespaceUri() {
+    return seriesUri.getUri();
+  }
+
 }

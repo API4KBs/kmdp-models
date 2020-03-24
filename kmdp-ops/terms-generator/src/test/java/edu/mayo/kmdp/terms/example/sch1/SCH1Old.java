@@ -32,6 +32,7 @@ import edu.mayo.kmdp.terms.impl.model.TermImpl;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -172,6 +173,15 @@ public enum SCH1Old implements ISCH1 {
 
   public static Optional<SCH1Old> resolveRef(final String refUri) {
     return resolveTerm(refUri, SCH1Old.values(), Term::getRef);
+  }
+
+  public Date getEstablishedOn() {
+    return namespace.getEstablishedOn();
+  }
+
+  @Override
+  public String getVersionTag() {
+    return namespace.getVersion();
   }
 }
 

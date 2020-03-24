@@ -28,4 +28,7 @@ public interface ISCH1 extends VersionableTerm<ISCH1,SCH1Series> {
     return true;
   }
 
+  default URI getNamespaceUri() {
+    return seriesUri.getUri();
+  }
 }

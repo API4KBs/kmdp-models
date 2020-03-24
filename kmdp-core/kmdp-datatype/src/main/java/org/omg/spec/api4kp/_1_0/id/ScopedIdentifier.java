@@ -1,5 +1,6 @@
 package org.omg.spec.api4kp._1_0.id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.UUID;
@@ -9,12 +10,13 @@ public interface ScopedIdentifier extends Identifier {
 
   URI getResourceId();
   UUID getUuid();
-  URI getNamespace();
+  URI getNamespaceUri();
 
   /**
    * compose QName given namespace and tag
    * @return QName
    */
+  @JsonIgnore
   default QName getQName() {
     String tag = getTag();
     if(Util.isEmpty(tag)) {
@@ -25,8 +27,8 @@ public interface ScopedIdentifier extends Identifier {
         tag = "_" + tag;
       }
     }
-    if(null != getNamespace()) {
-      return new QName(getNamespace().toString(), tag);
+    if(null != getNamespaceUri()) {
+      return new QName(getNamespaceUri().toString(), tag);
     } else {
       return new QName(tag);
     }

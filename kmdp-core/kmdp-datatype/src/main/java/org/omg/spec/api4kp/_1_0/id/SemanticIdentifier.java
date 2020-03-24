@@ -3,6 +3,8 @@ package org.omg.spec.api4kp._1_0.id;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 
 import com.github.zafarkhaja.semver.Version;
+import edu.mayo.kmdp.util.DateTimeUtil;
+import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Date;
@@ -16,8 +18,6 @@ import java.util.UUID;
  * •	resourceId can be constructed from either tag or uuid, plus the namespace/base uri
  * •	if a uuid is not provided explicitly, we can use UUID.namedUUIDfromBytes().
  *    using resourceId.toString.getBytes since resourceId is a URI
- *    TODO: should allow for resourceId to be provided? Or always construct?
- *    TODO: Since namespace is defaulted when not provided, also set on the Identifier?
  *
  */
 public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
@@ -29,7 +29,23 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    *
    * @return ResourceIdentifier
    */
-  static SemanticIdentifier newId(UUID uuid) {
+  static ResourceIdentifier newId(URI uri) {
+    return new ResourceIdentifier()
+        // generate required tag from uuid
+        // set required fields
+        .withTag(URIUtil.detectLocalName(uri))
+        .withResourceId(uri)
+        .withEstablishedOn(DateTimeUtil.now())
+        .withUuid(Util.uuid(uri.toString()));
+  }
+
+  /**
+   * Create ResourceIdentifier for the UUID provided. Will generate tag and resourceId as required
+   * values.
+   *
+   * @return ResourceIdentifier
+   */
+  static ResourceIdentifier newId(UUID uuid) {
     checkUUID(uuid);
     // compose required resourceId from uuid
     URI resourceId = toResourceId(uuid);
@@ -38,6 +54,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         // set required fields
         .withTag(uuid.toString())
         .withResourceId(resourceId)
+        .withEstablishedOn(DateTimeUtil.now())
         .withUuid(uuid);
   }
 
@@ -47,11 +64,19 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    *
    * @return ResourceIdentifier
    */
-  static SemanticIdentifier newId(URI namespace, String tag, Version version) {
-    return newId(namespace, tag, version.toString());
+  static ResourceIdentifier newId(URI namespace, UUID tag, Version version) {
+    return newId(namespace, tag.toString(), version.toString());
   }
 
-  static SemanticIdentifier newId(URI namespace, String tag, String versionTag) {
+  static ResourceIdentifier newId(URI namespace, UUID tag, String version) {
+    return newId(namespace, tag.toString(), version);
+  }
+
+  static ResourceIdentifier newId(URI namespace, String tag, Version versionTag) {
+    return newId(namespace, tag, versionTag.toString());
+  }
+
+  static ResourceIdentifier newId(URI namespace, String tag, String versionTag) {
     URI resourceId = toResourceId(tag, namespace);
     return new ResourceIdentifier()
         .withVersionTag(versionTag)
@@ -59,7 +84,8 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(tag)
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
-        .withNamespace(namespace);
+        .withEstablishedOn(DateTimeUtil.now())
+        .withNamespaceUri(namespace);
   }
 
   /**
@@ -72,11 +98,11 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @param name the name for the resource
    * @return ResourceIdentifier with appropriate values set
    */
-  static SemanticIdentifier newId(URI namespace, UUID uuid, Version version, String name) {
+  static ResourceIdentifier newId(URI namespace, UUID uuid, Version version, String name) {
     return newId(namespace, uuid, version.toString(), name);
   }
 
-  static SemanticIdentifier newId(URI namespace, UUID uuid, String versionTag, String name) {
+  static ResourceIdentifier newId(URI namespace, UUID uuid, String versionTag, String name) {
     checkUUID(uuid);
     // create URI id
     return new ResourceIdentifier()
@@ -85,7 +111,8 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(uuid.toString())
         .withResourceId(toResourceId(uuid.toString(), namespace, uuid))
         .withUuid(uuid)
-        .withNamespace(namespace)
+        .withNamespaceUri(namespace)
+        .withEstablishedOn(DateTimeUtil.now())
         .withName(name);
   }
 
@@ -96,11 +123,11 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    *
    * @return ResourceIdentifier
    */
-  static SemanticIdentifier newId(UUID uuid, Version version, String name) {
+  static ResourceIdentifier newId(UUID uuid, Version version, String name) {
     return newId(uuid, version.toString(), name);
   }
 
-  static SemanticIdentifier newId(UUID uuid, String versionTag, String name) {
+  static ResourceIdentifier newId(UUID uuid, String versionTag, String name) {
     checkUUID(uuid);
     // create URN id
     return new ResourceIdentifier()
@@ -109,6 +136,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(uuid.toString())
         .withResourceId(toResourceId(uuid.toString(), uuid))
         .withVersionTag(versionTag)
+        .withEstablishedOn(DateTimeUtil.now())
         .withName(name);
   }
 
@@ -117,20 +145,21 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    *
    * @return ResourceIdentifier
    */
-  static SemanticIdentifier newId(URI namespace, String tag, UUID uuid, Version version,
+  static ResourceIdentifier newId(URI namespace, String tag, UUID uuid, Version version,
       String name) {
     return newId(namespace, tag, uuid, version.toString(), name);
   }
 
-  static SemanticIdentifier newId(URI namespace, String tag, UUID uuid, String versionTag, String name) {
+  static ResourceIdentifier newId(URI namespace, String tag, UUID uuid, String versionTag, String name) {
     checkUUID(uuid);
     checkTag(tag);
     return new ResourceIdentifier()
         .withUuid(uuid)
         .withTag(tag)
-        .withNamespace(namespace)
         .withVersionTag(versionTag)
+        .withNamespaceUri(namespace)
         .withName(name)
+        .withEstablishedOn(DateTimeUtil.now())
         .withResourceId(toResourceId(tag, namespace, uuid));
   }
 
@@ -139,19 +168,19 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    *
    * @return ResourceIdentifier
    */
-  static SemanticIdentifier newId(URI namespace, String tag, UUID uuid, Version version,
+  static ResourceIdentifier newId(URI namespace, String tag, UUID uuid, Version version,
       String name, Date establishedOn) {
     return newId(namespace, tag, uuid, version.toString(), name, establishedOn);
   }
 
-  static SemanticIdentifier newId(URI namespace, String tag, UUID uuid, String versionTag, String name, Date establishedOn) {
+  static ResourceIdentifier newId(URI namespace, String tag, UUID uuid, String versionTag, String name, Date establishedOn) {
     checkUUID(uuid);
     checkTag(tag);
     return new ResourceIdentifier()
         .withUuid(uuid)
         .withTag(tag)
-        .withNamespace(namespace)
         .withVersionTag(versionTag)
+        .withNamespaceUri(namespace)
         .withName(name)
         .withResourceId(toResourceId(tag, namespace, uuid))
         .withEstablishedOn(establishedOn);
@@ -162,13 +191,14 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    *
    * @return ResourceIdentifier with required values
    */
-  static SemanticIdentifier newId(URI namespace, String tag) {
+  static ResourceIdentifier newId(URI namespace, String tag) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
     return new ResourceIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
-        .withNamespace(namespace)
+        .withNamespaceUri(namespace)
+        .withEstablishedOn(DateTimeUtil.now())
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
@@ -178,12 +208,13 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    *
    * @return ResourceIdentifier with required values set
    */
-  static SemanticIdentifier newId(String tag) {
+  static ResourceIdentifier newId(String tag) {
     checkTag(tag);
     URI resourceId = toResourceId(tag);
     return new ResourceIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
+        .withEstablishedOn(DateTimeUtil.now())
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
@@ -194,11 +225,11 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    *
    * @return ResourceIdentifier with all required attributes set
    */
-  static SemanticIdentifier newId(String tag, Version version) {
+  static ResourceIdentifier newId(String tag, Version version) {
     return newId(tag, version.toString());
   }
 
-  static SemanticIdentifier newId(String tag, String versionTag) {
+  static ResourceIdentifier newId(String tag, String versionTag) {
     checkTag(tag);
     URI resourceId = toResourceId(tag);
     return new ResourceIdentifier()
@@ -206,6 +237,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withResourceId(resourceId)
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
+        .withEstablishedOn(DateTimeUtil.now())
         .withVersionTag(versionTag);
   }
 
@@ -216,13 +248,14 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @param tag
    * @return Pointer with required resourceId, tag and UUID set
    */
-  static SemanticIdentifier newIdAsPointer(URI namespace, String tag) {
+  static ResourceIdentifier newIdAsPointer(URI namespace, String tag) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
     return new Pointer()
-        .withNamespace(namespace)
+        .withNamespaceUri(namespace)
         .withTag(tag)
         .withResourceId(resourceId)
+        .withEstablishedOn(DateTimeUtil.now())
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
 
@@ -236,16 +269,17 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * to point the client to a specific location where the denoted resource is available
    * @return Pointer with required resourceid, tag, UUID and all other values provided set
    */
-  static SemanticIdentifier newIdAsPointer(URI namespace, String tag, String description, URI locator) {
+  static ResourceIdentifier newIdAsPointer(URI namespace, String tag, String description, URI locator) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
     return new Pointer()
-        .withNamespace(namespace)
+        .withNamespaceUri(namespace)
         .withTag(tag)
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
         .withDescription(description)
-        .withLocator(locator);
+        .withEstablishedOn(DateTimeUtil.now())
+        .withHref(locator);
   }
 
   /**

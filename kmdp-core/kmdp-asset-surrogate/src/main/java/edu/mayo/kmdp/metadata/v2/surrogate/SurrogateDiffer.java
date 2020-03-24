@@ -26,7 +26,7 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 
         .registerEntity(
             new EntityDefinition(KnowledgeAsset.class, "assetId",
-                Arrays.asList("policies", "lifecycle")))
+                Arrays.asList("carriers", "annotation")))
         .registerEntity(
             new EntityDefinition(KnowledgeArtifact.class, "artifactId")
         )

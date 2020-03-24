@@ -13,10 +13,7 @@ import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 
 public interface Series<T extends Versionable<T>> {
 
-  String SNAPSHOT = "SNAPSHOT";
-  String SNAPSHOT_DATE_PATTERN = "yyyyMMdd-HHmmSS";
-
-  static boolean isSame(Versionable v0, Versionable v1) {
+   static boolean isSame(Versionable<?> v0, Versionable<?> v1) {
     if (v0 == null || v0.getVersionIdentifier() == null
         || v0.getVersionIdentifier().getTag() == null
         || v1 == null || v1.getVersionIdentifier() == null) {
@@ -25,7 +22,7 @@ public interface Series<T extends Versionable<T>> {
     return v0.getVersionIdentifier().getTag().equals(v1.getVersionIdentifier().getTag());
   }
 
-  static boolean isDifferentVersion(Versionable v0, Versionable v1) {
+  static boolean isDifferentVersion(Versionable<?> v0, Versionable<?> v1) {
     if (!isSame(v0, v1)) {
       return false;
     }

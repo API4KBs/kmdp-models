@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
 /*
 	Example of generated 'terminology' class
@@ -167,6 +168,17 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
     protected Optional<ISCH1> resolveUUID(UUID uuid) {
       return SCH1Series.resolveUUID(uuid);
     }
+  }
+
+
+  @Override
+  public String getVersionTag() {
+    return ((NamespaceIdentifier)getNamespace()).getVersion();
+  }
+
+  @Override
+  public Date getEstablishedOn() {
+    return ((NamespaceIdentifier)getNamespace()).getEstablishedOn();
   }
 
 }

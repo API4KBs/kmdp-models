@@ -16,4 +16,7 @@ public interface ICito extends VersionableTerm<ICito,CitoSeries> {
     return (URIIdentifier) seriesUri.clone();
   }
 
+  default URI getNamespaceUri() {
+    return seriesUri.getUri();
+  }
 }
