@@ -15,9 +15,11 @@ package edu.mayo.kmdp.metadata.v2.surrogate;
 
 import static edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries.English;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries.Operational_Concept_Definition;
+import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_ZERO;
 
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Applicability;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
@@ -39,6 +41,7 @@ import java.util.Arrays;
 import java.util.UUID;
 import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.id.Term;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
@@ -306,22 +309,27 @@ public class SurrogateBuilder {
   }
 
   public static ResourceIdentifier assetId(String uuid, String versionTag) {
-    //return SemanticIdentifier
-    throw new UnsupportedOperationException("Redo with factory method");
+    return SemanticIdentifier.newId(Registry.MAYO_ASSETS_BASE_URI_URI, uuid, versionTag);
   }
 
   public static ResourceIdentifier assetId(UUID uuid, String versionTag) {
-    throw new UnsupportedOperationException("Redo with factory method");
+    return SemanticIdentifier.newId(Registry.MAYO_ASSETS_BASE_URI_URI, uuid, versionTag);
+  }
+
+  public static ResourceIdentifier randomAssetId() {
+    return assetId(UUID.randomUUID(),VERSION_ZERO);
   }
 
   public static ResourceIdentifier artifactId(String uuid, String versionTag) {
-    //return SemanticIdentifier
-    throw new UnsupportedOperationException("Redo with factory method");
+    return SemanticIdentifier.newId(Registry.MAYO_ARTIFACTS_BASE_URI_URI, uuid, versionTag);
   }
 
   public static ResourceIdentifier artifactId(UUID uuid, String versionTag) {
-    throw new UnsupportedOperationException("Redo with factory method");
+    return SemanticIdentifier.newId(Registry.MAYO_ARTIFACTS_BASE_URI_URI, uuid, versionTag);
   }
 
+  public static ResourceIdentifier randomArtifactId() {
+    return artifactId(UUID.randomUUID(),VERSION_ZERO);
+  }
 
 }

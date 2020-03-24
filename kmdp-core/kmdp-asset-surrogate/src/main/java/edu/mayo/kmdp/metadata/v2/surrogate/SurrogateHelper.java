@@ -17,12 +17,9 @@ package edu.mayo.kmdp.metadata.v2.surrogate;
 
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
 import edu.mayo.kmdp.util.StreamUtil;
-import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRole;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -43,14 +40,6 @@ public class SurrogateHelper {
         SurrogateHelper.class.getResource("/xsd/metadata/v2/surrogate/surrogate.xsd"),
         XMLUtil.catalogResolver("/xsd/km-metadata-catalog.xml", "/xsd/terms-catalog.xml"));
   }
-
-
-  private static final Set<DependencyTypeSeries> TRAVERSE_DEPS = Util
-      .newEnumSet(Arrays.asList(
-          DependencyTypeSeries.Imports,
-          DependencyTypeSeries.Includes,
-          DependencyTypeSeries.Depends_On),
-          DependencyTypeSeries.class);
 
 
   public static Optional<ConceptIdentifier> getSimpleAnnotationValue(KnowledgeAsset asset,

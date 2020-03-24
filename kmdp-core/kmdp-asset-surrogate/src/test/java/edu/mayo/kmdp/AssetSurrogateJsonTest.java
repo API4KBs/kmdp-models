@@ -1,24 +1,44 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries.Italian;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.KnowledgeArtifactCategorySeries.Software;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique.KnowledgeProcessingTechniqueSeries.Logic_Based_Technique;
+import static edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRoleSeries.Schema_Language;
+import static edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries.Published;
+import static edu.mayo.ontology.taxonomies.kao.rel.citationreltype.BibliographicCitationTypeSeries.Cites_As_Authority;
+import static edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries.Depends_On;
+import static edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries.Abdridgement_Of;
+import static edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries.Derived_From;
+import static edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries.Inspired_By;
+import static edu.mayo.ontology.taxonomies.kao.rel.relatedversiontype.RelatedVersionTypeSeries.Has_Original;
+import static edu.mayo.ontology.taxonomies.kao.rel.structuralreltype.StructuralPartTypeSeries.Has_Part;
+import static edu.mayo.ontology.taxonomies.kao.rel.summaryreltype.SummarizationTypeSeries.Compact_Representation_Of;
+import static edu.mayo.ontology.taxonomies.kao.rel.variantreltype.VariantTypeSeries.Adaptation_Of;
+import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TXT;
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_1;
+import static edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfileSeries.CQL_Essentials;
+import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_1_XML_Syntax;
+import static edu.mayo.ontology.taxonomies.lexicon.LexiconSeries.SNOMED_CT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.newId;
 
 import edu.mayo.kmdp.metadata.v2.surrogate.Citation;
 import edu.mayo.kmdp.metadata.v2.surrogate.Component;
@@ -26,42 +46,21 @@ import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.v2.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.v2.surrogate.Derivative;
 import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.v2.surrogate.Party;
 import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
 import edu.mayo.kmdp.metadata.v2.surrogate.Summary;
+import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateBuilder;
 import edu.mayo.kmdp.metadata.v2.surrogate.Variant;
 import edu.mayo.kmdp.metadata.v2.surrogate.Version;
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Applicability;
-import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.KnowledgeArtifactCategorySeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique.KnowledgeProcessingTechniqueSeries;
-import edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRoleSeries;
-import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries;
-import edu.mayo.ontology.taxonomies.kao.publishingrole.PublishingRoleSeries;
 import edu.mayo.ontology.taxonomies.kao.rel.citationreltype.BibliographicCitationTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.relatedversiontype.RelatedVersionTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype.StructuralPartTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.summaryreltype.SummarizationTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.variantreltype.VariantTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
-import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
-import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfileSeries;
-import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
-import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
 
@@ -70,7 +69,7 @@ public class AssetSurrogateJsonTest {
   @Test
   void testAssetCore() {
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withAssetId(uri("http://foo.bar/123", "234"));
+        .withAssetId(newId("http://foo.bar/123", "234"));
 
     String jsonTree = toJson(ks);
     assertFalse(Util.isEmpty(jsonTree));
@@ -79,13 +78,13 @@ public class AssetSurrogateJsonTest {
   @Test
   void testApplicability() {
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withAssetId(uri("http://foo.bar/54123", "001"))
+        .withAssetId(newId("http://foo.bar/54123", "001"))
         .withApplicableIn(new Applicability()
-            .withSituation(TermsHelper.mayo("Example Situation","x123"))
+            .withSituation(Term.mock("Example Situation", "x123").asConceptIdentifier())
         );
 
     String x = toJson(ks);
-    ks = JSonUtil.parseJson(x,KnowledgeAsset.class).orElse(null);
+    ks = JSonUtil.parseJson(x, KnowledgeAsset.class).orElse(null);
     assertNotNull(ks);
 
     assertEquals("x123", ks.getApplicableIn().getSituation().get(0).getTag());
@@ -94,31 +93,31 @@ public class AssetSurrogateJsonTest {
   @Test
   void testRelated() {
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withAssetId(uri("http://foo.bar/random", "0.0.12"))
-        .withRelated(new Dependency()
-            .withRel(DependencyTypeSeries.Depends_On)
-            .withHref((ResourceIdentifier) SemanticIdentifier.newId("1","1.0.0"))
+        .withAssetId(newId("http://foo.bar/random", "0.0.12"))
+        .withLinks(new Dependency()
+            .withRel(Depends_On)
+            .withHref(newId("1", "1.0.0"))
         );
 
     String x = toJson(ks);
-    ks = JSonUtil.parseJson(x,KnowledgeAsset.class).orElse(null);
+    ks = JSonUtil.parseJson(x, KnowledgeAsset.class).orElse(null);
     assertNotNull(ks);
 
-    assertEquals(DependencyTypeSeries.Depends_On,
-        ((Dependency)ks.getLinks().get(0)).getRel());
+    assertEquals(Depends_On,
+        ((Dependency) ks.getLinks().get(0)).getRel());
   }
 
   @Test
   void testSeriesSerialization() {
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withAssetId(uri("http://foo.bar/7443", "142412"))
-        .withFormalCategory(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines.getLatest());
+        .withAssetId(newId("http://foo.bar/7443", "142412"))
+        .withFormalCategory(Rules_Policies_And_Guidelines.getLatest());
 
     String x = toJson(ks);
-    ks = JSonUtil.parseJson(x,KnowledgeAsset.class).orElse(null);
+    ks = JSonUtil.parseJson(x, KnowledgeAsset.class).orElse(null);
     assertNotNull(ks);
 
-    assertEquals(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines.getLatest(),
+    assertEquals(Rules_Policies_And_Guidelines.getLatest(),
         ks.getFormalCategory().get(0));
   }
 
@@ -126,47 +125,44 @@ public class AssetSurrogateJsonTest {
   @Test
   void testDeserializationOfKnownVocabularies() {
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withAssetId(uri("http://foo.bar", "142412"))
-        .withFormalCategory(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines)
-        .withFormalType(KnowledgeAssetTypeSeries.Clinical_Rule)
-        .withProcessingMethod(KnowledgeProcessingTechniqueSeries.Logic_Based_Technique)
+        .withAssetId(newId("http://foo.bar", "142412"))
+        .withFormalCategory(Rules_Policies_And_Guidelines)
+        .withFormalType(Clinical_Rule)
+        .withProcessingMethod(Logic_Based_Technique)
         .withRole(KnowledgeAssetRoleSeries.Operational_Concept_Definition)
-        .withRelated(
-            new Component().withRel(StructuralPartTypeSeries.Has_Part))
-        .withRelated(
-            new Derivative().withRel(DerivationTypeSeries.Inspired_By))
-        .withRelated(
-            new Dependency().withRel(DependencyTypeSeries.Depends_On))
-        .withRelated(
-            new Variant().withRel(VariantTypeSeries.Adaptation_Of))
-        .withRelated(
-            new Version().withRel(RelatedVersionTypeSeries.Has_Original))
+        .withLinks(
+            new Component().withRel(Has_Part))
+        .withLinks(
+            new Derivative().withRel(Inspired_By))
+        .withLinks(
+            new Dependency().withRel(Depends_On))
+        .withLinks(
+            new Variant().withRel(Adaptation_Of))
+        .withLinks(
+            new Version().withRel(Has_Original))
         .withCitations(
-            new Citation().withRel(BibliographicCitationTypeSeries.Cites_As_Authority))
-        .withLifecycle(
-            new Publication()
-                .withPublicationStatus(PublicationStatusSeries.Published)
-                .withAssociatedTo(new Party().withPublishingRole(PublishingRoleSeries.Author))
-        )
+            new Citation().withRel(Cites_As_Authority))
         .withCarriers(
             new ComputableKnowledgeArtifact()
-                .withLocalization(LanguageSeries.Italian)
-                .withExpressionCategory(KnowledgeArtifactCategorySeries.Software)
+                .withLocalization(Italian)
+                .withExpressionCategory(Software)
                 .withSummary(
-                    new Summary().withRel(SummarizationTypeSeries.Compact_Representation_Of))
-              .withRepresentation(new SyntacticRepresentation()
-                  .withLanguage(KnowledgeRepresentationLanguageSeries.DMN_1_1)
-                  .withProfile(KnowledgeRepresentationLanguageProfileSeries.CQL_Essentials)
-                  .withFormat(SerializationFormatSeries.TXT)
-                  .withLexicon(LexiconSeries.SNOMED_CT)
-                  .withSerialization(KnowledgeRepresentationLanguageSerializationSeries.DMN_1_1_XML_Syntax)
-                  .withSubLanguage(new SyntacticRepresentation()
-                      .withRole(KnowledgeRepresentationLanguageRoleSeries.Schema_Language))
-              )
+                    new Summary().withRel(Compact_Representation_Of))
+                .withRepresentation(new SyntacticRepresentation()
+                    .withLanguage(DMN_1_1)
+                    .withProfile(CQL_Essentials)
+                    .withFormat(TXT)
+                    .withLexicon(SNOMED_CT)
+                    .withSerialization(DMN_1_1_XML_Syntax)
+                    .withSubLanguage(new SyntacticRepresentation()
+                        .withRole(Schema_Language))
+                ).withLifecycle(
+                new Publication()
+                    .withPublicationStatus(Published))
         );
 
     String x = toJson(ks);
-    ks = JSonUtil.parseJson(x,KnowledgeAsset.class).orElse(null);
+    ks = JSonUtil.parseJson(x, KnowledgeAsset.class).orElse(null);
     assertNotNull(ks);
   }
 
@@ -175,24 +171,22 @@ public class AssetSurrogateJsonTest {
   void testSerialization() {
     KnowledgeAsset ks = new KnowledgeAsset()
 
-        .withAssetId(uri("http://foo.bar", "234"))
+        .withAssetId(newId("http://foo.bar", "234"))
 
-        .withFormalCategory(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines.getLatest())
+        .withFormalCategory(Rules_Policies_And_Guidelines.getLatest())
 
         .withDescription("This is a test")
 
-        .withSubject(new Annotation()
+        .withAnnotation(new Annotation()
             .withRel(AnnotationRelTypeSeries.Has_Primary_Subject.getLatest().asConceptIdentifier())
-            .withRef(TermsHelper.mayo("fooLabel", "123456")))
+            .withRef(Term.mock("fooLabel", "123456").asConceptIdentifier()))
 
-        .withRelated(new Derivative()
-                .withRel(DerivationTypeSeries.Abdridgement_Of)
-                .withHref(new ComputableKnowledgeArtifact()
-                    .withArtifactId(uri("http://foo.bar/234"))),
+        .withLinks(new Derivative()
+                .withRel(Abdridgement_Of)
+                .withHref(SurrogateBuilder.artifactId("234", "0.0.0")),
             new Derivative()
-                .withRel(DerivationTypeSeries.Derived_From)
-                .withHref(new KnowledgeAsset()
-                    .withAssetId(uri("http://foo.bar/234"))))
+                .withRel(Derived_From)
+                .withHref(newId("http://foo.bar/234")))
         .withCitations(
             new Citation()
                 .withRel(BibliographicCitationTypeSeries.Cites)
@@ -213,7 +207,7 @@ public class AssetSurrogateJsonTest {
     assertTrue(y.isPresent());
 
     String json2 = y.flatMap(JSonUtil::writeJsonAsString).orElse("");
-    assertEquals(json,json2);
+    assertEquals(json, json2);
 
     return json;
   }
