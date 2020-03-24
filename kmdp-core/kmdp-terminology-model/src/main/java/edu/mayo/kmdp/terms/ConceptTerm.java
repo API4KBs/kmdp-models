@@ -5,8 +5,19 @@ import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
 
-public interface ConceptTerm<T extends Term> extends Term, Taxonomic<T> {
+public interface ConceptTerm<T extends Term> extends Term, org.omg.spec.api4kp._1_0.id.Term, Taxonomic<T> {
+
+  @Override
+  default URI getResourceId() {
+    return getDescription().getConceptId();
+  }
+
+  @Override
+  default String getName() {
+    return getLabel();
+  }
 
   @Override
   default String getLabel() {
@@ -29,8 +40,18 @@ public interface ConceptTerm<T extends Term> extends Term, Taxonomic<T> {
   }
 
   @Override
+  default UUID getUuid() {
+    return getConceptUUID();
+  }
+
+  @Override
   default URI getRef() {
     return getDescription().getRef();
+  }
+
+  @Override
+  default URI getReferentId() {
+    return getRef();
   }
 
   @Override
@@ -61,6 +82,13 @@ public interface ConceptTerm<T extends Term> extends Term, Taxonomic<T> {
   @Override
   default org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier asConcept() {
     return DatatypeHelper.toConceptIdentifier( this );
+  }
+
+  @Override
+  default ConceptIdentifier asConceptIdentifier() {
+    return (ConceptIdentifier) org.omg.spec.api4kp._1_0.id.Term
+        .newId(this.getTag(), this.getUuid(), this.getNamespaceUri(), this.getReferentId(),
+            this.getVersionTag(), this.getLabel(), this.getEstablishedOn());
   }
 
   TermDescription getDescription();

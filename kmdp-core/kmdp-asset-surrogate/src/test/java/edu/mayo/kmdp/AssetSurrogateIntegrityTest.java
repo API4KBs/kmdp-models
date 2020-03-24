@@ -19,9 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.v2.surrogate.resources.KnowledgeAsset;
 import java.io.File;
 import java.net.URISyntaxException;
@@ -31,7 +29,8 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -92,7 +91,7 @@ public class AssetSurrogateIntegrityTest {
       assertTrue(f.isDirectory());
       Set<String> fileNames = streamChildFiles(f).map(File::getName)
           .collect(Collectors.toSet());
-      assertTrue(fileNames.contains(SimpleAnnotation.class.getSimpleName() + ".java"));
+      assertTrue(fileNames.contains(Annotation.class.getSimpleName() + ".java"));
     } catch (URISyntaxException e) {
       logger.error(e.getMessage(), e);
       fail(e.getMessage());

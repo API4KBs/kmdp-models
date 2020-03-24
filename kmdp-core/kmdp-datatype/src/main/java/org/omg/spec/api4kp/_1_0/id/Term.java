@@ -31,13 +31,21 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
 
   URI getReferentId();
 
+  default URI getEvokes() {
+    return getResourceId();
+  }
+
   /**
    * label is a display value
    *
    * @return
    */
-  default String getLabel() {
+  default String getPrefLabel() {
     return getName();
+  }
+
+  default ConceptIdentifier asConceptIdentifier() {
+    return (ConceptIdentifier) this;
   }
 
   /**
@@ -59,14 +67,13 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
         .withUuid(uuid);
   }
 
-  static Term newId(String tag, UUID uuid, URI namespace, URI referentId, String locale,
+  static Term newId(String tag, UUID uuid, URI namespace, URI referentId,
       String versionTag, String name, Date establishedDate) {
     return new ConceptIdentifier()
         .withUuid(uuid)
         .withReferentId(referentId)
         .withTag(tag)
-        .withNamespace(namespace)
-        .withLocale(locale)
+        .withNamespaceUri(namespace)
         .withVersionTag(versionTag)
         .withResourceId(SemanticIdentifier.toResourceId(tag, namespace, uuid))
         .withName(name)
@@ -89,7 +96,7 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
     return new ConceptIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
-        .withNamespace(namespace)
+        .withNamespaceUri(namespace)
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
@@ -106,7 +113,7 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
         .withTag(tag)
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
-        .withNamespace(namespace);
+        .withNamespaceUri(namespace);
   }
 
   static Term newId(String tag, Version version) {

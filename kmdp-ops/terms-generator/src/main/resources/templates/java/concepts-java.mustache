@@ -99,6 +99,16 @@ public enum {{typeName}} implements {{intfPackageName}}.{{intfName}} {
   }
 
   @Override
+  public java.util.Date getEstablishedOn() {
+    return namespace.getEstablishedOn();
+  }
+
+  @Override
+  public String getVersionTag() {
+    return namespace.getVersion();
+  }
+
+  @Override
   public {{seriesName}} asEnum() {
     return toSeries();
   }

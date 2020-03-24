@@ -26,7 +26,9 @@ import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
+import java.net.URI;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -83,6 +85,21 @@ public enum ColorsSeries implements IColors, Series<IColors> {
   @Override
   public Series<IColors> asSeries() {
     return this;
+  }
+
+  @Override
+  public URI getNamespaceUri() {
+    return null;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return null;
+  }
+
+  @Override
+  public Date getEstablishedOn() {
+    return null;
   }
 
   public static class JsonSerializer extends AbstractTermsJsonAdapter.AbstractSerializer {

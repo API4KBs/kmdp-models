@@ -13,10 +13,12 @@ import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
 public enum CitoSeries implements ICito, Series<ICito> {
 
@@ -92,5 +94,15 @@ public enum CitoSeries implements ICito, Series<ICito> {
   @Override
   public Series<ICito> asSeries() {
     return this;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return ((NamespaceIdentifier)getNamespace()).getVersion();
+  }
+
+  @Override
+  public Date getEstablishedOn() {
+    return ((NamespaceIdentifier)getNamespace()).getEstablishedOn();
   }
 }

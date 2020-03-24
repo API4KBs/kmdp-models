@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,13 +28,11 @@ import edu.mayo.kmdp.metadata.v2.surrogate.Derivative;
 import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.v2.surrogate.Party;
 import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
-import edu.mayo.kmdp.metadata.v2.surrogate.Representation;
-import edu.mayo.kmdp.metadata.v2.surrogate.SubLanguage;
 import edu.mayo.kmdp.metadata.v2.surrogate.Summary;
 import edu.mayo.kmdp.metadata.v2.surrogate.Variant;
 import edu.mayo.kmdp.metadata.v2.surrogate.Version;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleApplicability;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Applicability;
 import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
@@ -63,6 +60,9 @@ import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLangu
 import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
 
 public class AssetSurrogateJsonTest {
@@ -80,7 +80,7 @@ public class AssetSurrogateJsonTest {
   void testApplicability() {
     KnowledgeAsset ks = new KnowledgeAsset()
         .withAssetId(uri("http://foo.bar/54123", "001"))
-        .withApplicableIn(new SimpleApplicability()
+        .withApplicableIn(new Applicability()
             .withSituation(TermsHelper.mayo("Example Situation","x123"))
         );
 
@@ -88,7 +88,7 @@ public class AssetSurrogateJsonTest {
     ks = JSonUtil.parseJson(x,KnowledgeAsset.class).orElse(null);
     assertNotNull(ks);
 
-    assertEquals("x123", ((SimpleApplicability)ks.getApplicableIn()).getSituation().getTag());
+    assertEquals("x123", ks.getApplicableIn().getSituation().get(0).getTag());
   }
 
   @Test
@@ -97,7 +97,7 @@ public class AssetSurrogateJsonTest {
         .withAssetId(uri("http://foo.bar/random", "0.0.12"))
         .withRelated(new Dependency()
             .withRel(DependencyTypeSeries.Depends_On)
-            .withTgt(new KnowledgeAsset())
+            .withHref((ResourceIdentifier) SemanticIdentifier.newId("1","1.0.0"))
         );
 
     String x = toJson(ks);
@@ -105,7 +105,7 @@ public class AssetSurrogateJsonTest {
     assertNotNull(ks);
 
     assertEquals(DependencyTypeSeries.Depends_On,
-        ((Dependency)ks.getRelated().get(0)).getRel());
+        ((Dependency)ks.getLinks().get(0)).getRel());
   }
 
   @Test
@@ -154,14 +154,14 @@ public class AssetSurrogateJsonTest {
                 .withExpressionCategory(KnowledgeArtifactCategorySeries.Software)
                 .withSummary(
                     new Summary().withRel(SummarizationTypeSeries.Compact_Representation_Of))
-              .withRepresentation(new Representation()
+              .withRepresentation(new SyntacticRepresentation()
                   .withLanguage(KnowledgeRepresentationLanguageSeries.DMN_1_1)
                   .withProfile(KnowledgeRepresentationLanguageProfileSeries.CQL_Essentials)
                   .withFormat(SerializationFormatSeries.TXT)
                   .withLexicon(LexiconSeries.SNOMED_CT)
                   .withSerialization(KnowledgeRepresentationLanguageSerializationSeries.DMN_1_1_XML_Syntax)
-                  .withWith(
-                      new SubLanguage().withRole(KnowledgeRepresentationLanguageRoleSeries.Schema_Language))
+                  .withSubLanguage(new SyntacticRepresentation()
+                      .withRole(KnowledgeRepresentationLanguageRoleSeries.Schema_Language))
               )
         );
 
@@ -181,17 +181,17 @@ public class AssetSurrogateJsonTest {
 
         .withDescription("This is a test")
 
-        .withSubject(new SimpleAnnotation()
-            .withRel(AnnotationRelTypeSeries.Has_Primary_Subject.getLatest().asConcept())
-            .withExpr(TermsHelper.mayo("fooLabel", "123456")))
+        .withSubject(new Annotation()
+            .withRel(AnnotationRelTypeSeries.Has_Primary_Subject.getLatest().asConceptIdentifier())
+            .withRef(TermsHelper.mayo("fooLabel", "123456")))
 
         .withRelated(new Derivative()
                 .withRel(DerivationTypeSeries.Abdridgement_Of)
-                .withTgt(new ComputableKnowledgeArtifact()
+                .withHref(new ComputableKnowledgeArtifact()
                     .withArtifactId(uri("http://foo.bar/234"))),
             new Derivative()
                 .withRel(DerivationTypeSeries.Derived_From)
-                .withTgt(new KnowledgeAsset()
+                .withHref(new KnowledgeAsset()
                     .withAssetId(uri("http://foo.bar/234"))))
         .withCitations(
             new Citation()

@@ -111,6 +111,17 @@ public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
         .min(java.util.Comparator.naturalOrder());
   }
 
+
+  @Override
+  public String getVersionTag() {
+    return getNamespace().getVersion();
+  }
+
+  @Override
+  public Date getEstablishedOn() {
+    return getNamespace().getEstablishedOn();
+  }
+
   public static Optional<{{intfName}}> resolve(final Term trm) {
     return trm != null ? resolveId(trm.getConceptId()) : Optional.empty();
   }

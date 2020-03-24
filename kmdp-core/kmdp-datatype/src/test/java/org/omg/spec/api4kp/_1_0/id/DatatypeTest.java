@@ -43,7 +43,7 @@ public class DatatypeTest {
     // this should at least compile
     assertNotNull(new ResourceIdentifier()
         .withUuid(UUID.randomUUID())
-        .withNamespace(MAYO_ASSETS_BASE_URI_URI)
+        .withNamespaceUri(MAYO_ASSETS_BASE_URI_URI)
         .withName("Test ResourceId")
         .withVersionTag("LATEST"));
   }
@@ -59,7 +59,7 @@ public class DatatypeTest {
 
     assertNotNull(id);
     assertEquals("testing", id.getName());
-    assertEquals(MAYO_ASSETS_BASE_URI_URI, id.getNamespace());
+    assertEquals(MAYO_ASSETS_BASE_URI_URI, id.getNamespaceUri());
     assertEquals(uuid, id.getUuid());
     assertEquals(expectedId, id.getResourceId());
     assertEquals(versionId, id.getVersionId());
@@ -100,7 +100,7 @@ public class DatatypeTest {
     assertEquals(versionId, id.getVersionId());
     assertEquals(version.toString(), id.getVersionTag());
     assertNull(id.getEstablishedOn());
-    assertNull(id.getNamespace());
+    assertNull(id.getNamespaceUri());
   }
 
   @Test
@@ -217,7 +217,7 @@ public class DatatypeTest {
     assertEquals(name, rid.getName());
     assertEquals(version.toString(), rid.getVersionTag());
     assertEquals(established, rid.getEstablishedOn());
-    assertEquals(MAYO_ASSETS_BASE_URI_URI, rid.getNamespace());
+    assertEquals(MAYO_ASSETS_BASE_URI_URI, rid.getNamespaceUri());
   }
 
   @Test
@@ -255,7 +255,7 @@ public class DatatypeTest {
     Identifier id = SemanticIdentifier.newId("thisId");
 
     assertEquals("thisId", id.getTag());
-    assertEquals(IdentifierTagType.STRING_VALUE, id.getFormat());
+    assertEquals(IdentifierTagType.STRING_VALUE, id.getTagFormat());
   }
 
   @Test
@@ -273,7 +273,7 @@ public class DatatypeTest {
     String tag = "1.3.6.1";
     ScopedIdentifier qid = SemanticIdentifier.newId(MAYO_ASSETS_BASE_URI_URI, tag);
 
-    assertEquals(MAYO_ASSETS_BASE_URI_URI, qid.getNamespace());
+    assertEquals(MAYO_ASSETS_BASE_URI_URI, qid.getNamespaceUri());
     assertEquals("1.3.6.1", qid.getTag());
     assertEquals("_1.3.6.1", qid.getQName().getLocalPart());
     assertEquals(MAYO_ASSETS_BASE_URI, qid.getQName().getNamespaceURI());
@@ -300,7 +300,7 @@ public class DatatypeTest {
     String tag = "1.3.6.1";
     String expectedQname = BASE_UUID_URN + ":" + tag;
     ScopedIdentifier qid = SemanticIdentifier.newId(BASE_UUID_URN_URI, tag);
-    assertEquals(BASE_UUID_URN_URI, qid.getNamespace());
+    assertEquals(BASE_UUID_URN_URI, qid.getNamespaceUri());
     assertEquals("1.3.6.1", qid.getTag());
     assertEquals("_1.3.6.1", qid.getQName().getLocalPart());
     assertEquals(BASE_UUID_URN, qid.getQName().getNamespaceURI());
@@ -344,7 +344,7 @@ public class DatatypeTest {
     assertEquals(expectedResourceId, pid.getResourceId());
     assertEquals(uuid.toString(), pid.getTag());
     assertEquals(uuid, pid.getUuid());
-    assertEquals("https://internal/locator/", pid.getLocator().toString());
+    assertEquals("https://internal/locator/", pid.getHref().toString());
     assertEquals("Resource Description", pid.getDescription());
   }
 
@@ -358,18 +358,18 @@ public class DatatypeTest {
     ResourceIdentifier ridString = (ResourceIdentifier) SemanticIdentifier.newId(random);
 
 
-    assertTrue(IdentifierTagType.OID_VALUE.equals(ridOid.getFormat()));
-    assertFalse(IdentifierTagType.UUID_VALUE.equals(ridOid.getFormat()));
-    assertFalse(IdentifierTagType.STRING_VALUE.equals(ridOid.getFormat()));
+    assertTrue(IdentifierTagType.OID_VALUE.equals(ridOid.getTagFormat()));
+    assertFalse(IdentifierTagType.UUID_VALUE.equals(ridOid.getTagFormat()));
+    assertFalse(IdentifierTagType.STRING_VALUE.equals(ridOid.getTagFormat()));
 
-    assertTrue(IdentifierTagType.UUID_VALUE.equals(ridUuid.getFormat()));
-    assertFalse(IdentifierTagType.OID_VALUE.equals(ridUuid.getFormat()));
-    assertFalse(IdentifierTagType.STRING_VALUE.equals(ridUuid.getFormat()));
+    assertTrue(IdentifierTagType.UUID_VALUE.equals(ridUuid.getTagFormat()));
+    assertFalse(IdentifierTagType.OID_VALUE.equals(ridUuid.getTagFormat()));
+    assertFalse(IdentifierTagType.STRING_VALUE.equals(ridUuid.getTagFormat()));
 
 
-    assertTrue(IdentifierTagType.STRING_VALUE.equals(ridString.getFormat()));
-    assertFalse(IdentifierTagType.UUID_VALUE.equals(ridString.getFormat()));
-    assertFalse(IdentifierTagType.OID_VALUE.equals(ridString.getFormat()));
+    assertTrue(IdentifierTagType.STRING_VALUE.equals(ridString.getTagFormat()));
+    assertFalse(IdentifierTagType.UUID_VALUE.equals(ridString.getTagFormat()));
+    assertFalse(IdentifierTagType.OID_VALUE.equals(ridString.getTagFormat()));
 
   }
 

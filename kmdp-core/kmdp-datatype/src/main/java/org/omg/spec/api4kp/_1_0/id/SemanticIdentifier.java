@@ -59,7 +59,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(tag)
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
-        .withNamespace(namespace);
+        .withNamespaceUri(namespace);
   }
 
   /**
@@ -85,7 +85,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(uuid.toString())
         .withResourceId(toResourceId(uuid.toString(), namespace, uuid))
         .withUuid(uuid)
-        .withNamespace(namespace)
+        .withNamespaceUri(namespace)
         .withName(name);
   }
 
@@ -128,8 +128,8 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     return new ResourceIdentifier()
         .withUuid(uuid)
         .withTag(tag)
-        .withNamespace(namespace)
         .withVersionTag(versionTag)
+        .withNamespaceUri(namespace)
         .withName(name)
         .withResourceId(toResourceId(tag, namespace, uuid));
   }
@@ -150,8 +150,8 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     return new ResourceIdentifier()
         .withUuid(uuid)
         .withTag(tag)
-        .withNamespace(namespace)
         .withVersionTag(versionTag)
+        .withNamespaceUri(namespace)
         .withName(name)
         .withResourceId(toResourceId(tag, namespace, uuid))
         .withEstablishedOn(establishedOn);
@@ -168,7 +168,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     return new ResourceIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
-        .withNamespace(namespace)
+        .withNamespaceUri(namespace)
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
@@ -220,7 +220,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
     return new Pointer()
-        .withNamespace(namespace)
+        .withNamespaceUri(namespace)
         .withTag(tag)
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
@@ -240,12 +240,12 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
     return new Pointer()
-        .withNamespace(namespace)
+        .withNamespaceUri(namespace)
         .withTag(tag)
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
         .withDescription(description)
-        .withLocator(locator);
+        .withHref(locator);
   }
 
   /**

@@ -9,7 +9,7 @@ public interface ScopedIdentifier extends Identifier {
 
   URI getResourceId();
   UUID getUuid();
-  URI getNamespace();
+  URI getNamespaceUri();
 
   /**
    * compose QName given namespace and tag
@@ -25,8 +25,8 @@ public interface ScopedIdentifier extends Identifier {
         tag = "_" + tag;
       }
     }
-    if(null != getNamespace()) {
-      return new QName(getNamespace().toString(), tag);
+    if(null != getNamespaceUri()) {
+      return new QName(getNamespaceUri().toString(), tag);
     } else {
       return new QName(tag);
     }

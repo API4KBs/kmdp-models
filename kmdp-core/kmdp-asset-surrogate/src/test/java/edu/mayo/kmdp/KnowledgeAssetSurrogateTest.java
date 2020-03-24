@@ -13,8 +13,6 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.name;
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,15 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.v2.surrogate.Derivative;
-import edu.mayo.kmdp.metadata.v2.surrogate.InlinedRepresentation;
 import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.v2.surrogate.ObjectFactory;
 import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
-import edu.mayo.kmdp.metadata.v2.surrogate.Representation;
 import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateHelper;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.ComplexApplicability;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleApplicability;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Applicability;
 import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
@@ -46,7 +41,7 @@ import java.util.Collections;
 import java.util.Optional;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.SimpleIdentifier;
+import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
 public class KnowledgeAssetSurrogateTest {
 
@@ -59,7 +54,7 @@ public class KnowledgeAssetSurrogateTest {
         .withName("Foo")
         .withFormalCategory(br)
         .withLifecycle(new Publication().withPublicationStatus(PublicationStatusSeries.Draft))
-        .withSubject(new SimpleAnnotation().withExpr(TermsHelper.sct("mock", "123")));
+        .withSubject(new Annotation().withRef(TermsHelper.sct("mock", "123")));
 
     checkRoundTrip(ks);
   }
@@ -69,12 +64,12 @@ public class KnowledgeAssetSurrogateTest {
     KnowledgeAsset ks = new KnowledgeAsset()
         .withAssetId(uri("http://foo.bar", "142412"))
         .withName("Foo")
-        .withApplicableIn(new SimpleApplicability()
+        .withApplicableIn(new Applicability()
             .withSituation(TermsHelper.mayo("Example Situation", "x123"))
         );
     assertNotNull(ks);
     ks = checkRoundTrip(ks);
-    assertEquals("x123", ((SimpleApplicability) ks.getApplicableIn()).getSituation().getTag());
+    assertEquals("x123", ks.getApplicableIn().getSituation().get(0).getTag());
   }
 
   @Test
@@ -100,12 +95,11 @@ public class KnowledgeAssetSurrogateTest {
         .withCarriers(new ComputableKnowledgeArtifact()
             .withArtifactId(uri("urn:to:do"))
             .withName("Bar")
-            .withRepresentation(new Representation()
+            .withRepresentation(new SyntacticRepresentation()
                 .withLanguage(KnowledgeRepresentationLanguageSeries.KNART_1_3))
             // carrier + external catalog is not perfect
             .withSecondaryId(name("poc:RUL-12345"))
-            .withInlined(new InlinedRepresentation()
-                .withExpr("IF so and so DO nothing"))
+            .withInlined("IF so and so DO nothing"))
             .withRelated(new Derivative()
                 .withRel(DerivationTypeSeries.Derived_From)
                 // should I have an inverse flag here?
@@ -153,20 +147,20 @@ public class KnowledgeAssetSurrogateTest {
   @Test
   void testSimpleApplicability() {
     KnowledgeAsset asset = new KnowledgeAsset();
-    asset.withApplicableIn(new SimpleApplicability()
+    asset.withApplicableIn(new Applicability()
         .withSituation(TermsHelper.mayo("test", "123")));
 
-    assertTrue(asset.getApplicableIn() instanceof SimpleApplicability);
+    assertTrue(asset.getApplicableIn() != null);
   }
 
   @Test
   void testComplexApplicability() {
     KnowledgeAsset asset = new KnowledgeAsset();
-    asset.withApplicableIn(new ComplexApplicability()
+    asset.withApplicableIn(new Applicability()
         .withSituation(new InlinedRepresentation()
             .withExpr("A or B")
             .withCodedRepresentationType("plain/txt")));
 
-    assertTrue(asset.getApplicableIn() instanceof ComplexApplicability);
+    assertTrue(asset.getApplicableIn() instanceof Applicability);
   }
 }

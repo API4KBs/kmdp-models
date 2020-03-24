@@ -9,7 +9,7 @@ import java.util.Date;
 public interface Identifier {
   String getTag();
 
-  default IdentifierTagType getFormat() {
+  default IdentifierTagType getTagFormat() {
     // OID format
     if(isOID(getTag())) {
       return IdentifierTagType.OID_VALUE;

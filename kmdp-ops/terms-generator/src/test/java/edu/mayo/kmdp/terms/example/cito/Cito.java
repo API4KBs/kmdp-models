@@ -32,6 +32,7 @@ import edu.mayo.kmdp.terms.impl.model.TermImpl;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -156,5 +157,14 @@ public enum Cito implements ICito {
     return resolveTerm(refUri, Cito.values(), Term::getRef);
   }
 
+  @Override
+  public Date getEstablishedOn() {
+    return namespace.getEstablishedOn();
+  }
+
+  @Override
+  public String getVersionTag() {
+    return namespace.getVersion();
+  }
 
 }

@@ -22,7 +22,6 @@ import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.v2.surrogate.ObjectFactory;
 import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateHelper;
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
@@ -34,8 +33,7 @@ import java.util.Optional;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
 
 public class RootElementTest {
 
@@ -43,13 +41,13 @@ public class RootElementTest {
   @Test
   public void testAnnotationRoundtrip() {
     KnowledgeAssetCategory br = KnowledgeAssetCategory.Rules_Policies_And_Guidelines;
-    SimpleAnnotation anno = new edu.mayo.kmdp.metadata.v2.surrogate.annotations.resources.SimpleAnnotation()
-        .withExpr(
+    Annotation anno = new edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation()
+        .withRef(
             new ConceptIdentifier()
-                .withRef(br.getRef())
+                .withReferentId(br.getRef())
                 .withTag("BusinessRuleAsset")
-                .withLabel(br.getLabel())
-                .withNamespace((NamespaceIdentifier) br.getNamespace()));
+                .withName(br.getLabel())
+                .withNamespaceUri(br.getNamespaceUri()));
 
     Annotation rec = checkRoundTrip(anno);
     assertNotNull(rec);
@@ -57,9 +55,9 @@ public class RootElementTest {
         rec,
         JaxbUtil.defaultProperties());
 
-    rec = (Annotation) rec.copyTo(new SimpleAnnotation());
+    rec = (Annotation) rec.copyTo(new Annotation());
 
-    KnowledgeAsset kas = new KnowledgeAsset().withSubject(rec);
+    KnowledgeAsset kas = new KnowledgeAsset().withAnnotation(rec);
     String str = JaxbUtil.marshallToString(Collections.singleton(kas.getClass()),
         kas,
         new ObjectFactory()::createKnowledgeAsset,
