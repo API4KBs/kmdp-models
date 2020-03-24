@@ -19,9 +19,8 @@ public interface UniversalIdentifier extends Identifier {
                   new IllegalStateException(
                       "UUID Identifier not initialized with a valid UUID " + tag)));
     } else {
-      new IllegalStateException("Tag value is required for Identifier.");
+      throw new IllegalStateException("Tag value is required for Identifier.");
     }
-    return null;
   }
 
 

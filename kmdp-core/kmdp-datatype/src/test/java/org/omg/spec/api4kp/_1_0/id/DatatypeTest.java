@@ -19,20 +19,17 @@ import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSIONS;
 
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.UUID;
-import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
 import org.junit.jupiter.api.Test;
 
 
@@ -53,7 +50,7 @@ public class DatatypeTest {
     UUID uuid = UUID.randomUUID();
     URI expectedId = URI.create(MAYO_ASSETS_BASE_URI + uuid);
     URI versionId = URI.create(
-        MAYO_ASSETS_BASE_URI + uuid + VersionIdentifier.VERSIONS + Version.valueOf("1.0.0"));
+        MAYO_ASSETS_BASE_URI + uuid + VERSIONS + Version.valueOf("1.0.0"));
     ResourceIdentifier id = (ResourceIdentifier) SemanticIdentifier
         .newId(MAYO_ASSETS_BASE_URI_URI, uuid, Version.valueOf("1.0.0"), "testing");
 
@@ -70,13 +67,13 @@ public class DatatypeTest {
     UUID uuid = UUID.randomUUID();
     URI expectedId = URI.create(MAYO_ASSETS_BASE_URI + uuid);
     URI versionId = URI.create(
-        MAYO_ASSETS_BASE_URI + uuid + VersionIdentifier.VERSIONS + "1.0.0");
+        MAYO_ASSETS_BASE_URI + uuid + VERSIONS + "1.0.0");
     ResourceIdentifier id = (ResourceIdentifier) SemanticIdentifier
         .newId(MAYO_ASSETS_BASE_URI_URI, uuid, "1.0.0", "testing");
 
     assertNotNull(id);
     assertEquals("testing", id.getName());
-    assertEquals(MAYO_ASSETS_BASE_URI_URI, id.getNamespace());
+    assertEquals(MAYO_ASSETS_BASE_URI_URI, id.getNamespaceUri());
     assertEquals(uuid, id.getUuid());
     assertEquals(expectedId, id.getResourceId());
     assertEquals(versionId, id.getVersionId());
@@ -99,7 +96,7 @@ public class DatatypeTest {
     assertEquals(expectedId, id.getResourceId());
     assertEquals(versionId, id.getVersionId());
     assertEquals(version.toString(), id.getVersionTag());
-    assertNull(id.getEstablishedOn());
+    assertNotNull(id.getEstablishedOn());
     assertNull(id.getNamespaceUri());
   }
 
@@ -120,8 +117,8 @@ public class DatatypeTest {
     assertEquals(expectedId, id.getResourceId());
     assertEquals(versionId, id.getVersionId());
     assertEquals(version, id.getVersionTag());
-    assertNull(id.getEstablishedOn());
-    assertNull(id.getNamespace());
+    assertNotNull(id.getEstablishedOn());
+    assertNull(id.getNamespaceUri());
   }
 
 
@@ -160,7 +157,7 @@ public class DatatypeTest {
     // TODO: confirm: tag is used if provided, else uuid
     URI expectedId = URI.create(MAYO_ASSETS_BASE_URI + tag);
     URI versionId = URI
-        .create(MAYO_ASSETS_BASE_URI + tag + VersionIdentifier.VERSIONS + version.toString());
+        .create(MAYO_ASSETS_BASE_URI + tag + VERSIONS + version.toString());
 
     ResourceIdentifier rid = (ResourceIdentifier) SemanticIdentifier
         .newId(MAYO_ASSETS_BASE_URI_URI, tag, uuid, version, name);
@@ -204,7 +201,7 @@ public class DatatypeTest {
     Date established = DateTimeUtil.now();
     URI expectedId = URI.create(MAYO_ASSETS_BASE_URI + tag);
     URI versionId = URI
-        .create(MAYO_ASSETS_BASE_URI + tag + VersionIdentifier.VERSIONS + version.toString());
+        .create(MAYO_ASSETS_BASE_URI + tag + VERSIONS + version.toString());
 
     ResourceIdentifier rid = (ResourceIdentifier) SemanticIdentifier
         .newId(MAYO_ASSETS_BASE_URI_URI, tag, uuid, version, name, established);
@@ -239,7 +236,7 @@ public class DatatypeTest {
     String name = "TestURN";
     URI expectedResourceId = URI.create(BASE_UUID_URN + uuid);
     URI expectedVersionId = URI.create(BASE_UUID_URN + uuid + ":" + version.toString());
-    ResourceIdentifier id = (ResourceIdentifier) SemanticIdentifier
+    ResourceIdentifier id = SemanticIdentifier
         .newId(BASE_UUID_URN_URI, uuid, version, name);
 
     assertNotNull(id);
@@ -286,7 +283,7 @@ public class DatatypeTest {
     String tag = "1.3.6.1";
     ScopedIdentifier qid = SemanticIdentifier.newId(tag);
 
-    assertNull(qid.getNamespace());
+    assertNull(qid.getNamespaceUri());
     assertEquals("1.3.6.1", qid.getTag());
     assertNotNull(qid.getUuid());
     assertNotNull(qid.getResourceId());
@@ -317,7 +314,7 @@ public class DatatypeTest {
 
   @Test
   public void testIDComposition() {
-    ResourceIdentifier uid = (ResourceIdentifier) SemanticIdentifier
+    ResourceIdentifier uid = SemanticIdentifier
         .newId(URI.create("http://foo.bar/"), "baz", Version.valueOf("1.1.0"));
     assertEquals(URI.create("http://foo.bar/baz"), uid.getResourceId());
     assertEquals(URI.create("http://foo.bar/baz/versions/1.1.0"), uid.getVersionId());
@@ -353,23 +350,21 @@ public class DatatypeTest {
     String oidString = "1.5.6.3";
     UUID uuid = UUID.randomUUID();
     String random = "15-4";
-    ResourceIdentifier ridOid = (ResourceIdentifier) SemanticIdentifier.newId(oidString);
-    ResourceIdentifier ridUuid = (ResourceIdentifier) SemanticIdentifier.newId(uuid);
-    ResourceIdentifier ridString = (ResourceIdentifier) SemanticIdentifier.newId(random);
+    ResourceIdentifier ridOid = SemanticIdentifier.newId(oidString);
+    ResourceIdentifier ridUuid = SemanticIdentifier.newId(uuid);
+    ResourceIdentifier ridString = SemanticIdentifier.newId(random);
 
+    assertEquals(IdentifierTagType.OID_VALUE, ridOid.getTagFormat());
+    assertNotEquals(IdentifierTagType.UUID_VALUE, ridOid.getTagFormat());
+    assertNotEquals(IdentifierTagType.STRING_VALUE, ridOid.getTagFormat());
 
-    assertTrue(IdentifierTagType.OID_VALUE.equals(ridOid.getTagFormat()));
-    assertFalse(IdentifierTagType.UUID_VALUE.equals(ridOid.getTagFormat()));
-    assertFalse(IdentifierTagType.STRING_VALUE.equals(ridOid.getTagFormat()));
+    assertEquals(IdentifierTagType.UUID_VALUE, ridUuid.getTagFormat());
+    assertNotEquals(IdentifierTagType.OID_VALUE, ridUuid.getTagFormat());
+    assertNotEquals(IdentifierTagType.STRING_VALUE, ridUuid.getTagFormat());
 
-    assertTrue(IdentifierTagType.UUID_VALUE.equals(ridUuid.getTagFormat()));
-    assertFalse(IdentifierTagType.OID_VALUE.equals(ridUuid.getTagFormat()));
-    assertFalse(IdentifierTagType.STRING_VALUE.equals(ridUuid.getTagFormat()));
-
-
-    assertTrue(IdentifierTagType.STRING_VALUE.equals(ridString.getTagFormat()));
-    assertFalse(IdentifierTagType.UUID_VALUE.equals(ridString.getTagFormat()));
-    assertFalse(IdentifierTagType.OID_VALUE.equals(ridString.getTagFormat()));
+    assertEquals(IdentifierTagType.STRING_VALUE, ridString.getTagFormat());
+    assertNotEquals(IdentifierTagType.UUID_VALUE, ridString.getTagFormat());
+    assertNotEquals(IdentifierTagType.OID_VALUE, ridString.getTagFormat());
 
   }
 
@@ -384,45 +379,44 @@ public class DatatypeTest {
     Date timestamp = DateTimeUtil.now();
     String other = "v3";
 
-    ResourceIdentifier semanticVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, semVer);
-    ResourceIdentifier semStringVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, semVerString);
-    ResourceIdentifier sequentialVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, sequential);
-    ResourceIdentifier dateFormatVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, dateFormat);
-    ResourceIdentifier timestampVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, timestamp.toString());
-    ResourceIdentifier genericVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, other);
+    ResourceIdentifier semanticVersion = SemanticIdentifier.newId(oidString, semVer);
+    ResourceIdentifier semStringVersion = SemanticIdentifier.newId(oidString, semVerString);
+    ResourceIdentifier sequentialVersion = SemanticIdentifier.newId(oidString, sequential);
+    ResourceIdentifier dateFormatVersion = SemanticIdentifier.newId(oidString, dateFormat);
+    ResourceIdentifier timestampVersion = SemanticIdentifier.newId(oidString, timestamp.toString());
+    ResourceIdentifier genericVersion = SemanticIdentifier.newId(oidString, other);
 
-
-    assertTrue(VersionTagType.SEM_VER.equals(semanticVersion.getVersionFormat()));
+    assertEquals(VersionTagType.SEM_VER, semanticVersion.getVersionFormat());
     assertNotNull(semanticVersion.getSemanticVersionTag());
     assertEquals("1.0.0", semanticVersion.getSemanticVersionTag().toString());
-    assertFalse(VersionTagType.SEQUENTIAL.equals(semanticVersion.getVersionFormat()));
-    assertFalse(VersionTagType.TIMESTAMP.equals(semanticVersion.getVersionFormat()));
-    assertFalse(VersionTagType.GENERIC.equals(semanticVersion.getVersionFormat()));
+    assertNotEquals(VersionTagType.SEQUENTIAL, semanticVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.TIMESTAMP, semanticVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.GENERIC, semanticVersion.getVersionFormat());
 
-    assertTrue(VersionTagType.SEM_VER.equals(semStringVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEQUENTIAL.equals(semStringVersion.getVersionFormat()));
-    assertFalse(VersionTagType.TIMESTAMP.equals(semStringVersion.getVersionFormat()));
-    assertFalse(VersionTagType.GENERIC.equals(semStringVersion.getVersionFormat()));
+    assertEquals(VersionTagType.SEM_VER, semStringVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEQUENTIAL, semStringVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.TIMESTAMP, semStringVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.GENERIC, semStringVersion.getVersionFormat());
 
-    assertTrue(VersionTagType.SEQUENTIAL.equals(sequentialVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEM_VER.equals(sequentialVersion.getVersionFormat()));
-    assertFalse(VersionTagType.TIMESTAMP.equals(sequentialVersion.getVersionFormat()));
-    assertFalse(VersionTagType.GENERIC.equals(sequentialVersion.getVersionFormat()));
+    assertEquals(VersionTagType.SEQUENTIAL, sequentialVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEM_VER, sequentialVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.TIMESTAMP, sequentialVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.GENERIC, sequentialVersion.getVersionFormat());
 
-    assertTrue(VersionTagType.TIMESTAMP.equals(dateFormatVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEQUENTIAL.equals(dateFormatVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEM_VER.equals(dateFormatVersion.getVersionFormat()));
-    assertFalse(VersionTagType.GENERIC.equals(dateFormatVersion.getVersionFormat()));
+    assertEquals(VersionTagType.TIMESTAMP, dateFormatVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEQUENTIAL, dateFormatVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEM_VER, dateFormatVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.GENERIC, dateFormatVersion.getVersionFormat());
 
-    assertTrue(VersionTagType.GENERIC.equals(timestampVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEQUENTIAL.equals(timestampVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEM_VER.equals(timestampVersion.getVersionFormat()));
-    assertFalse(VersionTagType.TIMESTAMP.equals(timestampVersion.getVersionFormat()));
+    assertEquals(VersionTagType.GENERIC, timestampVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEQUENTIAL, timestampVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEM_VER, timestampVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.TIMESTAMP, timestampVersion.getVersionFormat());
 
-    assertTrue(VersionTagType.GENERIC.equals(genericVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEQUENTIAL.equals(genericVersion.getVersionFormat()));
-    assertFalse(VersionTagType.TIMESTAMP.equals(genericVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEM_VER.equals(genericVersion.getVersionFormat()));
+    assertEquals(VersionTagType.GENERIC, genericVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEQUENTIAL, genericVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.TIMESTAMP, genericVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEM_VER, genericVersion.getVersionFormat());
 
   }
 
@@ -438,45 +432,42 @@ public class DatatypeTest {
     Date timestamp = DateTimeUtil.now();
     String other = "v3";
 
-    ResourceIdentifier semanticVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, semVer);
-    ResourceIdentifier sequentialVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, sequential);
-    ResourceIdentifier dateFormatVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, dateFormat);
-    ResourceIdentifier dateFormatGenericVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, dateFormatGeneric);
-    ResourceIdentifier timestampVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, timestamp.toString());
-    ResourceIdentifier genericVersion = (ResourceIdentifier) SemanticIdentifier.newId(oidString, other);
+    ResourceIdentifier semanticVersion = SemanticIdentifier.newId(oidString, semVer);
+    ResourceIdentifier sequentialVersion = SemanticIdentifier.newId(oidString, sequential);
+    ResourceIdentifier dateFormatVersion = SemanticIdentifier.newId(oidString, dateFormat);
+    ResourceIdentifier dateFormatGenericVersion = SemanticIdentifier.newId(oidString, dateFormatGeneric);
+    ResourceIdentifier timestampVersion = SemanticIdentifier.newId(oidString, timestamp.toString());
+    ResourceIdentifier genericVersion = SemanticIdentifier.newId(oidString, other);
 
-    assertTrue(VersionTagType.SEM_VER.equals(semanticVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEQUENTIAL.equals(semanticVersion.getVersionFormat()));
-    assertFalse(VersionTagType.TIMESTAMP.equals(semanticVersion.getVersionFormat()));
-    assertFalse(VersionTagType.GENERIC.equals(semanticVersion.getVersionFormat()));
+    assertEquals(VersionTagType.SEM_VER, semanticVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEQUENTIAL, semanticVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.TIMESTAMP, semanticVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.GENERIC, semanticVersion.getVersionFormat());
 
-    assertTrue(VersionTagType.SEQUENTIAL.equals(sequentialVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEM_VER.equals(sequentialVersion.getVersionFormat()));
-    assertFalse(VersionTagType.TIMESTAMP.equals(sequentialVersion.getVersionFormat()));
-    assertFalse(VersionTagType.GENERIC.equals(sequentialVersion.getVersionFormat()));
+    assertEquals(VersionTagType.SEQUENTIAL, sequentialVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEM_VER, sequentialVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.TIMESTAMP, sequentialVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.GENERIC, sequentialVersion.getVersionFormat());
 
-    assertTrue(VersionTagType.TIMESTAMP.equals(dateFormatVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEQUENTIAL.equals(dateFormatVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEM_VER.equals(dateFormatVersion.getVersionFormat()));
-    assertFalse(VersionTagType.GENERIC.equals(dateFormatVersion.getVersionFormat()));
+    assertEquals(VersionTagType.TIMESTAMP, dateFormatVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEQUENTIAL, dateFormatVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEM_VER, dateFormatVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.GENERIC, dateFormatVersion.getVersionFormat());
 
+    assertEquals(VersionTagType.GENERIC, dateFormatGenericVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEQUENTIAL, dateFormatGenericVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEM_VER, dateFormatGenericVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.TIMESTAMP, dateFormatGenericVersion.getVersionFormat());
 
-    assertTrue(VersionTagType.GENERIC.equals(dateFormatGenericVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEQUENTIAL.equals(dateFormatGenericVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEM_VER.equals(dateFormatGenericVersion.getVersionFormat()));
-    assertFalse(VersionTagType.TIMESTAMP.equals(dateFormatGenericVersion.getVersionFormat()));
+    assertEquals(VersionTagType.GENERIC, timestampVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEQUENTIAL, timestampVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEM_VER, timestampVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.TIMESTAMP, timestampVersion.getVersionFormat());
 
-
-    assertTrue(VersionTagType.GENERIC.equals(timestampVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEQUENTIAL.equals(timestampVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEM_VER.equals(timestampVersion.getVersionFormat()));
-    assertFalse(VersionTagType.TIMESTAMP.equals(timestampVersion.getVersionFormat()));
-
-
-    assertTrue(VersionTagType.GENERIC.equals(genericVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEQUENTIAL.equals(genericVersion.getVersionFormat()));
-    assertFalse(VersionTagType.TIMESTAMP.equals(genericVersion.getVersionFormat()));
-    assertFalse(VersionTagType.SEM_VER.equals(genericVersion.getVersionFormat()));
+    assertEquals(VersionTagType.GENERIC, genericVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEQUENTIAL, genericVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.TIMESTAMP, genericVersion.getVersionFormat());
+    assertNotEquals(VersionTagType.SEM_VER, genericVersion.getVersionFormat());
 
   }
 

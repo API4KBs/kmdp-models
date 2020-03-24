@@ -21,11 +21,11 @@ import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSIONS;
 
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
@@ -37,7 +37,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
-import javax.xml.namespace.QName;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 
@@ -60,7 +59,7 @@ public class TermTest {
     Version version = Version.valueOf("1.0.0");
     URI expectedResourceId = URI.create(BASE_UUID_URN + tag);
     URI expectedVersionId = URI.create(BASE_UUID_URN + tag + ":" + version.toString());
-    ConceptIdentifier cid = (ConceptIdentifier) Term.newId(tag, version);
+    ConceptIdentifier cid = Term.newTerm(tag, version).asConceptIdentifier();
     assertNotNull(cid);
     assertEquals(tag, cid.getTag());
     assertEquals(version.toString(), cid.getVersionTag());
@@ -72,7 +71,7 @@ public class TermTest {
   public void testConceptIdentifierUUID() {
     UUID uid = UUID.randomUUID();
     URI expectedResourceId = URI.create(BASE_UUID_URN + uid.toString());
-    ConceptIdentifier cid = (ConceptIdentifier) Term.newId(uid);
+    ConceptIdentifier cid = Term.newTerm(uid).asConceptIdentifier();
     assertNotNull(cid);
     // uuid, resourceId and tag are required on ConceptIdentifier; confirm all are there
     assertEquals(uid, cid.getUuid());
@@ -89,11 +88,11 @@ public class TermTest {
     Date established = DateTimeUtil.now();
     URI expectedId = URI.create(MAYO_ASSETS_BASE_URI + tag);
     URI versionId = URI
-        .create(MAYO_ASSETS_BASE_URI + tag + VersionIdentifier.VERSIONS + version.toString());
+        .create(MAYO_ASSETS_BASE_URI + tag + VERSIONS + version.toString());
     URI referentId = URI.create("http://foo.bar/baz");
 
     ConceptIdentifier cid = (ConceptIdentifier) Term
-        .newId(tag, uuid, MAYO_ASSETS_BASE_URI_URI, referentId, version.toString(), name,
+        .newTerm(tag, uuid, MAYO_ASSETS_BASE_URI_URI, referentId, version.toString(), name,
             established);
     assertNotNull(cid);
     // uuid, tag and resourceId are required; confirm all are there
@@ -111,7 +110,7 @@ public class TermTest {
   public void testConceptIdentifierTag() {
     String tag = "1.6.4.3";
     URI expectedResourceId = URI.create(BASE_UUID_URN + tag);
-    ConceptIdentifier cid = (ConceptIdentifier) Term.newId(tag);
+    ConceptIdentifier cid = (ConceptIdentifier) Term.newTerm(tag);
     assertNotNull(cid);
     // uuid, resourceId and tag are required on ConceptIdentifier; confirm all are there
     assertEquals(tag, cid.getTag());
@@ -121,7 +120,7 @@ public class TermTest {
 
   @Test
   public void testSimpleID() {
-    Identifier id = Term.newId("thisId");
+    Identifier id = Term.newTerm("thisId");
 
     assertEquals("thisId", id.getTag());
     assertEquals(IdentifierTagType.STRING_VALUE, id.getTagFormat());
@@ -132,7 +131,7 @@ public class TermTest {
   public void testVersionedID() {
     String tag = "1.3.6.1";
     String version = "42";
-    VersionIdentifier vid = Term.newId(tag, version);
+    VersionIdentifier vid = Term.newTerm(tag, version);
 
     assertEquals("42", vid.getVersionTag());
     assertEquals("1.3.6.1", vid.getTag());
@@ -142,7 +141,7 @@ public class TermTest {
   public void testQNameID() {
     String tag = "1.3.6.1";
     String expectedQname = "{" + MAYO_ASSETS_BASE_URI + "}_" + tag;
-    ScopedIdentifier qid = Term.newId(MAYO_ASSETS_BASE_URI_URI, tag);
+    ScopedIdentifier qid = Term.newTerm(MAYO_ASSETS_BASE_URI_URI, tag);
 
     assertEquals(MAYO_ASSETS_BASE_URI_URI, qid.getNamespaceUri());
     assertEquals("1.3.6.1", qid.getTag());
@@ -157,7 +156,7 @@ public class TermTest {
   public void testQNameID_URN() {
     String tag = "1.3.6.1";
     String expectedQname = "{" + BASE_UUID_URN + "}_" + tag;
-    ScopedIdentifier qid = Term.newId(BASE_UUID_URN_URI, tag);
+    ScopedIdentifier qid = Term.newTerm(BASE_UUID_URN_URI, tag);
     assertEquals(BASE_UUID_URN_URI, qid.getNamespaceUri());
     assertEquals("1.3.6.1", qid.getTag());
     assertEquals("_1.3.6.1", qid.getQName().getLocalPart());
@@ -170,14 +169,14 @@ public class TermTest {
   @Test
   public void testExceptionNoTag() {
     Exception exception = assertThrows(IllegalStateException.class,
-        () -> Term.newId(""));
+        () -> Term.newTerm(""));
     assertEquals("Missing required tag for Identifier", exception.getMessage());
   }
 
 
   @Test
   public void testTerm() {
-    Term term = Term.newId("123456", UUID.randomUUID(), URI.create("http://foo.bar/kinda"),
+    Term term = Term.newTerm("123456", UUID.randomUUID(), URI.create("http://foo.bar/kinda"),
         URI.create("http://foo.bar/kinda/123456"), "1981", null, null);
 
     assertEquals("123456", term.getTag());
@@ -193,7 +192,7 @@ public class TermTest {
   @Test
   public void testConceptIdentifier() {
     ConceptIdentifier trm = (ConceptIdentifier) Term
-        .newId("234", UUID.randomUUID(), URI.create("http://id/1"),
+        .newTerm("234", UUID.randomUUID(), URI.create("http://id/1"),
             URI.create("http://foo.bar/234"), null, "1", null);
 
     ObjectFactory of = new ObjectFactory();
@@ -218,7 +217,7 @@ public class TermTest {
   @Test
   public void testIDComposition() {
     ConceptIdentifier uid = (ConceptIdentifier) Term
-        .newId(URI.create("http://foo.bar/"), "baz", Version.valueOf("1.1.0"));
+        .newTerm(URI.create("http://foo.bar/"), "baz", Version.valueOf("1.1.0"));
     assertEquals(URI.create("http://foo.bar/baz"), uid.getResourceId());
     assertEquals(URI.create("http://foo.bar/baz/versions/1.1.0"), uid.getVersionId());
   }
@@ -228,21 +227,21 @@ public class TermTest {
     String oidString = "1.5.6.3";
     UUID uuid = UUID.randomUUID();
     String random = "15-4";
-    ConceptIdentifier cidOid = (ConceptIdentifier) Term.newId(oidString);
-    ConceptIdentifier cidUuid = (ConceptIdentifier) Term.newId(uuid);
-    ConceptIdentifier cidString = (ConceptIdentifier) Term.newId(random);
+    ConceptIdentifier cidOid = (ConceptIdentifier) Term.newTerm(oidString);
+    ConceptIdentifier cidUuid = (ConceptIdentifier) Term.newTerm(uuid);
+    ConceptIdentifier cidString = (ConceptIdentifier) Term.newTerm(random);
 
-    assertTrue(IdentifierTagType.OID_VALUE.equals(cidOid.getTagFormat()));
-    assertFalse(IdentifierTagType.UUID_VALUE.equals(cidOid.getTagFormat()));
-    assertFalse(IdentifierTagType.STRING_VALUE.equals(cidOid.getTagFormat()));
+    assertEquals(IdentifierTagType.OID_VALUE, cidOid.getTagFormat());
+    assertNotEquals(IdentifierTagType.UUID_VALUE, cidOid.getTagFormat());
+    assertNotEquals(IdentifierTagType.STRING_VALUE, cidOid.getTagFormat());
 
-    assertTrue(IdentifierTagType.UUID_VALUE.equals(cidUuid.getTagFormat()));
-    assertFalse(IdentifierTagType.OID_VALUE.equals(cidUuid.getTagFormat()));
-    assertFalse(IdentifierTagType.STRING_VALUE.equals(cidUuid.getTagFormat()));
+    assertEquals(IdentifierTagType.UUID_VALUE, cidUuid.getTagFormat());
+    assertNotEquals(IdentifierTagType.OID_VALUE, cidUuid.getTagFormat());
+    assertNotEquals(IdentifierTagType.STRING_VALUE, cidUuid.getTagFormat());
 
-    assertTrue(IdentifierTagType.STRING_VALUE.equals(cidString.getTagFormat()));
-    assertFalse(IdentifierTagType.UUID_VALUE.equals(cidString.getTagFormat()));
-    assertFalse(IdentifierTagType.OID_VALUE.equals(cidString.getTagFormat()));
+    assertEquals(IdentifierTagType.STRING_VALUE, cidString.getTagFormat());
+    assertNotEquals(IdentifierTagType.UUID_VALUE, cidString.getTagFormat());
+    assertNotEquals(IdentifierTagType.OID_VALUE, cidString.getTagFormat());
 
   }
 

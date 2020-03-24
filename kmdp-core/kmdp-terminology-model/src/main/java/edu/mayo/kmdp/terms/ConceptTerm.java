@@ -87,7 +87,7 @@ public interface ConceptTerm<T extends Term> extends Term, org.omg.spec.api4kp._
   @Override
   default ConceptIdentifier asConceptIdentifier() {
     return (ConceptIdentifier) org.omg.spec.api4kp._1_0.id.Term
-        .newId(this.getTag(), this.getUuid(), this.getNamespaceUri(), this.getReferentId(),
+        .newTerm(this.getTag(), this.getUuid(), this.getNamespaceUri(), this.getReferentId(),
             this.getVersionTag(), this.getLabel(), this.getEstablishedOn());
   }
 
