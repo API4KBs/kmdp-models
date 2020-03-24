@@ -39,6 +39,7 @@ import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSer
 import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries;
 import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -161,13 +162,13 @@ public class KnowledgeAssetSurrogateTest {
   }
 
   @Test
-  void testComplexApplicability() {
+  void testComplexApplicability() throws UnsupportedEncodingException {
     KnowledgeAsset asset = new KnowledgeAsset();
     asset.withApplicableIn(new Applicability()
         .withSituation(
             Term.newTerm(
                 URI.create("http://snomed.info/scg/"),
-                URLEncoder.encode("A + B", Charset.defaultCharset()),
+                URLEncoder.encode("A + B", Charset.defaultCharset().name()),
                 "either A or B")
             .asConceptIdentifier()));
 

@@ -54,8 +54,8 @@ public class FileUtil {
   }
 
   public static Optional<String> read(String file) {
-    try {
-      return read(new FileInputStream(file));
+    try(FileInputStream fis = new FileInputStream(file)) {
+      return read(fis);
     } catch (IOException e) {
       return Optional.empty();
     }
