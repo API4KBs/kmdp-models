@@ -248,7 +248,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @param tag
    * @return Pointer with required resourceId, tag and UUID set
    */
-  static ResourceIdentifier newIdAsPointer(URI namespace, String tag) {
+  static Pointer newIdAsPointer(URI namespace, String tag) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
     return new Pointer()
@@ -269,7 +269,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * to point the client to a specific location where the denoted resource is available
    * @return Pointer with required resourceid, tag, UUID and all other values provided set
    */
-  static ResourceIdentifier newIdAsPointer(URI namespace, String tag, String description,
+  static Pointer newIdAsPointer(URI namespace, String tag, String description,
       String versionTag, URI locator) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
@@ -290,7 +290,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @param tag value to use to generate resourceId and set tag
    * @return Pointer with required values set
    */
-  static ResourceIdentifier newIdAsPointer(String tag) {
+  static Pointer newIdAsPointer(String tag) {
     checkTag(tag);
     URI resourceId = toResourceId(tag);
     return new Pointer()
