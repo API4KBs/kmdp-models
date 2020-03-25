@@ -260,6 +260,9 @@ public class Answer<T> extends Explainer {
   public T orElse(T alt) {
     return getOptionalValue().orElse(alt);
   }
+  public T orElseGet(Supplier<T> alt) {
+    return getOptionalValue().orElseGet(alt);
+  }
 
   public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
     if (value != null) {

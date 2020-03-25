@@ -336,13 +336,27 @@ public class DatatypeTest {
     UUID uuid = UUID.randomUUID();
     URI expectedResourceId = URI.create("http://foo.bar/baz/"+uuid.toString());
     Pointer pid = (Pointer) SemanticIdentifier.newIdAsPointer(URI.create("http://foo.bar/baz/"),
-        uuid.toString(), "Resource Description", URI.create("https://internal/locator/"));
+        uuid.toString(), "Resource Description", "1.3.4",
+        URI.create("https://internal/locator/"));
     assertNotNull(pid);
     assertEquals(expectedResourceId, pid.getResourceId());
     assertEquals(uuid.toString(), pid.getTag());
     assertEquals(uuid, pid.getUuid());
+    assertEquals("1.3.4", pid.getVersionTag());
     assertEquals("https://internal/locator/", pid.getHref().toString());
     assertEquals("Resource Description", pid.getDescription());
+  }
+
+
+  @Test
+  public void testPointerTagOnly() {
+    UUID uuid = UUID.randomUUID();
+    URI expectedResourceId = URI.create(BASE_UUID_URN+uuid.toString());
+    Pointer pid = (Pointer) SemanticIdentifier.newIdAsPointer(uuid.toString());
+    assertNotNull(pid);
+    assertEquals(expectedResourceId, pid.getResourceId());
+    assertEquals(uuid.toString(), pid.getTag());
+    assertEquals(uuid, pid.getUuid());
   }
 
   @Test

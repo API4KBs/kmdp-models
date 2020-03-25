@@ -128,4 +128,16 @@ class AnswerTest {
     assertTrue(ans2.isFailure());
   }
 
+  @Test
+  void testOrElseGet() {
+    Answer<String> ans = Answer.of("aaa");
+    assertEquals("aaa", ans.orElseGet(() -> "fail"));
+
+    Answer<String> ans2 = Answer.failed();
+    assertEquals("fail", ans2.orElseGet(() -> "fail"));
+
+    Answer<String> ans3 = Answer.of("bbb");
+    assertEquals("bbb", ans3.orElseGet(() -> { throw new RuntimeException(); }));
+  }
+
 }
