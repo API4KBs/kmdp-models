@@ -36,8 +36,8 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -124,7 +124,7 @@ public class JaxbUtil {
     Marshaller marshaller = null;
     try {
       marshaller = getXMLMarshaller(ctx,
-          root instanceof JAXBElement ? ((JAXBElement) root).getDeclaredType() : root.getClass(),
+          root instanceof JAXBElement ? ((JAXBElement<?>) root).getDeclaredType() : root.getClass(),
           schema,
           p);
 
@@ -180,7 +180,7 @@ public class JaxbUtil {
         .flatMap(baos -> XMLUtil.loadXMLDocument(new ByteArrayInputStream(baos.toByteArray())));
   }
 
-  public static <T> Collection<T> unmarshall(final Class ctx,
+  public static <T> Collection<T> unmarshall(final Class<?> ctx,
       final Class<T> type,
       final NodeList sources) {
     Collection<T> set = new HashSet<>(sources.getLength());
@@ -190,7 +190,7 @@ public class JaxbUtil {
       for (int j = 0; j < sources.getLength(); j++) {
         Object o = unmarshaller.unmarshal(sources.item(j));
         if (o instanceof JAXBElement) {
-          o = ((JAXBElement) o).getValue();
+          o = ((JAXBElement<?>) o).getValue();
         }
         if (type.isInstance(o)) {
           set.add(type.cast(o));
@@ -203,12 +203,12 @@ public class JaxbUtil {
     }
   }
 
-  public static <T> Optional<T> unmarshall(final Class ctx,
+  public static <T> Optional<T> unmarshall(final Class<T> ctx,
       final Node source) {
     return unmarshall(ctx, ctx, source);
   }
 
-  public static <T> Optional<T> unmarshall(final Class ctx,
+  public static <T> Optional<T> unmarshall(final Class<?> ctx,
       final Class<T> type,
       final Node source) {
     try {
@@ -216,7 +216,7 @@ public class JaxbUtil {
       Unmarshaller unmarshaller = getXMLUnmarshaller(ctx);
       Object o = unmarshaller.unmarshal(source);
       if (o instanceof JAXBElement) {
-        val = type.cast(((JAXBElement) o).getValue());
+        val = type.cast(((JAXBElement<?>) o).getValue());
       } else {
         val = type.cast(o);
       }
@@ -227,7 +227,7 @@ public class JaxbUtil {
     }
   }
 
-  public static <T> Optional<T> unmarshall(final Collection<Class> context,
+  public static <T> Optional<T> unmarshall(final Collection<Class<?>> context,
       final Class<T> type,
       final InputStream input) {
 
@@ -235,7 +235,7 @@ public class JaxbUtil {
         .flatMap(dox -> unmarshall(context, type, dox));
   }
 
-  public static <T> Optional<T> unmarshall(final Class factory,
+  public static <T> Optional<T> unmarshall(final Class<?> factory,
       final Class<T> type,
       final InputStream input) {
 
@@ -243,27 +243,27 @@ public class JaxbUtil {
         .flatMap(dox -> unmarshall(factory, type, dox));
   }
 
-  public static <T> Optional<T> unmarshall(final Collection<Class> context,
+  public static <T> Optional<T> unmarshall(final Collection<Class<?>> context,
       final Class<T> type,
       final String input) {
 
     return unmarshall(context, type, new ByteArrayInputStream(input.getBytes()));
   }
 
-  public static <T> Optional<T> unmarshall(final Class factory,
+  public static <T> Optional<T> unmarshall(final Class<?> factory,
       final Class<T> type,
       final String input) {
 
     return unmarshall(factory, type, new ByteArrayInputStream(input.getBytes()));
   }
 
-  public static <T> Optional<T> unmarshall(final Class factory,
+  public static <T> Optional<T> unmarshall(final Class<?> factory,
       final Class<T> type,
       final Document dox) {
     return unmarshall(Collections.singleton(factory), type, dox);
   }
 
-  public static <T> Optional<T> unmarshall(final Collection<Class> context,
+  public static <T> Optional<T> unmarshall(final Collection<Class<?>> context,
       final Class<T> type,
       final Document dox) {
     Unmarshaller unmarshaller;
@@ -271,7 +271,7 @@ public class JaxbUtil {
       unmarshaller = getXMLUnmarshaller(context.toArray(new Class[context.size()]));
       Object root = unmarshaller.unmarshal(new DOMSource(dox));
       if (root instanceof JAXBElement) {
-        root = ((JAXBElement) root).getValue();
+        root = ((JAXBElement<?>) root).getValue();
       }
       if (type.isInstance(root)) {
         return Optional.of(type.cast(root));
