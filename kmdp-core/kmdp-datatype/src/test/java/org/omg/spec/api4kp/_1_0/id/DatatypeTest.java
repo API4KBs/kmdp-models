@@ -30,6 +30,7 @@ import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Date;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 
 
@@ -483,6 +484,65 @@ public class DatatypeTest {
     assertNotEquals(VersionTagType.TIMESTAMP, genericVersion.getVersionFormat());
     assertNotEquals(VersionTagType.SEM_VER, genericVersion.getVersionFormat());
 
+  }
+
+  @Test
+  void testKeyIdentifiers() {
+    SemanticIdentifier id1 = SemanticIdentifier.newId("thisId", Version.valueOf("0.0.0"));
+    SemanticIdentifier id2 = SemanticIdentifier.newId("thisId", "0.0.0");
+    SemanticIdentifier id3 = SemanticIdentifier.newId("thisId", "0.0.1");
+
+    assertEquals(id1.asKey(), id2.asKey());
+    assertEquals(id1.hashCode(), id2.hashCode());
+
+    assertNotEquals(id1.hashCode(), id3.hashCode());
+    assertNotEquals(id1.asKey(), id3.asKey());
+  }
+
+  @Test
+  void testVersionedUriWithQualifiedVersions() {
+    URI uri = URI.create("http://foo.bar/blah/test/123/versions/2131");
+    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri);
+
+    assertEquals("123", rid.getTag());
+    assertEquals("2131", rid.getVersionTag());
+    assertEquals(URI.create("http://foo.bar/blah/test/"), rid.getNamespaceUri());
+  }
+
+  @Test
+  void testVersionedUriWithUUIDandVersion() {
+    UUID uuid = UUID.nameUUIDFromBytes("mock".getBytes());
+    URI uri = URI.create("urn:uuid:" + uuid + ":0");
+    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri);
+
+    assertEquals(uuid, rid.getUuid());
+    assertEquals(uuid.toString(), rid.getTag());
+    assertEquals("0", rid.getVersionTag());
+    assertEquals(BASE_UUID_URN_URI, rid.getNamespaceUri());
+  }
+
+  @Test
+  void testVersionedUriWithUUIDandQualifiedVersions() {
+    UUID uuid = UUID.nameUUIDFromBytes("mock".getBytes());
+    URI uri = URI.create("http://foo.bar/blah/test/" + uuid + "/versions/2131");
+    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri);
+
+    assertEquals(uuid, rid.getUuid());
+    assertEquals(uuid.toString(), rid.getTag());
+    assertEquals("2131", rid.getVersionTag());
+    assertEquals(URI.create("http://foo.bar/blah/test/"), rid.getNamespaceUri());
+  }
+
+  @Test
+  void testVersionedUriWithDateTimePattern() {
+    URI uri = URI.create("http://foo.bar/blah/20200301/example");
+    ResourceIdentifier rid =
+        SemanticIdentifier.newVersionId(uri,
+            Pattern.compile("(.*)/(\\d+)/(\\w+)"),2,3);
+
+    assertEquals("20200301", rid.getVersionTag());
+    assertEquals("example", rid.getTag());
+    assertEquals(URI.create("http://foo.bar/blah"), rid.getNamespaceUri());
   }
 
 }

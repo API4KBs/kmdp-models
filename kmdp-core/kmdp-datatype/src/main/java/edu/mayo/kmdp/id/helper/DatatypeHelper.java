@@ -38,6 +38,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.xml.namespace.QName;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
@@ -388,6 +390,13 @@ public class DatatypeHelper {
         .withConceptId(v.getConceptId());
   }
 
+  public static ResourceIdentifier toSemanticIdentifier(URIIdentifier uriIdentifier) {
+    if (uriIdentifier.getVersionId() != null) {
+      return SemanticIdentifier.newVersionId(uriIdentifier.getVersionId());
+    } else {
+      return SemanticIdentifier.newId(uriIdentifier.getUri());
+    }
+  }
 
   public static <T extends Term, X> Optional<T> resolveTerm(final X val, T[] values,
       Function<Term, X> getter) {
