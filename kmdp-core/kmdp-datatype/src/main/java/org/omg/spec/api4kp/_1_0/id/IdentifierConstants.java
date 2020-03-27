@@ -13,8 +13,9 @@ public final class IdentifierConstants {
   public static final String VERSION_ZERO = "0.0.0";
 
   public static final String VERSIONS = "/versions/";
-  public static final Pattern SEMVER_RX = Pattern.compile("^(\\d+\\.)(\\d+\\.)(\\*|\\d+)$");
+  public static final Pattern VERSIONS_RX = Pattern.compile("^(.*/)?(.*)/versions/(.+)$");
 
+  public static final Pattern SEMVER_RX = Pattern.compile("^(\\d+\\.)(\\d+\\.)(\\*|\\d+)$");
 
   public static final URI SNOMED_URI = URI.create("http://snomed.info/sct");
   public static final URI SNOMED_BASE_URI = URI.create("http://snomed.info/id/");

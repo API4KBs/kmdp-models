@@ -147,13 +147,21 @@ public class URIUtil {
       return uri.getFragment();
     } else {
       String str = uri.toString();
-      if (str.indexOf('/') >= 0) {
-        return str.substring(str.lastIndexOf('/') + 1);
-      }
-      if (str.indexOf(':') >= 0) {
-        return str.substring(str.lastIndexOf(':') + 1);
-      }
+      return detectLocalName(str);
     }
-    return uri.getPath();
+  }
+
+  private static String detectLocalName(String str) {
+    String local = str;
+    if (str.indexOf('/') >= 0) {
+      local = str.substring(str.lastIndexOf('/') + 1);
+    } else if (str.indexOf(':') >= 0) {
+      local = str.substring(str.lastIndexOf(':') + 1);
+    }
+    if (Util.isEmpty(local)) {
+      return detectLocalName(str.substring(0,str.length() -1));
+    } else {
+      return local;
+    }
   }
 }

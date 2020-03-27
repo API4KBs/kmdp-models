@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.omg.spec.api4kp._1_0.AbstractCarrier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -73,7 +74,7 @@ public class HTMLKnowledgeCarrierWrapper implements HttpMessageConverter<Knowled
       throws IOException {
     return AbstractCarrier.of(inputMessage.getBody())
         .withRepresentation(AbstractCarrier.rep(HTML,TXT))
-        .withAssetId(DatatypeHelper.uri(UUID.randomUUID().toString()))
-        .withArtifactId(DatatypeHelper.uri(UUID.randomUUID().toString()));
+        .withAssetId(SemanticIdentifier.newId(UUID.randomUUID()))
+        .withArtifactId(SemanticIdentifier.newId(UUID.randomUUID()));
   }
 }
