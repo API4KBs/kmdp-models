@@ -398,6 +398,12 @@ public class DatatypeHelper {
     }
   }
 
+  public static URIIdentifier toURIIdentifier(SemanticIdentifier semId) {
+    return new URIIdentifier()
+        .withUri(semId.getResourceId())
+        .withVersionId(semId.getVersionId());
+  }
+
   public static <T extends Term, X> Optional<T> resolveTerm(final X val, T[] values,
       Function<Term, X> getter) {
     return Arrays.stream(values)

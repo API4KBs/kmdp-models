@@ -359,6 +359,24 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   /**
    * Pointer for client/server interaction.
    *
+   * @param tag
+   * @param versionTag
+   * @return Pointer with required resourceId, tag and UUID set
+   */
+  static Pointer newIdAsPointer(UUID tag, String versionTag) {
+    URI resourceId = toResourceId(tag.toString(), BASE_UUID_URN_URI);
+    return new Pointer()
+        .withNamespaceUri(resourceId)
+        .withTag(tag.toString())
+        .withVersionTag(versionTag)
+        .withResourceId(resourceId)
+        .withEstablishedOn(DateTimeUtil.now())
+        .withUuid(tag);
+  }
+
+  /**
+   * Pointer for client/server interaction.
+   *
    * @param namespace   resource namespace
    * @param tag         resource tag
    * @param description human readable description of the resource

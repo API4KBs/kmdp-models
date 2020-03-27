@@ -115,7 +115,7 @@ public class KnowledgeAssetSurrogateTest {
         .withLinks(new Derivative()
                 .withRel(DerivationTypeSeries.Derived_From)
                 // should I have an inverse flag here?
-                .withHref(newId(URI.create("urn:TODO"))));
+                .withHref(newId(URI.create("urn:name:TODO"))));
 
     checkRoundTrip(ks);
 
