@@ -15,6 +15,7 @@ package org.omg.spec.api4kp._1_0.id;
 
 import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNOMED_BASE_URI;
 import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNOMED_DATE;
+import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNOMED_URI;
 import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNOMED_VERSION;
 import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.checkTag;
 
@@ -149,7 +150,7 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
     String termUri = SNOMED_BASE_URI + code;
     return newTerm(code,
         Util.uuid(termUri),
-        SNOMED_BASE_URI,
+        SNOMED_URI,
         URI.create(termUri),
         SNOMED_VERSION,
         label,

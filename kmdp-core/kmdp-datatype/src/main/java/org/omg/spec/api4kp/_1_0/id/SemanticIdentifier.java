@@ -400,6 +400,23 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withHref(locator);
   }
 
+  static Pointer newIdAsPointer(URI namespace, String tag, String name,
+      String versionTag, String description, URI entityType, URI locator) {
+    checkTag(tag);
+    URI resourceId = toResourceId(tag, namespace);
+    return new Pointer()
+        .withNamespaceUri(namespace)
+        .withType(entityType)
+        .withTag(tag)
+        .withName(name)
+        .withVersionTag(versionTag)
+        .withResourceId(resourceId)
+        .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
+        .withDescription(description)
+        .withEstablishedOn(DateTimeUtil.now())
+        .withHref(locator);
+  }
+
   /**
    * Create a new Pointer from tag.
    *

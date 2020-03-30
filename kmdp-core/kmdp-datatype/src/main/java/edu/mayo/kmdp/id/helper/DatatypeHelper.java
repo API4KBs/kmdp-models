@@ -404,6 +404,45 @@ public class DatatypeHelper {
         .withVersionId(semId.getVersionId());
   }
 
+  public static ConceptIdentifier toConceptIdentifier(
+      org.omg.spec.api4kp._1_0.id.ConceptIdentifier cId) {
+
+    ResourceIdentifier nsId = cId.getNamespaceUri() != null
+        && "http".equals(cId.getNamespaceUri().getScheme())
+        ? SemanticIdentifier.newId(cId.getNamespaceUri())
+        : new ResourceIdentifier();
+
+    return new ConceptIdentifier()
+        .withConceptId(cId.getResourceId())
+        .withTag(cId.getTag())
+        .withLabel(cId.getName())
+        .withRef(cId.getReferentId())
+        .withConceptUUID(cId.getUuid())
+        .withNamespace(
+            new NamespaceIdentifier()
+                .withId(nsId.getResourceId())
+                .withLabel(nsId.getName())
+                .withTag(nsId.getTag())
+                .withVersion(nsId.getVersionTag())
+                .withEstablishedOn(nsId.getEstablishedOn())
+        );
+  }
+
+
+  public static org.omg.spec.api4kp._1_0.id.ConceptIdentifier toConceptIdentifier(
+      ConceptIdentifier v) {
+    if (v == null) {
+      return null;
+    }
+    return new org.omg.spec.api4kp._1_0.id.ConceptIdentifier()
+        .withUuid(v.getConceptUUID())
+        .withResourceId(v.getConceptId())
+        .withTag(v.getTag())
+        .withNamespaceUri(v.getNamespace().getId())
+        .withName(v.getLabel())
+        .withReferentId(v.getRef());
+  }
+
   public static <T extends Term, X> Optional<T> resolveTerm(final X val, T[] values,
       Function<Term, X> getter) {
     return Arrays.stream(values)
