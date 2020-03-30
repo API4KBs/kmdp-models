@@ -72,7 +72,7 @@ public class Registry {
     try {
       String path = xcat.getCatalog().resolveURI(REGISTRY_URI);
 
-      Model registryGraph = ModelFactory.createOntologyModel()
+      Model registryGraph = ModelFactory.createDefaultModel()
           .read(openStream(path), null);
       registryGraph = ModelFactory.createInfModel(ReasonerRegistry.getOWLMicroReasoner(),
           registryGraph);
