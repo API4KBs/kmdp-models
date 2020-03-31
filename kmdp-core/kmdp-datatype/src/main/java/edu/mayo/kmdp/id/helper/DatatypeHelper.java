@@ -409,7 +409,7 @@ public class DatatypeHelper {
 
     ResourceIdentifier nsId = cId.getNamespaceUri() != null
         && "http".equals(cId.getNamespaceUri().getScheme())
-        ? SemanticIdentifier.newId(cId.getNamespaceUri())
+        ? SemanticIdentifier.newNamespaceId(cId.getNamespaceUri())
         : new ResourceIdentifier();
 
     return new ConceptIdentifier()

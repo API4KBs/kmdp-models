@@ -545,4 +545,17 @@ public class DatatypeTest {
     assertEquals(URI.create("http://foo.bar/blah"), rid.getNamespaceUri());
   }
 
+  @Test
+  void testNamespaceOnlyURIFailure() {
+    assertThrows(IllegalArgumentException.class,
+        () -> SemanticIdentifier.newId(URI.create("http://foo.bar")));
+  }
+
+  @Test
+  void testNamespaceOnlyURI() {
+    URI uri = URI.create("http://foo.bar");
+    ResourceIdentifier rid = SemanticIdentifier.newNamespaceId(uri);
+    assertEquals(uri, rid.getNamespaceUri());
+    assertEquals("foo.bar", rid.getTag());
+  }
 }

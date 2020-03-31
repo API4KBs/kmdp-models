@@ -41,11 +41,36 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   static ResourceIdentifier newId(URI uri) {
     String uriStr = uri.toString();
     String tag = URIUtil.detectLocalName(uri);
+    URI nsUri = URI.create(uriStr.substring(0, uriStr.lastIndexOf(tag)));
+    if (! "urn".equals(nsUri.getScheme()) && nsUri.getAuthority() == null) {
+      throw new IllegalArgumentException("Unable to split the URI into a namespace and a tag, "
+          + "consider using newNamespaceId instead? " + nsUri);
+    }
     return new ResourceIdentifier()
         // generate required tag from uuid
         // set required fields
         .withTag(tag)
-        .withNamespaceUri(URI.create(uriStr.substring(0, uriStr.lastIndexOf(tag))))
+        .withNamespaceUri(nsUri)
+        .withResourceId(uri)
+        .withEstablishedOn(DateTimeUtil.now())
+        .withUuid(Util.isUUID(tag)
+            ? UUID.fromString(tag)
+            : Util.uuid(tag));
+  }
+
+  /**
+   * Create ResourceIdentifier for the URI provided. Will generate tag and resourceId as required
+   * values.
+   *
+   * @return ResourceIdentifier
+   */
+  static ResourceIdentifier newNamespaceId(URI uri) {
+    String tag = URIUtil.detectLocalName(uri);
+    return new ResourceIdentifier()
+        // generate required tag from uuid
+        // set required fields
+        .withTag(tag)
+        .withNamespaceUri(uri)
         .withResourceId(uri)
         .withEstablishedOn(DateTimeUtil.now())
         .withUuid(Util.isUUID(tag)
