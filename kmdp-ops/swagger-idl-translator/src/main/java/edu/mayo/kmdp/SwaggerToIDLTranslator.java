@@ -84,10 +84,12 @@ public class SwaggerToIDLTranslator {
 
   private Module withOperations(Module m, Swagger swagger, TypeProvider provider) {
     Module leafModule = getLeafModule(m);
-    swagger.getPaths()
-        .forEach(
-            (pathStr, path) -> path.getOperations()
-                .forEach(op -> addOperation(leafModule, op, swagger, provider)));
+    if (swagger.getPaths() != null) {
+      swagger.getPaths()
+          .forEach(
+              (pathStr, path) -> path.getOperations()
+                  .forEach(op -> addOperation(leafModule, op, swagger, provider)));
+    }
     return m;
   }
 

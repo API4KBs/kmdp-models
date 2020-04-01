@@ -373,7 +373,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   static Pointer newIdAsPointer(URI namespace, String tag) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
-    return new Pointer()
+    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
         .withNamespaceUri(namespace)
         .withTag(tag)
         .withResourceId(resourceId)
@@ -390,7 +390,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    */
   static Pointer newIdAsPointer(UUID tag, String versionTag) {
     URI resourceId = toResourceId(tag.toString(), BASE_UUID_URN_URI);
-    return new Pointer()
+    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
         .withNamespaceUri(resourceId)
         .withTag(tag.toString())
         .withVersionTag(versionTag)
@@ -414,7 +414,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
       String versionTag, URI locator) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
-    return new Pointer()
+    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
         .withNamespaceUri(namespace)
         .withTag(tag)
         .withVersionTag(versionTag)
@@ -429,7 +429,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
       String versionTag, String description, URI entityType, URI locator) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
-    return new Pointer()
+    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
         .withNamespaceUri(namespace)
         .withType(entityType)
         .withTag(tag)
@@ -451,7 +451,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   static Pointer newIdAsPointer(String tag) {
     checkTag(tag);
     URI resourceId = toResourceId(tag);
-    return new Pointer()
+    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
         .withTag(tag)
         .withResourceId(resourceId)
         // generate required UUID from resourceId
@@ -464,6 +464,24 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return A new Pointer derived from this ResourceIdentifier
    */
   default Pointer toPointer() {
+    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
+        .withNamespaceUri(getNamespaceUri())
+        .withTag(getTag())
+        .withVersionTag(getVersionTag())
+        .withResourceId(getResourceId())
+        .withUuid(getUuid())
+        .withEstablishedOn(getEstablishedOn());
+  }
+
+  /**
+   * Builds a pointer from a ResourceIdentifier
+   *
+   * Unlike other constructors, this method returns a base Pointer
+   * that is not an @XmlRootElement. As such, it cannot be serialized
+   * directly, but can be used within serializable resources
+   * @return A new Pointer derived from this ResourceIdentifier
+   */
+  default Pointer toInnerPointer() {
     return new Pointer()
         .withNamespaceUri(getNamespaceUri())
         .withTag(getTag())
@@ -526,11 +544,12 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return resourceId URI
    */
   static URI toResourceId(String tag, URI namespace, UUID uuid) {
+    String base = NameUtils.separatingName(namespace.toString());
     if (tag != null) {
-      return URI.create(namespace + tag);
+      return URI.create(base + tag);
     } else if (uuid != null) {
       return Util.ensureUUID(uuid.toString())
-          .map(uuid1 -> URI.create(namespace + uuid1.toString()))
+          .map(uuid1 -> URI.create(base + uuid1.toString()))
           .orElseThrow(() -> new IllegalStateException("Invalid UUID Format"));
     } else {
       throw new IllegalStateException("No valid tag or uuid for ResourceId");

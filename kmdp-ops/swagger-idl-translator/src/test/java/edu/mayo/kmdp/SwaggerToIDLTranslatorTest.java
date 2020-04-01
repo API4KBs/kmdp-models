@@ -36,14 +36,15 @@ public class SwaggerToIDLTranslatorTest {
   @TempDir
   public Path tmp;
 
-  final static String karSource = "/openapi/v2/org/omg/spec/api4kp/3.0.0/knowledgeArtifactRepository.yaml";
-  final static String dataTypeSource = "/yaml/API4KP/api4kp/identifiers/identifiers.yaml";
+  final static String karSource = "/openapi/v2/org/omg/spec/api4kp/4.0.0/knowledgeArtifactRepository.yaml";
+  final static String idSource = "/yaml/API4KP/api4kp/id/id.yaml";
+  final static String dataTypeSource = "/yaml/API4KP/api4kp/datatypes/datatypes.yaml";
   final static String repoSource = "/yaml/API4KP/api4kp/services/repository/repository.yaml";
 
 
   @Test
   public void testArtifactAPI() {
-    List<InputStream> sources = Stream.of(karSource, dataTypeSource, repoSource)
+    List<InputStream> sources = Stream.of( karSource, idSource, repoSource)
         .map(SwaggerToIDLTranslatorTest.class::getResourceAsStream)
         .collect(Collectors.toList());
 

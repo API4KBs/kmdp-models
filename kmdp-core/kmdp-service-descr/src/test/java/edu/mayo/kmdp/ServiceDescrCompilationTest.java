@@ -44,6 +44,7 @@ import java.util.UUID;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.GAVIdentifier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentation;
@@ -158,7 +159,7 @@ public class ServiceDescrCompilationTest {
   private void init(Transrepresentator component, Transrepresentation rep) {
     SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KnowledgeRepresentationLanguage.BPMN_2_0);
     component
-        .withInstanceId(uri("uri:urn:" + UUID.randomUUID()))
+        .withInstanceId(SemanticIdentifier.newId(UUID.randomUUID()))
         .withTxions(new Transrepresentation()
             .withConsumes(syn)
             .withProduces(syn))

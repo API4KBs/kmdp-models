@@ -15,10 +15,9 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static edu.mayo.kmdp.util.FileUtil.streamChildFiles;
-import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -40,6 +39,7 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.GAVIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.omg.spec.api4kp._1_0.services.Job;
@@ -71,7 +71,7 @@ public class ServiceDescrClassGenerationTest {
     SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KnowledgeRepresentationLanguage.BPMN_2_0);
 
     Transrepresentator component = new Transrepresentator()
-        .withInstanceId(uri("uri:urn:" + UUID.randomUUID()))
+        .withInstanceId(SemanticIdentifier.newId(UUID.randomUUID()))
         .withTxions(new Transrepresentation()
             .withConsumes(syn)
             .withProduces(syn))

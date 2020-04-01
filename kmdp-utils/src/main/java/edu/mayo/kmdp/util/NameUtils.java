@@ -194,7 +194,8 @@ public final class NameUtils {
   }
 
   public static String separatingName(String name) {
-    return name.endsWith("/") || name.endsWith("#") ? name : (name + "#");
+    char last = name.charAt(name.length() - 1);
+    return last == '/' || last == '#' || last ==':' ? name : (name + "#");
   }
 
 

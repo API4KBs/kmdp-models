@@ -43,7 +43,7 @@ class TypeProvider {
       return new Type(primitiveMap(type.getName()), type.isCollection());
     }
 
-    Model model = find(type.getName(), swaggers);
+    Model model = find(applyMappings(type.getName()), swaggers);
 
     String packageName = getNamespace(model)
         .map(NameUtils::namespaceURIStringToPackage)
@@ -59,6 +59,15 @@ class TypeProvider {
     type.linkStruct(struct);
 
     return type;
+  }
+
+  private String applyMappings(String name) {
+    // Temporary mapping - "2" types allow for co-existence
+    // of legacy and future types of the same name
+    if (name.endsWith("2")) {
+      return name.substring(0,name.length()-1);
+    }
+    return name;
   }
 
   private Optional<String> getNamespace(Model model) {
@@ -167,6 +176,7 @@ class TypeProvider {
       case "string":
       case "number":
       case "boolean":
+      case "uuid":
         return true;
       default:
         return false;
@@ -180,6 +190,8 @@ class TypeProvider {
       case "number":
         mapped = "long";
         break;
+      case "uuid":
+        mapped = "string";
       default:
     }
     return mapped;
