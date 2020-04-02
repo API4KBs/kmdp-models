@@ -29,13 +29,22 @@ public class CarrierTest {
   void testCarrierAs() {
     KnowledgeCarrier kc = AbstractCarrier.ofAst(42);
     assertTrue(kc.as(Integer.class).isPresent());
+    assertTrue(kc.is(Integer.class));
     assertFalse(kc.as(String.class).isPresent());
+    assertFalse(kc.is(String.class));
   }
 
   @Test
-  void testASTCarrierAsString() {
+  void testCarrierAsWithNull() {
+    KnowledgeCarrier kc = AbstractCarrier.ofAst(null);
+    assertFalse(kc.as(Integer.class).isPresent());
+    assertFalse(kc.is(String.class));
+  }
+
+  @Test
+  void testKnowledgeCarrierAsString() {
     KnowledgeCarrier kc = AbstractCarrier.ofAst(42);
-    assertFalse(kc.asString().isPresent());
+    assertEquals("42", kc.asString().orElse(""));
   }
 
   @Test

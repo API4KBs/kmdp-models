@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.AbstractCarrier;
 import org.omg.spec.api4kp._1_0.Answer;
 import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
-import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 
 public class CompositeTest {
@@ -33,14 +32,14 @@ public class CompositeTest {
 
     CompositeKnowledgeCarrier ckc2 = (CompositeKnowledgeCarrier) result;
     Set<String> strs = ckc2.getComponent().stream()
-        .flatMap(StreamUtil.filterAs(ExpressionCarrier.class))
-        .map(ExpressionCarrier::getSerializedExpression)
+        .map(KnowledgeCarrier::asString)
+        .flatMap(StreamUtil::trimStream)
         .collect(Collectors.toSet());
     assertEquals(new HashSet<>(Arrays.asList("FOO","BAR")), strs);
   }
 
   private Answer<KnowledgeCarrier> upCase(KnowledgeCarrier carrier) {
-    String src = ((ExpressionCarrier) carrier).getSerializedExpression();
+    String src = carrier.asString().orElse("");
     return Answer.of(AbstractCarrier.of(src.toUpperCase()));
   }
 

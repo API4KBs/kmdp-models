@@ -47,12 +47,8 @@ import java.util.stream.Collectors;
 import org.omg.spec.api4kp._1_0.contrastors.ParsingLevelContrastor;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.services.ASTCarrier;
-import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
 import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.CompositeStructType;
-import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
-import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.w3c.dom.Document;
@@ -63,20 +59,20 @@ public interface AbstractCarrier {
   String HAS_MEMBER = "<https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/hasMember>";
 
   static KnowledgeCarrier of(byte[] encoded) {
-    return new org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier()
-        .withEncodedExpression(encoded)
+    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+        .withExpression(encoded)
         .withLevel(ParsingLevelSeries.Encoded_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(InputStream stream) {
-    return new org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier()
-        .withEncodedExpression(FileUtil.readBytes(stream).orElse(new byte[0]))
+    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+        .withExpression(FileUtil.readBytes(stream).orElse(new byte[0]))
         .withLevel(ParsingLevelSeries.Encoded_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(String serialized) {
-    return new org.omg.spec.api4kp._1_0.services.resources.ExpressionCarrier()
-        .withSerializedExpression(serialized)
+    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+        .withExpression(serialized)
         .withLevel(ParsingLevelSeries.Concrete_Knowledge_Expression);
   }
 
@@ -89,13 +85,14 @@ public interface AbstractCarrier {
   }
 
   static KnowledgeCarrier ofTree(Object parseTree) {
-    return new org.omg.spec.api4kp._1_0.services.resources.DocumentCarrier()
-        .withStructuredExpression(parseTree)
+    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+        .withExpression(parseTree)
         .withLevel(ParsingLevelSeries.Parsed_Knowedge_Expression);
   }
 
   static KnowledgeCarrier ofAst(Object ast) {
-    return new ASTCarrier().withParsedExpression(ast)
+    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+        .withExpression(ast)
         .withLevel(ParsingLevelSeries.Abstract_Knowledge_Expression);
   }
 
@@ -346,20 +343,14 @@ public interface AbstractCarrier {
   }
 
 
-  default  <T> Optional<T> as(Class<T> type) {
-    return
-        (this instanceof ASTCarrier
-            && type.isInstance(((ASTCarrier) this).getParsedExpression()))
-            ? Optional.ofNullable(type.cast(((ASTCarrier) this).getParsedExpression()))
+  default <T> Optional<T> as(Class<T> type) {
+    return type.isInstance(getExpression())
+            ? Optional.ofNullable(type.cast(getExpression()))
             : Optional.empty();
   }
-  
-  default  <T> Optional<T> asParseTree(Class<T> type) {
-    return
-        (this instanceof DocumentCarrier
-            && type.isInstance(((DocumentCarrier) this).getStructuredExpression()))
-            ? Optional.ofNullable(type.cast(((DocumentCarrier) this).getStructuredExpression()))
-            : Optional.empty();
+
+  default <T> boolean is(Class<T> type) {
+    return type.isInstance(getExpression());
   }
 
   /**
@@ -374,20 +365,29 @@ public interface AbstractCarrier {
    * @return An optional 'toString' representation of the carried Knowledge Artifact
    */
   default Optional<String> asString() {
-    if (this instanceof ExpressionCarrier) {
-      return Optional.ofNullable(((ExpressionCarrier) this).getSerializedExpression());
-    } else if (this instanceof BinaryCarrier) {
-      return Optional.of(new String(((BinaryCarrier) this).getEncodedExpression()));
-    } else if (this instanceof DocumentCarrier) {
-      DocumentCarrier doc = (DocumentCarrier) this;
-      if (doc.getStructuredExpression() instanceof Document) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        XMLUtil.streamXMLNode((Document) doc.getStructuredExpression(), baos);
-        return Optional.of(new String(baos.toByteArray()));
-      } else if (doc.getStructuredExpression() instanceof JsonNode) {
-        return JSonUtil.writeJsonAsString(doc.getStructuredExpression());
-      }
+    if (this.getExpression() == null) {
+      return Optional.empty();
+    }
+    if (this.getExpression() instanceof byte[]) {
+      return Optional.of(new String((byte[]) this.getExpression()));
+    }
+    if (this.getExpression() instanceof Document) {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      XMLUtil.streamXMLNode((Document) this.getExpression(), baos);
+      return Optional.of(new String(baos.toByteArray()));
+    }
+    if (this.getExpression() instanceof JsonNode) {
+      return JSonUtil.writeJsonAsString(this.getExpression());
+    }
+    if (this.getExpression() != null) {
+      return Optional.ofNullable(this.getExpression() != null ? this.getExpression().toString() : null);
     }
     return Optional.empty();
   }
+
+  default Optional<byte[]> asBinary() {
+    return asString().map(String::getBytes);
+  }
+
+  Object getExpression();
 }

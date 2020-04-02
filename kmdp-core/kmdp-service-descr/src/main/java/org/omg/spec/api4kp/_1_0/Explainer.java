@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 
 /**
@@ -67,8 +66,8 @@ public abstract class Explainer {
   }
 
   private static KnowledgeCarrier ofNaturalLanguageRep(String str) {
-    return new org.omg.spec.api4kp._1_0.services.resources.ExpressionCarrier()
-        .withSerializedExpression(str)
+    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+        .withExpression(str)
         .withLevel(ParsingLevelSeries.Concrete_Knowledge_Expression)
         .withRepresentation(
             // TODO ADD "Natural Language" to the list of languages
@@ -82,14 +81,8 @@ public abstract class Explainer {
       if (this.explanation == null) {
         this.explanation = other;
       } else {
-        if (!(this.explanation instanceof ExpressionCarrier)
-            || !(other instanceof ExpressionCarrier)) {
-          throw new UnsupportedOperationException(
-              "TODO : Only natural language explanations are currently supported");
-        }
-        ExpressionCarrier s = (ExpressionCarrier) explanation;
-        ExpressionCarrier o = (ExpressionCarrier) other;
-        s.setSerializedExpression(s.getSerializedExpression() + "\n" + o.getSerializedExpression());
+        KnowledgeCarrier s = (KnowledgeCarrier) explanation;
+        s.setExpression(s.asString() + "\n" + other.asString());
       }
     }
   }
@@ -113,7 +106,8 @@ public abstract class Explainer {
   }
 
   public String printExplanation() {
-    return ((ExpressionCarrier) explanation).getSerializedExpression();
+    return explanation.asString()
+        .orElse("n/a");
   }
 
   public void setExplanation(KnowledgeCarrier explanation) {

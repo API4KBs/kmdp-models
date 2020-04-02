@@ -31,7 +31,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.AbstractCarrier;
 import org.omg.spec.api4kp._1_0.Answer;
-import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 
 class AnswerTest {
@@ -44,8 +43,7 @@ class AnswerTest {
 
     KnowledgeCarrier expl = ans.getExplanation();
     assertNotNull(expl);
-    assertTrue(expl instanceof ExpressionCarrier);
-    assertNotNull(((ExpressionCarrier) expl).getSerializedExpression());
+    assertNotNull(expl.getExpression());
     assertEquals(ParsingLevelSeries.Concrete_Knowledge_Expression, expl.getLevel().asSeries());
 
     assertTrue(ans.isSuccess());
@@ -112,11 +110,11 @@ class AnswerTest {
 
     ans = ans.map(
         kc -> AbstractCarrier.of(
-            "mapped " + ((ExpressionCarrier) kc).getSerializedExpression()));
+            "mapped " + kc.asString().orElse("n/a")));
 
     KnowledgeCarrier kc = ans.orElse(null);
     assertNotNull(kc);
-    assertEquals("mapped Foo", ((ExpressionCarrier) kc).getSerializedExpression());
+    assertEquals("mapped Foo", kc.asString().orElse("n/a"));
   }
 
   @Test

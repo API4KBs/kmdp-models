@@ -19,10 +19,6 @@ import edu.mayo.kmdp.comparator.Contrastor;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevel;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
 import java.util.Comparator;
-import org.omg.spec.api4kp._1_0.services.ASTCarrier;
-import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
-import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
-import org.omg.spec.api4kp._1_0.services.ExpressionCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
@@ -44,16 +40,16 @@ public class ParsingLevelContrastor extends Contrastor<ParsingLevel> implements
       return ParsingLevelSeries.Knowledge_Expression;
     }
 
-    if (rep.getEncoding() != null || carrier instanceof BinaryCarrier) {
+    if (rep.getEncoding() != null) {
       return ParsingLevelSeries.Encoded_Knowledge_Expression;
     }
-    if (rep.getCharset() != null || carrier instanceof ExpressionCarrier) {
+    if (rep.getCharset() != null) {
       return ParsingLevelSeries.Concrete_Knowledge_Expression;
     }
-    if (rep.getFormat() != null || rep.getSerialization() != null || carrier instanceof DocumentCarrier) {
+    if (rep.getFormat() != null || rep.getSerialization() != null) {
       return ParsingLevelSeries.Parsed_Knowedge_Expression;
     }
-    if (rep.getLanguage() != null || carrier instanceof ASTCarrier) {
+    if (rep.getLanguage() != null) {
       return ParsingLevelSeries.Abstract_Knowledge_Expression;
     }
     return ParsingLevelSeries.Knowledge_Expression;
