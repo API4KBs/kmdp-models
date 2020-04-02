@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
@@ -252,6 +253,15 @@ public class Util {
     return x -> type.isInstance(x)
         ? Optional.of(type.cast(x))
         : Optional.empty();
+  }
+
+  public static UUID hashUUID(UUID uuid1, UUID uuid2) {
+    long l1 = uuid1.getLeastSignificantBits() ^ uuid2.getMostSignificantBits();
+    long l2 = uuid2.getLeastSignificantBits() ^ uuid1.getMostSignificantBits();
+    ByteBuffer bb = ByteBuffer.allocate(16);
+    bb.putLong(l1);
+    bb.putLong(8,l2);
+    return UUID.nameUUIDFromBytes(bb.array());
   }
 
   private static class Entry {

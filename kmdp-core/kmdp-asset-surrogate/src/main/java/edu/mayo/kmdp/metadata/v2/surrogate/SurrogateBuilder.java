@@ -295,14 +295,6 @@ public class SurrogateBuilder {
     return this;
   }
 
-  public SurrogateBuilder withDependency(DependencyType rel, KnowledgeAsset relatedAsset) {
-    get().withLinks(
-        new Dependency()
-            .withRel(rel)
-            .withHref(relatedAsset.getAssetId()));
-    return this;
-  }
-
 
   public KnowledgeAsset get() {
     return surrogate;

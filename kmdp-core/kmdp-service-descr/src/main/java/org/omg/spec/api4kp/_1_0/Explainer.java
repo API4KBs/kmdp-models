@@ -15,10 +15,13 @@
  */
 package org.omg.spec.api4kp._1_0;
 
-import static org.omg.spec.api4kp._1_0.AbstractCarrier.ofNaturalLanguageRep;
+import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
+import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
+import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,6 +64,16 @@ public abstract class Explainer {
     // TODO This should resolve a Provenance URI
     return Optional.ofNullable(meta.get(explKey))
         .map(expl -> ofNaturalLanguageRep(Util.concat(expl)));
+  }
+
+  private static KnowledgeCarrier ofNaturalLanguageRep(String str) {
+    return new org.omg.spec.api4kp._1_0.services.resources.ExpressionCarrier()
+        .withSerializedExpression(str)
+        .withLevel(ParsingLevelSeries.Concrete_Knowledge_Expression)
+        .withRepresentation(
+            // TODO ADD "Natural Language" to the list of languages
+            rep(KnowledgeRepresentationLanguageSeries.HTML,
+                SerializationFormatSeries.TXT));
   }
 
   protected void mergeExplanation(KnowledgeCarrier other) {

@@ -108,10 +108,10 @@ class AnswerTest {
 
   @Test
   void testWithKCarrier() {
-    Answer<? extends KnowledgeCarrier> ans = Answer.of(AbstractCarrier.ofNaturalLanguageRep("Foo"));
+    Answer<? extends KnowledgeCarrier> ans = Answer.of(AbstractCarrier.of("Foo"));
 
     ans = ans.map(
-        kc -> AbstractCarrier.ofNaturalLanguageRep(
+        kc -> AbstractCarrier.of(
             "mapped " + ((ExpressionCarrier) kc).getSerializedExpression()));
 
     KnowledgeCarrier kc = ans.orElse(null);

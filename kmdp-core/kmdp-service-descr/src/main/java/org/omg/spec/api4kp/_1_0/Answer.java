@@ -31,6 +31,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -83,6 +84,12 @@ public class Answer<T> extends Explainer {
 
   public static <X> Answer<X> notFound() {
     return failed(new ServerSideException(ResponseCodeSeries.NotFound,
+        Collections.emptyMap(),
+        new byte[0]));
+  }
+
+  public static <X> Answer<X> conflict() {
+    return failed(new ServerSideException(ResponseCodeSeries.Conflict,
         Collections.emptyMap(),
         new byte[0]));
   }
@@ -277,6 +284,22 @@ public class Answer<T> extends Explainer {
       return Stream.empty();
     }
     return StreamUtil.trimStream(ans.getOptionalValue());
+  }
+
+  public static <T> Answer<T> merge(Answer<T> a1, Answer<T> a2) {
+    return merge(a1,a2,(x,y) -> y);
+  }
+
+  public static <T> Answer<T> merge(Answer<T> a1, Answer<T> a2, BiFunction<T,T,T> valueMerger) {
+    return Answer.of(valueMerger.apply(a1.value,a2.value))
+        .withCodedOutcome(ResponseCodeSeries.resolveTag("" +
+            Math.max(Integer.parseInt(a1.getCodedOutcome().getTag()),
+                Integer.parseInt(a2.getCodedOutcome().getTag())))
+            .orElse(ResponseCodeSeries.InternalServerError))
+        .withMeta(a1.getMeta())
+        .withAddedMeta(a2.getMeta())
+        .withExplanation(a1.getExplanation())
+        .withAddedExplanation(a2.getExplanation());
   }
 
   public static <X, T> Stream<T> aggregate(Collection<X> delegates,
