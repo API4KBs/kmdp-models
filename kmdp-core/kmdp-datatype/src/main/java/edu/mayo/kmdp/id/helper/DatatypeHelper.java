@@ -49,6 +49,7 @@ import org.omg.spec.api4kp._1_0.identifiers.UUIDentifier;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
 
+
 @Deprecated
 public class DatatypeHelper {
 
@@ -375,6 +376,7 @@ public class DatatypeHelper {
         .withConceptId(v.getConceptId())
         .withNamespace((NamespaceIdentifier) ((NamespaceIdentifier) v.getNamespace()).clone());
   }
+
 
   public static ConceptIdentifier toUnqualifiedConceptIdentifier(Term v) {
     if (v == null) {

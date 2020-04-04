@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
 public interface ConceptTerm<T extends Term> extends Term, org.omg.spec.api4kp._1_0.id.Term, Taxonomic<T> {
 
