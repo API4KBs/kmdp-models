@@ -28,7 +28,7 @@ public class TerminologyScheme {
     /**
      * The terms found in the terminology
      */
-    private List<ConceptTerm> terms;
+    private List<ConceptDescriptor> terms;
 
     public String getName() {
         return name;
@@ -62,11 +62,11 @@ public class TerminologyScheme {
         this.seriesId = seriesId;
     }
 
-    public List<ConceptTerm> getTerms() {
+    public List<ConceptDescriptor> getTerms() {
         return terms;
     }
 
-    public void setTerms(List<ConceptTerm>  terms) {
+    public void setTerms(List<ConceptDescriptor>  terms) {
         this.terms = terms;
     }
 

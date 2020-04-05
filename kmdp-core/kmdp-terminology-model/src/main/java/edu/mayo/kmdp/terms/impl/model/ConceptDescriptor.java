@@ -7,12 +7,49 @@ import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
 public class ConceptDescriptor extends ConceptIdentifier {
 
-
   private Term[] ancestors;
-  private Term[] ancestorsClosure;
+  private Term[] closure;
 
+  public ConceptDescriptor() {
+  }
 
+  /**
+   * Get the ancestors for the conceptDescriptor
+   * @return an array of any ancestor terms
+   */
+  public Term[] getAncestors() {
+    return ancestors;
+  }
 
+  /**
+   * Set the ancestors for the conceptDescriptor
+   * @param ancestors the ancestor terms
+   */
+  public void setAncestors(Term[] ancestors) {
+    this.ancestors = ancestors;
+  }
+
+  /**
+   * Get all the relations for the conceptDescriptor
+   * @return an array of any related terms
+   */
+  public Term[] getClosure() {
+    return closure;
+  }
+
+  /**
+   * Set the related terms for the conceptDescriptor
+   * @param closure the related terms
+   */
+  public void setClosure(Term[] closure) {
+    this.closure = closure;
+  }
+
+  /**
+   * Converts a term into a ConceptDescriptor
+   * @param v the term to be converted
+   * @return the ConceptDescriptor
+   */
   public static ConceptDescriptor toConceptDescriptor(ConceptTerm v) {
     if (v == null) {
       return null;
@@ -27,6 +64,8 @@ public class ConceptDescriptor extends ConceptIdentifier {
         .withTag(v.getTag())
         .withResourceId(v.getConceptId())
         .withNamespaceUri(((NamespaceIdentifier) v.getNamespace()).getId());
+        //.setAncestors(v.getAncestors())
+        //.setClosure(v.getClosure());
   }
 
 }
