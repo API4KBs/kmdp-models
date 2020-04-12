@@ -37,6 +37,8 @@ import org.slf4j.LoggerFactory;
 
 public class Registry {
 
+  public static final String ONTOLOGY_VER = "LATEST";
+
   public static final String REGISTRY_URI = "https://www.omg.org/spec/API4KP/api4kp-registry";
 
   public static final String MAYO_ASSETS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/assets/";
@@ -89,8 +91,7 @@ public class Registry {
   }
 
   public static String getCatalogRef() {
-    String ver = System.getProperty("ONTO-VERSION","LATEST");
-    return getCatalogVersion(ver);
+    return getCatalogVersion(ONTOLOGY_VER);
   }
 
   public static String getCatalogVersion(String version) {
