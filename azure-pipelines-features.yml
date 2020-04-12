@@ -104,7 +104,7 @@ steps:
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.11'
     jdkArchitectureOption: 'x64'
-    options: '-X'
+    options: '-ntp'
 
 # ------------------ END PIPELINE  ------------------
 - script: |
