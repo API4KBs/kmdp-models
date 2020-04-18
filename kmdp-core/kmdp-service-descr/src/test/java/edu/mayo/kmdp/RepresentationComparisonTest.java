@@ -15,7 +15,10 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
+import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.RDF_XML_Syntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._1_0.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
 
@@ -24,8 +27,11 @@ import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSe
 import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
+import java.nio.charset.Charset;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder;
 
 class RepresentationComparisonTest {
 
@@ -46,18 +52,29 @@ class RepresentationComparisonTest {
 
   @Test
   void languageTestWithSeries() {
-    SyntacticRepresentation r1 = rep(KnowledgeRepresentationLanguageSeries.OWL_2)
-        .withSerialization(KnowledgeRepresentationLanguageSerializationSeries.RDF_XML_Syntax);
+    SyntacticRepresentation r1 = rep(OWL_2)
+        .withSerialization(RDF_XML_Syntax);
 
     SyntacticRepresentation r2 = rep(KnowledgeRepresentationLanguage.OWL_2)
         .withSerialization(KnowledgeRepresentationLanguageSerialization.RDF_XML_Syntax);
 
-    SyntacticRepresentation r3 = rep(KnowledgeRepresentationLanguageSeries.OWL_2.getLatest())
-        .withSerialization(KnowledgeRepresentationLanguageSerializationSeries.RDF_XML_Syntax.getLatest());
+    SyntacticRepresentation r3 = rep(OWL_2.getLatest())
+        .withSerialization(RDF_XML_Syntax.getLatest());
 
     assertEquals(Comparison.EQUIVALENT,theRepContrastor.contrast(r1,r2));
     assertEquals(Comparison.EQUIVALENT,theRepContrastor.contrast(r1,r3));
     assertEquals(Comparison.EQUIVALENT,theRepContrastor.contrast(r2,r3));
+  }
+
+  @Test
+  void concreteRep() {
+    SyntacticRepresentation r1 = ModelMIMECoder.decode("model/owl2-v20121211+rdf/xml;charset=UTF-8")
+        .orElseGet(Assertions::fail);
+
+    SyntacticRepresentation r2 = ModelMIMECoder.decode("model/owl2-v20121211;lex={skos}")
+        .orElseGet(Assertions::fail);
+
+    assertTrue(theRepContrastor.isNarrowerOrEqual(r1,r2));
   }
 
 }

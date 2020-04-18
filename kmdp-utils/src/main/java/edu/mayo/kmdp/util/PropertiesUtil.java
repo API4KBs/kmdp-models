@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
@@ -82,7 +83,20 @@ public class PropertiesUtil {
         : Optional.empty();
   }
 
+  public static String serializeProps(Properties props) {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    try {
+      props.store(baos,"");
+    } catch (IOException e) {
+      logger.error(e.getMessage(),e);
+    }
+    return new String(baos.toByteArray());
+  }
+
   public static Optional<Properties> parse(String serializedProperties) {
+    if (Util.isEmpty(serializedProperties)) {
+      return Optional.empty();
+    }
     try {
       Properties prop = new Properties();
       prop.load(new ByteArrayInputStream(serializedProperties.getBytes()));

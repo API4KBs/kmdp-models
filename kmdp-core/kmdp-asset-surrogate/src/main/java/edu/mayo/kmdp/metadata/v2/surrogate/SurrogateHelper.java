@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.validation.Schema;
 import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
 public class SurrogateHelper {
@@ -43,7 +44,7 @@ public class SurrogateHelper {
 
 
   public static Optional<ConceptIdentifier> getSimpleAnnotationValue(KnowledgeAsset asset,
-      ConceptIdentifier rel) {
+      Term rel) {
     return asset.getAnnotation().stream()
         .filter(ann -> rel == null || rel.getUuid().equals(ann.getRel().getUuid()))
         .map(Annotation::getRef)

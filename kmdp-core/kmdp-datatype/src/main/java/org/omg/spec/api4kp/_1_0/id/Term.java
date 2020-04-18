@@ -76,7 +76,25 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
         .withUuid(uuid);
   }
 
-  static Term newTerm(String tag, UUID uuid, URI namespace, URI referentId,
+  /**
+   * Constructs a generic Term
+   *
+   * @param conceptId The URI assigned to the Concept
+   *                  The conceptId is version invariant
+   * @param tag An identifier, scoped by the concept scheme to which this concept belongs.
+   *            The tag evokes the concept, and denotes the referent
+   * @param uuid A universal identifier associated to the concept
+   *             The uuid is version invariant
+   * @param namespace The URI of the namespace / concept scheme that defines the concept
+   * @param referentId The URI of the referent of the concept
+   * @param versionTag The version of this concept
+   *                   The version tag can be combined with the concept Id to create a concept version URI
+   * @param name The primary label for the concept
+   * @param establishedDate The date the concept was established (usually inherited from the date
+   *                        of the release of the version of the concept scheme that first incluedd this concept)
+   * @return a Term
+   */
+  static Term newTerm(URI conceptId, String tag, UUID uuid, URI namespace, URI referentId,
       String versionTag, String name, Date establishedDate) {
     return new ConceptIdentifier()
         .withUuid(uuid)
@@ -84,7 +102,7 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
         .withTag(tag)
         .withNamespaceUri(namespace)
         .withVersionTag(versionTag)
-        .withResourceId(SemanticIdentifier.toResourceId(tag, namespace, uuid))
+        .withResourceId(conceptId != null ? conceptId : SemanticIdentifier.toResourceId(tag, namespace, uuid))
         .withName(name)
         .withEstablishedOn(establishedDate);
   }
@@ -148,7 +166,9 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
    */
   static Term sct(String label, String code) {
     String termUri = SNOMED_BASE_URI + code;
-    return newTerm(code,
+    return newTerm(
+        URI.create(termUri)
+        ,code,
         Util.uuid(termUri),
         SNOMED_URI,
         URI.create(termUri),
@@ -166,7 +186,9 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
   static Term mock(String label, String code) {
     URI mock = URI.create("http://ontology.mock.edu/mock/");
     String termUri = mock + code;
-    return newTerm(code,
+    return newTerm(
+        URI.create(termUri),
+        code,
         Util.uuid(termUri),
         mock,
         URI.create(termUri),

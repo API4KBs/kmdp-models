@@ -47,8 +47,10 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
         && ! Series.isSame(sr1.getFormat(), sr2.getFormat())) {
       return false;
     }
-    return StreamUtil.mapToSet(sr1.getLexicon(),ConceptTerm::getConceptUUID)
-        .equals(StreamUtil.mapToSet(sr2.getLexicon(),ConceptTerm::getConceptUUID));
+    return sr1.getLexicon().isEmpty()
+        || sr2.getLexicon().isEmpty()
+        || StreamUtil.mapToSet(sr1.getLexicon(), ConceptTerm::getConceptUUID)
+        .equals(StreamUtil.mapToSet(sr2.getLexicon(), ConceptTerm::getConceptUUID));
   }
 
   public int compare(SyntacticRepresentation sr1, SyntacticRepresentation sr2) {
@@ -57,9 +59,14 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
     }
     ParsingLevel p1 = ParsingLevelContrastor.detectLevel(sr1);
     ParsingLevel p2 = ParsingLevelContrastor.detectLevel(sr2);
-    return ParsingLevelContrastor.singleton.compare(p1,p2);
+    return ParsingLevelContrastor.theLevelContrastor.compare(p1,p2);
   }
 
-
+  public boolean isBroaderOrEqual(SyntacticRepresentation r1, SyntacticRepresentation r2) {
+    return Contrastor.isBroaderOrEqual(theRepContrastor.contrast(r1,r2));
+  }
+  public boolean isNarrowerOrEqual(SyntacticRepresentation r1, SyntacticRepresentation r2) {
+    return Contrastor.isNarrowerOrEqual(theRepContrastor.contrast(r1,r2));
+  }
 
 }

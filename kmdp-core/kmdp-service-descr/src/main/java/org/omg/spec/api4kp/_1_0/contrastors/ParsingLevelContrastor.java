@@ -29,7 +29,7 @@ public class ParsingLevelContrastor extends Contrastor<ParsingLevel> implements
 
   }
 
-  public static final Contrastor<ParsingLevel> singleton = new ParsingLevelContrastor();
+  public static final ParsingLevelContrastor theLevelContrastor = new ParsingLevelContrastor();
 
   public static ParsingLevel detectLevel(KnowledgeCarrier carrier) {
     if (carrier.getLevel() != null) {
@@ -98,4 +98,12 @@ public class ParsingLevelContrastor extends Contrastor<ParsingLevel> implements
   public boolean comparable(ParsingLevel first, ParsingLevel second) {
     return true;
   }
+
+  public boolean isBroaderOrEqual(ParsingLevel r1, ParsingLevel r2) {
+    return Contrastor.isBroaderOrEqual(theLevelContrastor.contrast(r1,r2));
+  }
+  public boolean isNarrowerOrEqual(ParsingLevel r1, ParsingLevel r2) {
+    return Contrastor.isNarrowerOrEqual(theLevelContrastor.contrast(r1,r2));
+  }
+
 }

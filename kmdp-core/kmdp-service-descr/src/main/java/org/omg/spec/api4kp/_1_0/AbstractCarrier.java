@@ -22,8 +22,6 @@ import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_LATEST;
 import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.newId;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.mayo.kmdp.SurrogateHelper;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JSonUtil;
@@ -39,18 +37,21 @@ import edu.mayo.ontology.taxonomies.lexicon.Lexicon;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.omg.spec.api4kp._1_0.contrastors.ParsingLevelContrastor;
+import org.omg.spec.api4kp._1_0.id.KeyIdentifier;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.CompositeStructType;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder;
 import org.w3c.dom.Document;
 
 public interface AbstractCarrier {
@@ -97,16 +98,31 @@ public interface AbstractCarrier {
   }
 
   static KnowledgeCarrier of(byte[] encoded, SyntacticRepresentation rep) {
+    if (rep.getCharset() == null) {
+      rep.withCharset(Charset.defaultCharset().name());
+    }
+    if (rep.getEncoding() == null) {
+      rep.withEncoding("default");
+    }
     return of(encoded)
         .withRepresentation(rep);
   }
 
   static KnowledgeCarrier of(InputStream stream, SyntacticRepresentation rep) {
+    if (rep.getCharset() == null) {
+      rep.withCharset(Charset.defaultCharset().name());
+    }
+    if (rep.getEncoding() == null) {
+      rep.withEncoding("default");
+    }
     return of(stream)
         .withRepresentation(rep);
   }
 
   static KnowledgeCarrier of(String serialized, SyntacticRepresentation rep) {
+    if (rep.getCharset() == null) {
+      rep.withCharset(Charset.defaultCharset().name());
+    }
     return of(serialized)
         .withRepresentation(rep);
   }
@@ -168,8 +184,7 @@ public interface AbstractCarrier {
    */
   static <T> KnowledgeCarrier ofSet(SyntacticRepresentation rep, Collection<T> artifacts) {
     return ofIdentiableSet(rep,
-        x -> newId(UUID.randomUUID()),
-        artifacts);
+        x -> newId(UUID.randomUUID()), artifacts);
   }
 
   /**
@@ -226,9 +241,24 @@ public interface AbstractCarrier {
     return ckc;
   }
 
+  default KnowledgeCarrier mainComponent() {
+    if (this instanceof CompositeKnowledgeCarrier) {
+      CompositeKnowledgeCarrier ckc = (CompositeKnowledgeCarrier) this;
+      if (ckc.getRootId() != null) {
+        KeyIdentifier key = ckc.getRootId().asKey();
+        return ckc.getComponent().stream()
+            .filter(kc -> kc.getAssetId() != null)
+            .filter(kc -> kc.getAssetId().asKey().equals(key))
+            .findFirst()
+            .orElseThrow(IllegalStateException::new);
+      }
+    }
+    return (KnowledgeCarrier) this;
+  }
+
 
   static SyntacticRepresentation rep(SyntacticRepresentation src) {
-    SyntacticRepresentation rep = new org.omg.spec.api4kp._1_0.services.resources.SyntacticRepresentation();
+    SyntacticRepresentation rep = new org.omg.spec.api4kp._1_0.services.SyntacticRepresentation();
     src.copyTo(rep);
     return rep;
   }
@@ -253,20 +283,16 @@ public interface AbstractCarrier {
   }
 
   static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+      SerializationFormat format, Lexicon... vocabs) {
+    return rep(language, format, null, null)
+        .withLexicon(vocabs);
+  }
+
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format) {
     return rep(language, serialization, format, null, null);
   }
-
-  // Should the object be unified?
-  static SyntacticRepresentation rep(Representation meta) {
-    return rep(meta.getLanguage(), meta.getSerialization(), meta.getFormat(), null, null);
-  }
-
-  static SyntacticRepresentation canonicalRepresentationOf(KnowledgeAsset asset) {
-    return rep(SurrogateHelper.canonicalRepresentationOf(asset));
-  }
-
 
   static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageSerialization ser,
@@ -297,6 +323,17 @@ public interface AbstractCarrier {
   }
 
   static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageProfile profile) {
+    return rep(language, profile, null, null, null, null);
+  }
+
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageProfile profile,
+      KnowledgeRepresentationLanguageSerialization serialization) {
+    return rep(language, profile, serialization, null, null, null);
+  }
+
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageProfile profile,
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format) {
@@ -309,24 +346,42 @@ public interface AbstractCarrier {
       SerializationFormat format,
       Charset charset,
       String encoding) {
-    return new org.omg.spec.api4kp._1_0.services.resources.SyntacticRepresentation()
-        .withLanguage(language)
-        .withProfile(profile)
-        .withSerialization(serialization)
-        .withFormat(format)
-        .withCharset(charset != null ? charset.name() : null)
-        .withEncoding(encoding);
+    return rep(language, profile, serialization, format, charset, encoding, new Lexicon[0]);
   }
 
   static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       KnowledgeRepresentationLanguageProfile profile,
       SerializationFormat format,
       Charset charset) {
-    return new org.omg.spec.api4kp._1_0.services.resources.SyntacticRepresentation()
+    return rep(language, profile, null, format, charset, null, new Lexicon[0]);
+  }
+
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageProfile profile,
+      KnowledgeRepresentationLanguageSerialization serialization,
+      SerializationFormat format,
+      Charset charset,
+      String encoding,
+      Lexicon... lexicons) {
+    return rep(language, profile, serialization, format, charset, encoding,
+        Arrays.asList(lexicons));
+  }
+
+  static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageProfile profile,
+      KnowledgeRepresentationLanguageSerialization serialization,
+      SerializationFormat format,
+      Charset charset,
+      String encoding,
+      Collection<Lexicon> lexicons) {
+    return new SyntacticRepresentation()
         .withLanguage(language)
         .withProfile(profile)
+        .withSerialization(serialization)
         .withFormat(format)
-        .withCharset(charset != null ? charset.name() : null);
+        .withCharset(charset != null ? charset.name() : null)
+        .withEncoding(encoding)
+        .withLexicon(lexicons);
   }
 
   static SyntacticRepresentation rep(SerializationFormat format, Charset charset,
@@ -340,6 +395,109 @@ public interface AbstractCarrier {
 
   static SyntacticRepresentation rep(String encoding) {
     return rep(null, null, null, null, encoding);
+  }
+
+
+  static String codedRep(SyntacticRepresentation src) {
+    SyntacticRepresentation rep = new org.omg.spec.api4kp._1_0.services.SyntacticRepresentation();
+    src.copyTo(rep);
+    return ModelMIMECoder.encode(rep);
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language) {
+    return codedRep(language, null, null, null, null);
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language, Lexicon... vocabs) {
+    return ModelMIMECoder.encode(
+        rep(language, null, null, null, null)
+            .withLexicon(vocabs));
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageSerialization serialization) {
+    return codedRep(language, serialization, null, null, null);
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language,
+      SerializationFormat format) {
+    return codedRep(language, format, null, null);
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageSerialization serialization,
+      SerializationFormat format) {
+    return codedRep(language, serialization, format, null, null);
+  }
+
+  // Should the object be unified?
+  static String codedRep(Representation meta) {
+    return codedRep(meta.getLanguage(), meta.getSerialization(), meta.getFormat(), null, null);
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageSerialization ser,
+      SerializationFormat format,
+      Charset charset) {
+    return codedRep(language, ser, format, charset, null);
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language,
+      SerializationFormat format,
+      Charset charset) {
+    return codedRep(language, format, charset, null);
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language,
+      SerializationFormat format,
+      Charset charset,
+      String encoding) {
+    return codedRep(language, null, format, charset, encoding);
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageSerialization serialization,
+      SerializationFormat format,
+      Charset charset,
+      String encoding) {
+    return codedRep(language, null, serialization, format, charset, encoding);
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageProfile profile,
+      KnowledgeRepresentationLanguageSerialization serialization,
+      SerializationFormat format) {
+    return codedRep(language, profile, serialization, format, null, null);
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageProfile profile,
+      KnowledgeRepresentationLanguageSerialization serialization,
+      SerializationFormat format,
+      Charset charset,
+      String encoding) {
+    return ModelMIMECoder.encode(
+        rep(language,profile,serialization,format,charset, encoding));
+  }
+
+  static String codedRep(KnowledgeRepresentationLanguage language,
+      KnowledgeRepresentationLanguageProfile profile,
+      SerializationFormat format,
+      Charset charset) {
+    return ModelMIMECoder.encode(rep(language,profile,format,charset));
+  }
+
+  static String codedRep(SerializationFormat format, Charset charset,
+      String encoding) {
+    return codedRep(null, format, charset, encoding);
+  }
+
+  static String codedRep(Charset charset, String encoding) {
+    return codedRep(null, null, charset, encoding);
+  }
+
+  static String codedRep(String encoding) {
+    return codedRep(null, null, null, null, encoding);
   }
 
 

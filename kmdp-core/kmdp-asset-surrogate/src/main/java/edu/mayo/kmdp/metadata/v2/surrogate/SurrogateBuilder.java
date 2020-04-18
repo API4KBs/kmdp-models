@@ -39,7 +39,6 @@ import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.id.Term;
@@ -155,7 +154,7 @@ public class SurrogateBuilder {
   }
 
 
-  public SurrogateBuilder asOperationalDefinition(ConceptIdentifier subject, Term proposition,
+  public SurrogateBuilder asOperationalDefinition(Term subject, Term proposition,
       Term... inputs) {
     get().withRole(Operational_Concept_Definition);
 
@@ -166,7 +165,7 @@ public class SurrogateBuilder {
 
     if (subject != null) {
       this.withAnnotation(AnnotationRelTypeSeries.Has_Primary_Subject.asConceptIdentifier(),
-          subject);
+          subject.asConceptIdentifier());
     }
 
     Arrays.stream(inputs).forEach(input ->
@@ -280,10 +279,10 @@ public class SurrogateBuilder {
     return this;
   }
 
-  public SurrogateBuilder withAnnotation(ConceptIdentifier rel, ConceptIdentifier obj) {
+  public SurrogateBuilder withAnnotation(Term rel, Term obj) {
     get().withAnnotation(new Annotation()
         .withRel(rel.asConceptIdentifier())
-        .withRef(obj));
+        .withRef(obj.asConceptIdentifier()));
     return this;
   }
 

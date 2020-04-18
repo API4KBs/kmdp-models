@@ -21,6 +21,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import javax.inject.Qualifier;
 
+/**
+ * Qualifier annotation that marks Knowledge Platform Components
+ */
 @Qualifier
 @Target({
     ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})

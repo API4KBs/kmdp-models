@@ -75,10 +75,10 @@ public class ServiceDescrClassGenerationTest {
         .withTxions(new Transrepresentation()
             .withConsumes(syn)
             .withProduces(syn))
-        .withKind(new GAVIdentifier()
+        .withKind(SemanticIdentifier.newId(UUID.randomUUID())
             .withTag("aaa")
-            .withVersion("1")
-            .withNamespace("edu.test"));
+            .withVersionTag("1")
+            .withNamespaceUri(URI.create("edu.test")));
 
     org.omg.spec.api4kp._1_0.services.tranx.ObjectFactory of = new org.omg.spec.api4kp._1_0.services.tranx.ObjectFactory();
     String xml = JaxbUtil.marshallToString(Collections.singleton(of.getClass()),

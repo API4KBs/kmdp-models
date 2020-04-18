@@ -38,6 +38,7 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder.decode;
 import static org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder.encode;
 
+import java.nio.charset.Charset;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
@@ -105,7 +106,6 @@ public class MimeCoderTest {
     SyntacticRepresentation rep1 = decode(c1)
         .orElse(new SyntacticRepresentation());
     assertSame(HTML,rep1.getLanguage());
-    assertSame(TXT,rep1.getFormat());
     assertTrue(rep1.getLexicon().contains(SNOMED_CT));
   }
 
@@ -125,6 +125,29 @@ public class MimeCoderTest {
         decode(m)
             .map(ModelMIMECoder::encode)
             .orElse(""));
+  }
+
+  @Test
+  public void testWithCharset() {
+    String m = "model/html-v52+text;charset=UTF-8";
+    assertEquals("UTF-8", decode(m)
+        .map(SyntacticRepresentation::getCharset).orElse("FAIL"));
+  }
+
+  @Test
+  public void testWithEncoding() {
+    String m = "model/html-v52+text;enc=default";
+    assertEquals("default", decode(m)
+        .map(SyntacticRepresentation::getEncoding).orElse("FAIL"));
+  }
+
+  @Test
+  public void testWithCharsetAndEncoding() {
+    String m = "model/html-v52+text;charset=UTF-8;enc=default";
+    assertEquals("UTF-8", decode(m)
+        .map(SyntacticRepresentation::getCharset).orElse("FAIL"));
+    assertEquals("default", decode(m)
+        .map(SyntacticRepresentation::getEncoding).orElse("FAIL"));
   }
 
 }

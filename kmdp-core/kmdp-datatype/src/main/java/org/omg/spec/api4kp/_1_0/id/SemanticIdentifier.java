@@ -4,6 +4,7 @@ import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSIONS_RX;
 
 import com.github.zafarkhaja.semver.Version;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.URIUtil;
@@ -456,6 +457,10 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withResourceId(resourceId)
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
+  }
+
+  static ResourceIdentifier randomId() {
+    return newId(BASE_UUID_URN_URI,UUID.randomUUID(),IdentifierConstants.VERSION_LATEST);
   }
 
   /**

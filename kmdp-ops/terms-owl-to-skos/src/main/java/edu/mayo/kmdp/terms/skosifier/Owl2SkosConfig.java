@@ -19,6 +19,7 @@ import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
+import edu.mayo.kmdp.util.PropertiesUtil;
 import java.util.Properties;
 
 @SuppressWarnings("unchecked")
@@ -37,6 +38,10 @@ public class Owl2SkosConfig extends ConfigProperties<Owl2SkosConfig, OWLtoSKOSTx
   @Override
   public Owl2SkosConfig.OWLtoSKOSTxParams[] properties() {
     return Owl2SkosConfig.OWLtoSKOSTxParams.values();
+  }
+
+  public String encode() {
+    return PropertiesUtil.serializeProps(this);
   }
 
 

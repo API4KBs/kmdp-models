@@ -60,7 +60,7 @@ public class Util {
   }
 
   public static String concat(List<String> str) {
-    return str == null ? null : str.stream().reduce("",String::concat);
+    return str == null ? null : str.stream().collect(Collectors.joining());
   }
 
   public static String normalize(String str) {

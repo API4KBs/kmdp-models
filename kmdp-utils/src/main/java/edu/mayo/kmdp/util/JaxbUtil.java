@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.util;
 
@@ -45,10 +43,11 @@ import org.w3c.dom.NodeList;
 
 
 public class JaxbUtil {
-  
+
   private static final Logger logger = LoggerFactory.getLogger(JaxbUtil.class);
-  
-  private JaxbUtil() {}
+
+  private JaxbUtil() {
+  }
 
   public static JaxbConfig defaultProperties() {
     return new JaxbConfig();
@@ -64,13 +63,13 @@ public class JaxbUtil {
     if (schema != null) {
       marshaller.setSchema(schema);
     }
-    p.consumeTyped((k,v) -> {
+    p.consumeTyped((k, v) -> {
       try {
         if (k.startsWith("com") || k.startsWith("sun")) {
           marshaller.setProperty(k, v);
         }
       } catch (PropertyException e) {
-        logger.error(e.getMessage(),e);
+        logger.error(e.getMessage(), e);
       }
     });
 
@@ -89,12 +88,18 @@ public class JaxbUtil {
       final Function<T, JAXBElement<? super T>> mapper,
       final Schema schema,
       JaxbConfig p) {
-    if  (root.getClass().getAnnotation(XmlRootElement.class) == null) {
+    if (root.getClass().getAnnotation(XmlRootElement.class) == null) {
       return marshall(ctx, mapper.apply(root), schema, p);
     } else {
       return marshall(ctx, root, schema, p);
     }
 
+  }
+
+  public static <T> Optional<ByteArrayOutputStream> marshall(final Collection<Class<?>> ctx,
+      final T root,
+      final Function<T, JAXBElement<? super T>> mapper) {
+    return marshall(ctx, root, mapper, null, JaxbUtil.defaultProperties());
   }
 
   public static <T> Optional<ByteArrayOutputStream> marshall(final Collection<Class<?>> ctx,
@@ -167,6 +172,12 @@ public class JaxbUtil {
 
   public static <T> Optional<Document> marshallDox(final Collection<Class<?>> ctx,
       final T root,
+      final Function<T, JAXBElement<? super T>> mapper) {
+    return marshallDox(ctx, root, mapper, JaxbUtil.defaultProperties());
+  }
+
+  public static <T> Optional<Document> marshallDox(final Collection<Class<?>> ctx,
+      final T root,
       final Function<T, JAXBElement<? super T>> mapper,
       JaxbConfig p) {
     return marshall(ctx, mapper.apply(root), p)
@@ -198,7 +209,7 @@ public class JaxbUtil {
       }
       return set;
     } catch (JAXBException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Collections.emptyList();
     }
   }
@@ -222,7 +233,7 @@ public class JaxbUtil {
       }
       return Optional.of(val);
     } catch (JAXBException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }

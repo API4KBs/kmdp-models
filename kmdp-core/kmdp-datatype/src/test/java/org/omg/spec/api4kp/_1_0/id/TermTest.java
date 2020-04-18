@@ -86,19 +86,19 @@ public class TermTest {
     Version version = Version.valueOf("5.0.1");
     String name = "TestResource";
     Date established = DateTimeUtil.now();
-    URI expectedId = URI.create(MAYO_ASSETS_BASE_URI + tag);
-    URI versionId = URI
-        .create(MAYO_ASSETS_BASE_URI + tag + VERSIONS + version.toString());
     URI referentId = URI.create("http://foo.bar/baz");
+    URI conceptId = URI.create("http://foo.bar#1323");
+    URI versionId = URI
+        .create(conceptId + VERSIONS + version.toString());
 
     ConceptIdentifier cid = (ConceptIdentifier) Term
-        .newTerm(tag, uuid, MAYO_ASSETS_BASE_URI_URI, referentId, version.toString(), name,
-            established);
+        .newTerm(conceptId, tag, uuid, MAYO_ASSETS_BASE_URI_URI, referentId,
+            version.toString(), name, established);
     assertNotNull(cid);
     // uuid, tag and resourceId are required; confirm all are there
     assertEquals(uuid, cid.getUuid());
     assertEquals(tag, cid.getTag());
-    assertEquals(expectedId, cid.getResourceId());
+    assertEquals(conceptId, cid.getResourceId());
     assertEquals(versionId, cid.getVersionId());
     assertEquals(name, cid.getName());
     assertEquals(version.toString(), cid.getVersionTag());
@@ -176,7 +176,7 @@ public class TermTest {
 
   @Test
   public void testTerm() {
-    Term term = Term.newTerm("123456", UUID.randomUUID(), URI.create("http://foo.bar/kinda"),
+    Term term = Term.newTerm(URI.create("http://terms.bar/kinda"),"123456", UUID.randomUUID(), URI.create("http://foo.bar/kinda"),
         URI.create("http://foo.bar/kinda/123456"), "1981", null, null);
 
     assertEquals("123456", term.getTag());
@@ -192,7 +192,7 @@ public class TermTest {
   @Test
   public void testConceptIdentifier() {
     ConceptIdentifier trm = (ConceptIdentifier) Term
-        .newTerm("234", UUID.randomUUID(), URI.create("http://id/1"),
+        .newTerm(URI.create("http://foo.bar/term/234"),"234", UUID.randomUUID(), URI.create("http://id/1"),
             URI.create("http://foo.bar/234"), null, "1", null);
 
     ObjectFactory of = new ObjectFactory();

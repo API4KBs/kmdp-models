@@ -25,13 +25,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
-import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -41,6 +43,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.http.HttpHeaders;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
+import org.omg.spec.api4kp._1_0.services.tranx.Detector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -178,13 +181,17 @@ public class Answer<T> extends Explainer {
   public static <T> Collector<Answer<T>, List<Answer<T>>, Answer<List<T>>> toList() {
     return toList(ans -> true);
   }
+  public static <T> Collector<Answer<T>, Set<Answer<T>>, Answer<Set<T>>> toSet() {
+    return toSet(ans -> true);
+  }
 
   public static <T> Collector<Answer<T>, List<Answer<T>>, Answer<List<T>>> toList(
       Predicate<T> filter) {
     return Collector.of(
         ArrayList::new,
         (list, member) -> {
-          if (member.isSuccess() && member.map(filter::test).orElse(false)) {
+          if (member.isSuccess()
+              && member.map(filter::test).orElse(false).booleanValue()) {
             list.add(member);
           }
         },
@@ -195,6 +202,26 @@ public class Answer<T> extends Explainer {
         answerList -> Answer.of(answerList.stream()
             .map(Answer::get)
             .collect(Collectors.toList()))
+    );
+  }
+
+  public static <T> Collector<Answer<T>, Set<Answer<T>>, Answer<Set<T>>> toSet(
+      Predicate<T> filter) {
+    return Collector.of(
+        HashSet::new,
+        (list, member) -> {
+          if (member.isSuccess()
+              && member.map(filter::test).orElse(false).booleanValue()) {
+            list.add(member);
+          }
+        },
+        (left, right) -> {
+          left.addAll(right);
+          return left;
+        },
+        answerSet -> Answer.of(answerSet.stream()
+            .map(Answer::get)
+            .collect(Collectors.toSet()))
     );
   }
 
@@ -252,6 +279,14 @@ public class Answer<T> extends Explainer {
     }
   }
 
+  public <K> Answer<K> cast(Class<K> klazz) {
+    return klazz.isInstance(getValue())
+        ? (Answer<K>) this
+        : Answer.failed(new ClassCastException());
+  }
+
+
+
   public Optional<T> getOptionalValue() {
     return Optional.ofNullable(getValue());
   }
@@ -290,7 +325,7 @@ public class Answer<T> extends Explainer {
     return merge(a1,a2,(x,y) -> y);
   }
 
-  public static <T> Answer<T> merge(Answer<T> a1, Answer<T> a2, BiFunction<T,T,T> valueMerger) {
+  public static <T> Answer<T> merge(Answer<T> a1, Answer<T> a2, BinaryOperator<T> valueMerger) {
     return Answer.of(valueMerger.apply(a1.value,a2.value))
         .withCodedOutcome(ResponseCodeSeries.resolveTag("" +
             Math.max(Integer.parseInt(a1.getCodedOutcome().getTag()),
@@ -318,10 +353,16 @@ public class Answer<T> extends Explainer {
 
   public static <X,Y> Answer<Y> anyDo(Collection<X> delegates, Function<X,Answer<Y>> mapper) {
     return delegates.stream()
-        .map(mapper)
+        .map(x -> {
+          try {
+            return mapper.apply(x);
+          } catch (Exception e) {
+            return Answer.<Y>failed(e);
+          }
+        })
         .filter(Answer::isSuccess)
         .findAny()
-        .orElse(failed(new UnsupportedOperationException()));
+        .orElseGet(() -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
   }
 
   public static <X, T> Answer<T> delegateTo(Optional<X> delegate,

@@ -24,6 +24,7 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
+import edu.mayo.ontology.taxonomies.krformat.SerializationFormat;
 import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
@@ -34,6 +35,7 @@ import edu.mayo.ontology.taxonomies.mimetype.IMIMEType;
 import edu.mayo.ontology.taxonomies.mimetype.MIMETypeSeries;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
@@ -75,6 +77,12 @@ public class ModelMIMECoder {
       sb.append(";lex=").append("{");
       rep.getLexicon().forEach(l -> sb.append(l.getTag()).append(","));
       sb.replace(sb.length() - 1, sb.length(), "}");
+    }
+    if (rep.getCharset() != null) {
+      sb.append(";charset=").append(rep.getCharset());
+    }
+    if (rep.getEncoding() != null) {
+      sb.append(";enc=").append(rep.getEncoding());
     }
 
     if (!rxPattern.matcher(sb.toString()).matches()) {
@@ -136,8 +144,15 @@ public class ModelMIMECoder {
                 .ifPresent(rep::setSerialization);
           }
 
-          if (rep.getFormat() == null) {
-            rep.setFormat(TXT);
+          if (rep.getFormat() == null && rep.getSerialization() != null) {
+            StringTokenizer tok = new StringTokenizer(t.serialTag,"+/");
+            while (tok.hasMoreTokens()) {
+              Optional<SerializationFormat> detectedFormat = SerializationFormatSeries.resolveTag(tok.nextToken());
+              detectedFormat.ifPresent(rep::setFormat);
+            }
+            if (rep.getFormat() == null) {
+              rep.setFormat(TXT);
+            }
           }
 
 
@@ -145,6 +160,14 @@ public class ModelMIMECoder {
             Arrays.stream(t.lexTags.split(","))
                 .forEach(l -> LexiconSeries.resolve(l)
                     .ifPresent(rep::withLexicon));
+          }
+
+          if (!isEmpty(t.charsetTag)) {
+            rep.setCharset(t.charsetTag);
+          }
+
+          if (!isEmpty(t.encodingTag)) {
+            rep.setEncoding(t.encodingTag);
           }
 
           return rep;
@@ -193,6 +216,8 @@ public class ModelMIMECoder {
     String serialTag;
     String formatTag;
     String lexTags;
+    String charsetTag;
+    String encodingTag;
   }
 
   private static Optional<LangTags> decompose(String mime) {
@@ -221,10 +246,18 @@ public class ModelMIMECoder {
     tags.formatTag = Util.isEmpty(matcher.group(4)) ? "" : matcher.group(4)
         .trim().replaceAll("\\+", "");
 
-    tags.lexTags = isEmpty(matcher.group(5)) ? "" : matcher.group(5).trim()
+    tags.lexTags = isEmpty(matcher.group(6)) ? "" : matcher.group(6).trim()
         .replace("}", "")
         .replace("{", "")
         .replace(";lex=", "");
+
+    // Group 7 is the weight q
+
+    tags.charsetTag = isEmpty(matcher.group(8)) ? "" : matcher.group(8).trim()
+        .replace(";charset=", "");
+
+    tags.encodingTag = isEmpty(matcher.group(9)) ? "" : matcher.group(9).trim()
+        .replace(";enc=", "");
 
     return Optional.of(tags);
   }

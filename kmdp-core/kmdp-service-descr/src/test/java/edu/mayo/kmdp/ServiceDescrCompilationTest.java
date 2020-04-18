@@ -36,6 +36,7 @@ import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import java.io.File;
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
@@ -166,10 +167,10 @@ public class ServiceDescrCompilationTest {
         .withTxions(new Transrepresentation()
             .withConsumes(syn)
             .withProduces(syn))
-        .withKind(new GAVIdentifier()
+        .withKind(SemanticIdentifier.newId(UUID.randomUUID())
             .withTag("aaa")
-            .withVersion("1")
-            .withNamespace("edu.test"));
+            .withVersionTag("1")
+            .withNamespaceUri(URI.create("edu.test")));
   }
 
 }
