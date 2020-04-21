@@ -57,15 +57,17 @@ public class ConceptDescriptor extends ConceptIdentifier {
     if (v instanceof ConceptDescriptor) {
       return (ConceptDescriptor) v;
     }
-    return (ConceptDescriptor) new ConceptDescriptor()
-        .withReferentId(v.getRef())
-        .withUuid(v.getConceptUUID())
-        .withName(v.getLabel())
-        .withTag(v.getTag())
-        .withResourceId(v.getConceptId())
-        .withNamespaceUri(((NamespaceIdentifier) v.getNamespace()).getId());
-        //.setAncestors(v.getAncestors())
-        //.setClosure(v.getClosure());
+    ConceptDescriptor conceptDescriptor = new ConceptDescriptor();
+    conceptDescriptor.withReferentId(v.getRef());
+    conceptDescriptor.withUuid(v.getConceptUUID());
+    conceptDescriptor.withName(v.getLabel());
+    conceptDescriptor.withTag(v.getTag());
+    conceptDescriptor.withResourceId(v.getConceptId());
+    conceptDescriptor.withNamespaceUri(((NamespaceIdentifier) v.getNamespace()).getId());
+    conceptDescriptor.setAncestors(v.getAncestors());
+    conceptDescriptor.setClosure(v.getClosure());
+
+    return conceptDescriptor;
   }
 
 }
