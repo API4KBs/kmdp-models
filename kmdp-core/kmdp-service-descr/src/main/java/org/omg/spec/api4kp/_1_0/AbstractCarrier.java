@@ -19,7 +19,9 @@ import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TX
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
 import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_LATEST;
+import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.hashIdentifiers;
 import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.randomId;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
@@ -44,6 +46,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.omg.spec.api4kp._1_0.contrastors.ParsingLevelContrastor;
+import org.omg.spec.api4kp._1_0.id.IdentifierConstants;
 import org.omg.spec.api4kp._1_0.id.KeyIdentifier;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
@@ -58,6 +61,10 @@ public interface AbstractCarrier {
 
   //TODO This will become a controlled term in a future release of the ontologies (version 8+)
   String HAS_MEMBER = "<https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/hasMember>";
+  
+  enum Encodings {
+    DEFAULT;
+  }
 
   static KnowledgeCarrier of(byte[] encoded) {
     return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
@@ -183,8 +190,10 @@ public interface AbstractCarrier {
    * @return A set-oriented Composite Knowledge Carrier
    */
   static <T> KnowledgeCarrier ofSet(SyntacticRepresentation rep, Collection<T> artifacts) {
-    return ofIdentiableSet(rep,
-        x -> newId(UUID.randomUUID()), artifacts);
+    return ofIdentifiableSet(rep,
+        x -> randomId(),
+        x -> randomId(),
+        artifacts);
   }
 
   /**
@@ -194,13 +203,15 @@ public interface AbstractCarrier {
    *
    * @param rep The common representation
    * @param artifacts The artifacts to be aggregated into the composite
-   * @param identificator A function that allows to extract an (asset) ID from each of the artifacts
+   * @param assetIdentificator A function that allows to extract an (asset) ID from each of the artifacts
+   * @param assetIdentificator A function that allows to extract an (artifact) ID from each of the artifacts
    * @param <T> The common type of the artifacts
    * @return A set-oriented Composite Knowledge Carrier
    */
-  static <T> KnowledgeCarrier ofIdentiableSet(
+  static <T> KnowledgeCarrier ofIdentifiableSet(
       SyntacticRepresentation rep,
-      Function<T, ResourceIdentifier> identificator,
+      Function<T, ResourceIdentifier> assetIdentificator,
+      Function<T, ResourceIdentifier> artifactidentificator,
       Collection<T> artifacts) {
     CompositeKnowledgeCarrier ckc = new CompositeKnowledgeCarrier()
         .withStructType(CompositeStructType.SET);
@@ -210,32 +221,31 @@ public interface AbstractCarrier {
     artifacts.stream()
         .map(x -> of(x,level)
             .withRepresentation(rep)
-            .withAssetId(identificator.apply(x))
-            .withArtifactId(newId(UUID.randomUUID())))
+            .withAssetId(assetIdentificator.apply(x))
+            .withArtifactId(artifactidentificator.apply(x)))
         .forEach(ckc.getComponent()::add);
 
     // hash the (versioned) IDs of the components into an asset Id for the composite
     ckc.withAssetId(artifacts.stream()
-        .map(identificator)
-        .map(ResourceIdentifier::getVersionUuid)
-        .reduce(Util::hashUUID)
-        .map(uid -> SemanticIdentifier.newId(uid, VERSION_LATEST))
-        .orElse(newId(UUID.randomUUID())));
-
-    // random artifact Id
-    ckc.withArtifactId(newId(UUID.randomUUID()));
+        .map(assetIdentificator)
+        .reduce(SemanticIdentifier::hashIdentifiers)
+        .map(compsId -> hashIdentifiers(
+            compsId,
+            newId(Util.uuid(CompositeStructType.SET), VERSION_LATEST)))
+        .orElseThrow(IllegalArgumentException::new));
 
     // create a Struct in RDF
     String struct = artifacts.stream()
-        .map(identificator)
+        .map(assetIdentificator)
         .map(id -> new StringBuilder()
-            .append("<").append(ckc.getAssetId().getResourceId()).append(">")
+            .append("<").append(ckc.getAssetId().getVersionId()).append(">")
             .append(" ").append(HAS_MEMBER).append(" ")
-            .append("<").append(id.getResourceId()).append(">")
+            .append("<").append(id.getVersionId()).append(">")
             .append(".")
         ).collect(Collectors.joining("\n"));
     ckc.withStruct(of(struct)
         .withAssetId(ckc.getAssetId())
+        .withArtifactId(randomId())
         .withRepresentation(rep(OWL_2,Turtle,TXT)));
 
     return ckc;
@@ -310,7 +320,7 @@ public interface AbstractCarrier {
   static SyntacticRepresentation rep(KnowledgeRepresentationLanguage language,
       SerializationFormat format,
       Charset charset,
-      String encoding) {
+      Encodings encoding) {
     return rep(language, null, format, charset, encoding);
   }
 
@@ -318,7 +328,7 @@ public interface AbstractCarrier {
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format,
       Charset charset,
-      String encoding) {
+      Encodings encoding) {
     return rep(language, null, serialization, format, charset, encoding);
   }
 
@@ -345,7 +355,7 @@ public interface AbstractCarrier {
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format,
       Charset charset,
-      String encoding) {
+      Encodings encoding) {
     return rep(language, profile, serialization, format, charset, encoding, new Lexicon[0]);
   }
 
@@ -361,7 +371,7 @@ public interface AbstractCarrier {
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format,
       Charset charset,
-      String encoding,
+      Encodings encoding,
       Lexicon... lexicons) {
     return rep(language, profile, serialization, format, charset, encoding,
         Arrays.asList(lexicons));
@@ -372,7 +382,7 @@ public interface AbstractCarrier {
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format,
       Charset charset,
-      String encoding,
+      Encodings encoding,
       Collection<Lexicon> lexicons) {
     return new SyntacticRepresentation()
         .withLanguage(language)
@@ -380,20 +390,20 @@ public interface AbstractCarrier {
         .withSerialization(serialization)
         .withFormat(format)
         .withCharset(charset != null ? charset.name() : null)
-        .withEncoding(encoding)
+        .withEncoding(encoding != null ? encoding.name() : null)
         .withLexicon(lexicons);
   }
 
   static SyntacticRepresentation rep(SerializationFormat format, Charset charset,
-      String encoding) {
+      Encodings encoding) {
     return rep(null, format, charset, encoding);
   }
 
-  static SyntacticRepresentation rep(Charset charset, String encoding) {
+  static SyntacticRepresentation rep(Charset charset, Encodings encoding) {
     return rep(null, null, charset, encoding);
   }
 
-  static SyntacticRepresentation rep(String encoding) {
+  static SyntacticRepresentation rep(Encodings encoding) {
     return rep(null, null, null, null, encoding);
   }
 
@@ -451,7 +461,7 @@ public interface AbstractCarrier {
   static String codedRep(KnowledgeRepresentationLanguage language,
       SerializationFormat format,
       Charset charset,
-      String encoding) {
+      Encodings encoding) {
     return codedRep(language, null, format, charset, encoding);
   }
 
@@ -459,7 +469,7 @@ public interface AbstractCarrier {
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format,
       Charset charset,
-      String encoding) {
+      Encodings encoding) {
     return codedRep(language, null, serialization, format, charset, encoding);
   }
 
@@ -475,7 +485,7 @@ public interface AbstractCarrier {
       KnowledgeRepresentationLanguageSerialization serialization,
       SerializationFormat format,
       Charset charset,
-      String encoding) {
+      Encodings encoding) {
     return ModelMIMECoder.encode(
         rep(language,profile,serialization,format,charset, encoding));
   }
@@ -488,15 +498,15 @@ public interface AbstractCarrier {
   }
 
   static String codedRep(SerializationFormat format, Charset charset,
-      String encoding) {
+      Encodings encoding) {
     return codedRep(null, format, charset, encoding);
   }
 
-  static String codedRep(Charset charset, String encoding) {
+  static String codedRep(Charset charset, Encodings encoding) {
     return codedRep(null, null, charset, encoding);
   }
 
-  static String codedRep(String encoding) {
+  static String codedRep(Encodings encoding) {
     return codedRep(null, null, null, null, encoding);
   }
 

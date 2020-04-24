@@ -16,6 +16,7 @@
 package org.omg.spec.api4kp._1_0.services.tranx;
 
 import static edu.mayo.kmdp.util.Util.isEmpty;
+import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.JSON;
 import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TXT;
 import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.XML_1_1;
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
@@ -45,22 +46,30 @@ public class ModelMIMECoder {
   protected ModelMIMECoder() {
   }
 
+  public static final String TYPE = "model";
+
   private static final String REGEXP = FileUtil
       .readStatic("/model.mime.regexp", ModelMIMECoder.class);
 
-  private static Pattern rxPattern = Pattern.compile(REGEXP);
+  private static final String WEIGHT_REGEXP = "(.+);q=([01].\\d+)(;.+)*";
+
+  private static final Pattern RX_PATTERN = Pattern.compile(REGEXP);
+
+  private static final Pattern WX_PATTERN = Pattern.compile(WEIGHT_REGEXP);
 
   public static String encode(SyntacticRepresentation rep) {
     return encode(rep, true);
   }
 
   public static String encode(SyntacticRepresentation rep, boolean withVersions) {
-    StringBuilder sb = new StringBuilder("model/");
+    StringBuilder sb = new StringBuilder(TYPE + "/");
     if (rep.getLanguage() != null) {
       String langTag = withVersions
           ? rep.getLanguage().getTag()
           : rep.getLanguage().getTag().substring(0, rep.getLanguage().getTag().indexOf('-'));
       sb.append(langTag);
+    } else {
+      sb.append("*");
     }
     if (rep.getProfile() != null) {
       sb.append("[").append(rep.getProfile().getTag()).append("]");
@@ -75,7 +84,7 @@ public class ModelMIMECoder {
     }
     if (!rep.getLexicon().isEmpty()) {
       sb.append(";lex=").append("{");
-      rep.getLexicon().forEach(l -> sb.append(l.getTag()).append(","));
+      rep.getLexicon().forEach(l -> sb.append(l.getTag()).append(";"));
       sb.replace(sb.length() - 1, sb.length(), "}");
     }
     if (rep.getCharset() != null) {
@@ -85,7 +94,7 @@ public class ModelMIMECoder {
       sb.append(";enc=").append(rep.getEncoding());
     }
 
-    if (!rxPattern.matcher(sb.toString()).matches()) {
+    if (!RX_PATTERN.matcher(sb.toString()).matches()) {
       throw new IllegalStateException("Invalid constructed MIME code " + sb.toString());
     }
 
@@ -106,76 +115,79 @@ public class ModelMIMECoder {
   public static Optional<SyntacticRepresentation> decode(String mime) {
     String formalMime = ensureFormalized(mime);
     return decompose(formalMime)
-        .map(t -> {
-          SyntacticRepresentation rep = new SyntacticRepresentation();
+        .map(ModelMIMECoder::decodeTags);
+  }
 
-          if (!isEmpty(t.langVerTag)) {
-            KnowledgeRepresentationLanguageSeries.resolve(t.versionedLangTag)
-                .ifPresent(rep::setLanguage);
-          } else {
-            String tag = t.langTag + "-";
-            Optional<KnowledgeRepresentationLanguage> lang = Arrays
-                .stream(KnowledgeRepresentationLanguageSeries.values())
-                .map(KnowledgeRepresentationLanguage::getTag)
-                .filter(x -> x.startsWith(tag))
-                .findFirst()
-                .flatMap(KnowledgeRepresentationLanguageSeries::resolve);
-            lang.ifPresent(rep::setLanguage);
-            if (!lang.isPresent()) {
-              SerializationFormatSeries.resolve(t.langTag)
-                  .ifPresent(rep::setFormat);
-            }
-          }
+  protected static SyntacticRepresentation decodeTags(LangTags t) {
 
-          if (!isEmpty(t.profTag)) {
-            KnowledgeRepresentationLanguageProfileSeries.resolve(t.profTag)
-                .ifPresent(rep::setProfile);
-          }
+    SyntacticRepresentation rep = new SyntacticRepresentation();
 
-          // currently, serialization meta-format XOR serialization are supported:
-          // prefer the former, try to use the latter if unsuccessful.
-          if (!isEmpty(t.formatTag)) {
-            rep.setFormat(SerializationFormatSeries.resolve(t.formatTag)
-                .orElse(null));
-          }
+    if (!isEmpty(t.langVerTag)) {
+      KnowledgeRepresentationLanguageSeries.resolve(t.versionedLangTag)
+          .ifPresent(rep::setLanguage);
+    } else {
+      String tag = t.langTag + "-";
+      Optional<KnowledgeRepresentationLanguage> lang = Arrays
+          .stream(KnowledgeRepresentationLanguageSeries.values())
+          .map(KnowledgeRepresentationLanguage::getTag)
+          .filter(x -> x.startsWith(tag))
+          .findFirst()
+          .flatMap(KnowledgeRepresentationLanguageSeries::resolve);
+      lang.ifPresent(rep::setLanguage);
+      if (!lang.isPresent()) {
+        SerializationFormatSeries.resolve(t.langTag)
+            .ifPresent(rep::setFormat);
+      }
+    }
 
-          if (!isEmpty(t.serialTag) && rep.getFormat() == null) {
-            KnowledgeRepresentationLanguageSerializationSeries.resolve(t.serialTag)
-                .ifPresent(rep::setSerialization);
-          }
+    if (!isEmpty(t.profTag)) {
+      KnowledgeRepresentationLanguageProfileSeries.resolve(t.profTag)
+          .ifPresent(rep::setProfile);
+    }
 
-          if (rep.getFormat() == null && rep.getSerialization() != null) {
-            StringTokenizer tok = new StringTokenizer(t.serialTag,"+/");
-            while (tok.hasMoreTokens()) {
-              Optional<SerializationFormat> detectedFormat = SerializationFormatSeries.resolveTag(tok.nextToken());
-              detectedFormat.ifPresent(rep::setFormat);
-            }
-            if (rep.getFormat() == null) {
-              rep.setFormat(TXT);
-            }
-          }
+    // currently, serialization meta-format XOR serialization are supported:
+    // prefer the former, try to use the latter if unsuccessful.
+    if (!isEmpty(t.formatTag)) {
+      rep.setFormat(SerializationFormatSeries.resolve(t.formatTag)
+          .orElse(null));
+    }
 
+    if (!isEmpty(t.serialTag) && rep.getFormat() == null) {
+      KnowledgeRepresentationLanguageSerializationSeries.resolve(t.serialTag)
+          .ifPresent(rep::setSerialization);
+    }
 
-          if (!isEmpty(t.lexTags)) {
-            Arrays.stream(t.lexTags.split(","))
-                .forEach(l -> LexiconSeries.resolve(l)
-                    .ifPresent(rep::withLexicon));
-          }
+    if (rep.getFormat() == null && rep.getSerialization() != null) {
+      StringTokenizer tok = new StringTokenizer(t.serialTag, "+/");
+      while (tok.hasMoreTokens()) {
+        Optional<SerializationFormat> detectedFormat = SerializationFormatSeries
+            .resolveTag(tok.nextToken());
+        detectedFormat.ifPresent(rep::setFormat);
+      }
+      if (rep.getFormat() == null) {
+        rep.setFormat(TXT);
+      }
+    }
 
-          if (!isEmpty(t.charsetTag)) {
-            rep.setCharset(t.charsetTag);
-          }
+    if (!isEmpty(t.lexTags)) {
+      Arrays.stream(t.lexTags.split(";"))
+          .forEach(l -> LexiconSeries.resolve(l)
+              .ifPresent(rep::withLexicon));
+    }
 
-          if (!isEmpty(t.encodingTag)) {
-            rep.setEncoding(t.encodingTag);
-          }
+    if (!isEmpty(t.charsetTag)) {
+      rep.setCharset(t.charsetTag);
+    }
 
-          return rep;
-        });
+    if (!isEmpty(t.encodingTag)) {
+      rep.setEncoding(t.encodingTag);
+    }
+
+    return rep;
   }
 
   private static String ensureFormalized(String mimeCode) {
-    if (Util.isEmpty(mimeCode) || mimeCode.startsWith("model")) {
+    if (Util.isEmpty(mimeCode) || mimeCode.startsWith(TYPE)) {
       return mimeCode;
     }
     return MIMETypeSeries.resolve(mimeCode)
@@ -202,6 +214,12 @@ public class ModelMIMECoder {
       case Application_Xhtmlxml:
         mappedMime = ModelMIMECoder.encode(rep(XHTML,XML_1_1));
         break;
+      case Application_Xml:
+        mappedMime = ModelMIMECoder.encode(rep(null,XML_1_1));
+        break;
+      case JSON_Data:
+        mappedMime = ModelMIMECoder.encode(rep(null,JSON));
+        break;
       default:
     }
     return Optional.ofNullable(mappedMime);
@@ -218,13 +236,14 @@ public class ModelMIMECoder {
     String lexTags;
     String charsetTag;
     String encodingTag;
+    Float w;
   }
 
   private static Optional<LangTags> decompose(String mime) {
     if (Util.isEmpty(mime)) {
       return Optional.empty();
     }
-    Matcher matcher = rxPattern.matcher(mime);
+    Matcher matcher = RX_PATTERN.matcher(mime);
     if (!matcher.matches()) {
       return Optional.empty();
     }
@@ -251,7 +270,9 @@ public class ModelMIMECoder {
         .replace("{", "")
         .replace(";lex=", "");
 
-    // Group 7 is the weight q
+    tags.w = isEmpty(matcher.group(7))
+        ? 1.0f
+        : Float.parseFloat(matcher.group(7).replace(";q=",""));
 
     tags.charsetTag = isEmpty(matcher.group(8)) ? "" : matcher.group(8).trim()
         .replace(";charset=", "");
@@ -263,57 +284,69 @@ public class ModelMIMECoder {
   }
 
 
-  public static class WeightedCode implements Comparable<WeightedCode> {
+  public static WeightedRepresentation decodeWeighted(String code) {
+    return decodeWeighted(code, null);
+  }
 
-    String code;
-    float w;
-
-    public WeightedCode(String wcode) {
-      int index = wcode.lastIndexOf(';');
-      if (index > 0) {
-        code = wcode.substring(0, index);
-        w = Float.parseFloat(wcode.substring(index + 1).replace("q=", ""));
-      } else {
-        code = wcode;
-        w = 1.0f;
-      }
-    }
-
-    @Override
-    public int compareTo(WeightedCode o) {
-      if (!code.equals(o.code)) {
-        return 0;
-      }
-      float delta = o.w - w;
-      if (Math.abs(delta) < 0.001) {
-        return 0;
-      } else {
-        return delta > 0 ? 1 : -1;
-      }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (!(o instanceof WeightedCode)) {
-        return false;
-      }
-
-      WeightedCode that = (WeightedCode) o;
-
-      if (Math.abs(w-that.w) > 0.001) {
-        return false;
-      }
-      return code.equals(that.code);
-    }
-
-    @Override
-    public int hashCode() {
-      int result = code.hashCode();
-      result = 31 * result + (w != +0.0f ? Float.floatToIntBits(w) : 0);
-      return result;
+  public static WeightedRepresentation decodeWeighted(String code, SyntacticRepresentation rep) {
+    if (code.startsWith(TYPE)) {
+      Optional<LangTags> tags = decompose(code);
+      return tags
+          .map(t -> new WeightedRepresentation(
+              code,
+              tags.map(ModelMIMECoder::decodeTags)
+                  .orElse(null),
+              t.w))
+          .orElseThrow(() ->
+              new IllegalArgumentException("Unable to decode formal MIME code " + code));
+    } else {
+      int idx = code.indexOf(';');
+      String coreCode = code.substring(0, idx < 0 ? code.length() : idx).trim();
+      return new WeightedRepresentation(
+              code,
+              MIMETypeSeries.resolveTag(coreCode)
+                  .flatMap(ModelMIMECoder::mapKnownMimes)
+                  .flatMap(mime -> ModelMIMECoder.decode( mime, rep != null ? rep.getLanguage() : null))
+                  .orElse(null),
+              detectWeight(code).orElse(1.0f)
+          );
     }
   }
+
+  private static Optional<Float> detectWeight(String code) {
+    Matcher m = WX_PATTERN.matcher(code);
+    if (m.matches()) {
+      return Optional.of(Float.parseFloat(m.group(2)));
+    }
+    return Optional.empty();
+  }
+
+  public static class WeightedRepresentation implements Comparable<WeightedRepresentation> {
+
+    String code;
+    SyntacticRepresentation rep;
+    float weight;
+
+    public WeightedRepresentation(String code, SyntacticRepresentation rep, Float w) {
+      this.code = code;
+      this.rep = rep;
+      this.weight = w;
+    }
+
+    @Override
+    public int compareTo(WeightedRepresentation other) {
+      return Float.compare(other.weight,this.weight);
+    }
+
+    public String getCode() {
+      return code;
+    }
+    public Optional<SyntacticRepresentation> getRep() {
+      return Optional.ofNullable(rep);
+    }
+    public float getWeight() {
+      return weight;
+    }
+  }
+
 }

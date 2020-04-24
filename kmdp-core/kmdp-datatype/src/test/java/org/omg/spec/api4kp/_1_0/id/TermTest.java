@@ -85,7 +85,7 @@ public class TermTest {
     UUID uuid = UUID.randomUUID();
     Version version = Version.valueOf("5.0.1");
     String name = "TestResource";
-    Date established = DateTimeUtil.now();
+    Date established = DateTimeUtil.today();
     URI referentId = URI.create("http://foo.bar/baz");
     URI conceptId = URI.create("http://foo.bar#1323");
     URI versionId = URI

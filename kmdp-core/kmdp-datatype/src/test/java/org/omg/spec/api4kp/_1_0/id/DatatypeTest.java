@@ -199,7 +199,7 @@ public class DatatypeTest {
     UUID uuid = UUID.randomUUID();
     Version version = Version.valueOf("5.0.1");
     String name = "TestResource";
-    Date established = DateTimeUtil.now();
+    Date established = DateTimeUtil.today();
     URI expectedId = URI.create(MAYO_ASSETS_BASE_URI + tag);
     URI versionId = URI
         .create(MAYO_ASSETS_BASE_URI + tag + VERSIONS + version.toString());
@@ -391,7 +391,7 @@ public class DatatypeTest {
     String sequential = "1";
     // Is there a standard date format?
     String dateFormat = "2020-03-20";
-    Date timestamp = DateTimeUtil.now();
+    Date timestamp = DateTimeUtil.today();
     String other = "v3";
 
     ResourceIdentifier semanticVersion = SemanticIdentifier.newId(oidString, semVer);
@@ -444,7 +444,7 @@ public class DatatypeTest {
     String dateFormat = "2020-03-20";
     // Should these formats also test to date?
     String dateFormatGeneric = "20200320-101092";
-    Date timestamp = DateTimeUtil.now();
+    Date timestamp = DateTimeUtil.today();
     String other = "v3";
 
     ResourceIdentifier semanticVersion = SemanticIdentifier.newId(oidString, semVer);

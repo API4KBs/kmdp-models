@@ -23,11 +23,15 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -39,6 +43,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Collection of miscellaneaous utility functions
+ */
 public class Util {
 
   private static final Logger logger = LoggerFactory.getLogger(Util.class);
@@ -258,10 +265,32 @@ public class Util {
   public static UUID hashUUID(UUID uuid1, UUID uuid2) {
     long l1 = uuid1.getLeastSignificantBits() ^ uuid2.getMostSignificantBits();
     long l2 = uuid2.getLeastSignificantBits() ^ uuid1.getMostSignificantBits();
-    ByteBuffer bb = ByteBuffer.allocate(16);
-    bb.putLong(l1);
-    bb.putLong(8,l2);
-    return UUID.nameUUIDFromBytes(bb.array());
+    long l3 = l1 ^ l2;
+
+    byte[] x = ByteBuffer.allocate(Long.BYTES).putLong(l3).array();
+
+    return UUID.nameUUIDFromBytes(x);
+  }
+
+  public static String hashString(String s1, String s2) {
+    int h1 = s1.hashCode();
+    int h2 = s2.hashCode();
+    if (h1 == h2) {
+      h2 += 37;
+    }
+    return Integer.toString(h1 ^ h2 );
+  }
+
+
+  public static <T> T coalesce(T... values) {
+    return Arrays.stream(values)
+        .filter(Objects::nonNull)
+        .findFirst()
+        .orElse(null);
+  }
+
+  public static <T extends Enum<T>> UUID uuid(Enum<T> val) {
+    return uuid(val.getDeclaringClass().getName() + val.name());
   }
 
   private static class Entry {
@@ -338,4 +367,24 @@ public class Util {
     return oidPattern.matcher(tag).matches();
   }
 
+
+  public static <T> List<T> paginate(List<T> list, Integer offset, Integer limit, Comparator<? super T> comparator) {
+    if (list == null || list.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    if (comparator != null) {
+      list = new ArrayList<>(list);
+      list.sort(comparator);
+    }
+
+    int num = list.size();
+    int off = offset != null && offset > 0 ? offset : 0;
+    if (off > num) {
+      return Collections.emptyList();
+    }
+
+    int lim = limit != null && limit > 0 ? limit : (Integer.MAX_VALUE - off - 1);
+    return list.subList(off, Math.min(off + lim, num));
+  }
 }

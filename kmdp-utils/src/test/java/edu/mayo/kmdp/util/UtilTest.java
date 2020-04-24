@@ -15,20 +15,68 @@
  */
 package edu.mayo.kmdp.util;
 
+import static edu.mayo.kmdp.util.Util.paginate;
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
 public class UtilTest {
 
   @Test
-  public void testTermConceptNameNormalization() {
+  void testTermConceptNameNormalization() {
     String normalized = NameUtils.getTermConceptName( "123", "Something (else)");
     assertEquals("Something_Else", normalized);
   }
+
   @Test
-  public void testTermConceptNameNormalizationOnEmpty() {
+  void testTermConceptNameNormalizationOnEmpty() {
     String normalized = NameUtils.getTermConceptName( "", "");
     assertEquals("", normalized);
+  }
+
+  @Test
+  void testPaginate() {
+    List<Integer> list = IntStream.range(0,5).boxed().collect(toList());
+    assertEquals(list, paginate(list,null,null, null));
+    assertEquals(Arrays.asList(2,3,4), paginate(list,2,null, null));
+    assertEquals(Arrays.asList(2,3,4), paginate(list,2,8, null));
+    assertEquals(Arrays.asList(2,3,4), paginate(list,2,5, null));
+    assertEquals(Arrays.asList(0,1,2), paginate(list,null,3, null));
+    assertEquals(Arrays.asList(1,2), paginate(list,1,2, null));
+    assertEquals(Arrays.asList(3,4), paginate(list,3,3, null));
+  }
+
+  @Test
+  void testHashUUIDs() {
+    UUID u1 = UUID.nameUUIDFromBytes("a".getBytes());
+    UUID u2 = UUID.nameUUIDFromBytes("b".getBytes());
+
+    UUID u3 = Util.hashUUID(u1,u2);
+    UUID u4 = Util.hashUUID(u2,u1);
+    assertEquals(u3,u4);
+
+    UUID u5 = Util.hashUUID(u1,u1);
+    assertNotEquals(u5,u1);
+    assertNotEquals(u5,u3);
+  }
+
+  @Test
+  void testHashStrings() {
+    String s1 = "a";
+    String s2 = "b";
+
+    String s3 = Util.hashString(s1,s2);
+    String s4 = Util.hashString(s2,s1);
+    assertEquals(s3,s4);
+
+    String s5 = Util.hashString(s1,s1);
+    assertNotEquals(s5,s1);
+    assertNotEquals(s5,s3);
   }
 }

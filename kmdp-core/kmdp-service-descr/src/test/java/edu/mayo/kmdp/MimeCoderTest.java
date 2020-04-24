@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.JSON;
 import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TXT;
 import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.XML_1_1;
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
@@ -31,6 +32,7 @@ import static edu.mayo.ontology.taxonomies.lexicon.LexiconSeries.LOINC;
 import static edu.mayo.ontology.taxonomies.lexicon.LexiconSeries.RxNORM;
 import static edu.mayo.ontology.taxonomies.lexicon.LexiconSeries.SNOMED_CT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -38,22 +40,23 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder.decode;
 import static org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder.encode;
 
-import java.nio.charset.Charset;
 import java.util.Optional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder;
+import org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder.WeightedRepresentation;
 
 public class MimeCoderTest {
 
   @Test
-  public void testEncode1() {
+  void testEncode1() {
     SyntacticRepresentation r1 = rep(BPMN_2_0, XML_1_1);
     assertEquals("model/bpmn-v2+xml", encode(r1));
   }
 
   @Test
-  public void testEncode2() {
+  void testEncode2() {
     SyntacticRepresentation r2 = rep(DMN_1_1,
         DMN_1_1_XML_Syntax,
         XML_1_1);
@@ -62,7 +65,7 @@ public class MimeCoderTest {
   }
 
   @Test
-  public void testEncode3() {
+  void testEncode3() {
     SyntacticRepresentation r3 = rep(OWL_2,
         OWL2_RL,
         OWL_Manchester_Syntax,
@@ -71,19 +74,19 @@ public class MimeCoderTest {
   }
 
   @Test
-  public void testEncode4() {
+  void testEncode4() {
     SyntacticRepresentation r4 = rep(OWL_2,
         OWL2_RL,
         RDF_XML_Syntax,
         XML_1_1)
         .withLexicon(SNOMED_CT, LOINC);
-    assertEquals("model/owl2[RL]+rdf/xml;lex={sct,lnc}", encode(r4, false));
+    assertEquals("model/owl2[RL]+rdf/xml;lex={sct;lnc}", encode(r4, false));
   }
 
 
   @Test
-  public void testDecode1() {
-    String mime = "model/owl2[QL]+ttl;lex={sct,rxnorm}";
+  void testDecode1() {
+    String mime = "model/owl2[QL]+ttl;lex={sct;rxnorm}";
     Optional<SyntacticRepresentation> rep = decode(mime);
     if (!rep.isPresent()) {
       fail("Unable to decode " + mime);
@@ -101,7 +104,7 @@ public class MimeCoderTest {
 
 
   @Test
-  public void testWeights() {
+  void testWeights() {
     String c1 = "model/html;q=0.3;lex={sct}";
     SyntacticRepresentation rep1 = decode(c1)
         .orElse(new SyntacticRepresentation());
@@ -110,7 +113,7 @@ public class MimeCoderTest {
   }
 
   @Test
-  public void testWeights2() {
+  void testWeights2() {
     String c2 = "model/dmn-v11+xml;q=0.21";
     SyntacticRepresentation rep2 = decode(c2)
         .orElse(new SyntacticRepresentation());
@@ -119,7 +122,7 @@ public class MimeCoderTest {
   }
 
   @Test
-  public void testMappingHTML() {
+  void testMappingHTML() {
     String m = "text/html";
     assertEquals("model/html-v52+text",
         decode(m)
@@ -128,21 +131,21 @@ public class MimeCoderTest {
   }
 
   @Test
-  public void testWithCharset() {
+  void testWithCharset() {
     String m = "model/html-v52+text;charset=UTF-8";
     assertEquals("UTF-8", decode(m)
         .map(SyntacticRepresentation::getCharset).orElse("FAIL"));
   }
 
   @Test
-  public void testWithEncoding() {
+  void testWithEncoding() {
     String m = "model/html-v52+text;enc=default";
     assertEquals("default", decode(m)
         .map(SyntacticRepresentation::getEncoding).orElse("FAIL"));
   }
 
   @Test
-  public void testWithCharsetAndEncoding() {
+  void testWithCharsetAndEncoding() {
     String m = "model/html-v52+text;charset=UTF-8;enc=default";
     assertEquals("UTF-8", decode(m)
         .map(SyntacticRepresentation::getCharset).orElse("FAIL"));
@@ -150,4 +153,34 @@ public class MimeCoderTest {
         .map(SyntacticRepresentation::getEncoding).orElse("FAIL"));
   }
 
+  @Test
+  void testFormalWithWeight() {
+    String c1 = "model/bpmn+xml;q=0.3;lex={sct}";
+    WeightedRepresentation rep = ModelMIMECoder.decodeWeighted(c1);
+    assertEquals(0.3f, rep.getWeight());
+    assertEquals(c1, rep.getCode());
+    assertTrue(rep.getRep().isPresent());
+    assertSame(BPMN_2_0, rep.getRep().map(SyntacticRepresentation::getLanguage).orElse(null));
+  }
+
+  @Test
+  void testClassicWithWeight() {
+    String c1 = "text/html;q=0.3;lex={sct}";
+    WeightedRepresentation rep = ModelMIMECoder.decodeWeighted(c1);
+    assertEquals(0.3f, rep.getWeight());
+    assertEquals(c1, rep.getCode());
+    assertTrue(rep.getRep().isPresent());
+    assertSame(HTML, rep.getRep().map(SyntacticRepresentation::getLanguage).orElse(null));
+  }
+
+  @Test
+  void testDecodeFormatOnly() {
+    String c1 = "model/*+json";
+    WeightedRepresentation rep = ModelMIMECoder.decodeWeighted(c1);
+    assertEquals(1.0f, rep.getWeight());
+    assertEquals(c1, rep.getCode());
+    assertTrue(rep.getRep().isPresent());
+    assertSame(JSON, rep.getRep().map(SyntacticRepresentation::getFormat).orElseGet(Assertions::fail));
+    assertNull(rep.getRep().get().getLanguage());
+  }
 }

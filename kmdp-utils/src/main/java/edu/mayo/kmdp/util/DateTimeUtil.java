@@ -13,6 +13,7 @@
  */
 package edu.mayo.kmdp.util;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -33,8 +34,13 @@ public class DateTimeUtil {
 
   }
 
-  public static Date now() {
+  public static Date today() {
     return Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+  }
+
+  public static LocalDateTime localToday() {
+    return LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
+        .atZone(ZoneId.systemDefault()).toLocalDateTime();
   }
 
   public static Optional<Date> tryParseDate(String date) {
@@ -139,5 +145,13 @@ public class DateTimeUtil {
   public static Date parseDateTime(String dateStr) {
     return tryParseDateTime(dateStr,DEFAULT_DATETIME_PATTERN)
         .orElse(null);
+  }
+
+  public static Date fromEpochTimestamp(long timestamp) {
+    return Date.from(Instant.ofEpochMilli(timestamp));
+  }
+
+  public static Date toDate(LocalDateTime ldt) {
+    return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
   }
 }

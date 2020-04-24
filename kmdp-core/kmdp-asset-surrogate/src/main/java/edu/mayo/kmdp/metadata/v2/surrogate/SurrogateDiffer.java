@@ -74,4 +74,9 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
       return value != null ? value.toString() : null;
     }
   }
+
+  public static boolean isEquivalent(KnowledgeAsset a1, KnowledgeAsset a2) {
+    Comparison c = new SurrogateDiffer().contrast(a1,a2);
+    return c == Comparison.EQUAL || c == Comparison.EQUIVALENT || c == Comparison.IDENTICAL;
+  }
 }

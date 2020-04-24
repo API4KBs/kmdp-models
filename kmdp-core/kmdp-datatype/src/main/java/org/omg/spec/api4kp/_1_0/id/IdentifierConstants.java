@@ -17,6 +17,13 @@ public final class IdentifierConstants {
   public static final Pattern VERSIONS_RX = Pattern.compile("^(.*/)?(.*)/versions/(.+)$");
 
   public static final Pattern SEMVER_RX = Pattern.compile("^(\\d+\\.)(\\d+\\.)(\\*|\\d+)$");
+  public static final Pattern SEMVER_FULL =
+      Pattern.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-]"
+          + "[0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?"
+          + "(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$");
+
+
+
 
   public static final URI SNOMED_URI = URI.create("http://snomed.info/sct");
   public static final URI SNOMED_BASE_URI = URI.create("http://snomed.info/id/");

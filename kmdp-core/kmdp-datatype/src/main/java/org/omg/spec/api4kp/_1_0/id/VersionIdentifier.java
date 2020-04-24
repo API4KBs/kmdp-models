@@ -16,6 +16,24 @@ import java.util.regex.Matcher;
  */
 public interface VersionIdentifier extends Identifier {
 
+  static String toSemVer(String versionTag) {
+    Matcher matcher = IdentifierConstants.SEMVER_FULL.matcher(versionTag);
+    if (matcher.matches()) {
+      return versionTag;
+    }
+    if (versionTag.matches("\\d+")) {
+      return Version.forIntegers(Integer.parseInt(versionTag)).toString();
+    }
+    if (versionTag.matches("(\\d+)\\.(\\d+)")) {
+      int idx = versionTag.indexOf('.');
+      return Version.forIntegers(
+          Integer.parseInt(versionTag.substring(0,idx)),
+              Integer.parseInt(versionTag.substring(idx+1)))
+          .toString();
+    }
+    return IdentifierConstants.VERSION_ZERO + "-" + versionTag;
+  }
+
   String getVersionTag();
 
   @JsonIgnore
@@ -65,16 +83,5 @@ public interface VersionIdentifier extends Identifier {
         : "/versions/";
   }
 
-  @JsonIgnore
-  default UUID getVersionUuid() {
-    byte[] r = this.getResourceId().toString().getBytes();
-    byte[] v = (this.getVersionTag() != null)
-        ? this.getVersionTag().getBytes()
-        : VERSION_LATEST.getBytes();
-    byte[] x = new byte[r.length + v.length];
-    System.arraycopy(r, 0, x, 0, r.length);
-    System.arraycopy(v, 0, x, r.length, v.length);
-    return UUID.nameUUIDFromBytes(x);
-  }
 
 }

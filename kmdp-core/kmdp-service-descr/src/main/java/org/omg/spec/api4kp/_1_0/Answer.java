@@ -97,8 +97,20 @@ public class Answer<T> extends Explainer {
         new byte[0]));
   }
 
+  public static <X> Answer<X> unacceptable() {
+    return failed(new ServerSideException(ResponseCodeSeries.NotAcceptable,
+        Collections.emptyMap(),
+        new byte[0]));
+  }
+
   public static <X> Answer<X> failed() {
     return failed(new ServerSideException(ResponseCodeSeries.InternalServerError,
+        Collections.emptyMap(),
+        new byte[0]));
+  }
+
+  public static <X> Answer<X> failed(ResponseCode errorCode) {
+    return failed(new ServerSideException(errorCode,
         Collections.emptyMap(),
         new byte[0]));
   }
@@ -249,6 +261,16 @@ public class Answer<T> extends Explainer {
       consumer.accept(value);
   }
 
+  public Answer<T> or(Supplier<? extends Answer<? extends T>> supplier) {
+    Objects.requireNonNull(supplier);
+    if (this.isSuccess()) {
+      return this;
+    } else {
+      return  (Answer<T>) supplier.get();
+    }
+  }
+
+
 
   public static <U> Answer<U> first(List<U> coll) {
     return coll.isEmpty()
@@ -362,6 +384,20 @@ public class Answer<T> extends Explainer {
         })
         .filter(Answer::isSuccess)
         .findAny()
+        .orElseGet(() -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
+  }
+
+  public static <X,Y> Answer<Y> firstDo(Collection<X> delegates, Function<X,Answer<Y>> mapper) {
+    return delegates.stream()
+        .map(x -> {
+          try {
+            return mapper.apply(x);
+          } catch (Exception e) {
+            return Answer.<Y>failed(e);
+          }
+        })
+        .filter(Answer::isSuccess)
+        .findFirst()
         .orElseGet(() -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
   }
 
@@ -512,6 +548,9 @@ public class Answer<T> extends Explainer {
 
   /* Maps exceptions to status codes */
   protected static ResponseCode mapCode(Throwable t) {
+    if (t instanceof ServerSideException) {
+      return ((ServerSideException)t).getCode();
+    }
     if (t instanceof UnsupportedOperationException) {
       return ResponseCodeSeries.NotImplemented;
     }

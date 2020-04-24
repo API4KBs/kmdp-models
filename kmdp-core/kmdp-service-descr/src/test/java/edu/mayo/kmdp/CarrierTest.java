@@ -83,7 +83,6 @@ public class CarrierTest {
     CompositeKnowledgeCarrier ckc = (CompositeKnowledgeCarrier) kc;
 
     assertNotNull(ckc.getAssetId());
-    assertNotNull(ckc.getArtifactId());
 
     assertEquals(3, ckc.getComponent().size());
     assertTrue(ckc.getComponent().stream().allMatch(

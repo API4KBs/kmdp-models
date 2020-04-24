@@ -2,9 +2,10 @@ package org.omg.spec.api4kp._1_0.id;
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSIONS_RX;
+import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_LATEST;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
-import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.URIUtil;
@@ -12,6 +13,8 @@ import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -53,7 +56,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(tag)
         .withNamespaceUri(nsUri)
         .withResourceId(uri)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withUuid(Util.isUUID(tag)
             ? UUID.fromString(tag)
             : Util.uuid(tag));
@@ -73,7 +76,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(tag)
         .withNamespaceUri(uri)
         .withResourceId(uri)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withUuid(Util.isUUID(tag)
             ? UUID.fromString(tag)
             : Util.uuid(tag));
@@ -159,6 +162,17 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    *
    * @return ResourceIdentifier
    */
+  static ResourceIdentifier newId(URI base, UUID uuid) {
+    checkUUID(uuid);
+    return newId(toResourceId(uuid.toString(),base,uuid));
+  }
+
+  /**
+   * Create ResourceIdentifier for the UUID provided. Will generate tag and resourceId as required
+   * values.
+   *
+   * @return ResourceIdentifier
+   */
   static ResourceIdentifier newId(UUID uuid) {
     checkUUID(uuid);
     // compose required resourceId from uuid
@@ -168,7 +182,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         // set required fields
         .withTag(uuid.toString())
         .withResourceId(resourceId)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withUuid(uuid);
   }
 
@@ -206,7 +220,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(tag)
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withNamespaceUri(namespace);
   }
 
@@ -234,7 +248,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withResourceId(toResourceId(uuid.toString(), namespace, uuid))
         .withUuid(uuid)
         .withNamespaceUri(namespace)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withName(name);
   }
 
@@ -257,7 +271,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(uuid.toString())
         .withResourceId(toResourceId(uuid.toString(), uuid))
         .withVersionTag(versionTag)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withName(name);
   }
 
@@ -281,7 +295,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withVersionTag(versionTag)
         .withNamespaceUri(namespace)
         .withName(name)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withResourceId(toResourceId(tag, namespace, uuid));
   }
 
@@ -321,7 +335,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(tag)
         .withResourceId(resourceId)
         .withNamespaceUri(namespace)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
@@ -337,7 +351,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     return new ResourceIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
@@ -360,7 +374,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withResourceId(resourceId)
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withVersionTag(versionTag);
   }
 
@@ -378,7 +392,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withNamespaceUri(namespace)
         .withTag(tag)
         .withResourceId(resourceId)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
 
@@ -396,7 +410,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withTag(tag.toString())
         .withVersionTag(versionTag)
         .withResourceId(resourceId)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withUuid(tag);
   }
 
@@ -422,7 +436,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
         .withDescription(description)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withHref(locator);
   }
 
@@ -439,7 +453,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
         .withDescription(description)
-        .withEstablishedOn(DateTimeUtil.now())
+        .withEstablishedOn(DateTimeUtil.today())
         .withHref(locator);
   }
 
@@ -496,6 +510,11 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withEstablishedOn(getEstablishedOn());
   }
 
+  default Pointer toPointer(URI locator) {
+    return toPointer()
+        .withHref(locator);
+  }
+
   default Pointer toPointer(URL locator) {
     Pointer ptr = toPointer();
     try {
@@ -522,6 +541,9 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
       }
 
       public boolean equals(Object other) {
+        if (other == null) {
+          return false;
+        }
         if (other instanceof KeyIdentifier) {
           KeyIdentifier otherkey = (KeyIdentifier) other;
           return this.getUuid().equals(otherkey.getUuid())
@@ -603,6 +625,59 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   static void checkUUID(UUID uuid) {
     if (null == uuid) {
       throw new IllegalStateException("Missing required UUID for Identifier");
+    }
+  }
+
+
+  static Comparator<SemanticIdentifier> mostRecentFirstComparator() {
+    Comparator<SemanticIdentifier> c =
+        Comparator.comparing(Identifier::getEstablishedOn);
+    return c.reversed();
+  }
+
+  static Comparator<SemanticIdentifier> semVerComparator() {
+    Comparator<SemanticIdentifier> c =
+        Comparator.comparing(VersionIdentifier::getSemanticVersionTag);
+    return c.reversed();
+  }
+
+  static Comparator<SemanticIdentifier> timedSemverComparator() {
+    return (s1, s2) -> {
+      int comp = semVerComparator().compare(s1, s2);
+      if (comp == 0) {
+        comp = mostRecentFirstComparator().compare(s1, s2);
+      }
+      return comp;
+    };
+  }
+
+  default boolean sameAs(ResourceIdentifier other) {
+    return other != null && this.asKey().equals(other.asKey());
+  }
+
+  default boolean sameAs(UUID otherId, String otherVersionTag) {
+    return this.getUuid().equals(otherId) && this.getVersionTag().equals(otherVersionTag);
+  }
+
+  @JsonIgnore
+  default UUID getVersionUuid() {
+    long l1 = this.getUuid().getLeastSignificantBits();
+    long l2 = this.getUuid().getMostSignificantBits();
+    int v = (this.getVersionTag() != null)
+        ? this.getVersionTag().hashCode()
+        : VERSION_LATEST.hashCode();
+    byte[] x = ByteBuffer.allocate(2*Long.BYTES+Integer.BYTES)
+        .putLong(l1).putLong(l2).putInt(v).array();
+    return UUID.nameUUIDFromBytes(x);
+  }
+
+  static ResourceIdentifier hashIdentifiers(ResourceIdentifier id1, ResourceIdentifier id2) {
+    UUID uuid = Util.hashUUID(id1.getUuid(), id2.getUuid());
+    String vTag = IdentifierConstants.VERSION_ZERO + "+" + Util.hashString(id1.getVersionTag(),id2.getVersionTag());
+    if (id1.getNamespaceUri().equals(id2.namespaceUri)) {
+      return newId(id1.getNamespaceUri(),uuid,vTag);
+    } else {
+      return newId(uuid,vTag);
     }
   }
 

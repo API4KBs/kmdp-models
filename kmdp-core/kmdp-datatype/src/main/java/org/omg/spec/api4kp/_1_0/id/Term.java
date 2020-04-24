@@ -194,7 +194,7 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
         URI.create(termUri),
         "0.0.0",
         label,
-        DateTimeUtil.now());
+        DateTimeUtil.today());
   }
 
 }

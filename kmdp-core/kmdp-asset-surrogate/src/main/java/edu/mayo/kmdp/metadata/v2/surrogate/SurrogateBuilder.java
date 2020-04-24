@@ -42,6 +42,7 @@ import java.util.UUID;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 
 public class SurrogateBuilder {
@@ -299,12 +300,18 @@ public class SurrogateBuilder {
     return surrogate;
   }
 
+
+  public static ResourceIdentifier assetId(UUID assetId) {
+    return SemanticIdentifier.newId(Registry.MAYO_ASSETS_BASE_URI_URI, assetId);
+  }
+
   public static ResourceIdentifier assetId(String uuid, String versionTag) {
-    return SemanticIdentifier.newId(Registry.MAYO_ASSETS_BASE_URI_URI, uuid, versionTag);
+    return SemanticIdentifier.newId(Registry.MAYO_ASSETS_BASE_URI_URI, uuid,
+        VersionIdentifier.toSemVer(versionTag));
   }
 
   public static ResourceIdentifier assetId(UUID uuid, String versionTag) {
-    return SemanticIdentifier.newId(Registry.MAYO_ASSETS_BASE_URI_URI, uuid, versionTag);
+    return assetId(uuid.toString(),versionTag);
   }
 
   public static ResourceIdentifier randomAssetId() {
@@ -312,11 +319,12 @@ public class SurrogateBuilder {
   }
 
   public static ResourceIdentifier artifactId(String uuid, String versionTag) {
-    return SemanticIdentifier.newId(Registry.MAYO_ARTIFACTS_BASE_URI_URI, uuid, versionTag);
+    return SemanticIdentifier.newId(Registry.MAYO_ARTIFACTS_BASE_URI_URI, uuid,
+        VersionIdentifier.toSemVer(versionTag));
   }
 
   public static ResourceIdentifier artifactId(UUID uuid, String versionTag) {
-    return SemanticIdentifier.newId(Registry.MAYO_ARTIFACTS_BASE_URI_URI, uuid, versionTag);
+    return artifactId(uuid.toString(),versionTag);
   }
 
   public static ResourceIdentifier randomArtifactId() {

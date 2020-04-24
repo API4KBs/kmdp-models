@@ -50,6 +50,9 @@ public interface Term extends LexicalIdentifier, Serializable {
   }
 
   default boolean sameAs(Term other) {
+    if (other == null) {
+      return false;
+    }
     if (this.getConceptUUID() != null && other.getConceptUUID() != null) {
       return this.getConceptUUID().equals(other.getConceptUUID());
     }
