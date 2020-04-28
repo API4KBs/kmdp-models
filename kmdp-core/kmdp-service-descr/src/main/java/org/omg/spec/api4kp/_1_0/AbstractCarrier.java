@@ -189,7 +189,7 @@ public interface AbstractCarrier {
    * @param <T> The common type of the artifacts
    * @return A set-oriented Composite Knowledge Carrier
    */
-  static <T> KnowledgeCarrier ofSet(SyntacticRepresentation rep, Collection<T> artifacts) {
+  static <T> CompositeKnowledgeCarrier ofSet(SyntacticRepresentation rep, Collection<T> artifacts) {
     return ofIdentifiableSet(rep,
         x -> randomId(),
         x -> randomId(),
@@ -208,7 +208,7 @@ public interface AbstractCarrier {
    * @param <T> The common type of the artifacts
    * @return A set-oriented Composite Knowledge Carrier
    */
-  static <T> KnowledgeCarrier ofIdentifiableSet(
+  static <T> CompositeKnowledgeCarrier ofIdentifiableSet(
       SyntacticRepresentation rep,
       Function<T, ResourceIdentifier> assetIdentificator,
       Function<T, ResourceIdentifier> artifactidentificator,
@@ -250,6 +250,56 @@ public interface AbstractCarrier {
 
     return ckc;
   }
+
+  /**
+   * Creates an Anonymous Composite Knowledge Carrier from a set of "homogeneous" Knowledge Artifacts
+   * that share the same representation
+   *
+   * @param rep The common representation
+   * @param artifacts The artifacts to be aggregated into the composite
+   * @param assetIdentificator A function that allows to extract an (asset) ID from each of the artifacts
+   * @param assetIdentificator A function that allows to extract an (artifact) ID from each of the artifacts
+   * @param <T> The common type of the artifacts
+   * @return An Anonymous Composite Knowledge Carrier
+   */
+  static <T> CompositeKnowledgeCarrier ofAnonymousComposite(
+      SyntacticRepresentation rep,
+      Function<T, ResourceIdentifier> assetIdentificator,
+      Function<T, ResourceIdentifier> artifactidentificator,
+      Collection<T> artifacts) {
+    CompositeKnowledgeCarrier ckc = new CompositeKnowledgeCarrier();
+    ParsingLevel level = ParsingLevelContrastor.detectLevel(rep);
+
+    // wrap the components into KnowledgeCarriers
+    artifacts.stream()
+        .map(x -> of(x,level)
+            .withRepresentation(rep)
+            .withAssetId(assetIdentificator.apply(x))
+            .withArtifactId(artifactidentificator.apply(x)))
+        .forEach(ckc.getComponent()::add);
+
+    ckc.withAssetId(randomId());
+    return ckc;
+  }
+
+  /**
+   * Creates an Anonymous Composite Knowledge Carrier from a set of "heterogeneous"
+   * Knowledge Artifacts
+   *
+   * @param artifacts The artifacts to be aggregated into the composite
+   * @return An Anonymous Composite Knowledge Carrier
+   */
+  static CompositeKnowledgeCarrier ofHeterogeneousComposite(
+      Collection<KnowledgeCarrier> artifacts) {
+    CompositeKnowledgeCarrier ckc = new CompositeKnowledgeCarrier()
+        .withComponent(artifacts);
+
+    // hash the (versioned) IDs of the components into an asset Id for the composite
+    ckc.withAssetId(randomId());
+    ckc.withArtifactId(randomId());
+    return ckc;
+  }
+
 
   default KnowledgeCarrier mainComponent() {
     if (this instanceof CompositeKnowledgeCarrier) {

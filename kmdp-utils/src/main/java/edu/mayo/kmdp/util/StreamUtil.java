@@ -18,6 +18,7 @@ package edu.mayo.kmdp.util;
 import static edu.mayo.kmdp.util.Util.as;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -41,6 +42,17 @@ public class StreamUtil {
     return source.stream()
         .map(mapper)
         .collect(Collectors.toSet());
+  }
+  public static <T,X> List<X> mapToList(Collection<T> source, Function<T,X> mapper) {
+    return source.stream()
+        .map(mapper)
+        .collect(Collectors.toList());
+  }
+  public static <T,X> List<X> flatMapToList(Collection<T> source, Function<T,Optional<X>> mapper) {
+    return source.stream()
+        .map(mapper)
+        .flatMap(StreamUtil::trimStream)
+        .collect(Collectors.toList());
   }
 
 }
