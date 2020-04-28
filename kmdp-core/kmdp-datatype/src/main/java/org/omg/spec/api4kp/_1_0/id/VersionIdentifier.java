@@ -2,13 +2,11 @@ package org.omg.spec.api4kp._1_0.id;
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SEMVER_RX;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_LATEST;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
-import java.util.UUID;
 import java.util.regex.Matcher;
 
 /**

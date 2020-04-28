@@ -43,7 +43,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.http.HttpHeaders;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
-import org.omg.spec.api4kp._1_0.services.tranx.Detector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

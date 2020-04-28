@@ -42,7 +42,7 @@ public class CopyableHashMap<K, V, M extends CopyableHashMap<K,V,M>> extends Has
       CopyStrategy2 strategy) {
     if (target instanceof Map) {
       Map targetMap = (Map) target;
-      this.forEach((k, v) -> targetMap.put((Object) k, (Object) strategy.copy(locator, v, true)));
+      this.forEach((k, v) -> targetMap.put(k, strategy.copy(locator, v, true)));
     }
     return target;
   }

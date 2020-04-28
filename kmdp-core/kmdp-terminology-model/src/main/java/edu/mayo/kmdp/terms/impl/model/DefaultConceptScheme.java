@@ -116,9 +116,6 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
     if (!(o instanceof DefaultConceptScheme)) {
       return false;
     }
-    if (!super.equals(o)) {
-      return false;
-    }
 
     DefaultConceptScheme<?> that = (DefaultConceptScheme<?>) o;
 

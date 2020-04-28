@@ -18,7 +18,6 @@ package edu.mayo.kmdp.util.ws;
 import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TXT;
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;

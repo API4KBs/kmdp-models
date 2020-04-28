@@ -1,6 +1,5 @@
 package edu.mayo.kmdp.terms.impl.model;
 
-import edu.mayo.kmdp.terms.ConceptTerm;
 import java.net.URI;
 import java.util.List;
 

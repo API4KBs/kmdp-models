@@ -47,11 +47,6 @@ public interface SemVerSeries<T extends SemVersionable<T>> extends Series<T> {
     }
 
     @Override
-    public boolean equals(Object o) {
-      return super.equals(o);
-    }
-
-    @Override
     public int hashCode() {
       return super.hashCode();
     }

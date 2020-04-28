@@ -11,6 +11,7 @@ public class ConceptDescriptor extends ConceptIdentifier {
   private Term[] closure;
 
   public ConceptDescriptor() {
+    // Empty constructor
   }
 
   /**
