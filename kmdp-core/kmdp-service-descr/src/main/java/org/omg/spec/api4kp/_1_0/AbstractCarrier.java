@@ -107,7 +107,7 @@ public interface AbstractCarrier {
       rep.withCharset(Charset.defaultCharset().name());
     }
     if (rep.getEncoding() == null) {
-      rep.withEncoding("default");
+      rep.withEncoding(Encodings.DEFAULT.name());
     }
     return of(encoded)
         .withRepresentation(rep);
@@ -118,7 +118,7 @@ public interface AbstractCarrier {
       rep.withCharset(Charset.defaultCharset().name());
     }
     if (rep.getEncoding() == null) {
-      rep.withEncoding("default");
+      rep.withEncoding(Encodings.DEFAULT.name());
     }
     return of(stream)
         .withRepresentation(rep);
