@@ -94,6 +94,15 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
+   * Generate resourceIdentifier from a series URI and a version Tag
+   *
+   * @return ResourceIdentifier with required values set
+   */
+  static ResourceIdentifier newVersionId(URI seriesUri, String versionTag) {
+    return newVersionId(URI.create(seriesUri.toString() + IdentifierConstants.VERSIONS + versionTag));
+  }
+
+  /**
    * Generate resourceIdentifier for URI that includes
    * version information according to a user-specified Pattern
    *

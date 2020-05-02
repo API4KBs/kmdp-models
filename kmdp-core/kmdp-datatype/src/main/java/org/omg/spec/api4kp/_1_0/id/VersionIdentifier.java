@@ -4,6 +4,7 @@ import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SEMVER_RX;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.zafarkhaja.semver.UnexpectedCharacterException;
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
@@ -36,7 +37,11 @@ public interface VersionIdentifier extends Identifier {
 
   @JsonIgnore
   default Version getSemanticVersionTag() {
-    return Version.valueOf(getVersionTag());
+    try {
+      return Version.valueOf(getVersionTag());
+    } catch (UnexpectedCharacterException ue) {
+      return Version.valueOf(toSemVer(getVersionTag()));
+    }
   }
 
   @JsonIgnore
