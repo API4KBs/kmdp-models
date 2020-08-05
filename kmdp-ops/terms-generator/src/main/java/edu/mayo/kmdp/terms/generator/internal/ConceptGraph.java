@@ -124,7 +124,7 @@ public class ConceptGraph {
         .filter(s -> s.getId().equals(schemeURI))
         .sorted(Comparator.comparing(VersionedIdentifier::getEstablishedOn).reversed())
         .map(ConceptScheme::getEstablishedOn)
-        .map(DateTimeUtil::format)
+        .map(DateTimeUtil::serializeAsDate)
         .collect(Collectors.toList());
   }
 

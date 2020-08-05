@@ -39,7 +39,7 @@ public class DateAdapter extends XmlAdapter<String, Date> {
   }
 
   public String write(Date v) {
-    return v != null ? DateTimeUtil.format(v, XML_DATETIME_PATTERN) : null;
+    return v != null ? DateTimeUtil.serializeDate(v, XML_DATETIME_PATTERN) : null;
   }
 
   public String marshal(Date v) {

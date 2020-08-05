@@ -159,7 +159,7 @@ public class DatatypeHelper {
     if (tag.matches("\\d+")) {
       return VersionTagType.SEQUENTIAL;
     }
-    if (DateTimeUtil.isDate(tag)) {
+    if (DateTimeUtil.validateDate(tag)) {
       return VersionTagType.TIMESTAMP;
     }
     Matcher matcher = SEMVER_RX.matcher(tag);

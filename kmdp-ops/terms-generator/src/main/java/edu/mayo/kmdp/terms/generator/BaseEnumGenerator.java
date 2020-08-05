@@ -127,7 +127,7 @@ public abstract class BaseEnumGenerator {
         graph.getSchemeSeriesURI(conceptScheme.getId()));
 
     context.put("conceptSeries", holder);
-    context.put("publicationDate", DateTimeUtil.format(conceptScheme.getEstablishedOn()));
+    context.put("publicationDate", DateTimeUtil.serializeAsDate(conceptScheme.getEstablishedOn()));
     context.put("publicationDates", graph.getSchemeReleases(conceptScheme.getId()));
 
     context.put("typeName", className);

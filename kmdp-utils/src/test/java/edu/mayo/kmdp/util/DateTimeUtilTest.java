@@ -38,7 +38,7 @@ class DateTimeUtilTest {
 
   @Test
   public void testParseDateDefault() {
-    Date d = DateTimeUtil.tryParseDate("2015-08-14").orElse(null);
+    Date d = DateTimeUtil.parseDate("2015-08-14");
     assertNotNull(d);
 
     LocalDate date = LocalDate.from(d.toInstant().atZone(ZoneId.systemDefault()));
@@ -61,7 +61,7 @@ class DateTimeUtilTest {
 
   @Test
   public void testXMLFormat() {
-    Date d = DateTimeUtil.tryParseDate("2019-08-01").orElse(null);
+    Date d = DateTimeUtil.parseDate("2019-08-01");
     assertNotNull(d);
 
     String s = DateAdapter.instance().write(d);
@@ -82,6 +82,13 @@ class DateTimeUtilTest {
     assertNotNull(s);
 
     assertEquals("2019-08-06T22:16:54", s);
+  }
+
+  @Test
+  public void testIsDate() {
+    assertTrue(DateTimeUtil.validateDate("2019-08-06"));
+    Date d = DateTimeUtil.parseDate("2019-08-06");
+    assertNotNull(d);
   }
 
 }

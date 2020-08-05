@@ -65,7 +65,7 @@ public interface VersionIdentifier extends Identifier {
     if (versionTag.matches("\\d+")) {
       return VersionTagType.SEQUENTIAL;
     }
-    if (DateTimeUtil.isDate(versionTag)) {
+    if (DateTimeUtil.validateDate(versionTag)) {
       return VersionTagType.TIMESTAMP;
     } else {
       return VersionTagType.GENERIC;

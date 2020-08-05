@@ -295,7 +295,7 @@ public class SkosTerminologyAbstractor {
         versionTag,
         dateFormatPattern);
     if (versionTag == null || SNAPSHOT.equals(versionTag)) {
-      versionTag = DateTimeUtil.format(pubDate, SNAPSHOT_DATE_PATTERN);
+      versionTag = DateTimeUtil.serializeDate(pubDate, SNAPSHOT_DATE_PATTERN);
     }
 
     MutableConceptScheme mcs = new MutableConceptScheme(uri, version, code, versionTag, label,

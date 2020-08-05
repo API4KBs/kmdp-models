@@ -178,7 +178,7 @@ public class VersionAgnosticVocabularyTest {
         .map(Versionable::getVersionEstablishedOn)
         .orElse(null);
     assertNotNull(effectiveDate);
-    assertEquals("2019-08-01",DateTimeUtil.format(effectiveDate));
+    assertEquals("2019-08-01",DateTimeUtil.serializeAsDate(effectiveDate));
   }
 
 

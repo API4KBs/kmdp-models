@@ -120,7 +120,7 @@ public class VersionedOntologyTest {
     String versionTag = scheme.getVersion();
     assertEquals("20190108", versionTag);
 
-    assertEquals("2019-01-08", DateTimeUtil.format(scheme.getEstablishedOn()));
+    assertEquals("2019-01-08", DateTimeUtil.serializeAsDate(scheme.getEstablishedOn()));
   }
 
   @Test
