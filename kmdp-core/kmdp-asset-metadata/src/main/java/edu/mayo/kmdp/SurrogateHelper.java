@@ -30,6 +30,7 @@ import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.URIUtil;
@@ -307,6 +308,16 @@ public class SurrogateHelper {
   }
 
   public static ResourceIdentifier fromURIIdentifier(URIIdentifier assetId) {
-    return SemanticIdentifier.newId(assetId.getUri(), getVersionTag(assetId));
+    URI uri = assetId.getUri();
+    if ("urn".equals(uri.getScheme())) {
+      return SemanticIdentifier.newId(
+          Registry.BASE_UUID_URN_URI, URIUtil.detectLocalName(uri), getVersionTag(assetId));
+    } else {
+      String localTag = URIUtil.detectLocalName(uri);
+      URI ns = URIUtil.detectNamespace(uri);
+      return SemanticIdentifier.newId(
+          ns, localTag, getVersionTag(assetId));
+    }
+
   }
 }
