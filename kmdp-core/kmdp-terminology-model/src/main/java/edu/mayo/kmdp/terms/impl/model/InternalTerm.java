@@ -15,11 +15,12 @@
  */
 package edu.mayo.kmdp.terms.impl.model;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import java.util.Date;
+import java.util.List;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public class InternalTerm extends TermImpl {
 
@@ -27,23 +28,18 @@ public class InternalTerm extends TermImpl {
   protected String comment;
 
   public InternalTerm(URI conceptURI, String code, String label, String comment, URI refUri,
-      ConceptScheme<Term> scheme) {
-    this.setRef(refUri);
-    this.setTag(code);
-    this.setLabel(label);
-    this.setComment(Util.isEmpty(comment) ? label : comment);
+      ConceptScheme<Term> scheme, Date establishedOn) {
+    // TODO should this call super?
+    this.referentId = refUri;
+    this.tag = code;
+    this.name = label;
+    this.comment = Util.isEmpty(comment) ? label : comment;
     this.scheme = scheme;
-    this.conceptId = conceptURI;
+    this.resourceId = conceptURI;
+    this.establishedOn = establishedOn;
 
     if (scheme != null) {
-      this.namespace =
-          new NamespaceIdentifier()
-              .withId(scheme.getId())
-              .withLabel(scheme.getLabel())
-              .withTag(scheme.getTag())
-              .withVersioning(scheme.getVersioning())
-              .withEstablishedOn(scheme.getEstablishedOn())
-              .withVersion(scheme.getVersion());
+      this.namespaceUri = scheme.getResourceId();
     }
   }
 
@@ -52,7 +48,7 @@ public class InternalTerm extends TermImpl {
   }
 
   public String toString() {
-    return getRef().toString();
+    return getReferentId().toString();
   }
   
   public String getComment() {
@@ -63,5 +59,13 @@ public class InternalTerm extends TermImpl {
     this.comment = comment;
   }
 
+  @Override
+  public boolean equals(Object object) {
+    return super.equals(object);
+  }
 
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
 }

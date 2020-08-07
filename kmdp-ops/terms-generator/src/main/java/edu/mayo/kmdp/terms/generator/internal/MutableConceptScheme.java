@@ -1,7 +1,6 @@
 package edu.mayo.kmdp.terms.generator.internal;
 
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme;
 import java.io.IOException;
 import java.net.URI;
@@ -15,6 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public class MutableConceptScheme extends AnonymousConceptScheme {
 
@@ -90,7 +90,7 @@ public class MutableConceptScheme extends AnonymousConceptScheme {
         other.getId(),
         other.getVersionId(),
         other.getTag(),
-        other.getVersion(),
+        other.getVersionTag(),
         other.getLabel(),
         other.getEstablishedOn());
 
@@ -121,9 +121,9 @@ public class MutableConceptScheme extends AnonymousConceptScheme {
   @Override
   public String toString() {
     return "MutableConceptScheme{" +
-        "label='" + label + '\'' +
-        ", tag='" + tag + '\'' +
-        ", version='" + version + '\'' +
+        "label='" + getLabel() + '\'' +
+        ", tag='" + getTag() + '\'' +
+        ", version='" + getVersionTag() + '\'' +
         '}';
   }
 
@@ -133,7 +133,7 @@ public class MutableConceptScheme extends AnonymousConceptScheme {
       return false;
     }
     MutableConceptScheme mcso = (MutableConceptScheme) other;
-    if (!Objects.equals(this.getVersion(),mcso.getVersion())) {
+    if (!Objects.equals(this.getVersionTag(),mcso.getVersionTag())) {
       return false;
     }
     return Objects.equals(this.getId(), mcso.getId());

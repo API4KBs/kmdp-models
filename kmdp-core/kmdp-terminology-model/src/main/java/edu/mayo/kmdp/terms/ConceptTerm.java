@@ -1,18 +1,14 @@
 package edu.mayo.kmdp.terms;
 
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
-public interface ConceptTerm<T extends Term> extends Term, org.omg.spec.api4kp._1_0.id.Term, Taxonomic<T> {
+public interface ConceptTerm<T extends Term> extends Term, Taxonomic<T> {
 
-  @Override
-  default URI getResourceId() {
-    return getDescription().getConceptId();
-  }
 
   @Override
   default String getName() {
@@ -29,40 +25,20 @@ public interface ConceptTerm<T extends Term> extends Term, org.omg.spec.api4kp._
     return getDescription().getTag();
   }
 
-  @Override
   default List<String> getTags() {
     return getDescription().getTags();
   }
 
   @Override
-  default UUID getConceptUUID() {
-    return getDescription().getConceptUUID();
-  }
-
-  @Override
-  default UUID getUuid() {
-    return getConceptUUID();
-  }
-
-  @Override
-  default URI getRef() {
-    return getDescription().getRef();
-  }
-
-  @Override
   default URI getReferentId() {
-    return getRef();
-  }
-
-  @Override
-  default URI getConceptId() {
-    return getDescription().getConceptId();
+    return getDescription().getReferentId();
   }
 
   default void setConceptId(URI id) {
     throw new UnsupportedOperationException("IDs are immutable");
   }
 
+  ResourceIdentifier getNamespace();
   
   @Override
   default Term[] getClosure() {
@@ -75,20 +51,17 @@ public interface ConceptTerm<T extends Term> extends Term, org.omg.spec.api4kp._
   }
 
   @Override
-  default org.omg.spec.api4kp._1_0.identifiers.QualifiedIdentifier asQualified() {
-    return DatatypeHelper.toQualifiedIdentifier( this.getConceptId() );
-  }
-
-  @Override
-  default org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier asConcept() {
-    return DatatypeHelper.toConceptIdentifier( this );
-  }
-
-  @Override
   default ConceptIdentifier asConceptIdentifier() {
     return (ConceptIdentifier) org.omg.spec.api4kp._1_0.id.Term
-        .newTerm(this.getConceptId(),this.getTag(), this.getUuid(), this.getNamespaceUri(), this.getReferentId(),
-            this.getVersionTag(), this.getLabel(), this.getEstablishedOn());
+        .newTerm(
+            this.getConceptId(),
+            this.getTag(),
+            this.getUuid(),
+            this.getNamespaceUri(),
+            this.getReferentId(),
+            this.getVersionTag(),
+            this.getLabel(),
+            this.getEstablishedOn());
   }
 
   TermDescription getDescription();

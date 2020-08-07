@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.json.URITermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.json.UUIDTermsJsonAdapter;
@@ -40,6 +39,7 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public class TermsSerializationTest {
 
@@ -52,18 +52,18 @@ public class TermsSerializationTest {
 
     assertTrue(xml.contains(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getTag()));
     assertTrue(xml.contains(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getLabel()));
-    assertTrue(xml.contains(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getRef().toString()));
+    assertTrue(xml.contains(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getReferentId().toString()));
     assertTrue(xml.contains(KnowledgeRepresentationLanguageSeries.OWL_2.getTag()));
     assertTrue(xml.contains(KnowledgeRepresentationLanguageSeries.OWL_2.getLabel()));
-    assertTrue(xml.contains(KnowledgeRepresentationLanguageSeries.OWL_2.getRef().toString()));
+    assertTrue(xml.contains(KnowledgeRepresentationLanguageSeries.OWL_2.getReferentId().toString()));
 
     Optional<Foo> f2 = XMLUtil.loadXMLDocument(xml.getBytes())
         .flatMap(dox ->
             JaxbUtil.unmarshall(Collections.singleton(Foo.class), Foo.class, dox));
 
     assertTrue(f2.isPresent());
-    assertSame(KnowledgeAssetTypeSeries.Cognitive_Process_Model, f2.get().getType());
-    assertSame(KnowledgeRepresentationLanguageSeries.OWL_2, f2.get().getLang());
+    assertSame(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getLatest(), f2.get().getType());
+    assertSame(KnowledgeRepresentationLanguageSeries.OWL_2.getLatest(), f2.get().getLang());
   }
 
   @Test
@@ -77,16 +77,16 @@ public class TermsSerializationTest {
 
     assertTrue(json.contains(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getTag()));
     assertTrue(json.contains(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getLabel()));
-    assertTrue(json.contains(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getRef().toString()));
+    assertTrue(json.contains(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getReferentId().toString()));
     assertTrue(json.contains(KnowledgeRepresentationLanguageSeries.OWL_2.getTag()));
     assertTrue(json.contains(KnowledgeRepresentationLanguageSeries.OWL_2.getLabel()));
-    assertTrue(json.contains(KnowledgeRepresentationLanguageSeries.OWL_2.getRef().toString()));
+    assertTrue(json.contains(KnowledgeRepresentationLanguageSeries.OWL_2.getReferentId().toString()));
 
     Optional<Foo> f2 = JSonUtil.readJson(json.getBytes(), Foo.class);
 
     assertTrue(f2.isPresent());
-    assertEquals(KnowledgeAssetTypeSeries.Cognitive_Process_Model, f2.get().getType());
-    assertEquals(KnowledgeRepresentationLanguageSeries.OWL_2, f2.get().getLang());
+    assertEquals(KnowledgeAssetTypeSeries.Cognitive_Process_Model.getLatest(), f2.get().getType());
+    assertEquals(KnowledgeRepresentationLanguageSeries.OWL_2.getLatest(), f2.get().getLang());
 
     assertEquals(1, f2.get().getLang().getTags().size());
   }
@@ -101,15 +101,16 @@ public class TermsSerializationTest {
         .flatMap(Util::asString)
         .orElse("");
 
-    assertTrue(s.contains(KnowledgeAssetTypeSeries.Decision_Model.getConceptUUID().toString()));
+    assertTrue(s.contains(KnowledgeAssetTypeSeries.Decision_Model.getUuid().toString()));
     assertTrue(s.contains(
-        "\"lang\" : \"" + KnowledgeRepresentationLanguageSeries.DMN_1_2.getConceptUUID() + "\""));
+        "\"lang\" : \"" + KnowledgeRepresentationLanguageSeries.DMN_1_2.getUuid() + "\""));
 
     Bar b2 = JSonUtil.parseJson(s, Bar.class)
         .orElse(null);
 
     assertNotNull(b2);
-    assertEquals(KnowledgeAssetTypeSeries.Decision_Model, b2.getType());
+    assertEquals(KnowledgeAssetTypeSeries.Decision_Model.getLatest(), b2.getType());
+    // this uses a custom deserializer that does not resolve the latest version
     assertEquals(KnowledgeRepresentationLanguageSeries.DMN_1_2, b2.getLang());
   }
 

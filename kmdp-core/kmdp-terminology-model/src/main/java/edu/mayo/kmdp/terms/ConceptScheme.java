@@ -15,29 +15,26 @@
  */
 package edu.mayo.kmdp.terms;
 
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.util.NameUtils;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
-public interface ConceptScheme<T extends Term> extends VersionedIdentifier, Serializable {
+public interface ConceptScheme<T extends Term> extends SemanticIdentifier, Serializable {
+
+  default URI getId() {
+    return getResourceId();
+  }
 
   String getLabel();
 
   String getTag();
 
-  URI getId();
-
-  String getVersion();
-
   URI getVersionId();
 
-
-  NamespaceIdentifier asNamespace();
 
   Stream<T> getConcepts();
 
@@ -50,7 +47,7 @@ public interface ConceptScheme<T extends Term> extends VersionedIdentifier, Seri
 
   default String getPublicName() {
     return NameUtils.getTermCodeSystemName(getTopConcept()
-        .map(Term::getLabel)
+        .map(Term::getName)
         .orElseGet(this::getLabel));
   }
 }

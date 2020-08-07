@@ -17,17 +17,12 @@ package edu.mayo.kmdp.terms.example.cito;
 
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.toNamespace;
 
-import edu.mayo.kmdp.id.Identifier;
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
-import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
-import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.adapters.json.UUIDTermsJsonAdapter;
+import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;
 import java.net.URI;
 import java.util.Arrays;
@@ -39,13 +34,16 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public enum Cito implements ICito {
 
-
-  Cites("cites", UUID.nameUUIDFromBytes("cites".getBytes()).toString(), "http://test.skos.foo#cites",
+  Cites("cites",
+      UUID.nameUUIDFromBytes("cites".getBytes()).toString(),
+      "LATEST",
+      "http://test.skos.foo#cites",
       Collections.emptyList(),
       "cites",
       "http://mockpurl.org/cito#cites",
@@ -54,6 +52,7 @@ public enum Cito implements ICito {
 
   Cites_As_Source_Document("citesAsSourceDocument",
       UUID.nameUUIDFromBytes("citesAsSourceDocument".getBytes()).toString(),
+      "LATEST",
       "http://test.skos.foo#citesAsSourceDocument",
       Collections.emptyList(),
       "cites as source document",
@@ -62,15 +61,17 @@ public enum Cito implements ICito {
       new Term[]{Cito.Cites});
 
 
-  public static final URIIdentifier schemeURI = Series.toVersion(
+  public static final ResourceIdentifier schemeURI = Series.toVersion(
       ICito.seriesUri,
-      URI.create(
-          "http://test.skos.foo"));
+      "test.foo");
 
-  public static final NamespaceIdentifier namespace = toNamespace(schemeURI, ICito.schemeName);
+  public static final ResourceIdentifier namespace = SemanticIdentifier.newNamedId(
+      schemeURI.getResourceId(),
+      ICito.schemeID,
+      ICito.schemeName);
 
   public static final Map<UUID,Cito> index = Arrays.stream(Cito.values())
-      .collect(Collectors.toConcurrentMap(ConceptTerm::getConceptUUID, Function.identity()));
+      .collect(Collectors.toConcurrentMap(ConceptTerm::getUuid, Function.identity()));
 
   private TermDescription description;
   private CitoSeries series;
@@ -79,23 +80,23 @@ public enum Cito implements ICito {
     return description;
   }
 
-  Cito(final String conceptId, final String conceptUUID,
+  Cito(final String conceptId, final String conceptUUID, String versionTag,
       final String code, final List<String> additionalCodes,
       final String displayName, final String referent,
       final Term[] ancestors,
       final Term[] closure) {
-    this.description = new TermImpl(conceptId, conceptUUID, code, additionalCodes, displayName,
-        referent, ancestors, closure);
+    this.description = new TermImpl(conceptId, conceptUUID, versionTag, code, additionalCodes, displayName,
+        referent, ancestors, closure, new Date());
   }
 
   @Override
-  public Identifier getNamespace() {
+  public ResourceIdentifier getNamespace() {
     return namespace;
   }
 
   @Override
-  public VersionedIdentifier getVersionIdentifier() {
-    return namespace;
+  public ResourceIdentifier getVersionIdentifier() {
+    return SemanticIdentifier.newId(namespace.getResourceId(), this.getTag(), namespace.getVersionTag());
   }
 
   @Override
@@ -110,10 +111,20 @@ public enum Cito implements ICito {
 
   private CitoSeries toSeries() {
     if (series == null) {
-      series = (CitoSeries) CitoSeries.resolveUUID(this.getConceptUUID())
+      series = (CitoSeries) CitoSeries.resolveUUID(this.getUuid())
           .orElseThrow(IllegalStateException::new);
     }
     return series;
+  }
+
+  @Override
+  public URI getResourceId() {
+    return this.description.getResourceId();
+  }
+
+  @Override
+  public UUID getUuid() {
+    return this.description.getUuid();
   }
 
   public static class Adapter extends TermsXMLAdapter {
@@ -154,17 +165,22 @@ public enum Cito implements ICito {
   }
 
   public static Optional<Cito> resolveRef(final String refUri) {
-    return resolveTerm(refUri, Cito.values(), Term::getRef);
+    return resolveTerm(refUri, Cito.values(), Term::getReferentId);
   }
 
   @Override
   public Date getEstablishedOn() {
-    return namespace.getEstablishedOn();
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Date getVersionEstablishedOn() {
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public String getVersionTag() {
-    return namespace.getVersion();
+    return namespace.getVersionTag();
   }
 
 }

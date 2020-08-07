@@ -27,7 +27,7 @@ import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ObjectFactory;
+import org.omg.spec.api4kp._1_0.id.ObjectFactory;
 
 class XMLAdapterTest {
 
@@ -37,8 +37,8 @@ class XMLAdapterTest {
     bean.setSchone(SCH1Series.Sub_Sub_Concept.getLatest());
 
     String xml = marshall(bean);
-    assertTrue(xml.contains("ref=\"http://test/generator#sub_sub_concept\""));
-    assertTrue(xml.contains("version=\"v01\""));
+    assertTrue(xml.contains("referentId=\"http://test/generator#sub_sub_concept\""));
+    assertTrue(xml.contains("versionTag=\"v01\""));
   }
 
   @Test
@@ -47,8 +47,8 @@ class XMLAdapterTest {
     bean.setSchone(SCH1Series.Sub_Sub_Concept.getLatest());
 
     String xml = marshall(bean);
-    assertTrue(xml.contains("ref=\"http://test/generator#sub_sub_concept\""));
-    assertTrue(xml.contains("version=\"v01\""));
+    assertTrue(xml.contains("referentId=\"http://test/generator#sub_sub_concept\""));
+    assertTrue(xml.contains("versionTag=\"v01\""));
   }
 
   @Test
@@ -56,11 +56,11 @@ class XMLAdapterTest {
     SomeBean bean = new SomeBean();
     bean.setSchone(SCH1Series.Specific_Concept.getVersion(0).orElse(null));
     String xml1 = marshall(bean);
-    assertTrue(xml1.contains("version=\"v01\""));
+    assertTrue(xml1.contains("versionTag=\"v01\""));
 
     bean.setSchone(SCH1Series.Specific_Concept.getVersion(1).orElse(null));
     String xml2 = marshall(bean);
-    assertTrue(xml2.contains("version=\"v00_Ancient\""));
+    assertTrue(xml2.contains("versionTag=\"v00_Ancient\""));
   }
 
   @Test
@@ -69,15 +69,15 @@ class XMLAdapterTest {
 
     bean.setSchone(SCH1Series.Specific_Concept);
     String xml0 = marshall(bean);
-    assertFalse(xml0.contains("version=\"v01\""));
+    assertTrue(xml0.contains("versionTag=\"v01\""));
 
     bean.setSchone(SCH1Series.Specific_Concept.getLatest());
     String xml1 = marshall(bean);
-    assertTrue(xml1.contains("version=\"v01\""));
+    assertTrue(xml1.contains("versionTag=\"v01\""));
 
     bean.setSchone(SCH1Series.Deprecated_Concept.getLatest());
     String xml2 = marshall(bean);
-    assertTrue(xml2.contains("version=\"v00_Ancient\""));
+    assertTrue(xml2.contains("versionTag=\"v00_Ancient\""));
 
   }
 

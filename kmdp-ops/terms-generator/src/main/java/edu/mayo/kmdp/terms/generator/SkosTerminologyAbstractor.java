@@ -18,8 +18,8 @@ import static edu.mayo.kmdp.util.Util.isUUID;
 import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNAPSHOT;
 import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNAPSHOT_DATE_PATTERN;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
+import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
@@ -53,6 +53,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
+import org.omg.spec.api4kp._1_0.id.Term;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
 import org.semanticweb.HermiT.Configuration;
@@ -298,9 +299,8 @@ public class SkosTerminologyAbstractor {
       versionTag = DateTimeUtil.serializeDate(pubDate, SNAPSHOT_DATE_PATTERN);
     }
 
-    MutableConceptScheme mcs = new MutableConceptScheme(uri, version, code, versionTag, label,
-        pubDate);
-    mcs.withVersioning(VersionTagType.TIMESTAMP);
+    MutableConceptScheme mcs = new MutableConceptScheme(
+        uri, version, code, versionTag, label, pubDate);
     return mcs;
   }
 
@@ -417,8 +417,10 @@ public class SkosTerminologyAbstractor {
         referentUri,
         scheme,
         uuid,
-        codes);
+        codes,
+        scheme != null ? scheme.getEstablishedOn() : new Date());
     if (scheme != null) {
+      ((ConceptTermImpl) cd).setEstablishedOn(scheme.getEstablishedOn());
       if (asTop) {
         scheme.setTop(cd);
       } else {
@@ -579,7 +581,7 @@ public class SkosTerminologyAbstractor {
         }));
 
     Map<URI, ConceptScheme<Term>> codeSystems = clonedSchemes.stream()
-        .collect(Collectors.toMap(NamespaceIdentifier::getId, Function.identity()));
+        .collect(Collectors.toMap(ConceptScheme::getId, Function.identity()));
     Map<Term, Set<Term>> parents = join(codeSystems);
 
     return new ConceptGraph(codeSystems, parents);

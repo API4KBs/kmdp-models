@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
@@ -39,7 +38,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
@@ -81,7 +81,7 @@ public class GenerateWithImportsTest {
     try {
       assertEquals("123", t.getClass().getMethod("getTag").invoke(t));
 
-      Object ref = subScheme.getMethod("getRef").invoke(t);
+      Object ref = subScheme.getMethod("getReferentId").invoke(t);
       assertEquals("http://foo.org/ontologies/referent/AThing", ref.toString());
 
       Object anx = subScheme.getMethod("getAncestors").invoke(t);
@@ -96,6 +96,7 @@ public class GenerateWithImportsTest {
 
       assertEquals("000", f.getClass().getMethod("getTag").invoke(f));
     } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+      e.printStackTrace();
       fail(e.getMessage());
     }
 
@@ -171,10 +172,10 @@ public class GenerateWithImportsTest {
       assertNotNull(prn);
 
       Object sUri = prn.getClass().getMethod("getNamespace").invoke(prn);
-      assertTrue(sUri instanceof NamespaceIdentifier);
+      assertTrue(sUri instanceof ResourceIdentifier);
 
       assertEquals("https://foo.org/child/subScheme",
-          ((NamespaceIdentifier) sUri).getId().toString());
+          ((ResourceIdentifier) sUri).getResourceId().toString());
 
     } catch (Exception e) {
       e.printStackTrace();

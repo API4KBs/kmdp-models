@@ -14,7 +14,8 @@
 package edu.mayo.kmdp;
 
 
-import edu.mayo.kmdp.id.VersionedIdentifier;
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.getVersionSeparator;
+
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
@@ -31,11 +32,13 @@ import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.StreamUtil;
+import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRole;
 import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -45,7 +48,12 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.validation.Schema;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.w3c.dom.Node;
 
@@ -154,14 +162,14 @@ public class SurrogateHelper {
   private static Set<KnowledgeAsset> dependencies(KnowledgeResource resource,
       BiFunction<UUID, String, Optional<KnowledgeAsset>> resolver) {
     return resource.getRelated().stream()
-        .filter(dependency -> dependency instanceof Dependency)
-        .map(dependency -> (Dependency) dependency)
+        .filter(Dependency.class::isInstance)
+        .map(Dependency.class::cast)
         .filter(dependency -> TRAVERSE_DEPS.contains(dependency.getRel().asEnum()))
         .map(Association::getTgt)
-        .map(x -> (edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset) x)
+        .map(edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset.class::cast)
         .map(x -> {
-          VersionedIdentifier vid = DatatypeHelper.toVersionIdentifier(x.getAssetId());
-          return resolver.apply(UUID.fromString(vid.getTag()), vid.getVersion())
+          VersionIdentifier vid = DatatypeHelper.toVersionIdentifier(x.getAssetId().getVersionId());
+          return resolver.apply(UUID.fromString(vid.getTag()), vid.getVersionTag())
               .orElse(x);
         }).collect(Collectors.toSet());
   }
@@ -170,10 +178,11 @@ public class SurrogateHelper {
       ConceptIdentifier rel) {
     return asset.getSubject().stream()
         .flatMap(StreamUtil.filterAs(SimpleAnnotation.class))
-        .filter(ann -> rel == null || rel.sameAs(ann.getRel()))
+        .filter(ann -> rel == null || isSame(rel,ann.getRel()))
         .map(SimpleAnnotation::getExpr)
         .findAny();
   }
+
 
   public static Optional<URIIdentifier> getIdentifier(KnowledgeResource knowledgeResource) {
     if (knowledgeResource instanceof KnowledgeAsset) {
@@ -205,7 +214,7 @@ public class SurrogateHelper {
         role == null ? Stream.of(rep) : Stream.empty(),
         rep.getWith() != null
             ? rep.getWith().stream()
-            .filter(sub -> role == null || sub.getRole().asEnum().sameAs(role)
+            .filter(sub -> role == null || sub.getRole().isSame(role)
                 || sub.getRole().hasAncestor(role))
             .flatMap(sub -> expandRepresentation(sub.getSubLanguage(), role))
             : Stream.empty());
@@ -231,21 +240,73 @@ public class SurrogateHelper {
         .findAny();
   }
 
-  /**
-   * Helper method that looks for the ComputableKnowledgeArtifact with a given ID and version
-   * among the Artifact referenced in a Knowledge Asset Surrogate
-   * @param artifactId The ID of the Computable Artifact to retrieve
-   * @param artifactVersionTag The version Tag of the Computable Artifact to retrieve
-   * @param surr  The Surrogate of the Asset for which a Computable Manifestation is requested
-   * @return  The Computable Variant of the asset with the given ID and version, if present
-   */
-  public static Optional<ComputableKnowledgeArtifact> getComputableCarrier(UUID artifactId,
-      String artifactVersionTag,
-      KnowledgeAsset surr) {
-    return surr.getCarriers().stream()
-        .filter(a -> a.getArtifactId().getTag().equals(artifactId.toString())
-            && a.getArtifactId().getVersion().equals(artifactVersionTag))
-        .flatMap(StreamUtil.filterAs(ComputableKnowledgeArtifact.class))
-        .findAny();
+
+  public static org.omg.spec.api4kp._1_0.id.ConceptIdentifier fromLegacyConceptIdentifier(
+      ConceptIdentifier v) {
+    if (v == null) {
+      return null;
+    }
+    return new org.omg.spec.api4kp._1_0.id.ConceptIdentifier()
+        .withUuid(v.getConceptUUID())
+        .withResourceId(v.getConceptId())
+        .withTag(v.getTag())
+        .withNamespaceUri(v.getNamespace().getId())
+        .withName(v.getLabel())
+        .withReferentId(v.getRef());
+  }
+
+  public static ConceptIdentifier toLegacyConceptIdentifier(Term term) {
+    return toLegacyConceptIdentifier(term.asConceptIdentifier());
+  }
+
+  public static ConceptIdentifier toLegacyConceptIdentifier(
+      org.omg.spec.api4kp._1_0.id.ConceptIdentifier cId) {
+
+    ResourceIdentifier nsId = SemanticIdentifier.newNamespaceId(cId.getNamespaceUri());
+
+    return new ConceptIdentifier()
+        .withConceptId(cId.getResourceId())
+        .withTag(cId.getTag())
+        .withLabel(cId.getName())
+        .withRef(cId.getReferentId())
+        .withConceptUUID(cId.getUuid())
+        .withNamespace(
+            new NamespaceIdentifier()
+                .withId(nsId.getResourceId())
+                .withLabel(nsId.getName())
+                .withTag(nsId.getTag())
+                .withVersion(cId.getVersionTag())
+                .withEstablishedOn(nsId.getEstablishedOn())
+        );
+  }
+
+  public static URIIdentifier uri(final String id, final String versionTag) {
+    return new URIIdentifier()
+        .withUri(URI.create(id))
+        .withVersionId(
+            Util.isEmpty(versionTag) ? null : URI.create(id + getVersionSeparator(id) + versionTag));
+  }
+
+  public static String getTag(URIIdentifier id) {
+    return URIUtil.detectLocalName(id.getUri());
+  }
+
+  public static String getVersionTag(URIIdentifier id) {
+    return DatatypeHelper.toVersionIdentifier(id.getVersionId()).getVersionTag();
+  }
+
+  private static boolean isSame(ConceptIdentifier c1, ConceptIdentifier c2) {
+    return c1 != null && c2 != null
+        && c1.getConceptUUID().equals(c2.getConceptUUID());
+  }
+
+  public static URIIdentifier toURIIdentifier(SemanticIdentifier semId) {
+    return new URIIdentifier()
+        .withUri(semId.getResourceId())
+        .withVersionId(semId.getVersionId());
+  }
+
+  public static ResourceIdentifier fromURIIdentifier(URIIdentifier assetId) {
+    return SemanticIdentifier.newId(assetId.getUri(), getVersionTag(assetId));
   }
 }

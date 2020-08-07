@@ -15,9 +15,6 @@
  */
 package edu.mayo.kmdp.terms.adapters;
 
-import edu.mayo.kmdp.id.Identifier;
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
@@ -27,9 +24,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 /*
 	Example of generated 'terminology' class
@@ -53,37 +50,30 @@ public enum Colors implements IColors {
     trm = new TermImpl(
         URI.create("urn:uuid:" + uuid).toString(),
         uuid.toString(),
+        "0.0.1",
         code,
         Collections.emptyList(),
         code,
         null,
         new Term[0],
-        new Term[0]);
+        new Term[0],
+        new Date());
     this.series = series;
   }
 
   @Override
-  public VersionedIdentifier getVersionIdentifier() {
-    return new VersionIdentifier()
-        .withTag(trm.getTag())
-        .withVersion("0.0.1")
-        .withEstablishedOn(new Date())
-        .withVersioning(VersionTagType.SEM_VER);
+  public org.omg.spec.api4kp._1_0.id.VersionIdentifier getVersionIdentifier() {
+    return SemanticIdentifier.newId(trm.getTag(),"0.0.1");
+  }
+
+  @Override
+  public ResourceIdentifier getNamespace() {
+    return null;
   }
 
   @Override
   public TermDescription getDescription() {
     return trm;
-  }
-
-  @Override
-  public Identifier getNamespace() {
-    return new NamespaceIdentifier()
-        .withId(URI.create("http://colors.foo"))
-        .withTag(trm.getTag())
-        .withVersion("0.0.1")
-        .withEstablishedOn(new Date())
-        .withVersioning(VersionTagType.SEM_VER);
   }
 
   @Override
@@ -97,8 +87,18 @@ public enum Colors implements IColors {
   }
 
   @Override
+  public URI getResourceId() {
+    return trm.getResourceId();
+  }
+
+  @Override
+  public UUID getUuid() {
+    return trm.getUuid();
+  }
+
+  @Override
   public URI getNamespaceUri() {
-    return null;
+    return trm.getNamespaceUri();
   }
 
   @Override
@@ -108,7 +108,12 @@ public enum Colors implements IColors {
 
   @Override
   public Date getEstablishedOn() {
-    return null;
+    return new Date();
+  }
+
+  @Override
+  public Date getVersionEstablishedOn() {
+    return new Date();
   }
 
   public static class JsonSerializer extends AbstractTermsJsonAdapter.AbstractSerializer<Colors> {
@@ -126,13 +131,13 @@ public enum Colors implements IColors {
 
 
   public static Optional<Colors> resolveUUID(final UUID uuid) {
-    if (RED.getConceptUUID().equals(uuid)) {
+    if (RED.getUuid().equals(uuid)) {
       return Optional.of(RED);
     }
-    if (GREEN.getConceptUUID().equals(uuid)) {
+    if (GREEN.getUuid().equals(uuid)) {
       return Optional.of(GREEN);
     }
-    if (BLUE.getConceptUUID().equals(uuid)) {
+    if (BLUE.getUuid().equals(uuid)) {
       return Optional.of(BLUE);
     }
     return Optional.empty();

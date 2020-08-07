@@ -15,10 +15,10 @@
  */
 package edu.mayo.kmdp.terms;
 
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 
 public interface ValueSet {
 
@@ -30,7 +30,7 @@ public interface ValueSet {
 
   String getLabel();
 
-  VersionedIdentifier getId();
+  VersionIdentifier getId();
 
   boolean contains(Term cd);
 

@@ -114,8 +114,8 @@ class TerminologyGeneratorPluginTest extends AbstractPluginTest {
   }
 
   private void testWithJaxb() {
-    deploy(genSource, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
-    deploy(genSource, "/xsd/API4KP/api4kp/identifiers/bindings.xjb");
+    deploy(genSource, "/xsd/API4KP/api4kp/id/id.xsd");
+    deploy(genSource, "/xsd/API4KP/api4kp/id/bindings.xjb");
     deploy(genSource, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd");
     deploy(genSource, "/xsd/API4KP/api4kp/datatypes/bindings.xjb");
 

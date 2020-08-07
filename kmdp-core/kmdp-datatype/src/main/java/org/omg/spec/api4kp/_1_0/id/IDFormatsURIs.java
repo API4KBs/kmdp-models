@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.id;
+package org.omg.spec.api4kp._1_0.id;
 
-public interface ScopedIdentifier extends Identifier {
+public enum IDFormatsURIs {
 
-  Identifier getNamespace();
+  URI("https://www.ietf.org/rfc/rfc3986.txt"),
+  IRI("https://www.ietf.org/rfc/rfc3987.txt"),
+  QNAME("http://www.w3.org/2001/XMLSchema#QName"),
+  UUID("https://www.ietf.org/rfc/rfc4122.txt"),
+  OID("https://www.ietf.org/rfc/rfc3001.txt");
 
+  IDFormatsURIs(String uri) {
+    this.uri = java.net.URI.create(uri);
+  }
+
+  java.net.URI uri;
+
+  public java.net.URI asURI() {
+    return uri;
+  }
 }

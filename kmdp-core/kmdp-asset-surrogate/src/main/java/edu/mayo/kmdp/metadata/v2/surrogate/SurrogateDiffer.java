@@ -1,19 +1,40 @@
 package edu.mayo.kmdp.metadata.v2.surrogate;
 
 import edu.mayo.kmdp.comparator.AbstractDiffer;
-import edu.mayo.kmdp.terms.ControlledTerm;
-import edu.mayo.kmdp.util.URIUtil;
+import edu.mayo.kmdp.terms.VersionableTerm;
+import edu.mayo.ontology.taxonomies.iso639_2_languagecodes.Language;
+import edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.IKnowledgeArtifactCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRole;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique.KnowledgeProcessingTechnique;
+import edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRole;
+import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatus;
+import edu.mayo.ontology.taxonomies.kao.publishingrole.PublishingRole;
+import edu.mayo.ontology.taxonomies.kao.rel.citationreltype.BibliographicCitationType;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyType;
+import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationType;
+import edu.mayo.ontology.taxonomies.kao.rel.relatedversiontype.RelatedVersionType;
+import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype.StructuralPartType;
+import edu.mayo.ontology.taxonomies.kao.rel.summaryreltype.SummarizationType;
+import edu.mayo.ontology.taxonomies.kao.rel.variantreltype.VariantType;
+import edu.mayo.ontology.taxonomies.krformat.SerializationFormat;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfile;
+import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerialization;
+import edu.mayo.ontology.taxonomies.lexicon.Lexicon;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
 import org.javers.core.MappingStyle;
-import org.javers.core.diff.custom.CustomValueComparator;
 import org.javers.core.metamodel.clazz.EntityDefinition;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
 public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 
-  public SurrogateDiffer() { }
+  public SurrogateDiffer() {
+  }
 
   public SurrogateDiffer(Mode mode) {
     super(mode);
@@ -21,7 +42,7 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 
   @Override
   protected Javers init() {
-    return JaversBuilder.javers()
+    JaversBuilder builder = JaversBuilder.javers()
         .withMappingStyle(MappingStyle.BEAN)
 
         .registerEntity(
@@ -29,54 +50,47 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
                 Arrays.asList("carriers", "annotation")))
         .registerEntity(
             new EntityDefinition(KnowledgeArtifact.class, "artifactId")
-        )
+        );
 
-        .registerValue(ControlledTerm.class)
+    configureTerminology(builder);
 
-        .registerValue(NamespaceIdentifier.class, new LegacyNamespaceComparator())
-        
-        .build();
-  }
-
-
-  /*
-    This class exists for backwards compatibility.
-    In versions (,4.0.0], some NamespaceIdentifiers included a unique fragment
-    that denoted a concept scheme associated to the namespace.
-    As this fragment was removed in later versions, the custom comparator
-    tentatively checks both alternatives, with and without the fragment
-   */
-  private class LegacyNamespaceComparator
-      implements CustomValueComparator<NamespaceIdentifier> {
-
-    @Override
-    public boolean equals(NamespaceIdentifier a, NamespaceIdentifier b) {
-      boolean eq = a != null && a.equals(b);
-      if (!eq) {
-        NamespaceIdentifier n1 = normalize(a);
-        NamespaceIdentifier n2 = normalize(b);
-        return n1 != null && n1.equals(n2);
-      }
-      return true;
-    }
-
-    private NamespaceIdentifier normalize(NamespaceIdentifier nid) {
-      if (nid == null) {
-        return null;
-      }
-      NamespaceIdentifier nnid = (NamespaceIdentifier) nid.clone();
-      nnid.setId(URIUtil.normalizeURI(nid.getId()));
-      return nnid;
-    }
-
-    @Override
-    public String toString(NamespaceIdentifier value) {
-      return value != null ? value.toString() : null;
-    }
+    return builder.build();
   }
 
   public static boolean isEquivalent(KnowledgeAsset a1, KnowledgeAsset a2) {
-    Comparison c = new SurrogateDiffer().contrast(a1,a2);
+    Comparison c = new SurrogateDiffer().contrast(a1, a2);
     return c == Comparison.EQUAL || c == Comparison.EQUIVALENT || c == Comparison.IDENTICAL;
+  }
+
+
+  public static void configureTerminology(JaversBuilder builder) {
+    List<Class<? extends VersionableTerm<?, ?>>> valuesetKlasses =
+        Arrays.asList(
+            DependencyType.class,
+            KnowledgeAssetCategory.class,
+            KnowledgeAssetType.class,
+            KnowledgeProcessingTechnique.class,
+            KnowledgeAssetRole.class,
+            StructuralPartType.class,
+            DerivationType.class,
+            VariantType.class,
+            RelatedVersionType.class,
+            BibliographicCitationType.class,
+            PublicationStatus.class,
+            PublishingRole.class,
+            Language.class,
+            IKnowledgeArtifactCategory.class,
+            SummarizationType.class,
+            KnowledgeRepresentationLanguage.class,
+            KnowledgeRepresentationLanguageProfile.class,
+            SerializationFormat.class,
+            Lexicon.class,
+            KnowledgeRepresentationLanguageSerialization.class,
+            KnowledgeRepresentationLanguageRole.class
+        );
+
+    valuesetKlasses.forEach(klass ->
+        builder.registerValue(klass, VersionableTerm::isSameEntity, Objects::toString));
+
   }
 }

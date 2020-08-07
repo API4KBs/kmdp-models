@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.id.Term;
+import org.omg.spec.api4kp._1_0.id.Term;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
@@ -75,7 +75,7 @@ public class NotationTest {
     assertNotNull(trm);
 
     assertEquals("9f711427-f811-37db-b591-4bdf1d438d16",
-        trm.getConceptUUID().toString());
+        trm.getUuid().toString());
     assertEquals("9f711427-f811-37db-b591-4bdf1d438d16",
         trm.getConceptId().getFragment());
     assertEquals(2, trm.getNotations().size());

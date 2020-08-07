@@ -16,47 +16,37 @@
 package edu.mayo.kmdp.terms.impl.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import java.net.URI;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
-public class AnonymousConceptScheme extends NamespaceIdentifier implements ConceptScheme<Term> {
+public class AnonymousConceptScheme
+    extends IdentifiedConceptScheme<Term> implements ConceptScheme<Term> {
 
   private static final String NOT_SUPPORTED = "Unable to track Concepts in Anonymous Scheme";
 
   private URI versionId;
 
-  public AnonymousConceptScheme() {
-  }
-
   public AnonymousConceptScheme(String schemeId, String versionTag,
       String schemeName, URI schemeURI, URI schemeVersionURI, Date pubDate) {
-    this.withId(schemeURI)
-        .withLabel(schemeName)
-        .withTag(schemeId)
-        .withVersion(versionTag)
-        .withEstablishedOn(pubDate);
+    super(schemeURI, versionTag, schemeName, pubDate);
     this.versionId = schemeVersionURI;
   }
 
   public AnonymousConceptScheme(String schemeId, String schemeName, URI schemeURI,
       URI schemeVersionURI) {
-    this.withId(schemeURI)
-        .withLabel(schemeName)
-        .withTag(schemeId)
-        .withVersion(DatatypeHelper.versionOf(schemeVersionURI));
-    this.versionId = schemeVersionURI;
+    this(schemeId, null, schemeName, schemeURI, schemeVersionURI, null);
   }
 
   public AnonymousConceptScheme(URI scheme) {
-    this.withId(scheme)
-        .withTag(scheme.getFragment())
-        .withLabel(scheme.getFragment());
+    this(null, null, null, scheme, null, null);
+  }
+
+  public URI getVersionId() {
+    return versionId;
   }
 
   @Override
@@ -103,16 +93,6 @@ public class AnonymousConceptScheme extends NamespaceIdentifier implements Conce
   @Override
   public boolean subsumes(Term sup, Term sub) {
     throw new UnsupportedOperationException(NOT_SUPPORTED);
-  }
-
-  @Override
-  public URI getVersionId() {
-    return versionId;
-  }
-
-  @Override
-  public NamespaceIdentifier asNamespace() {
-    return this;
   }
 
 }

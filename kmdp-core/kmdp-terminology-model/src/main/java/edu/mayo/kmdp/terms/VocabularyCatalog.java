@@ -17,17 +17,18 @@ package edu.mayo.kmdp.terms;
 
 import java.net.URI;
 import java.util.Optional;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 /**
  * Catalog of Concept Schemes
  */
 public interface VocabularyCatalog {
 
-  void register(URI schemeURI, ConceptScheme scheme);
+  void register(URI schemeURI, ConceptScheme<? extends Term> scheme);
 
-  Optional<ConceptScheme> resolve(URI schemeURI);
+  Optional<ConceptScheme<? extends Term>> resolve(URI schemeURI);
 
-  Optional<ConceptScheme> resolve(String schemeID);
+  Optional<ConceptScheme<? extends Term>> resolve(String schemeID);
 
   Optional<URI> lookupURI(String schemeID);
 

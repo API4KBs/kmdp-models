@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.kmdp.id.Term;
+import org.omg.spec.api4kp._1_0.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
@@ -107,6 +107,7 @@ public class VersionedOntologyTest {
     Optional<OWLOntology> skosOntology = skosModel.map(Model::getGraph)
         .map(manager::addOntology);
 
+    assertTrue(skosOntology.isPresent());
     ConceptGraph graph = new SkosTerminologyAbstractor()
         .traverse(skosOntology.get(), new SkosAbstractionConfig()
             .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/(.*)/.*$")
@@ -117,7 +118,7 @@ public class VersionedOntologyTest {
     schemes.forEach((s) -> assertNotNull(s.getVersionId()));
 
     ConceptScheme<Term> scheme = schemes.iterator().next();
-    String versionTag = scheme.getVersion();
+    String versionTag = scheme.getVersionTag();
     assertEquals("20190108", versionTag);
 
     assertEquals("2019-01-08", DateTimeUtil.serializeAsDate(scheme.getEstablishedOn()));

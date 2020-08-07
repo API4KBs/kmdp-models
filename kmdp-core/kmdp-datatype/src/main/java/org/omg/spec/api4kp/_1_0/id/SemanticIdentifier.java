@@ -46,7 +46,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     String uriStr = uri.toString();
     String tag = URIUtil.detectLocalName(uri);
     URI nsUri = URI.create(uriStr.substring(0, uriStr.lastIndexOf(tag)));
-    if (! "urn".equals(nsUri.getScheme()) && nsUri.getAuthority() == null) {
+    if (!"urn".equals(nsUri.getScheme()) && nsUri.getAuthority() == null) {
       throw new IllegalArgumentException("Unable to split the URI into a namespace and a tag, "
           + "consider using newNamespaceId instead? " + nsUri);
     }
@@ -84,8 +84,8 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
 
 
   /**
-   * Generate resourceIdentifier for URI that includes
-   * version information according to known patterns
+   * Generate resourceIdentifier for URI that includes version information according to known
+   * patterns
    *
    * @return ResourceIdentifier with required values set
    */
@@ -99,23 +99,26 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return ResourceIdentifier with required values set
    */
   static ResourceIdentifier newVersionId(URI seriesUri, String versionTag) {
-    return newVersionId(URI.create(seriesUri.toString() + IdentifierConstants.VERSIONS + versionTag));
+    return newVersionId(
+        URI.create(seriesUri.toString() + IdentifierConstants.VERSIONS + versionTag));
   }
 
   /**
-   * Generate resourceIdentifier for URI that includes
-   * version information according to a user-specified Pattern
+   * Generate resourceIdentifier for URI that includes version information according to a
+   * user-specified Pattern
+   * <p>
+   * The Pattern can specify two groups (base URI + version) or three groups (base URI + tag +
+   * version)
    *
-   * The Pattern can specify two groups (base URI + version)
-   * or three groups (base URI + tag + version)
-   *
-   * @param versionUri the URI that contains version information
-   * @param versionPattern the Pattern that allows to deconstruct the URI
+   * @param versionUri      the URI that contains version information
+   * @param versionPattern  the Pattern that allows to deconstruct the URI
    * @param versionGroupIdx the index of the pattern group that contains the version information
-   * @param tagGroupIdx the index of the pattern group that contains the base and/or tag information
+   * @param tagGroupIdx     the index of the pattern group that contains the base and/or tag
+   *                        information
    * @return ResourceIdentifier with required values set
    */
-  static ResourceIdentifier newVersionId(URI versionUri, Pattern versionPattern, int versionGroupIdx, int tagGroupIdx) {
+  static ResourceIdentifier newVersionId(URI versionUri, Pattern versionPattern,
+      int versionGroupIdx, int tagGroupIdx) {
     if (versionUri.getScheme().equals("urn")) {
       // assume pattern urn:uuid:tag:version
       String str = versionUri.toString();
@@ -143,26 +146,59 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
-   * Generate resourceIdentifier for URI that includes
-   * version information according to a user-specified Pattern
-   * Further assumes that the tag is date-based, and can be parsed
-   * as a date using a given pattern. The date will be used
-   * as the identifier's establishing date
+   * Generate resourceIdentifier for URI that includes version information according to a
+   * user-specified Pattern Further assumes that the tag is date-based, and can be parsed as a date
+   * using a given pattern. The date will be used as the identifier's establishing date
    *
-   * @param versionUri the URI that contains version information
-   * @param versionPattern the Pattern that allows to deconstruct the URI
+   * @param versionUri      the URI that contains version information
+   * @param versionPattern  the Pattern that allows to deconstruct the URI
    * @param versionGroupIdx the index of the pattern group that contains the version information
-   * @param tagGroupIdx the index of the pattern group that contains the base and/or tag information
-   * @param datePattern the pattern used to parse the tag into the establishedDate
+   * @param tagGroupIdx     the index of the pattern group that contains the base and/or tag
+   *                        information
+   * @param datePattern     the pattern used to parse the tag into the establishedDate
    * @return ResourceIdentifier with required values set
    */
-  static ResourceIdentifier newDateVersionId(URI versionUri, Pattern versionPattern, int versionGroupIdx, int tagGroupIdx, Pattern datePattern) {
-    ResourceIdentifier id = newVersionId(versionUri,versionPattern,versionGroupIdx,tagGroupIdx);
+  static ResourceIdentifier newDateVersionId(URI versionUri, Pattern versionPattern,
+      int versionGroupIdx, int tagGroupIdx, Pattern datePattern) {
+    ResourceIdentifier id = newVersionId(versionUri, versionPattern, versionGroupIdx, tagGroupIdx);
     Matcher m = datePattern.matcher(id.getTag());
     if (m.matches()) {
-      id.withEstablishedOn(DateTimeUtil.parseDate(id.getTag(),datePattern.pattern()));
+      id.withEstablishedOn(DateTimeUtil.parseDate(id.getTag(), datePattern.pattern()));
     }
     return id;
+  }
+
+  /**
+   * Creates an Identifier for a named entity
+   *
+   * @param resourceId the URI that identifies the entity
+   * @param tag        the entity's tag
+   * @param label      the entity's name
+   * @return an Identifier of the entity
+   */
+  static ResourceIdentifier newNamedId(URI resourceId, String tag, String label) {
+    return newId(resourceId)
+        .withTag(tag)
+        .withName(label);
+  }
+
+  /**
+   * Creates an Identifier for a named entity
+   *
+   * @param resourceId the URI that identifies the entity
+   * @param tag        the entity's tag
+   * @param label      the entity's name
+   * @param versionTag the entity's version tag
+   * @param establishedOn the date the identifier was assigned
+   * @return an Identifier of the entity
+   */
+  static ResourceIdentifier newNamedId(URI resourceId, String tag, String label,
+      String versionTag, Date establishedOn) {
+    return newId(resourceId)
+        .withTag(tag)
+        .withVersionTag(versionTag)
+        .withName(label)
+        .withEstablishedOn(establishedOn);
   }
 
   /**
@@ -173,7 +209,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    */
   static ResourceIdentifier newId(URI base, UUID uuid) {
     checkUUID(uuid);
-    return newId(toResourceId(uuid.toString(),base,uuid));
+    return newId(toResourceId(uuid.toString(), base, uuid));
   }
 
   /**
@@ -483,7 +519,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   static ResourceIdentifier randomId() {
-    return newId(BASE_UUID_URN_URI,UUID.randomUUID(),IdentifierConstants.VERSION_LATEST);
+    return newId(BASE_UUID_URN_URI, UUID.randomUUID(), IdentifierConstants.VERSION_LATEST);
   }
 
   /**
@@ -503,10 +539,10 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
 
   /**
    * Builds a pointer from a ResourceIdentifier
+   * <p>
+   * Unlike other constructors, this method returns a base Pointer that is not an @XmlRootElement.
+   * As such, it cannot be serialized directly, but can be used within serializable resources
    *
-   * Unlike other constructors, this method returns a base Pointer
-   * that is not an @XmlRootElement. As such, it cannot be serialized
-   * directly, but can be used within serializable resources
    * @return A new Pointer derived from this ResourceIdentifier
    */
   default Pointer toInnerPointer() {
@@ -675,18 +711,19 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     int v = (this.getVersionTag() != null)
         ? this.getVersionTag().hashCode()
         : VERSION_LATEST.hashCode();
-    byte[] x = ByteBuffer.allocate(2*Long.BYTES+Integer.BYTES)
+    byte[] x = ByteBuffer.allocate(2 * Long.BYTES + Integer.BYTES)
         .putLong(l1).putLong(l2).putInt(v).array();
     return UUID.nameUUIDFromBytes(x);
   }
 
   static ResourceIdentifier hashIdentifiers(ResourceIdentifier id1, ResourceIdentifier id2) {
     UUID uuid = Util.hashUUID(id1.getUuid(), id2.getUuid());
-    String vTag = IdentifierConstants.VERSION_ZERO + "+" + Util.hashString(id1.getVersionTag(),id2.getVersionTag());
+    String vTag = IdentifierConstants.VERSION_ZERO + "+" + Util
+        .hashString(id1.getVersionTag(), id2.getVersionTag());
     if (id1.getNamespaceUri().equals(id2.namespaceUri)) {
-      return newId(id1.getNamespaceUri(),uuid,vTag);
+      return newId(id1.getNamespaceUri(), uuid, vTag);
     } else {
-      return newId(uuid,vTag);
+      return newId(uuid, vTag);
     }
   }
 

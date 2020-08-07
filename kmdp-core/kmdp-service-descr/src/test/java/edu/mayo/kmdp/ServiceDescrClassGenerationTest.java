@@ -39,6 +39,7 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.GAVIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
@@ -143,7 +144,7 @@ public class ServiceDescrClassGenerationTest {
 
   @Test
   public void testTag() {
-    URIIdentifier id = new URIIdentifier().withUri(URI.create("http://foo.bar/kinda/123456"));
+    ResourceIdentifier id = SemanticIdentifier.newId(URI.create("http://foo.bar/kinda/123456"));
     assertEquals("123456",id.getTag());
   }
 

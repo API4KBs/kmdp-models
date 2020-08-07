@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset;
@@ -108,7 +107,7 @@ public class MetadataIntegrityTest {
   @Test
   public void testEpisode() {
     // ConceptIdentifier should have not been regenerated (even more so without bindings!)
-    Term t = new ConceptIdentifier();
+    ConceptIdentifier t = new ConceptIdentifier();
     assertNotNull(t);
   }
 

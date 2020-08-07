@@ -1,12 +1,10 @@
 package edu.mayo.kmdp.terms.generator.internal;
 
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.terms.ConceptScheme;
-import edu.mayo.kmdp.util.graph.HierarchySorter;
-import edu.mayo.kmdp.util.graph.TransitiveClosure;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.URIUtil;
+import edu.mayo.kmdp.util.graph.HierarchySorter;
+import edu.mayo.kmdp.util.graph.TransitiveClosure;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +17,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 
 public class ConceptGraph {
 
@@ -65,7 +65,7 @@ public class ConceptGraph {
   public List<Term> getConceptList(ConceptScheme<Term> conceptScheme) {
     List<Term> trms = getConceptList(conceptScheme.getVersionId());
     if (trms.isEmpty()) {
-      trms = getConceptList(conceptScheme.getId());
+      trms = getConceptList(conceptScheme.getResourceId());
     }
     return trms;
   }
@@ -103,16 +103,16 @@ public class ConceptGraph {
 
   public Collection<String> getSchemeSeries(URI schemeURI) {
     return getConceptSchemes().stream()
-        .filter(s -> s.getId().equals(schemeURI))
-        .sorted(Comparator.comparing(VersionedIdentifier::getEstablishedOn).reversed())
-        .map(ConceptScheme::getVersion)
+        .filter(s -> s.getResourceId().equals(schemeURI))
+        .sorted(Comparator.comparing(VersionIdentifier::getEstablishedOn).reversed())
+        .map(ConceptScheme::getVersionTag)
         .collect(Collectors.toList());
   }
 
   public List<String> getSchemeSeriesURI(URI schemeURI) {
     return getConceptSchemes().stream()
-        .filter(s -> s.getId().equals(schemeURI))
-        .sorted(Comparator.comparing(VersionedIdentifier::getEstablishedOn).reversed())
+        .filter(s -> s.getResourceId().equals(schemeURI))
+        .sorted(Comparator.comparing(VersionIdentifier::getEstablishedOn).reversed())
         .map(ConceptScheme::getVersionId)
         .map(URIUtil::normalizeURI)
         .map(URI::toString)
@@ -121,8 +121,8 @@ public class ConceptGraph {
 
   public List<String> getSchemeReleases(URI schemeURI) {
     return getConceptSchemes().stream()
-        .filter(s -> s.getId().equals(schemeURI))
-        .sorted(Comparator.comparing(VersionedIdentifier::getEstablishedOn).reversed())
+        .filter(s -> s.getResourceId().equals(schemeURI))
+        .sorted(Comparator.comparing(VersionIdentifier::getEstablishedOn).reversed())
         .map(ConceptScheme::getEstablishedOn)
         .map(DateTimeUtil::serializeAsDate)
         .collect(Collectors.toList());

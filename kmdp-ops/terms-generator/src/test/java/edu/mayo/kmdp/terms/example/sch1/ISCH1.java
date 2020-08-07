@@ -1,27 +1,27 @@
 package edu.mayo.kmdp.terms.example.sch1;
 
 import edu.mayo.kmdp.terms.VersionableTerm;
-import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 
-@com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = SCH1Series.JsonDeserializer.class )
-public interface ISCH1 extends VersionableTerm<ISCH1,SCH1Series> {
+@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = SCH1Series.JsonDeserializer.class)
+public interface ISCH1 extends VersionableTerm<ISCH1, SCH1Series> {
 
   String schemeName = "SCH1";
   String schemeID = "0.0.0.0";
 
-  URIIdentifier seriesUri = new URIIdentifier()
-      .withUri(URI.create("http://test/generator#concept_scheme1"));
+  ResourceIdentifier seriesUri =
+      SemanticIdentifier.newId(URI.create("http://test/generator#concept_scheme1"));
 
-  NamespaceIdentifier seriesNamespace = new NamespaceIdentifier()
-      .withId(seriesUri.getUri())
-      .withLabel("Concept Scheme 1")
-      .withTag("concept_scheme_1");
+  ResourceIdentifier seriesNamespace =
+      SemanticIdentifier.newNamedId(
+          seriesUri.getResourceId(),
+          "concept_scheme_1",
+          "Concept Scheme 1");
 
-  default URIIdentifier getSeriesUri() {
-    return (URIIdentifier) seriesUri.clone();
+  default ResourceIdentifier getSeriesUri() {
+    return (ResourceIdentifier) seriesUri.clone();
   }
 
   default boolean equals(ISCH1 other) {
@@ -29,6 +29,6 @@ public interface ISCH1 extends VersionableTerm<ISCH1,SCH1Series> {
   }
 
   default URI getNamespaceUri() {
-    return seriesUri.getUri();
+    return seriesUri.getResourceId();
   }
 }

@@ -1,15 +1,15 @@
 package edu.mayo.kmdp.series;
 
-import edu.mayo.kmdp.id.SemVerIdentifier;
 import java.util.Comparator;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 
 public interface SemVersionable<T extends Versionable<T>> extends Versionable<T> {
 
   @Override
-  SemVerIdentifier getVersionIdentifier();
+  ResourceIdentifier getVersionIdentifier();
 
   static <T extends SemVersionable<T>> Comparator<T> highestVersionFirstComparator() {
-    Comparator<T> c = Comparator.comparing(v -> v.getVersionIdentifier().getSemanticVersion());
+    Comparator<T> c = Comparator.comparing(v -> v.getVersionIdentifier().getSemanticVersionTag());
     return c.reversed();
   }
 

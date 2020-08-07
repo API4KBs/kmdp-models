@@ -15,9 +15,9 @@
  */
 package edu.mayo.kmdp.terms;
 
-import edu.mayo.kmdp.id.Term;
 import java.util.Arrays;
 import java.util.Optional;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public interface Taxonomic<T extends Term> {
 

@@ -17,39 +17,7 @@
 
   <jxb:bindings schemaLocation="identifiers.xsd">
     <xjc:simple/>
-    <namespace:prefix name="id"/>
-
-    <jxb:bindings node="//xsd:simpleType[@name='IDFormats']">
-      <jxb:typesafeEnumClass ref="edu.mayo.kmdp.id.IDFormats"/>
-    </jxb:bindings>
-
-    <jxb:bindings node="//xsd:complexType[@name='SimpleIdentifier']">
-      <inheritance:implements>edu.mayo.kmdp.id.Identifier</inheritance:implements>
-    </jxb:bindings>
-
-    <jxb:bindings node="//xsd:complexType[@name='UUIDentifier']">
-      <inheritance:implements>edu.mayo.kmdp.id.UUIDentifier</inheritance:implements>
-    </jxb:bindings>
-
-    <jxb:bindings node="//xsd:complexType[@name='VersionIdentifier']">
-      <inheritance:implements>edu.mayo.kmdp.id.VersionedIdentifier</inheritance:implements>
-    </jxb:bindings>
-
-    <jxb:bindings node="//xsd:complexType[@name='NamespaceIdentifier']">
-      <inheritance:implements>edu.mayo.kmdp.id.VersionedIdentifier</inheritance:implements>
-    </jxb:bindings>
-
-    <jxb:bindings node="//xsd:complexType[@name='QualifiedIdentifier']">
-      <inheritance:implements>edu.mayo.kmdp.id.adapter.QualifiedId</inheritance:implements>
-    </jxb:bindings>
-
-    <jxb:bindings node="//xsd:complexType[@name='URIIdentifier']">
-      <inheritance:implements>edu.mayo.kmdp.id.adapter.URIId</inheritance:implements>
-    </jxb:bindings>
-
-    <jxb:bindings node="//xsd:complexType[@name='ConceptIdentifier']">
-      <inheritance:implements>edu.mayo.kmdp.id.Term</inheritance:implements>
-    </jxb:bindings>
+    <namespace:prefix name="id_old"/>
 
   </jxb:bindings>
 

@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static edu.mayo.kmdp.util.CodeGenTestBase.applyJaxb;
 import static edu.mayo.kmdp.util.CodeGenTestBase.deploy;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
@@ -24,8 +23,8 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.initGenSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
-import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -46,7 +45,6 @@ import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.GAVIdentifier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentation;
 import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentator;
@@ -68,8 +66,8 @@ public class ServiceDescrCompilationTest {
       assertNotNull(txc);
       assertNotNull(txr);
 
-      Transrepresentator tp = (Transrepresentator) txc.newInstance();
-      Transrepresentation tn = (Transrepresentation) txr.newInstance();
+      Transrepresentator tp = (Transrepresentator) txc.getConstructor().newInstance();
+      Transrepresentation tn = (Transrepresentation) txr.getConstructor().newInstance();
       init(tp, tn);
 
       String xml = JaxbUtil

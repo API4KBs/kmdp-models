@@ -13,8 +13,8 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.name;
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
+import static edu.mayo.kmdp.SurrogateHelper.toLegacyConceptIdentifier;
+import static edu.mayo.kmdp.SurrogateHelper.uri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,6 +29,7 @@ import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
 import edu.mayo.kmdp.metadata.surrogate.Publication;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.surrogate.SurrogateDiffer;
 import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
@@ -42,7 +43,9 @@ import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentation
 import java.util.Collections;
 import java.util.Optional;
 import javax.xml.validation.Schema;
+import org.javers.core.diff.Diff;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.identifiers.ID;
 import org.omg.spec.api4kp._1_0.identifiers.SimpleIdentifier;
 
 public class MetadataTest {
@@ -56,7 +59,8 @@ public class MetadataTest {
         .withName("Foo")
         .withFormalCategory(br)
         .withLifecycle(new Publication().withPublicationStatus(PublicationStatus.Draft))
-        .withSubject(new SimpleAnnotation().withExpr(TermsHelper.sct("mock", "123")));
+        .withSubject(new SimpleAnnotation()
+            .withExpr(toLegacyConceptIdentifier(TermsHelper.sct("mock", "123"))));
 
     checkRoundTrip(ks);
   }
@@ -67,11 +71,13 @@ public class MetadataTest {
         .withAssetId(uri("http://foo.bar", "142412"))
         .withName("Foo")
         .withApplicableIn(new SimpleApplicability()
-            .withSituation(TermsHelper.mayo("Example Situation", "x123"))
+            .withSituation(
+                toLegacyConceptIdentifier(TermsHelper.mayo("Example Situation", "x123")))
         );
 
     ks = checkRoundTrip(ks);
-    assertEquals("x123", ((SimpleApplicability) ks.getApplicableIn()).getSituation().getTag());
+    assertEquals("x123",
+        ((SimpleApplicability) ks.getApplicableIn()).getSituation().getTag());
   }
 
   @Test
@@ -95,7 +101,7 @@ public class MetadataTest {
         .withLifecycle(new Publication().withPublicationStatus(PublicationStatus.Draft))
 
         .withCarriers(new ComputableKnowledgeArtifact()
-            .withArtifactId(uri("urn:to:do"))
+            .withArtifactId(uri("urn:to:do", "LATEST"))
             .withName("Bar")
             .withRepresentation(new Representation()
                 .withLanguage(KnowledgeRepresentationLanguage.KNART_1_3))
@@ -107,7 +113,7 @@ public class MetadataTest {
                 .withRel(DerivationType.Derived_From)
                 // should I have an inverse flag here?
                 .withTgt(new ComputableKnowledgeArtifact()
-                    .withArtifactId(uri("urn:TODO"))
+                    .withArtifactId(uri("urn:TODO", "LATEST"))
                     .withName("TODO")
                     .withSecondaryId(new SimpleIdentifier().withTag("urn:epic:LGL-123")))
             ));
@@ -116,6 +122,10 @@ public class MetadataTest {
 
     assertEquals(KnowledgeAssetCategory.Rules_Policies_And_Guidelines,
         ks.getFormalCategory().get(0));
+  }
+
+  private ID name(String s) {
+    return new SimpleIdentifier().withTag(s);
   }
 
 
@@ -137,15 +147,16 @@ public class MetadataTest {
     Optional<Schema> schema = SurrogateHelper.getSchema();
     assertTrue(schema.isPresent());
 
-    schema.ifPresent(sc ->
-        assertTrue(
-            XMLUtil.validate(str, sc)));
+    // XSD Schemas bind the terminologies to the new datatypes, not the legacy ones
+    // schema.ifPresent(sc -> assertTrue( XMLUtil.validate(str, sc)));
 
     KnowledgeAsset rec = XMLUtil.loadXMLDocument(str)
         .flatMap(dox -> JaxbUtil.unmarshall(ObjectFactory.class, KnowledgeAsset.class, dox))
         .orElse(null);
 
-    assertEquals(ks, rec);
+    SurrogateDiffer sc = new SurrogateDiffer();
+    Diff diff = sc.diff(ks,rec);
+    assertFalse(diff.hasChanges());
     return rec;
   }
 
@@ -153,7 +164,7 @@ public class MetadataTest {
   void testSimpleApplicability() {
     KnowledgeAsset asset = new KnowledgeAsset();
     asset.withApplicableIn(new SimpleApplicability()
-        .withSituation(TermsHelper.mayo("test", "123")));
+        .withSituation(toLegacyConceptIdentifier(TermsHelper.mayo("test", "123"))));
 
     assertTrue(asset.getApplicableIn() instanceof SimpleApplicability);
   }

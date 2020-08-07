@@ -26,6 +26,7 @@ import edu.mayo.kmdp.metadata.v2.surrogate.Derivative;
 import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.v2.surrogate.ObjectFactory;
 import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
+import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateDiffer;
 import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateHelper;
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Applicability;
@@ -46,6 +47,7 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Optional;
 import javax.xml.validation.Schema;
+import org.javers.core.diff.Diff;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.id.Term;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
@@ -148,7 +150,9 @@ public class KnowledgeAssetSurrogateTest {
         .flatMap(dox -> JaxbUtil.unmarshall(ObjectFactory.class, KnowledgeAsset.class, dox))
         .orElse(null);
 
-    assertEquals(ks, rec);
+    SurrogateDiffer differ = new SurrogateDiffer();
+    Diff diff = differ.diff(ks, rec);
+    assertFalse(diff.hasChanges());
     return rec;
   }
 

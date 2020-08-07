@@ -16,107 +16,84 @@
 package edu.mayo.kmdp;
 
 
-import edu.mayo.kmdp.id.IDFormats;
-import edu.mayo.kmdp.id.Identifier;
-import edu.mayo.kmdp.id.ScopedIdentifier;
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.ObjectFactory;
-import org.omg.spec.api4kp._1_0.identifiers.QualifiedIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.SimpleIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
-
-import javax.xml.namespace.QName;
-import javax.xml.validation.Schema;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Optional;
-
-import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.UUID;
+import javax.xml.validation.Schema;
+import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.IdentifierTagType;
+import org.omg.spec.api4kp._1_0.id.ObjectFactory;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public class DatatypeTest {
 
   @Test
   public void testID() {
     // this should at least compile
-    assertNotNull(new URIIdentifier()
-        .withUri(URI.create("http://foo.com/bar/1")));
+    assertNotNull(SemanticIdentifier.newId(URI.create("http://foo.com/bar/1")));
   }
 
   @Test
   public void testSimpleID() {
-    Identifier id = new SimpleIdentifier().withTag("thisId");
+    SemanticIdentifier id = SemanticIdentifier.newId("thisId");
 
     assertEquals("thisId", id.getTag());
-    assertNull(id.getFormat());
+    assertSame(IdentifierTagType.STRING_VALUE,id.getTagFormat());
   }
 
   @Test
   public void testVersionedID() {
-    VersionedIdentifier vid = new VersionIdentifier()
+    SemanticIdentifier vid = new ResourceIdentifier()
         .withTag("1.3.6.1")
-        .withFormat(IDFormats.OID.asURI())
-        .withVersion("42");
+        .withVersionTag("42");
 
-    assertEquals("42", vid.getVersion());
-    assertEquals(IDFormats.OID.asURI(), vid.getFormat());
+    assertEquals("42", vid.getVersionTag());
+    assertSame(IdentifierTagType.OID_VALUE, vid.getTagFormat());
     assertEquals("1.3.6.1", vid.getTag());
   }
 
   @Test
-  public void testQNameID() {
-    ScopedIdentifier qid = new QualifiedIdentifier()
-        .withQName(new QName("http://foo.com", "bar"));
-    assertEquals("http://foo.com", qid.getNamespace().getTag());
-    assertEquals(IDFormats.URI.asURI(), qid.getNamespace().getFormat());
-    assertEquals("bar", qid.getTag());
-    assertEquals(IDFormats.QNAME.asURI(), qid.getFormat());
-  }
-
-  @Test
   public void testTerm() {
-    Term term = new ConceptIdentifier().withLabel("Foo bar and baz")
-        .withRef(URI.create("http://foo.bar/kinda/123456"))
+    Term term = new ConceptIdentifier()
+        .withName("Foo bar and baz")
+        .withReferentId(URI.create("http://foo.bar/kinda/123456"))
         .withTag("123456")
-        .withNamespace(new NamespaceIdentifier()
-            .withId(URI.create("http://foo.bar/kinda"))
-            .withTag("kinda")
-            .withVersion("1981").withVersioning(VersionTagType.GENERIC));
+        .withNamespaceUri(URI.create("http://foo.bar/kinda/versions/1981"));
 
     assertEquals("123456", term.getTag());
-    assertEquals("http://foo.bar/kinda/123456", term.getRef().toString());
+    assertEquals("http://foo.bar/kinda/123456", term.getReferentId().toString());
     assertEquals("Foo bar and baz", term.getLabel());
 
-    NamespaceIdentifier nsId = ((NamespaceIdentifier) term.getNamespace());
+    SemanticIdentifier nsId = SemanticIdentifier.newVersionId(term.getNamespaceUri());
 
-    assertEquals("http://foo.bar/kinda", nsId.getId().toString());
+    assertEquals("http://foo.bar/kinda", nsId.getResourceId().toString());
     assertEquals("kinda", nsId.getTag());
-    assertEquals("1981", nsId.getVersion());
+    assertEquals("1981", nsId.getVersionTag());
   }
 
   @Test
   public void testConceptIdentifier() {
     ConceptIdentifier trm = new ConceptIdentifier()
-        .withRef(URI.create("http://foo.bar/234"))
-        .withLabel("aaaa")
+        .withResourceId(URI.create("http://foo.bar/234"))
+        .withUuid(UUID.randomUUID())
+        .withName("aaaa")
         .withTag("234")
-        .withNamespace(new NamespaceIdentifier().withId(URI.create("http://id/1"))
-            .withTag("id")
-            .withVersion("1").withVersioning(VersionTagType.SEQUENTIAL));
+        .withNamespaceUri(URI.create("http://id/versions/1"));
 
     ObjectFactory of = new ObjectFactory();
     String xml = JaxbUtil.marshall(Collections.singleton(of.getClass()),
@@ -129,7 +106,7 @@ public class DatatypeTest {
 
     //System.out.println(xml);
     Optional<Schema> schema = getSchemas(
-        DatatypeTest.class.getResource("/xsd/API4KP/api4kp/identifiers/identifiers.xsd"),
+        DatatypeTest.class.getResource("/xsd/API4KP/api4kp/id/id.xsd"),
         catalogResolver("/xsd/api4kp-catalog.xml"));
     assertTrue(schema.isPresent());
 
@@ -138,23 +115,17 @@ public class DatatypeTest {
 
 
   @Test
-  public void testIDComposition() {
-    URIIdentifier uid = DatatypeHelper.uri("http://foo.bar", "baz", "1");
-    assertEquals(URI.create("http://foo.bar/baz"), uid.getUri());
-  }
-
-
-  @Test
   public void toURIIDentifier() {
     String versionedId = "http://foo.bar/baz/versions/1.2.0";
     String unversionedId = "http://foo.bar/baz";
-    URIIdentifier uid = DatatypeHelper.toURIIDentifier(versionedId);
-    assertEquals("http://foo.bar/baz", uid.getUri().toString());
-    assertEquals("1.2.0", uid.getVersion());
+    ResourceIdentifier uid = SemanticIdentifier.newVersionId(URI.create(versionedId));
+
+    assertEquals("http://foo.bar/baz", uid.getResourceId().toString());
+    assertEquals("1.2.0", uid.getVersionTag());
     assertEquals(versionedId, uid.getVersionId().toString());
 
-    uid = DatatypeHelper.toURIIDentifier(unversionedId);
-    assertEquals("http://foo.bar/baz", uid.getUri().toString());
+    uid = SemanticIdentifier.newId(URI.create(unversionedId));
+    assertEquals("http://foo.bar/baz", uid.getResourceId().toString());
     assertNull(uid.getVersionId());
   }
 }

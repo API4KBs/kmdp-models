@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.URIUtil;
@@ -22,7 +21,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public interface AbstractTermsJsonAdapter {
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
-      gen.writeObject(v.asConcept());
+      gen.writeObject(v.asConceptIdentifier());
     }
 
     @Override
@@ -49,7 +49,7 @@ public interface AbstractTermsJsonAdapter {
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
-      gen.writeFieldName(v.getConceptUUID() != null ? v.getConceptUUID().toString() : v.getTag());
+      gen.writeFieldName(v.getUuid() != null ? v.getUuid().toString() : v.getTag());
     }
   }
 
@@ -142,16 +142,21 @@ public interface AbstractTermsJsonAdapter {
 
     protected Optional<String> getVersionNode(TreeNode t) {
       if (t.isObject()) {
+        // legacy serializations used a structured 'namespace' sub-object
         TreeNode nsNode = t.get("namespace");
-        if (nsNode == null) {
-          return Optional.empty();
+        if (nsNode != null) {
+          TextNode versionNode = (TextNode) nsNode.get("version");
+          if (versionNode == null) {
+            return Optional.empty();
+          }
+          return Optional.of(versionNode)
+              .map(TextNode::asText);
+        } else {
+          // later serializations are flat
+          TextNode versionNode = (TextNode) t.get("versionTag");
+          return Optional.ofNullable(versionNode)
+              .map(TextNode::asText);
         }
-        TextNode versionNode = (TextNode) nsNode.get("version");
-        if (versionNode == null) {
-          return Optional.empty();
-        }
-        return Optional.of(versionNode)
-            .map(TextNode::asText);
       } else {
         return Optional.empty();
       }
@@ -176,9 +181,8 @@ public interface AbstractTermsJsonAdapter {
       }
       return
           trm.getTag().equals(code)
-              || (Util.isUUID(code) && trm.getConceptUUID().equals(Util.toUUID(code)))
-              || (URIUtil.isUri(code) && trm.getConceptId().toString().equals(code))
-              || trm.getTags().contains(code)
+              || (Util.isUUID(code) && trm.getUuid().equals(Util.toUUID(code)))
+              || (URIUtil.isUri(code) && trm.getResourceId().toString().equals(code))
           ;
     }
 

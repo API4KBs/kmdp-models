@@ -1,9 +1,9 @@
 package edu.mayo.kmdp.terms.generator.internal;
 
-import edu.mayo.kmdp.id.Term;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public class ConceptTermSeries {
 

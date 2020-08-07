@@ -20,7 +20,6 @@ import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
@@ -48,7 +47,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public abstract class BaseEnumGenerator {
 
@@ -243,7 +243,7 @@ public abstract class BaseEnumGenerator {
       this.versions = versions.stream()
           .flatMap(StreamUtil.filterAs(ConceptTermImpl.class))
           // Ensure latest version first
-          .sorted(Comparator.comparing(ConceptIdentifier::getNamespace).reversed())
+          .sorted(Comparator.comparing(ConceptIdentifier::getEstablishedOn).reversed())
           //
           .map(v -> packageNameMapper.apply(v.getTermConceptPackage())
               + "."

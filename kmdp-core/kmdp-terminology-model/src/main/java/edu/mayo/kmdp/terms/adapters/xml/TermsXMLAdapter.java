@@ -15,43 +15,42 @@
  */
 package edu.mayo.kmdp.terms.adapters.xml;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.util.StreamUtil;
 import java.util.Arrays;
 import java.util.Optional;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public abstract class TermsXMLAdapter extends
-    javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier, Term> {
+    javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._1_0.id.ConceptIdentifier, Term> {
 
   @Override
-  public Term unmarshal(org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier v) {
+  public Term unmarshal(org.omg.spec.api4kp._1_0.id.ConceptIdentifier v) {
     return DatatypeHelper.resolveTerm(
         v.getTag(),
-        v.getNamespace().getVersion() != null ? getValuesForVersion(v.getNamespace()) : getValues(),
+        v.getVersionTag() != null ? getValuesForVersion(v.getVersionTag()) : getValues(),
         Term::getTag)
         .orElse(null);
   }
 
   @Override
-  public org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier marshal(Term v) {
-    return DatatypeHelper.toConceptIdentifier(v);
+  public org.omg.spec.api4kp._1_0.id.ConceptIdentifier marshal(Term v) {
+    return v != null ? v.asConceptIdentifier() : null;
   }
 
   protected abstract Term[] getValues();
 
-  protected Term[] getValuesForVersion( final NamespaceIdentifier identifier ) {
+  protected Term[] getValuesForVersion( final String versionTag ) {
     return Arrays.stream(getValues())
-        .map(x -> getVersion(x,identifier.getVersion()))
+        .map(x -> getVersion(x,versionTag))
         .flatMap(StreamUtil::trimStream)
         .toArray(Term[]::new);
   }
 
-  private Optional<? extends Term> getVersion(Term x, String version) {
+  private Optional<? extends Term> getVersion(Term x, String versionTag) {
     return x instanceof Series
-        ? (Optional<? extends Term>) ((Series<?>) x).getVersion(version)
+        ? (Optional<? extends Term>) ((Series<?>) x).getVersion(versionTag)
         : Optional.of(x);
   }
 

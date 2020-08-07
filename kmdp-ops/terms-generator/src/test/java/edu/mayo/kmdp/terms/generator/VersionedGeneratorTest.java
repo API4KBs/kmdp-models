@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.series.Versionable;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
@@ -36,7 +35,6 @@ import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.internal.VersionedConceptGraph;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.StreamUtil;
-import edu.mayo.kmdp.util.Util;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.net.URI;
@@ -50,6 +48,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -91,11 +91,11 @@ public class VersionedGeneratorTest {
 
       ensureSuccessCompile(src, src, target);
 
-      Class scheme0 = getNamedClass("test.generator.SCH1", target);
-      Class scheme1 = getNamedClass("test.generator.v20180210.SCH1", target);
-      Class scheme2 = getNamedClass("test.generator.v20190605.SCH1", target);
-      Class scheme3 = getNamedClass("test.generator.snapshot.SCH1", target);
-      Class sseries = getNamedClass("test.generator.SCH1Series", target);
+      Class<?> scheme0 = getNamedClass("test.generator.SCH1", target);
+      Class<?> scheme1 = getNamedClass("test.generator.v20180210.SCH1", target);
+      Class<?> scheme2 = getNamedClass("test.generator.v20190605.SCH1", target);
+      Class<?> scheme3 = getNamedClass("test.generator.snapshot.SCH1", target);
+      Class<?> sseries = getNamedClass("test.generator.SCH1Series", target);
 
       assertTrue(scheme0.isInterface());
       assertTrue(scheme1.isEnum());
@@ -111,7 +111,7 @@ public class VersionedGeneratorTest {
 
       Field versionURIs = sseries.getDeclaredField("schemeVersionIdentifiers");
       assertNotNull(versionURIs);
-      List<?> v = (List) versionURIs.get(null);
+      List<?> v = (List<?>) versionURIs.get(null);
       assertEquals(3,v.size());
 
       Field latestVersionURI = sseries.getDeclaredField("latestVersionIdentifier");
@@ -120,7 +120,7 @@ public class VersionedGeneratorTest {
       assertEquals(URI.create("http://test/generator/SNAPSHOT"),u);
 
       assertTrue(x.get() instanceof Series);
-      List<?> versions = ((Series)x.get()).getVersions();
+      List<?> versions = ((Series<?>)x.get()).getVersions();
 
       versions.forEach(ver -> assertTrue(ver instanceof Versionable));
       List<Versionable> versionables = versions.stream()
@@ -128,13 +128,12 @@ public class VersionedGeneratorTest {
           .collect(Collectors.toList());
 
       List<Date> releases = versionables.stream()
-          .map(Versionable::getVersionIdentifier)
-          .map(VersionedIdentifier::getEstablishedOn)
+          .map(Versionable::getVersionEstablishedOn)
           .collect(Collectors.toList());
 
       List<String> releaseVersions = versionables.stream()
           .map(Versionable::getVersionIdentifier)
-          .map(VersionedIdentifier::getVersion)
+          .map(VersionIdentifier::getVersionTag)
           .collect(Collectors.toList());
 
       assertTrue(releases.get(0).getTime() > releases.get(1).getTime());
@@ -154,10 +153,11 @@ public class VersionedGeneratorTest {
       assertEquals(new HashSet<>(releaseVersions),new HashSet<>(sv));
 
       Date effectiveDate = DateTimeUtil.parseDate(sv.get(1),"yyyyMMdd");
-      Optional<?> version = ((Series)x.get()).asOf(effectiveDate);
+      Optional<?> version = ((Series<?>)x.get()).asOf(effectiveDate);
       assertTrue(version.isPresent());
       assertTrue(version.get() instanceof VersionableTerm);
       VersionableTerm vt = (VersionableTerm) version.get();
+      assertEquals(vt.getVersionEstablishedOn(), effectiveDate);
       assertEquals(vt.getVersionIdentifier().getEstablishedOn(), effectiveDate);
 
     } catch (Exception e) {

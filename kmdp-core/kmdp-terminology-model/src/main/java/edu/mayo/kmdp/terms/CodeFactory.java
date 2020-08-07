@@ -15,11 +15,10 @@
  */
 package edu.mayo.kmdp.terms;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme;
 import edu.mayo.kmdp.terms.impl.model.InternalTerm;
-
 import java.net.URI;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public interface CodeFactory {
 
@@ -40,6 +39,7 @@ public interface CodeFactory {
         codeUri.getFragment(),
         null,
         codeUri,
-        new AnonymousConceptScheme(schemeURI));
+        new AnonymousConceptScheme(schemeURI),
+        null);
   }
 }

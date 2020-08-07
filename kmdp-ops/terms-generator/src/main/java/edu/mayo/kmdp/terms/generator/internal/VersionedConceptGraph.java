@@ -1,7 +1,6 @@
 package edu.mayo.kmdp.terms.generator.internal;
 
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import java.net.URI;
 import java.util.Collection;
@@ -13,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public class VersionedConceptGraph extends ConceptGraph {
 

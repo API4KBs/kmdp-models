@@ -52,6 +52,7 @@ import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLangu
 import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import edu.mayo.ontology.taxonomies.mimetype.MIMETypeSeries;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConceptSeries;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -59,8 +60,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
 public class VocabularyTest {
 
@@ -125,7 +128,7 @@ public class VocabularyTest {
         LexiconSeries.LOINC.getTag());
 
     assertEquals("http://snomed.info/sct/900000000000207008/version/20180731",
-        LexiconSeries.SNOMED_CT.getRef().toString());
+        LexiconSeries.SNOMED_CT.getReferentId().toString());
 
     assertEquals("it",
         LanguageSeries.Italian.getTag());
@@ -159,10 +162,10 @@ public class VocabularyTest {
   @Test
   public void testReferents() {
     assertEquals("https://www.omg.org/spec/DMN/1.2/",
-        KnowledgeRepresentationLanguageSeries.DMN_1_2.getRef().toString());
+        KnowledgeRepresentationLanguageSeries.DMN_1_2.getReferentId().toString());
 
     assertEquals("https://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/Italian",
-        LanguageSeries.Italian.getRef().toString());
+        LanguageSeries.Italian.getReferentId().toString());
 
   }
 
@@ -209,16 +212,14 @@ public class VocabularyTest {
     Optional<UUID> uid = ensureUUID(KnowledgeAssetCategorySeries.SCHEME_ID);
     assertTrue(uid.isPresent());
 
-    URIIdentifier schemeURI = edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.schemeURI;
-    NamespaceIdentifier nspace = edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.namespace;
+    URI schemeURI = edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.schemeURI.getVersionId();
+    ResourceIdentifier nspace = edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.namespace;
 
-    assertNotNull(schemeURI.getVersionId());
+    assertNotNull(schemeURI);
+    VersionIdentifier vid = SemanticIdentifier.newVersionId(schemeURI);
 
-    String seriesId = schemeURI.getUri().toString();
-    String versionId = schemeURI.getVersionId().toString();
-    String version = versionId.replace(seriesId,"").replace("/","");
-    assertEquals(version, schemeURI.getVersion());
-    assertEquals(version, nspace.getVersion());
+    String version = vid.getVersionTag();
+    assertEquals(version, nspace.getVersionTag());
   }
 
   @Test
@@ -226,7 +227,7 @@ public class VocabularyTest {
     assertNotNull(KnowledgeRepresentationLanguageSeries.SPARQL_1_1);
 
     assertEquals(KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax,
-        Registry.getValidationSchema(KnowledgeRepresentationLanguageSeries.DMN_1_2.getRef())
+        Registry.getValidationSchema(KnowledgeRepresentationLanguageSeries.DMN_1_2.getReferentId())
             .flatMap(KnowledgeRepresentationLanguageSerializationSeries::resolveRef)
             .orElse(null));
 

@@ -39,11 +39,11 @@ public class XSDCompilationTest {
     assertEquals(6, KnowledgeAssetCategory.values().length);
 
     KnowledgeAssetType kat = KnowledgeAssetTypeSeries.Clinical_Rule;
-    assertEquals("https://www.omg.org/spec/API4KP/api4kp-ckao/ClinicalRule", kat.getRef().toString());
+    assertEquals("https://www.omg.org/spec/API4KP/api4kp-ckao/ClinicalRule", kat.getReferentId().toString());
 
     KnowledgeRepresentationLanguage dmn = KnowledgeRepresentationLanguageSeries.DMN_1_1;
     KnowledgeRepresentationLanguage dmn2 = KnowledgeRepresentationLanguageSeries.DMN_1_2;
-    assertEquals("https://www.omg.org/spec/DMN/1.1/", dmn.getRef().toString());
-    assertEquals("https://www.omg.org/spec/DMN/1.2/", dmn2.getRef().toString());
+    assertEquals("https://www.omg.org/spec/DMN/1.1/", dmn.getReferentId().toString());
+    assertEquals("https://www.omg.org/spec/DMN/1.2/", dmn2.getReferentId().toString());
   }
 }

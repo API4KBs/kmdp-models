@@ -1,6 +1,7 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.SurrogateBuilder.assetId;
+import static edu.mayo.kmdp.SurrogateHelper.toLegacyConceptIdentifier;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -62,7 +63,7 @@ public class MetadataDiffTest {
   void testDiffWithConceptIdentifiers() {
     SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
 
-    ConceptIdentifier trm = TermsHelper.mayo("Foo", "1234");
+    ConceptIdentifier trm = toLegacyConceptIdentifier(TermsHelper.mayo("Foo", "1234"));
 
     KnowledgeAsset base = new KnowledgeAsset()
         .withAssetId(assetId(UUID.randomUUID(), "0.0.0"))
@@ -83,7 +84,7 @@ public class MetadataDiffTest {
   void testDiffWithConceptIdentifiersLegacyNamespace() {
     SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
 
-    ConceptIdentifier trm = TermsHelper.mayo("Foo", "1234");
+    ConceptIdentifier trm = toLegacyConceptIdentifier(TermsHelper.mayo("Foo", "1234"));
 
     KnowledgeAsset base = new KnowledgeAsset()
         .withAssetId(assetId(UUID.randomUUID(), "0.0.0"))

@@ -15,12 +15,12 @@
  */
 package edu.mayo.kmdp.terms.impl.model;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ValueSet;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.stream.Stream;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 @SuppressWarnings("unchecked")
 public class DefaultValueSet<T extends Enum<T> & Term> extends AbstractValueSet implements

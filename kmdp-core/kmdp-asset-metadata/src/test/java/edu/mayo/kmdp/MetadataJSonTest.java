@@ -15,7 +15,8 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
+import static edu.mayo.kmdp.SurrogateHelper.toLegacyConceptIdentifier;
+import static edu.mayo.kmdp.SurrogateHelper.uri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -82,7 +83,8 @@ public class MetadataJSonTest {
     KnowledgeAsset ks = new KnowledgeAsset()
         .withAssetId(uri("http://foo.bar/789", "0001"))
         .withApplicableIn(new SimpleApplicability()
-            .withSituation(TermsHelper.mayo("Example Situation","x123"))
+            .withSituation(
+                toLegacyConceptIdentifier(TermsHelper.mayo("Example Situation","x123")))
         );
 
     String x = toJson(ks);
@@ -105,7 +107,7 @@ public class MetadataJSonTest {
     ks = JSonUtil.parseJson(x,KnowledgeAsset.class).orElse(null);
     assertNotNull(ks);
 
-    assertEquals(DependencyTypeSeries.Depends_On,
+    assertEquals(DependencyTypeSeries.Depends_On.getLatest(),
         ((Dependency)ks.getRelated().get(0)).getRel());
   }
 
@@ -191,17 +193,17 @@ public class MetadataJSonTest {
         .withDescription("This is a test")
 
         .withSubject(new SimpleAnnotation()
-            .withRel(AnnotationRelTypeSeries.Has_Primary_Subject.getLatest().asConcept())
-            .withExpr(TermsHelper.mayo("fooLabel", "123456")))
+            .withRel(toLegacyConceptIdentifier(AnnotationRelTypeSeries.Has_Primary_Subject.getLatest()))
+            .withExpr(toLegacyConceptIdentifier(TermsHelper.mayo("fooLabel", "123456"))))
 
         .withRelated(new Derivative()
                 .withRel(DerivationTypeSeries.Abdridgement_Of)
                 .withTgt(new ComputableKnowledgeArtifact()
-                    .withArtifactId(uri("http://foo.bar/234"))),
+                    .withArtifactId(uri("http://foo.bar/234", "LATEST"))),
             new Derivative()
                 .withRel(DerivationTypeSeries.Derived_From)
                 .withTgt(new KnowledgeAsset()
-                    .withAssetId(uri("http://foo.bar/234"))))
+                    .withAssetId(uri("http://foo.bar/234", "LATEST"))))
         .withCitations(
             new Citation()
                 .withRel(BibliographicCitationTypeSeries.Cites)

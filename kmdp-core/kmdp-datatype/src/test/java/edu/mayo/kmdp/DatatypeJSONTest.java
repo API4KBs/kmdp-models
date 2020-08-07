@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,9 +29,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.Pointer;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.Pointer;
 
 public class DatatypeJSONTest {
 
@@ -43,13 +41,13 @@ public class DatatypeJSONTest {
     ptr.setHref(foo);
     ptr.setName("Name");
     ptr.setType(foo);
-    ptr.setEntityRef(uri("uri:urn:faa"));
+    ptr.setResourceId(URI.create("uri:urn:faa"));
 
     Pointer ptr2 = new Pointer();
     ptr2.setHref(foo);
     ptr2.setName("Name2");
     ptr2.setType(foo);
-    ptr2.setEntityRef(uri("uri:urn:fbb"));
+    ptr2.setResourceId(URI.create("uri:urn:fbb"));
 
 //    JSonUtil.printOutJson(Arrays.asList(ptr, ptr2));
 
@@ -63,9 +61,9 @@ public class DatatypeJSONTest {
       mapper.writerWithDefaultPrettyPrinter().writeValue(baos, ptr);
       String str = new String(baos.toByteArray());
 
-      //System.out.println(str);
+      System.out.println(str);
       assertTrue(str.contains("name=\"Name\""));
-      assertTrue(str.contains("uri=\"uri:urn:faa\""));
+      assertTrue(str.contains("resourceId=\"uri:urn:faa\""));
     } catch (IOException e) {
       fail(e.getMessage());
     }
@@ -73,23 +71,23 @@ public class DatatypeJSONTest {
 
   @Test
   public void testJsonID() {
-    ConceptIdentifier c1 = new ConceptIdentifier().withConceptId(URI.create("http://foo.bar"));
-    ConceptIdentifier c2 = new ConceptIdentifier().withRef(URI.create("http://foo.bar"));
+    ConceptIdentifier c1 = new ConceptIdentifier().withResourceId(URI.create("http://foo.bar"));
+    ConceptIdentifier c2 = new ConceptIdentifier().withReferentId(URI.create("http://foo.bar/ref"));
 
-    assertTrue(JSonUtil.printJson(c1).filter((s) -> s.contains("@id")).isPresent());
-    assertFalse(JSonUtil.printJson(c2).filter((s) -> s.contains("@id")).isPresent());
+    JSonUtil.printJson(c1).ifPresent(System.out::println);
+    JSonUtil.printJson(c2).ifPresent(System.out::println);
 
-    NamespaceIdentifier nsId = new NamespaceIdentifier().withId(URI.create("http://foo.bar"))
-        .withLabel("NS")
-        .withTag("foo");
+    assertTrue(JSonUtil.printJson(c1).filter((s) -> s.contains("resourceId")).isPresent());
+    assertFalse(JSonUtil.printJson(c2).filter((s) -> s.contains("resourceId")).isPresent());
 
-    assertTrue(JSonUtil.printJson(nsId).filter((s) -> s.contains("\"@id\" : \"http://foo.bar\"")).isPresent());
+    assertTrue(JSonUtil.printJson(c1)
+        .filter((s) -> s.contains("\"resourceId\" : \"http://foo.bar\"")).isPresent());
   }
 
   @Test
   public void testRoundTrip() {
     ConceptIdentifier c1 = new ConceptIdentifier()
-        .withConceptId(URI.create("http://foo.bar"))
+        .withResourceId(URI.create("http://foo.bar"))
         .withTag("bar");
     Optional<String> s = JSonUtil.writeJsonAsString(c1);
     assertTrue(s.isPresent());

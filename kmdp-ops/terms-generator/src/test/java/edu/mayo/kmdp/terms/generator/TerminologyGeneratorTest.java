@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.id.Term;
+import org.omg.spec.api4kp._1_0.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
@@ -87,7 +87,7 @@ public class TerminologyGeneratorTest {
 
     concepts.forEach((concept) -> {
       assertNotNull(concept.getTag());
-      assertNotNull(concept.getNamespace());
+      assertNotNull(concept.getNamespaceUri());
       assertNotNull(concept.getLabel());
     });
   }

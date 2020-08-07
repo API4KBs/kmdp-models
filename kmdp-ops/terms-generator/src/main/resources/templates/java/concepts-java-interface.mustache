@@ -3,8 +3,8 @@ package {{intfPackageName}};
 import edu.mayo.kmdp.terms.ControlledTerm;
 import edu.mayo.kmdp.terms.VersionableTerm;
 import java.net.URI;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 
 @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( {{seriesName}}.Adapter.class )
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{seriesName}}.JsonDeserializer.class )
@@ -14,24 +14,25 @@ public interface {{intfName}} extends ControlledTerm, VersionableTerm<{{intfName
   String SCHEME_ID = "{{conceptSchemeTag}}";
 
   String seriesIdentifier = "{{seriesNamespace}}";
-  URIIdentifier seriesUri = new URIIdentifier()
-    .withUri( URI.create( "{{seriesNamespace}}" ) );
+  ResourceIdentifier seriesUri =
+      SemanticIdentifier.newId(URI.create("{{seriesNamespace}}"));
 
-  NamespaceIdentifier seriesNamespace = new NamespaceIdentifier()
-      .withId(seriesUri.getUri())
-      .withLabel(SCHEME_NAME)
-      .withTag(SCHEME_ID);
+  ResourceIdentifier seriesNamespace =
+      SemanticIdentifier.newNamedId(
+          seriesUri.getResourceId(),
+          SCHEME_ID,
+          SCHEME_NAME);
 
-  default URIIdentifier getSeriesUri() {
-    return seriesUri;
+  default ResourceIdentifier getSeriesUri() {
+    return (ResourceIdentifier) seriesUri.clone();
   }
 
   @Override
-  public NamespaceIdentifier getNamespace();
+  public ResourceIdentifier getNamespace();
 
   @Override
   default URI getNamespaceUri() {
-    return seriesUri.getUri();
+    return seriesUri.getResourceId();
   }
 
 }

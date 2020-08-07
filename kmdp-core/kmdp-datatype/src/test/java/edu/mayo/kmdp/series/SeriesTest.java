@@ -6,20 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import com.github.zafarkhaja.semver.Version;
-import edu.mayo.kmdp.id.SemVerIdentifier;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.util.DateTimeUtil;
-import java.text.ParseException;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 
 class SeriesTest {
 
@@ -57,7 +54,7 @@ class SeriesTest {
 
     assertEquals(Version.valueOf("2.0.0"), p.getLatestVersion());
     assertEquals("1.0.0",
-        p.getVersion(1).orElse(p.getLatest()).getVersionIdentifier().getVersion());
+        p.getVersion(1).orElse(p.getLatest()).getVersionIdentifier().getVersionTag());
 
     assertEquals(43,
         p.getVersion("1.0.0").orElse(p.getLatest()).getAge());
@@ -103,7 +100,7 @@ class SeriesTest {
 
   @Test
   void testSameNess() {
-    assertTrue(Series.isSame(p.getLatest(), p.getVersion(2).orElse(null)));
+    assertTrue(Series.isSameEntity(p.getLatest(), p.getVersion(2).orElse(null)));
     assertTrue(Series.isDifferentVersion(p.getLatest(), p.getVersion(2).orElse(null)));
   }
 
@@ -129,7 +126,7 @@ class SeriesTest {
 
   public static class Person implements SemVerSeries<PersonSnapshot> {
 
-    private List<PersonSnapshot> versions = new LinkedList<>();
+    private final List<PersonSnapshot> versions = new LinkedList<>();
 
     Person(String name, int age) {
       addVersion(
@@ -154,7 +151,7 @@ class SeriesTest {
 
   public static class PersonSnapshot implements SemVersionable<PersonSnapshot> {
 
-    private SemVerIdentifier id;
+    private ResourceIdentifier id;
     private int age;
     private final String name;
 
@@ -169,13 +166,13 @@ class SeriesTest {
     }
 
     @Override
-    public void dub(VersionedIdentifier identifier) {
+    public void dub(VersionIdentifier identifier) {
       SemVersionable.super.dub(identifier);
-      this.id = (SemVerIdentifier) identifier;
+      this.id = (ResourceIdentifier) identifier;
     }
 
     @Override
-    public SemVerIdentifier getVersionIdentifier() {
+    public ResourceIdentifier getVersionIdentifier() {
       return id;
     }
 
@@ -198,8 +195,13 @@ class SeriesTest {
     }
 
     @Override
+    public Date getVersionEstablishedOn() {
+      return getVersionIdentifier().getEstablishedOn();
+    }
+
+    @Override
     public String toString() {
-      return name + "@" + age + " :: " + getVersionIdentifier().getVersion() + " - "
+      return name + "@" + age + " :: " + getVersionIdentifier().getVersionTag() + " - "
           + getVersionIdentifier().getEstablishedOn();
     }
 

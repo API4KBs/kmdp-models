@@ -2,21 +2,22 @@ package edu.mayo.kmdp.terms.example.cito;
 
 import edu.mayo.kmdp.terms.VersionableTerm;
 import java.net.URI;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 
-public interface ICito extends VersionableTerm<ICito,CitoSeries> {
+public interface ICito extends VersionableTerm<ICito, CitoSeries> {
 
   String schemeName = "cito";
   String schemeID = "cito";
 
-  URIIdentifier seriesUri = new URIIdentifier()
-      .withUri(URI.create("http://test.skos.foo#cito"));
+  ResourceIdentifier seriesUri =
+      SemanticIdentifier.newId(URI.create("http://test.skos.foo#cito"));
 
-  default URIIdentifier getSeriesUri() {
-    return (URIIdentifier) seriesUri.clone();
+  default ResourceIdentifier getSeriesUri() {
+    return (ResourceIdentifier) seriesUri.clone();
   }
 
   default URI getNamespaceUri() {
-    return seriesUri.getUri();
+    return seriesUri.getResourceId();
   }
 }

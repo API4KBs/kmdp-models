@@ -15,8 +15,6 @@
  */
 package edu.mayo.kmdp.terms.impl.model;
 
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.Taxonomic;
 import java.lang.reflect.Array;
@@ -26,13 +24,16 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
-public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> extends
-    NamespaceIdentifier implements ConceptScheme<T> {
+public class DefaultEnumeratedConceptScheme<T extends Enum<T> & Taxonomic<T> & Term>
+    extends IdentifiedConceptScheme<T> implements ConceptScheme<T> {
 
   private URI versionId;
 
@@ -40,16 +41,14 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
   private Class<T> type;
   private EnumMap<T, EnumSet<T>> ancestry;
 
-  public DefaultConceptScheme(final String schemeID,
+  public DefaultEnumeratedConceptScheme(final String schemeID,
       final String schemeName,
       final URI schemeURI,
-      final URI schemeVersionURI,
+      final String versionTag,
       final Class<T> type) {
-    this.withId(schemeURI)
-        .withLabel(schemeName)
-        .withTag(schemeID)
-        .withVersion(DatatypeHelper.versionOf(schemeVersionURI));
-    this.versionId = schemeVersionURI;
+    super(schemeURI, versionTag, schemeName,null);
+
+    this.versionId = SemanticIdentifier.newId(schemeURI, versionTag).getVersionId();
 
     this.type = type;
     this.concepts = EnumSet.allOf(type);
@@ -78,8 +77,8 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
   }
 
   @Override
-  public NamespaceIdentifier asNamespace() {
-    return this;
+  public ResourceIdentifier asNamespace() {
+    return null;
   }
 
   public Stream<T> getConcepts() {
@@ -103,7 +102,7 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
       return Optional.of(type.cast(cd));
     } else {
       return concepts.stream()
-          .filter(t -> t.getRef().equals(cd.getRef()))
+          .filter(t -> t.getReferentId().equals(cd.getReferentId()))
           .findAny();
     }
   }
@@ -113,11 +112,11 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
     if (this == o) {
       return true;
     }
-    if (!(o instanceof DefaultConceptScheme)) {
+    if (!(o instanceof DefaultEnumeratedConceptScheme)) {
       return false;
     }
 
-    DefaultConceptScheme<?> that = (DefaultConceptScheme<?>) o;
+    DefaultEnumeratedConceptScheme<?> that = (DefaultEnumeratedConceptScheme<?>) o;
 
     return versionId != null ? versionId.equals(that.versionId) : that.versionId == null;
   }
@@ -127,5 +126,15 @@ public class DefaultConceptScheme<T extends Enum<T> & Taxonomic<T> & Term> exten
     int result = super.hashCode();
     result = 31 * result + (versionId != null ? versionId.hashCode() : 0);
     return result;
+  }
+
+  @Override
+  public UUID getUuid() {
+    return null;
+  }
+
+  @Override
+  public URI getNamespaceUri() {
+    return null;
   }
 }

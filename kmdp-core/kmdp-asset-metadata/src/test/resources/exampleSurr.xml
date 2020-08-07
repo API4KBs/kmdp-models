@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<surr:knowledgeAsset
+  xmlns:id_old="http://www.omg.org/spec/API4KP/1.0/identifiers"
+  xmlns:ann="http://kmdp.mayo.edu/metadata/annotations"
+  xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate ../target/classes/xsd/metadata/surrogate/surrogate.xsd"
+  name="Foo">
+  <surr:lifecycle>
+    <surr:publicationStatus label="draft" tag="draft" ref="http://purl.org/spar/pso/draft"
+      conceptId="https://ontology.mayo.edu/taxonomies/KAO/PublicationStatus#f91b2829-bf86-33e3-9809-4e1dedb6f947">
+      <id_old:conceptUUID>f91b2829-bf86-33e3-9809-4e1dedb6f947</id_old:conceptUUID>
+      <id_old:namespace tag="PublicationStatus"
+        id="https://ontology.mayo.edu/taxonomies/KAO/PublicationStatus"
+        establishedOn="2020-08-07T00:00:00"/>
+    </surr:publicationStatus>
+  </surr:lifecycle>
+  <surr:formalCategory label="Rules, Policies and Guidelines" tag="BusinessRuleAsset"
+    ref="https://www.omg.org/spec/API4KP/api4kp-kao/BusinessRuleAsset"
+    conceptId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetCategory#7db1af1f-1703-356f-bddc-8cb0a81a442c">
+    <id_old:conceptUUID>7db1af1f-1703-356f-bddc-8cb0a81a442c</id_old:conceptUUID>
+    <id_old:namespace tag="KnowledgeAssetCategory"
+      id="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetCategory"
+      establishedOn="2020-08-07T00:00:00"/>
+  </surr:formalCategory>
+  <surr:assetId uri="http://foo.bar" versionId="http://foo.bar/versions/234"/>
+  <surr:subject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:type="ann:SimpleAnnotation">
+    <ann:expr label="mock" tag="123" ref="http://snomed.info/id/123"
+      conceptId="http://snomed.info/id/123">
+      <id_old:conceptUUID>202cb962-ac59-375b-964b-07152d234b70</id_old:conceptUUID>
+      <id_old:namespace tag="900000000000207008" id="http://snomed.info/sct/900000000000207008"
+        establishedOn="2020-08-07T00:00:00"/>
+    </ann:expr>
+  </surr:subject>
+</surr:knowledgeAsset>

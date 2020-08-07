@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
@@ -40,6 +39,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.OWL;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.id.Term;
 import org.semanticweb.owlapi.model.OWLOntology;
 import ru.avicomp.ontapi.OntologyManager;
 
@@ -68,7 +68,7 @@ public class ComplexHierarchyTest {
 
     assertTrue(list.stream()
         .anyMatch(
-            (t) -> "http://test.org/KAO#ClinicalKnowledgeAsset".equals(t.getRef().toString())));
+            (t) -> "http://test.org/KAO#ClinicalKnowledgeAsset".equals(t.getReferentId().toString())));
   }
 
 

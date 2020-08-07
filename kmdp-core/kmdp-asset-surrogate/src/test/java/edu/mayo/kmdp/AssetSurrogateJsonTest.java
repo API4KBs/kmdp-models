@@ -103,7 +103,7 @@ public class AssetSurrogateJsonTest {
     ks = JSonUtil.parseJson(x, KnowledgeAsset.class).orElse(null);
     assertNotNull(ks);
 
-    assertEquals(Depends_On,
+    assertEquals(Depends_On.getLatest(),
         ((Dependency) ks.getLinks().get(0)).getRel());
   }
 

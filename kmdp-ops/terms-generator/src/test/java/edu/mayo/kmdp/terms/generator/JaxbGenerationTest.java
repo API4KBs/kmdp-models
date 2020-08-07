@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.id.Term;
+import org.omg.spec.api4kp._1_0.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
@@ -241,7 +241,7 @@ public class JaxbGenerationTest {
 
     deploy(new ByteArrayInputStream(parentXSD.getBytes()), src, "/parent.xsd");
     deploy(new ByteArrayInputStream(bindings.getBytes()), src, "/bindings.xjb");
-    deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
+    deploy(src, "/xsd/API4KP/api4kp/id/id.xsd");
     deploy(src, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd");
     deploy(src, "/xsd/api4kp-catalog.xml");
 

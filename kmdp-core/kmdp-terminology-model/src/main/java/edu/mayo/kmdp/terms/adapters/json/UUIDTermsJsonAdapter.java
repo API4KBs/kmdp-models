@@ -6,11 +6,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import edu.mayo.kmdp.id.Term;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public interface UUIDTermsJsonAdapter {
 
@@ -23,7 +23,7 @@ public interface UUIDTermsJsonAdapter {
     @Override
     public void serialize(Term v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
-      gen.writeString(v != null ? v.getConceptUUID().toString() : null);
+      gen.writeString(v != null ? v.getUuid().toString() : null);
     }
   }
 
@@ -45,7 +45,7 @@ public interface UUIDTermsJsonAdapter {
     @Override
     protected Optional<T> resolveUUID(UUID uuid) {
       return Arrays.stream(getValues())
-          .filter(x -> uuid.equals(x.getConceptUUID()))
+          .filter(x -> uuid.equals(x.getUuid()))
           .findFirst();
     }
 
@@ -56,7 +56,7 @@ public interface UUIDTermsJsonAdapter {
     @Override
     public void serialize(T v, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
-      gen.writeFieldName(v.getConceptUUID().toString());
+      gen.writeFieldName(v.getUuid().toString());
     }
   }
 

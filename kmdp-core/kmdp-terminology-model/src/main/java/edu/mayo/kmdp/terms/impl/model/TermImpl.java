@@ -1,12 +1,14 @@
 package edu.mayo.kmdp.terms.impl.model;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public class TermImpl extends ConceptIdentifier implements TermDescription {
 
@@ -19,45 +21,24 @@ public class TermImpl extends ConceptIdentifier implements TermDescription {
 
   }
 
-  public TermImpl(final String conceptId, final String conceptUUID, final String code,
+  public TermImpl(final String conceptId, final String conceptUUID, final String versionTag, final String code,
       final List<String> additionalCodes, final String displayName, final String referent,
-      final Term[] ancestors, final Term[] closure) {
-    this.ref = Util.isEmpty(referent) ? null : URI.create(referent);
+      final Term[] ancestors, final Term[] closure, Date publicationDate) {
+    this.referentId = Util.isEmpty(referent) ? null : URI.create(referent);
     this.tag = code;
+    this.versionTag = versionTag;
     this.tags = java.util.Collections.unmodifiableList(additionalCodes);
-    this.label = displayName;
+    this.name = displayName;
     this.ancestors = ancestors;
     this.ancestorsClosure = closure;
-    this.conceptId = URI.create(conceptId);
-    this.conceptUUID = UUID.fromString(conceptUUID);
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
-  }
-
-  @Override
-  public String getTag() {
-    return tag;
+    this.resourceId = URI.create(conceptId);
+    this.namespaceUri = SemanticIdentifier.newNamespaceId(this.resourceId).getResourceId();
+    this.uuid = UUID.fromString(conceptUUID);
+    this.establishedOn = publicationDate;
   }
 
   public List<String> getTags() {
     return tags;
-  }
-
-  public UUID getConceptUUID() {
-    return conceptUUID;
-  }
-
-  @Override
-  public URI getRef() {
-    return ref;
-  }
-
-  @Override
-  public URI getConceptId() {
-    return conceptId;
   }
 
   @Override
@@ -69,4 +50,8 @@ public class TermImpl extends ConceptIdentifier implements TermDescription {
     return ancestors;
   }
 
+  @Override
+  public String getLabel() {
+    return getName();
+  }
 }

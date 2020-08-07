@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
 import edu.mayo.kmdp.terms.skosifier.Modes;
@@ -34,6 +33,7 @@ import java.util.UUID;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.id.Term;
 import org.semanticweb.owlapi.model.OWLOntology;
 import ru.avicomp.ontapi.OntologyManager;
 
@@ -53,10 +53,10 @@ public class ConcreteTopConceptHierarchyTest {
 
     assertTrue(list.stream()
         .anyMatch((t) -> ("http://org.test/labelsTest#Parent")
-            .equals(t.getRef().toString())));
+            .equals(t.getReferentId().toString())));
     assertTrue(list.stream()
         .anyMatch((t) -> ("http://org.test/labelsTest#Child")
-            .equals(t.getRef().toString())));
+            .equals(t.getReferentId().toString())));
   }
 
 

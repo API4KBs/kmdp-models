@@ -15,8 +15,7 @@
  */
 package edu.mayo.kmdp.terms;
 
-import edu.mayo.kmdp.id.Term;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 /**
  * Copy of the official class for test purposes.
@@ -24,26 +23,18 @@ import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
  */
 @Deprecated
 public abstract class MockTermsXMLAdapter extends
-    javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier, Term> {
+    javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._1_0.id.ConceptIdentifier, Term> {
 
   @Override
-  public Term unmarshal(org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier v) {
+  public Term unmarshal(org.omg.spec.api4kp._1_0.id.ConceptIdentifier v) {
     return java.util.Arrays.stream(getValues())
-        .filter((x) -> x.getRef().equals(v.getRef()))
+        .filter((x) -> x.getReferentId().equals(v.getReferentId()))
         .findFirst().orElse(null);
   }
 
   @Override
-  public org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier marshal(Term v) {
-    if (v == null) {
-      return null;
-    }
-    return new org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier()
-        .withRef(v.getRef())
-        .withLabel(v.getLabel())
-        .withTag(v.getTag())
-        .withConceptId(v.getConceptId())
-        .withNamespace((NamespaceIdentifier) v.getNamespace());
+  public org.omg.spec.api4kp._1_0.id.ConceptIdentifier marshal(Term v) {
+    return v != null ? v.asConceptIdentifier() : null;
   }
 
   protected abstract Term[] getValues();

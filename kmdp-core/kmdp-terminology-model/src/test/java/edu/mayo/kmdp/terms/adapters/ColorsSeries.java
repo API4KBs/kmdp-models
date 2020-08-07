@@ -18,10 +18,6 @@ package edu.mayo.kmdp.terms.adapters;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 
-import edu.mayo.kmdp.id.Identifier;
-import edu.mayo.kmdp.id.ScopedIdentifier;
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
@@ -33,6 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 
 /*
 	Example of generated 'terminology' class
@@ -61,19 +60,18 @@ public enum ColorsSeries implements IColors, Series<IColors> {
 
 
   @Override
+  public ResourceIdentifier getNamespace() {
+    return null;
+  }
+
+  @Override
   public TermDescription getDescription() {
     return latest().map(ConceptTerm::getDescription)
         .orElse(null);
   }
 
   @Override
-  public Identifier getNamespace() {
-    return latest().map(ScopedIdentifier::getNamespace)
-        .orElse(null);
-  }
-
-  @Override
-  public VersionedIdentifier getVersionIdentifier() {
+  public VersionIdentifier getVersionIdentifier() {
     return getLatest().getVersionIdentifier();
   }
 
@@ -88,6 +86,16 @@ public enum ColorsSeries implements IColors, Series<IColors> {
   }
 
   @Override
+  public URI getResourceId() {
+    return getDescription().getResourceId();
+  }
+
+  @Override
+  public UUID getUuid() {
+    return getDescription().getUuid();
+  }
+
+  @Override
   public URI getNamespaceUri() {
     return null;
   }
@@ -99,7 +107,12 @@ public enum ColorsSeries implements IColors, Series<IColors> {
 
   @Override
   public Date getEstablishedOn() {
-    return null;
+    return new Date();
+  }
+
+  @Override
+  public Date getVersionEstablishedOn() {
+    return new Date();
   }
 
   public static class JsonSerializer extends AbstractTermsJsonAdapter.AbstractSerializer {

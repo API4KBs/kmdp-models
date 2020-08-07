@@ -44,10 +44,10 @@ public class RootElementTest {
     KnowledgeAssetCategory br = KnowledgeAssetCategory.Rules_Policies_And_Guidelines;
     SimpleAnnotation anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation().withExpr(
         new ConceptIdentifier()
-            .withRef(br.getRef())
+            .withRef(br.getReferentId())
             .withTag("BusinessRuleAsset")
             .withLabel(br.getLabel())
-            .withNamespace((NamespaceIdentifier) br.getNamespace()));
+            .withNamespace(new NamespaceIdentifier().withId(br.getNamespaceUri())));
 
     Annotation rec = checkRoundTrip(anno);
     String ann = JaxbUtil.marshallToString(Collections.singleton(rec.getClass()),

@@ -16,12 +16,17 @@
 package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermsHelper;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
 
 public class TermsTest {
 
@@ -31,9 +36,9 @@ public class TermsTest {
     ConceptIdentifier c2 = TermsHelper.sct("f1", "x");
 
     assertEquals(c1, c2);
-    assertEquals(c1.getNamespace(), c2.getNamespace());
-    assertNotSame(c1.getNamespace(), c2.getNamespace());
-    assertEquals(c1.getNamespace().hashCode(), c2.getNamespace().hashCode());
+    assertEquals(c1.getNamespaceUri(), c2.getNamespaceUri());
+    assertNotSame(c1.getNamespaceUri(), c2.getNamespaceUri());
+    assertEquals(c1.getNamespaceUri().hashCode(), c2.getNamespaceUri().hashCode());
 
   }
 
@@ -43,6 +48,24 @@ public class TermsTest {
     ConceptIdentifier c2 = TermsHelper.sct("f1", "x");
 
     assertTrue(c1.sameAs(c2));
+  }
+
+  @Test
+  public void testEqualityBySamenessInSeries() {
+    KnowledgeAssetType earlyRule = KnowledgeAssetTypeSeries.Clinical_Trial_Protocol.asSeries().getEarliest();
+    KnowledgeAssetType lateRule = KnowledgeAssetTypeSeries.Clinical_Trial_Protocol.asSeries().getLatest();
+
+    assertFalse(earlyRule.isSame(KnowledgeAssetTypeSeries.Cohort_Definition));
+
+    assertTrue(earlyRule.isDifferentVersion(lateRule));
+    assertFalse(earlyRule.isSameVersion(lateRule));
+
+    assertTrue(Series.isSameEntity(earlyRule,lateRule));
+    assertTrue(earlyRule.isSameEntity(lateRule));
+
+    assertFalse(Series.isSame(earlyRule,lateRule));
+    assertFalse(earlyRule.isSame(lateRule));
+    assertFalse(earlyRule.asConceptIdentifier().sameAs(lateRule.asConceptIdentifier()));
   }
 
 }

@@ -38,8 +38,35 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
 
   URI getReferentId();
 
+  /*
+    Prefer the more clear 'getReferentId'
+   */
+  @Deprecated(forRemoval = true, since = "7.0.1")
+  @JsonIgnore
+  default URI getRef() {
+    return getReferentId();
+  }
+
   @JsonIgnore
   default URI getEvokes() {
+    return getResourceId();
+  }
+
+  /**
+   * Alias 'name' as 'label' for terms
+   * @return
+   */
+  @JsonIgnore
+  default String getLabel() {
+    return getName();
+  }
+
+  /**
+   * Alias 'resourceId' as 'conceptId' for terms
+   * @return
+   */
+  @JsonIgnore
+  default URI getConceptId() {
     return getResourceId();
   }
 

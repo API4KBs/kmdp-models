@@ -35,8 +35,8 @@ class JsonAdapterTest {
     bean.setSchone(SCH1Series.Sub_Sub_Concept.getLatest());
 
     String json = marshall(bean);
-    assertTrue(json.contains("\"ref\" : \"http://test/generator#sub_sub_concept\""));
-    assertTrue(json.contains("\"version\" : \"v01\""));
+    assertTrue(json.contains("\"referentId\" : \"http://test/generator#sub_sub_concept\""));
+    assertTrue(json.contains("\"versionTag\" : \"v01\""));
   }
 
   @Test
@@ -45,8 +45,8 @@ class JsonAdapterTest {
     bean.setSchone(SCH1Series.Sub_Sub_Concept.getLatest());
 
     String json = marshall(bean);
-    assertTrue(json.contains("\"ref\" : \"http://test/generator#sub_sub_concept\""));
-    assertTrue(json.contains("\"version\" : \"v01\""));
+    assertTrue(json.contains("\"referentId\" : \"http://test/generator#sub_sub_concept\""));
+    assertTrue(json.contains("\"versionTag\" : \"v01\""));
   }
 
   @Test
@@ -54,11 +54,11 @@ class JsonAdapterTest {
     SomeBean bean = new SomeBean();
     bean.setSchone(SCH1Series.Specific_Concept.getVersion(0).orElse(null));
     String json1 = marshall(bean);
-    assertTrue(json1.contains("\"version\" : \"v01\""));
+    assertTrue(json1.contains("\"versionTag\" : \"v01\""));
 
     bean.setSchone(SCH1Series.Specific_Concept.getVersion(1).orElse(null));
     String json2 = marshall(bean);
-    assertTrue(json2.contains("\"version\" : \"v00_Ancient\""));
+    assertTrue(json2.contains("\"versionTag\" : \"v00_Ancient\""));
   }
 
   @Test
@@ -67,15 +67,15 @@ class JsonAdapterTest {
 
     bean.setSchone(SCH1Series.Specific_Concept);
     String json1 = marshall(bean);
-    assertFalse(json1.contains("\"version\" : \"v01\""));
+    assertTrue(json1.contains("\"versionTag\" : \"v01\""));
 
     bean.setSchone(SCH1Series.Deprecated_Concept);
     String json2 = marshall(bean);
-    assertFalse(json2.contains("\"version\" : \"v00_Ancient\""));
+    assertTrue(json2.contains("\"versionTag\" : \"v00_Ancient\""));
 
     bean.setSchone(SCH1Series.Deprecated_Concept.getLatest());
     String json3 = marshall(bean);
-    assertTrue(json3.contains("\"version\" : \"v00_Ancient\""));
+    assertTrue(json3.contains("\"versionTag\" : \"v00_Ancient\""));
 
   }
 
@@ -85,9 +85,10 @@ class JsonAdapterTest {
     SomeBean bean2 = new SomeBean();
     bean2.setSchone(SCH1Series.Specific_Concept);
     bean2 = roundtrip(bean2);
-    assertTrue(bean2.getSchone() instanceof SCH1Series);
+    // The 'series' will be resolved to the latest at serialization time
+    assertFalse(bean2.getSchone() instanceof SCH1Series);
     bean2 = roundtrip(bean2);
-    assertTrue(bean2.getSchone() instanceof SCH1Series);
+    assertFalse(bean2.getSchone() instanceof SCH1Series);
 
     SomeBean bean1 = new SomeBean();
     bean1.setSchone(SCH1Series.Specific_Concept.getLatest());

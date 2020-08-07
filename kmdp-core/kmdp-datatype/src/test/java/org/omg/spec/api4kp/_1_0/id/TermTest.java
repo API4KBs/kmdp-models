@@ -88,8 +88,7 @@ public class TermTest {
     Date established = DateTimeUtil.today();
     URI referentId = URI.create("http://foo.bar/baz");
     URI conceptId = URI.create("http://foo.bar#1323");
-    URI versionId = URI
-        .create(conceptId + VERSIONS + version.toString());
+    URI versionId = URI.create("http://foo.bar/versions/5.0.1#1323");
 
     ConceptIdentifier cid = (ConceptIdentifier) Term
         .newTerm(conceptId, tag, uuid, MAYO_ASSETS_BASE_URI_URI, referentId,

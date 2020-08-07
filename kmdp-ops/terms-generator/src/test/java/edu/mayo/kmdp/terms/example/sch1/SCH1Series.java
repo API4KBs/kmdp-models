@@ -19,9 +19,6 @@ package edu.mayo.kmdp.terms.example.sch1;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
-import edu.mayo.kmdp.id.Identifier;
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
@@ -36,7 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 
 /*
 	Example of generated 'terminology' class
@@ -52,7 +51,7 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
   Sub_Sub_Concept(SCH1.Sub_Sub_Concept);
 
   public static final List<String> schemeVersions =
-      java.util.Arrays.asList( "20190801"  ,   "19811201"   );
+      java.util.Arrays.asList( "v01"  ,   "v00_Ancient"   );
 
   public static final List<Date> schemeReleases =
       DateTimeUtil.parseDates(java.util.Arrays.asList( "20190801"  ,   "19811201"   ),"yyyyMMdd");
@@ -87,8 +86,7 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
         .orElse(null);
   }
 
-  @Override
-  public Identifier getNamespace() {
+  public ResourceIdentifier getNamespace() {
     return ISCH1.seriesNamespace;
   }
 
@@ -118,11 +116,11 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
   }
 
   public static Optional<ISCH1> resolveRef(final String refUri) {
-    return resolveTerm(refUri, SCH1Series.values(), Term::getRef);
+    return resolveTerm(refUri, SCH1Series.values(), Term::getReferentId);
   }
 
   @Override
-  public VersionedIdentifier getVersionIdentifier() {
+  public VersionIdentifier getVersionIdentifier() {
     return getLatest().getVersionIdentifier();
   }
 
@@ -150,6 +148,16 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
     return this;
   }
 
+  @Override
+  public URI getResourceId() {
+    return getDescription().getResourceId();
+  }
+
+  @Override
+  public UUID getUuid() {
+    return getDescription().getUuid();
+  }
+
   public static class Adapter extends TermsXMLAdapter {
     public static final TermsXMLAdapter instance = new SCH1Series.Adapter();
     protected SCH1Series[] getValues() { return values(); }
@@ -173,12 +181,17 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
 
   @Override
   public String getVersionTag() {
-    return ((NamespaceIdentifier)getNamespace()).getVersion();
+    return getDescription().getVersionTag();
   }
 
   @Override
   public Date getEstablishedOn() {
-    return ((NamespaceIdentifier)getNamespace()).getEstablishedOn();
+    return getVersions().get(0).getEstablishedOn();
+  }
+
+  @Override
+  public Date getVersionEstablishedOn() {
+    return getEstablishedOn();
   }
 
 }

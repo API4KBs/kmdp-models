@@ -67,7 +67,7 @@ public class Bean {
     @Override
     protected Optional<IColors> resolveUUID(UUID uuid) {
       return Arrays.stream(Colors.values())
-          .filter(c -> c.getConceptUUID().equals(uuid))
+          .filter(c -> c.getUuid().equals(uuid))
           .map(IColors.class::cast)
           .findAny();
     }

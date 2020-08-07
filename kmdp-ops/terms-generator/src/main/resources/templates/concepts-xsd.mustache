@@ -3,9 +3,9 @@
            targetNamespace="{{namespace}}"
            elementFormDefault="qualified"
            xmlns="{{namespace}}"
-           xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers"
+           xmlns:id="http://www.omg.org/spec/API4KP/1.0/id"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import namespace="http://www.omg.org/spec/API4KP/1.0/identifiers"/>
+  <xs:import namespace="http://www.omg.org/spec/API4KP/1.0/id"/>
 
     <xs:complexType name="{{typeName}}">
       <xs:complexContent>
@@ -17,7 +17,7 @@
     <xs:simpleType name="{{typeName}}_Valueset">
       <xs:restriction base="xs:string">
       {{#concepts}}
-        <xs:enumeration value="{{ref}}"/>
+        <xs:enumeration value="{{resourceId}}"/>
       {{/concepts}}
       </xs:restriction>
     </xs:simpleType>

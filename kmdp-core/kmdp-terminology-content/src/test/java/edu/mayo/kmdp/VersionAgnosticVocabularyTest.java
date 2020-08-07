@@ -117,7 +117,7 @@ public class VersionAgnosticVocabularyTest {
         LexiconSeries.LOINC.getTag());
 
     assertEquals("http://snomed.info/sct/900000000000207008/version/20180731",
-        LexiconSeries.SNOMED_CT.getRef().toString());
+        LexiconSeries.SNOMED_CT.getReferentId().toString());
 
     assertEquals("fr",
         edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20190201.Language.French.getTag());
@@ -129,7 +129,7 @@ public class VersionAgnosticVocabularyTest {
   @Test
   public void testReferents() {
     assertEquals("https://www.omg.org/spec/DMN/1.2/",
-        KnowledgeRepresentationLanguageSeries.DMN_1_2.getRef().toString());
+        KnowledgeRepresentationLanguageSeries.DMN_1_2.getReferentId().toString());
   }
 
   @Test
@@ -162,7 +162,7 @@ public class VersionAgnosticVocabularyTest {
     assertNotNull(KnowledgeRepresentationLanguageSeries.KNART_1_3);
 
     assertEquals(KnowledgeRepresentationLanguageSerializationSeries.DMN_1_1_XML_Syntax,
-        Registry.getValidationSchema(KnowledgeRepresentationLanguageSeries.DMN_1_1.getRef())
+        Registry.getValidationSchema(KnowledgeRepresentationLanguageSeries.DMN_1_1.getReferentId())
             .flatMap(KnowledgeRepresentationLanguageSerializationSeries::resolveRef)
             .orElse(null));
 

@@ -22,31 +22,32 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public class DefaultVocabularyCatalog implements VocabularyCatalog {
 
-  protected static final Map<URI, ConceptScheme> entries = new ConcurrentHashMap<>();
+  protected static final Map<URI, ConceptScheme<? extends Term>> entries = new ConcurrentHashMap<>();
 
   @Override
-  public void register(URI schemeURI, ConceptScheme scheme) {
+  public void register(URI schemeURI, ConceptScheme<? extends Term> scheme) {
     entries.put(schemeURI, scheme);
   }
 
   @Override
-  public Optional<ConceptScheme> resolve(URI schemeURI) {
+  public Optional<ConceptScheme<? extends Term>> resolve(URI schemeURI) {
     return Optional.ofNullable(entries.get(schemeURI));
   }
 
   @Override
-  public Optional<ConceptScheme> resolve(String schemeID) {
+  public Optional<ConceptScheme<? extends Term>> resolve(String schemeID) {
     return entries.values().stream()
-        .filter(s -> schemeID.equals(s.getId().toString()))
+        .filter(s -> schemeID.equals(s.getResourceId().toString()))
         .findAny();
   }
 
   @Override
   public Optional<URI> lookupURI(String schemeID) {
     return resolve(schemeID)
-        .map(ConceptScheme::getId);
+        .map(ConceptScheme::getResourceId);
   }
 }

@@ -14,8 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,20 +77,19 @@ public interface GenericURITermsJsonAdapter {
       }
 
       ConceptIdentifier cid = new ConceptIdentifier()
-          .withNamespace(new NamespaceIdentifier()
-              .withId(URIUtil.normalizeURI(nsURI != null ? nsURI : uri)));
+          .withNamespaceUri(URIUtil.normalizeURI(nsURI != null ? nsURI : uri));
 
       String id = extractIdentifier(uri).orElse(null);
       if (id != null && isUUID(id)) {
-        cid.withConceptUUID(ensureUUID(id).orElse(null));
+        cid.withUuid(ensureUUID(id).orElse(null));
       } else {
         cid.withTag(id);
       }
 
-      cid.withConceptId(uri);
+      cid.withResourceId(uri);
 
       String label = extractLabel(asText).orElse(null);
-      cid.withLabel(label);
+      cid.withName(label);
 
       return cid;
     }

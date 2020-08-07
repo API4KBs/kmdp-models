@@ -15,11 +15,10 @@
  */
 package edu.mayo.kmdp.terms;
 
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.ns;
-
+import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import java.util.UUID;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
 
 public class TermsHelper {
 
@@ -35,34 +34,37 @@ public class TermsHelper {
    */
   public static ConceptIdentifier sct(String label, String code) {
     return new ConceptIdentifier()
-        .withLabel(label)
+        .withName(label)
         .withTag(code)
-        .withNamespace(ns("http://snomed.info/sct/900000000000207008",
-            "SNOMED-CT",
-            "20130731"))
-
-        .withConceptId(URI.create("http://snomed.info/id/" + code))
-        .withRef(URI.create("http://snomed.info/id/" + code));
+        .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
+        .withNamespaceUri(URI.create("http://snomed.info/sct/900000000000207008"))
+        .withResourceId(URI.create("http://snomed.info/id/" + code))
+        .withReferentId(URI.create("http://snomed.info/id/" + code))
+        .withVersionTag("LATEST");
   }
 
   public static ConceptIdentifier lnc(String label, String code) {
     return new ConceptIdentifier()
-        .withLabel(label)
+        .withName(label)
         .withTag(code)
-        .withNamespace(new NamespaceIdentifier()
-            .withId(URI.create("https://loinc.org/oids/1.3.6.1.4.1.12009.10.2.3")))
-        .withConceptId(URI.create("http://loinc.org/" + code))
-        .withRef(URI.create("http://loinc.org/" + code));
+        .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
+        .withNamespaceUri(URI.create("https://loinc.org/oids/1.3.6.1.4.1.12009.10.2.3"))
+        .withResourceId(URI.create("http://loinc.org/" + code))
+        .withReferentId(URI.create("http://loinc.org/" + code))
+        .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
+        .withVersionTag("LATEST");
   }
 
   public static ConceptIdentifier rxn(String label, String code) {
     return new ConceptIdentifier()
-        .withLabel(label)
+        .withName(label)
         .withTag(code)
-        .withNamespace(new NamespaceIdentifier()
-            .withId(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm")))
-        .withConceptId(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm/" + code))
-        .withRef(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm/" + code));
+        .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
+        .withNamespaceUri(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm"))
+        .withResourceId(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm/" + code))
+        .withReferentId(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm/" + code))
+        .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
+        .withVersionTag("LATEST");
   }
 
 
@@ -74,11 +76,10 @@ public class TermsHelper {
    */
   public static ConceptIdentifier mayo(String label, String code) {
     return new ConceptIdentifier()
-        .withLabel(label)
+        .withName(label)
         .withTag(code)
-        .withNamespace(
-            new NamespaceIdentifier().withId(URI.create("http://ontology.mayo.edu/taxonomies/TODO")))
-        .withConceptId(URI.create("http://ontology.mayo.edu/taxonomies/TODO#" + code))
-        .withRef(URI.create("http://ontology.mayo.edu/taxonomies/TODO#" + code));
+        .withNamespaceUri(URI.create("http://ontology.mayo.edu/taxonomies/TODO"))
+        .withResourceId(URI.create("http://ontology.mayo.edu/taxonomies/TODO#" + code))
+        .withReferentId(URI.create("http://ontology.mayo.edu/taxonomies/TODO#" + code));
   }
 }

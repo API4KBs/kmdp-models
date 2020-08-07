@@ -16,17 +16,18 @@
 package edu.mayo.kmdp.terms.impl.model;
 
 
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.terms.ValueSet;
 import java.net.URI;
 import java.util.Optional;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 
 public abstract class AbstractValueSet<T extends Term> implements ValueSet {
 
   private String id;
-  private URIIdentifier uri;
+  private ResourceIdentifier uri;
   private String name;
 
   private T pivotalConcept;
@@ -37,8 +38,7 @@ public abstract class AbstractValueSet<T extends Term> implements ValueSet {
 
   protected AbstractValueSet(String id, String name, URI uri, URI versionUri) {
     this.id = id;
-    this.uri = new URIIdentifier().withUri(uri)
-        .withVersionId(versionUri);
+    this.uri = SemanticIdentifier.newId(uri.toString(),versionUri.toString());
     this.name = name;
   }
 
@@ -62,7 +62,7 @@ public abstract class AbstractValueSet<T extends Term> implements ValueSet {
   }
 
   @Override
-  public VersionedIdentifier getId() {
+  public VersionIdentifier getId() {
     return uri;
   }
 

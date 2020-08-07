@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.id.Term;
+import org.omg.spec.api4kp._1_0.id.Term;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
@@ -43,7 +43,7 @@ public class ReferentTest {
         .flatMap((cs) -> cs.getConcepts().filter((t) -> t.getLabel().contains("Parent")).findFirst());
     assertTrue(trm.isPresent());
     assertEquals("http://org.test/labelsTest#Parent",
-        trm.get().getRef().toString());
+        trm.get().getReferentId().toString());
   }
 
 

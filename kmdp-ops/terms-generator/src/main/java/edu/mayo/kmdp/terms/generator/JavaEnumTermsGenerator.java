@@ -15,13 +15,13 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public class JavaEnumTermsGenerator extends BaseEnumGenerator {
 

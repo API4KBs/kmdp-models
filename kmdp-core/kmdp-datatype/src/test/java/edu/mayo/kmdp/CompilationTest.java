@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
 import static edu.mayo.kmdp.util.CodeGenTestBase.applyJaxb;
 import static edu.mayo.kmdp.util.CodeGenTestBase.deploy;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
@@ -24,8 +23,8 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.initGenSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initSourceFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
 import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
-import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,11 +37,11 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.omg.spec.api4kp._1_0.identifiers.Pointer;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.Pointer;
 
 public class CompilationTest {
 
@@ -53,18 +52,19 @@ public class CompilationTest {
   public void testJaxbGeneration() {
     File tgt = compile();
 
-    Class<?> ptrClass = getNamedClass("org.omg.spec.api4kp._1_0.identifiers.resources.Pointer", tgt);
+    Class<?> ptrClass = getNamedClass("org.omg.spec.api4kp._1_0.id.resources.Pointer", tgt);
     assertNotNull(ptrClass);
     assertTrue(Pointer.class.isAssignableFrom(ptrClass));
 
     try {
-
-      Object ptr1 = ptrClass.newInstance();
+      Object ptr1 = ptrClass.getConstructor().newInstance();
       URI foo = URI.create("http://mock");
       ptrClass.getMethod("setName", String.class).invoke(ptr1, "Test");
       ptrClass.getMethod("setType", URI.class).invoke(ptr1, foo);
       ptrClass.getMethod("setHref", URI.class).invoke(ptr1, foo);
-      ptrClass.getMethod("setEntityRef", URIIdentifier.class).invoke(ptr1, uri(foo.toString()));
+      ptrClass.getMethod("setTag", String.class).invoke(ptr1, "foo");
+      ptrClass.getMethod("setUuid", UUID.class).invoke(ptr1, UUID.randomUUID());
+      ptrClass.getMethod("setResourceId", URI.class).invoke(ptr1, foo);
 
       String xml = JaxbUtil.marshallToString(Collections.singleton(Pointer.class),
           ptr1,
@@ -72,10 +72,10 @@ public class CompilationTest {
       //System.out.println(xml);
 
       Optional<Schema> schema = getSchemas(
-          DatatypeTest.class.getResource("/xsd/API4KP/api4kp/identifiers/identifiers.openapi.xsd"),
+          DatatypeTest.class.getResource("/xsd/API4KP/api4kp/id/id.openapi.xsd"),
           catalogResolver("/xsd/api4kp-catalog.xml"));
       assertTrue(schema.isPresent());
-      XMLUtil.validate(xml, schema.get());
+      assertTrue(XMLUtil.validate(xml, schema.get()));
 
       Optional<Pointer> asPtr = JaxbUtil
           .unmarshall(ptrClass, Pointer.class, xml);
@@ -83,7 +83,7 @@ public class CompilationTest {
       Pointer p2 = asPtr.get();
 
       assertEquals("Test", p2.getName());
-      assertNotNull(p2.getEntityRef());
+      assertNotNull(p2.getHref());
       assertNotNull(p2.getType());
 
       Pointer p3 = new Pointer();
@@ -91,7 +91,7 @@ public class CompilationTest {
 
       assertEquals(p2.getType(), p3.getType());
 
-      Object x = ptrClass.newInstance();
+      Object x = ptrClass.getConstructor().newInstance();
 
       p3.copyTo(x);
       assertEquals(((Pointer) x).getType(), ((Pointer) ptr1).getType());

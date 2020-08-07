@@ -57,7 +57,7 @@ class VersionedTermsTest {
     assertNotNull(v0);
     assertNotNull(v1);
 
-    assertTrue(Series.isSame(v0,v1));
+    assertTrue(Series.isSameEntity(v0,v1));
     assertTrue(Series.isDifferentVersion(v0,v1));
     assertFalse(Series.isDifferentVersion(v0,v0));
   }

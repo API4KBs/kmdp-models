@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.series.Versionable;
@@ -16,7 +15,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,10 +71,10 @@ public interface URITermsJsonAdapter {
     @SuppressWarnings("unchecked")
     private T resolveInSeries(T t, URI uri) {
       if (t instanceof Series) {
-        Series<? extends Versionable> s = ((Series<? extends Versionable>) t);
+        Series<? extends Versionable<?>> s = ((Series<? extends Versionable<?>>) t);
         Optional<?> opt = s.getVersions().stream()
             .flatMap(StreamUtil.filterAs(Term.class))
-            .filter(v -> ((NamespaceIdentifier) v.getNamespace()).getId().equals(uri))
+            .filter(v -> v.getNamespaceUri().equals(uri))
             .findAny();
         return opt.map(o -> (T) o).orElse(t);
       }

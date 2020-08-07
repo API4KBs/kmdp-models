@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.UnexpectedCharacterException;
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
+import edu.mayo.kmdp.util.URIUtil;
+import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.regex.Matcher;
 
@@ -46,8 +48,18 @@ public interface VersionIdentifier extends Identifier {
 
   @JsonIgnore
   default URI getVersionId() {
+    if (getVersionTag() == null) {
+      return null;
+    }
     URI uri = getResourceId();
-    return URI.create(uri + getVersionSeparator(uri.toString()) + getVersionTag());
+    StringBuilder sb = new StringBuilder();
+    sb.append(URIUtil.normalizeURI(uri).toString())
+        .append(getVersionSeparator(uri.toString()))
+        .append(getVersionTag());
+    if (!Util.isEmpty(uri.getFragment())) {
+      sb.append("#").append(uri.getFragment());
+    }
+    return URI.create(sb.toString());
   }
 
   /**

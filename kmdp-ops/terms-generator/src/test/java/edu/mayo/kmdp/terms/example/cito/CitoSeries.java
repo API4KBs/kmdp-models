@@ -4,10 +4,6 @@ package edu.mayo.kmdp.terms.example.cito;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
-import edu.mayo.kmdp.id.Identifier;
-import edu.mayo.kmdp.id.ScopedIdentifier;
-import edu.mayo.kmdp.id.Term;
-import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
@@ -18,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
 
 public enum CitoSeries implements ICito, Series<ICito> {
 
@@ -45,16 +43,15 @@ public enum CitoSeries implements ICito, Series<ICito> {
   }
 
   @Override
-  public Identifier getNamespace() {
-    return latest().map(ScopedIdentifier::getNamespace)
+  public ResourceIdentifier getNamespace() {
+    return latest().map(ConceptTerm::getNamespace)
         .orElse(null);
   }
 
   @Override
-  public VersionedIdentifier getVersionIdentifier() {
+  public VersionIdentifier getVersionIdentifier() {
     return getLatest().getVersionIdentifier();
   }
-
 
 
 
@@ -83,7 +80,7 @@ public enum CitoSeries implements ICito, Series<ICito> {
   }
 
   public static Optional<ICito> resolveRef(final String refUri) {
-    return resolveTerm(refUri, CitoSeries.values(), Term::getRef);
+    return resolveTerm(refUri, CitoSeries.values(), Term::getReferentId);
   }
 
   @Override
@@ -98,11 +95,26 @@ public enum CitoSeries implements ICito, Series<ICito> {
 
   @Override
   public String getVersionTag() {
-    return ((NamespaceIdentifier)getNamespace()).getVersion();
+    return getNamespace().getVersionTag();
   }
 
   @Override
   public Date getEstablishedOn() {
-    return ((NamespaceIdentifier)getNamespace()).getEstablishedOn();
+    return getVersions().get(0).getEstablishedOn();
+  }
+
+  @Override
+  public Date getVersionEstablishedOn() {
+    return getEstablishedOn();
+  }
+
+  @Override
+  public URI getResourceId() {
+    return getDescription().getResourceId();
+  }
+
+  @Override
+  public UUID getUuid() {
+    return getDescription().getUuid();
   }
 }

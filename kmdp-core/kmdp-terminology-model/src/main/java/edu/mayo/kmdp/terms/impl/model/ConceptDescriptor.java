@@ -1,9 +1,8 @@
 package edu.mayo.kmdp.terms.impl.model;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 public class ConceptDescriptor extends ConceptIdentifier {
 
@@ -51,7 +50,7 @@ public class ConceptDescriptor extends ConceptIdentifier {
    * @param v the term to be converted
    * @return the ConceptDescriptor
    */
-  public static ConceptDescriptor toConceptDescriptor(ConceptTerm v) {
+  public static ConceptDescriptor toConceptDescriptor(ConceptTerm<? extends Term> v) {
     if (v == null) {
       return null;
     }
@@ -59,12 +58,12 @@ public class ConceptDescriptor extends ConceptIdentifier {
       return (ConceptDescriptor) v;
     }
     ConceptDescriptor conceptDescriptor = new ConceptDescriptor();
-    conceptDescriptor.withReferentId(v.getRef());
-    conceptDescriptor.withUuid(v.getConceptUUID());
+    conceptDescriptor.withReferentId(v.getReferentId());
+    conceptDescriptor.withUuid(v.getUuid());
     conceptDescriptor.withName(v.getLabel());
     conceptDescriptor.withTag(v.getTag());
     conceptDescriptor.withResourceId(v.getConceptId());
-    conceptDescriptor.withNamespaceUri(((NamespaceIdentifier) v.getNamespace()).getId());
+    conceptDescriptor.withNamespaceUri(v.getNamespaceUri());
     conceptDescriptor.setAncestors(v.getAncestors());
     conceptDescriptor.setClosure(v.getClosure());
 

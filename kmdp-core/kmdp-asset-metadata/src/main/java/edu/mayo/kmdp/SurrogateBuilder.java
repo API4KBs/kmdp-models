@@ -15,11 +15,11 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
+import static edu.mayo.kmdp.SurrogateHelper.toLegacyConceptIdentifier;
+import static edu.mayo.kmdp.SurrogateHelper.uri;
 import static edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries.English;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries.Operational_Concept_Definition;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleApplicability;
 import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
@@ -49,6 +49,7 @@ import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.UUID;
+import org.omg.spec.api4kp._1_0.id.Term;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
@@ -152,7 +153,7 @@ public class SurrogateBuilder {
     if (t == null) {
       return this;
     }
-    get().withApplicableIn(new SimpleApplicability().withSituation(t.asConcept()));
+    get().withApplicableIn(new SimpleApplicability().withSituation(toLegacyConceptIdentifier(t)));
     return this;
   }
 
@@ -162,15 +163,15 @@ public class SurrogateBuilder {
     get().withRole(Operational_Concept_Definition);
 
     if (proposition != null) {
-      this.withAnnotation(AnnotationRelTypeSeries.Defines.asConcept(), proposition.asConcept());
+      this.withAnnotation(toLegacyConceptIdentifier(AnnotationRelTypeSeries.Defines), toLegacyConceptIdentifier(proposition));
     }
 
     if (subject != null) {
-      this.withAnnotation(AnnotationRelTypeSeries.Has_Primary_Subject.asConcept(), subject);
+      this.withAnnotation(toLegacyConceptIdentifier(AnnotationRelTypeSeries.Has_Primary_Subject), subject);
     }
 
     Arrays.stream(inputs).forEach(input ->
-        this.withAnnotation(AnnotationRelTypeSeries.In_Terms_Of.asConcept(), input.asConcept())
+        this.withAnnotation(toLegacyConceptIdentifier(AnnotationRelTypeSeries.In_Terms_Of), toLegacyConceptIdentifier(input))
     );
 
     return this;

@@ -31,7 +31,7 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
 
   @Override
   public boolean comparable(SyntacticRepresentation sr1, SyntacticRepresentation sr2) {
-    if (!Series.isSame(sr1.getLanguage(), sr2.getLanguage())) {
+    if (!Series.isSameEntity(sr1.getLanguage(), sr2.getLanguage())) {
       return false;
     }
     Comparison profileComparison = ProfileContrastor.theProfileContrastor
@@ -40,17 +40,17 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
       return false;
     }
     if (sr1.getSerialization() != null && sr2.getSerialization() != null
-        && ! Series.isSame(sr1.getSerialization(), sr2.getSerialization())) {
+        && ! Series.isSameEntity(sr1.getSerialization(), sr2.getSerialization())) {
       return false;
     }
     if (sr1.getFormat() != null && sr2.getFormat() != null
-        && ! Series.isSame(sr1.getFormat(), sr2.getFormat())) {
+        && ! Series.isSameEntity(sr1.getFormat(), sr2.getFormat())) {
       return false;
     }
     return sr1.getLexicon().isEmpty()
         || sr2.getLexicon().isEmpty()
-        || StreamUtil.mapToSet(sr1.getLexicon(), ConceptTerm::getConceptUUID)
-        .equals(StreamUtil.mapToSet(sr2.getLexicon(), ConceptTerm::getConceptUUID));
+        || StreamUtil.mapToSet(sr1.getLexicon(), ConceptTerm::getUuid)
+        .equals(StreamUtil.mapToSet(sr2.getLexicon(), ConceptTerm::getUuid));
   }
 
   public int compare(SyntacticRepresentation sr1, SyntacticRepresentation sr2) {
