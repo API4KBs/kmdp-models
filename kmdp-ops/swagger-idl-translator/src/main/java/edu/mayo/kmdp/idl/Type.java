@@ -25,6 +25,7 @@ public class Type {
   private String fullyQualifiedName;
   private boolean collection;
   private Struct struct;
+  private String description;
 
   public Type(String type) {
     this(type,null,false);
@@ -84,4 +85,11 @@ public class Type {
     return Optional.ofNullable(struct);
   }
 
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
 }

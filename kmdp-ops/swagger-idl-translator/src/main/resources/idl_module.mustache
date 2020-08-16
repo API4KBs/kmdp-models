@@ -2,7 +2,7 @@ module {{name}} {
 {{#structs}}
 struct {{typeName}} {
   {{#fields}}
-    {{type.fullyQualifiedName}} {{name}};
+    {{#type.isCollection}}sequence<{{/type.isCollection}}{{type.fullyQualifiedName}}{{#type.isCollection}}>{{/type.isCollection}} {{name}};
   {{/fields}}
 };
 typedef sequence<{{typeName}}> {{typeName}}List;

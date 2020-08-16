@@ -15,14 +15,20 @@
  */
 package edu.mayo.kmdp.idl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Interface {
 
   private Map<String,Operation> operations = new HashMap<>();
   private String name;
+  private String documentation;
 
   public Interface(String name) {
     this.name = name;
@@ -40,12 +46,29 @@ public class Interface {
     return this;
   }
 
+  public String getDocumentation() {
+    return documentation;
+  }
+
+  public void setDocumentation(String documentation) {
+    this.documentation = documentation;
+  }
+
   public Collection<Operation> getOperations() {
-    return operations.values();
+    return listOperations();
+  }
+
+  public Collection<Operation> listOperations() {
+    List<Operation> ops = new ArrayList<>(operations.values()).stream()
+        .filter(op -> op.getName() != null)
+        .collect(Collectors.toList());
+    ops.sort(Comparator.comparing(Operation::getName));
+    return ops;
   }
 
   public void merge(Interface existing) {
-    existing.getOperations().forEach(this::addOperation);
+    existing.listOperations().forEach(this::addOperation);
+    this.documentation = this.documentation + "\n" + existing.documentation;
   }
 }
 

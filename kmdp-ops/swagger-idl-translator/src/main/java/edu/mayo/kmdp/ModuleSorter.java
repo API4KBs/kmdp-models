@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ModuleSorter {
 
@@ -37,7 +38,7 @@ public class ModuleSorter {
     m.getSubModules().forEach(sub -> sortSubModules(sub, allSortedStructs));
     if (m.getSubModules().size() > 1) {
       List<Module> localModules = new ArrayList<>(m.getSubModules());
-      m.getSubModules().clear();
+      m.clear();
       localModules.sort(this::compare);
       localModules.forEach(m::addModule);
     }
@@ -56,7 +57,24 @@ public class ModuleSorter {
     if (m1Structs.isEmpty()) {
       return -1;
     }
-    throw new UnsupportedOperationException();
+
+    Collection<Struct> directDeps2 = m2Structs.values().stream()
+        .filter(m2s -> isDefinedIn(m2s,sm1)).collect(Collectors.toList());
+    Collection<Struct> directDeps1 = m1Structs.values().stream()
+        .filter(m1s -> isDefinedIn(m1s,sm2)).collect(Collectors.toList());
+    if (directDeps2.isEmpty()) {
+      return 1;
+    }
+    if (directDeps1.isEmpty()) {
+      return -1;
+    }
+    return 0;
+  }
+
+  private boolean isDefinedIn(Struct struct, Module otherModule) {
+    Map<String,Struct> moduleStructs = new HashMap<>();
+    collectStructs(otherModule, moduleStructs);
+    return moduleStructs.containsValue(struct);
   }
 
   private void sortLocalDeclarations(Module m, List<Struct> allSortedStructs) {
@@ -98,7 +116,7 @@ public class ModuleSorter {
       Map<String, Struct> allStructs) {
 
     m.getInterfaces().forEach(i ->
-        i.getOperations().forEach(o -> {
+        i.listOperations().forEach(o -> {
           o.getReturnType().tryGetStruct()
               .filter(s -> !availableStructs.containsKey(s.getTypeName()))
               .ifPresent(s -> allStructs.put(s.getTypeName(), s));
@@ -123,7 +141,7 @@ public class ModuleSorter {
     for (Struct s : structs.values()) {
       for (Field f : s.getFields()) {
         String fName = f.getType().getName();
-        if (structs.containsKey(fName)) {
+        if (structs.containsKey(fName) && ! s.getTypeName().equals(fName)) {
           deps.computeIfAbsent(s, x -> new HashSet<>())
               .add(structs.get(fName));
         }

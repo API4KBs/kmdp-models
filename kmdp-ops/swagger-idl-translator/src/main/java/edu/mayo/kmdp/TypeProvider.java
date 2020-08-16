@@ -1,5 +1,9 @@
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.idl.IDLNameUtil.applyFieldNameMappings;
+import static edu.mayo.kmdp.idl.IDLNameUtil.applyTypeNameMappings;
+
+import edu.mayo.kmdp.idl.IDLNameUtil;
 import edu.mayo.kmdp.idl.Module;
 import edu.mayo.kmdp.idl.Struct;
 import edu.mayo.kmdp.idl.Type;
@@ -15,14 +19,20 @@ import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.FormParameter;
+import io.swagger.models.parameters.HeaderParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.PathParameter;
 import io.swagger.models.parameters.QueryParameter;
 import io.swagger.models.properties.ArrayProperty;
+import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
+import io.swagger.models.properties.StringProperty;
+import io.swagger.models.properties.UUIDProperty;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 class TypeProvider {
@@ -31,43 +41,69 @@ class TypeProvider {
 
   private final Module context;
   private List<Swagger> swaggers;
+  private Map<String,Type> index;
 
   TypeProvider(List<Swagger> swaggers, Module rootModule) {
     this.swaggers = new ArrayList<>(swaggers);
     this.context = rootModule;
+    this.index = new HashMap<>();
   }
 
 
   public Type registerType(Type type) {
+    if (isTypeRegistered(type)) {
+      return index.get(indexKey(type));
+    }
+
     if (isPrimitive(type)) {
       return new Type(primitiveMap(type.getName()), type.isCollection());
     }
 
-    Model model = find(applyMappings(type.getName()), swaggers);
+    Model model = find(applyTypeNameMappings(type.getName()), swaggers);
 
-    String packageName = getNamespace(model)
-        .map(NameUtils::namespaceURIStringToPackage)
-        .orElse("");
-    Struct struct = new Struct(type.getName(), packageName);
-
-    if (model.getProperties() != null) {
-      model.getProperties().forEach(
-          (key, prop) -> struct.addField(key, toIDLType(prop)));
-    }
+    Struct struct = toStruct(type, model);
 
     context.insertStruct(struct);
     type.linkStruct(struct);
+    index.put(indexKey(type),type);
+
+    if (model.getProperties() != null) {
+      model.getProperties().forEach(
+          (key, prop) -> addField(struct, key, prop, swaggers));
+    } else {
+      if ("Bindings".equals(type.getName())) {
+        // TODO
+        addField(struct, "entries", new StringProperty(), swaggers);
+      } else {
+        addField(struct, "value", new UUIDProperty(), swaggers);
+      }
+    }
 
     return type;
   }
 
-  private String applyMappings(String name) {
-    // Temporary mapping - "2" types allow for co-existence
-    // of legacy and future types of the same name
-    if (name.endsWith("2")) {
-      return name.substring(0,name.length()-1);
+  private void addField(Struct struct, String key, Property prop, List<Swagger> swaggers) {
+    String fieldName = IDLNameUtil.toIdentifier(key);
+    Type type = toTypeDeclaration(prop);
+    Model model = isPrimitive(type) ? null : find(applyTypeNameMappings(type.getName()), swaggers);
+    if (model != null) {
+      String fqn = IDLNameUtil.toFQName(getNamespace(model)
+          .map(NameUtils::namespaceURIStringToPackage)
+          .orElse(""), type.getName());
+      if (index.containsKey(indexKey(fqn,type.isCollection()))) {
+        struct.addField(fieldName, index.get(indexKey(fqn,type.isCollection())));
+        return;
+      }
     }
-    return name;
+    struct.addField(fieldName, toIDLType(prop));
+  }
+
+
+  private Struct toStruct(Type type, Model model) {
+    String packageName = getNamespace(model)
+        .map(NameUtils::namespaceURIStringToPackage)
+        .orElse("");
+    return new Struct(type.getName(), packageName);
   }
 
   private Optional<String> getNamespace(Model model) {
@@ -91,7 +127,9 @@ class TypeProvider {
       if (m instanceof RefModel) {
         RefModel ref = (RefModel) m;
         // This is where we'd need to resolve the actual UML-driven YAML
-        t = new Type(ref.getSimpleRef());
+        t = new Type(applyTypeNameMappings(ref.getSimpleRef()));
+      } else if (m instanceof ModelImpl) {
+        t = new Type(((ModelImpl) m).getType());
       }
     } else if (parameter instanceof PathParameter) {
       PathParameter path = ((PathParameter) parameter);
@@ -102,6 +140,9 @@ class TypeProvider {
     } else if (parameter instanceof FormParameter) {
       FormParameter frm = ((FormParameter) parameter);
       t = new Type(frm.getType());
+    } else if (parameter instanceof HeaderParameter) {
+      HeaderParameter hdr = ((HeaderParameter) parameter);
+      t = new Type(hdr.getType());
     }
     if (t == null) {
       throw new UnsupportedOperationException("TODO");
@@ -119,26 +160,32 @@ class TypeProvider {
         .orElse(new Type(VOID));
   }
 
-  private Type toIDLType(Response response) {
+  Type toIDLType(Response response) {
     Property schema = response.getSchema();
     return toIDLType(schema);
   }
 
   Type toIDLType(Property schema) {
+    Type t = toTypeDeclaration(schema);
+    t = registerType(t);
+    return t;
+  }
+
+  private Type toTypeDeclaration(Property schema) {
     Type t;
     if (schema instanceof ArrayProperty) {
       ArrayProperty ap = (ArrayProperty) schema;
-      t = toIDLType(ap.getItems());
+      t = toTypeDeclaration(ap.getItems());
       t.setCollection(true);
+      t.setDescription(ap.getDescription());
     } else if (schema instanceof RefProperty) {
       RefProperty rp = (RefProperty) schema;
       String ref = rp.getSimpleRef();
       ref = ref.substring(ref.lastIndexOf('/') + 1);
-      t = new Type(ref);
+      t = new Type(applyTypeNameMappings(ref));
     } else {
-      t = new Type(schema != null && schema.getType() != null ? schema.getType() : VOID);
+      t = new Type(schema != null && schema.getType() != null ? applyTypeNameMappings(schema.getType()) : VOID);
     }
-    t = registerType(t);
     return t;
   }
 
@@ -148,24 +195,44 @@ class TypeProvider {
         .map(Swagger::getDefinitions)
         .map(m -> Optional.ofNullable(m.get(typeName)))
         .flatMap(StreamUtil::trimStream)
-        .map(this::asConcreteModel)
+        .map(m -> asConcreteModel(m, typeName, swaggers))
         .flatMap(StreamUtil::trimStream)
-        .findFirst()
+        .reduce((m1,m2) -> m1.getProperties() == null ? m2 : m1)
         .orElseThrow(() -> new IllegalStateException("Unable to resolve type " + typeName))
         ;
   }
 
-  private Optional<Model> asConcreteModel(Model m) {
+  private Optional<Model> asConcreteModel(Model m, String typeName,
+      List<Swagger> swaggers) {
+    if (isEnumeration(m)) {
+      return Optional.ofNullable(find("ConceptIdentifier", swaggers));
+    }
+
     if (m.getProperties() != null && !m.getProperties().isEmpty()) {
       return Optional.of(m);
     }
     if (m instanceof ComposedModel) {
       ComposedModel cm = (ComposedModel) m;
       if (cm.getChild() != null) {
-        return asConcreteModel(((ComposedModel) m).getChild());
+        return asConcreteModel(((ComposedModel) m).getChild(), typeName, swaggers);
       }
     }
-    return Optional.empty();
+    if (m instanceof ModelImpl) {
+      return Optional.of(m);
+    }return Optional.empty();
+  }
+
+  private boolean isEnumeration(Model m) {
+    // this needs improvement...
+    if (!(m instanceof ComposedModel)) {
+      return false;
+    }
+    ComposedModel cm = (ComposedModel) m;
+    if (! cm.getInterfaces().isEmpty()) {
+      RefModel rf = cm.getInterfaces().get(0);
+      return rf.get$ref().contains("ConceptIdentifier");
+    }
+    return true;
   }
 
 
@@ -195,6 +262,21 @@ class TypeProvider {
       default:
     }
     return mapped;
+  }
+
+
+  private boolean isTypeRegistered(Type type) {
+    return index.containsKey(indexKey(type));
+  }
+
+  private String indexKey(Type type) {
+    return indexKey(type.getFullyQualifiedName(), type.isCollection());
+  }
+
+
+  private String indexKey(String fqn, boolean isCollection) {
+    return fqn
+        + (isCollection ? "*" : "");
   }
 
 }

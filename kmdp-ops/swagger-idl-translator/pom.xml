@@ -76,7 +76,7 @@
 
   <build>
     <plugins>
-<!--      <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
@@ -98,11 +98,41 @@
                   <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                   <includes>**/*.yaml</includes>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>edu.mayo.kmdp</groupId>
+                  <artifactId>kmdp-datatype</artifactId>
+                  <version>${project.version}</version>
+
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                  <includes>**/*.yaml</includes>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>edu.mayo.kmdp</groupId>
+                  <artifactId>kmdp-service-descr</artifactId>
+                  <version>${project.version}</version>
+
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                  <includes>**/*.yaml</includes>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>edu.mayo.kmdp</groupId>
+                  <artifactId>kmdp-terminology-content</artifactId>
+                  <version>${project.version}</version>
+
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                  <includes>**/*.yaml</includes>
+                </artifactItem>
               </artifactItems>
             </configuration>
           </execution>
         </executions>
-      </plugin>-->
+      </plugin>
     </plugins>
   </build>
 </project>

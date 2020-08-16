@@ -18,11 +18,13 @@ package edu.mayo.kmdp.idl;
 
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.NameUtils.IdentifierType;
+import edu.mayo.kmdp.util.Util;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Module {
 
@@ -36,7 +38,7 @@ public class Module {
   }
 
   public Module addModule(Module sub) {
-    if (subModules.containsKey(sub.name)) {
+    if (subModules.containsKey(sub.name) && ! subModules.containsValue(sub)) {
       throw new UnsupportedOperationException("Cannot merge modules yet");
     }
     subModules.put(sub.name,sub);
@@ -44,14 +46,20 @@ public class Module {
   }
 
   public Collection<Module> getSubModules() {
-    return subModules.values();
+    return subModules.values().stream()
+        .filter(m -> !Util.isEmpty(m.getName()))
+        .collect(Collectors.toList());
+  }
+
+  public void clear() {
+    subModules.clear();
   }
 
   public Optional<Interface> getInterface(String tag) {
     return Optional.ofNullable(interfaces.get(tag2Name(tag)));
   }
 
-  public Interface addInterface( String tag) {
+  public Interface addInterface(String tag) {
     Interface itf = new Interface(tag2Name(tag));
 
     if (interfaces.containsKey(itf.getName())) {

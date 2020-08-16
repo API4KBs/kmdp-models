@@ -12,13 +12,17 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TestIDLCompiler {
+public class MockIDLCompiler {
 
-  private static final Logger logger = LoggerFactory.getLogger(TestIDLCompiler.class);
+  private static final Logger logger = LoggerFactory.getLogger(MockIDLCompiler.class);
 
   private static Compile compiler;
 
   static {
+    refreshCompiler();
+  }
+
+  private static void refreshCompiler() {
     try {
       Class<Compile> compileClass
           = Compile.class;
@@ -69,19 +73,21 @@ public class TestIDLCompiler {
     return baos.toString();
   }
 
-  protected TestIDLCompiler() {
+  protected MockIDLCompiler() {
     // nothing to do
   }
 
-  public static String tryCompileSource(File tmpRoot, List<String> idlSources) {
+  public static String tryCompileSource(String title, File tmpRoot, List<String> idlSources) {
+    refreshCompiler();
+
     File target = new File(tmpRoot, "output");
     if (target.mkdir()) {
       List<File> sources = idlSources.stream().map(idlSource -> {
         int j = idlSources.indexOf(idlSource);
-        String currFileName = "test" + j + ".idl";
+        String currFileName = title + j + ".idl";
         String content = idlSource;
         if (j > 0) {
-          String prevFileName = "test" + (j-1) + ".idl";
+          String prevFileName = title + (j-1) + ".idl";
           content = "#include <" + prevFileName + ">\n" + content;
         }
         File src = new File(tmpRoot, currFileName);
