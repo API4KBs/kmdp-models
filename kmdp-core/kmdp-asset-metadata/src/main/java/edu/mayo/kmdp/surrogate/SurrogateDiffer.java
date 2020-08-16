@@ -11,7 +11,7 @@ import org.javers.core.JaversBuilder;
 import org.javers.core.MappingStyle;
 import org.javers.core.diff.custom.CustomValueComparator;
 import org.javers.core.metamodel.clazz.EntityDefinition;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.NamespaceIdentifier;
 
 public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 

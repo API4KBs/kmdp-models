@@ -33,12 +33,12 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.id.IdentifierTagType;
-import org.omg.spec.api4kp._1_0.id.ObjectFactory;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.IdentifierTagType;
+import org.omg.spec.api4kp._20200801.id.ObjectFactory;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public class DatatypeTest {
 

@@ -1,7 +1,7 @@
 package edu.mayo.kmdp.series;
 
 import java.util.Comparator;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 
 public interface SemVersionable<T extends Versionable<T>> extends Versionable<T> {
 

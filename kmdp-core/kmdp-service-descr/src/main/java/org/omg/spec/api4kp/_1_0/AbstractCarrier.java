@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0;
+package org.omg.spec.api4kp._20200801;
 
 import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TXT;
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_LATEST;
-import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.hashIdentifiers;
-import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.newId;
-import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.randomId;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.hashIdentifiers;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.randomId;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
@@ -50,17 +50,16 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.jena.rdf.model.Statement;
-import org.omg.spec.api4kp._1_0.contrastors.ParsingLevelContrastor;
-import org.omg.spec.api4kp._1_0.id.KeyIdentifier;
 import org.omg.spec.api4kp._1_0.id.Link;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
-import org.omg.spec.api4kp._1_0.services.CompositeStructType;
-import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder;
-import org.w3c.dom.Document;
+import org.omg.spec.api4kp._20200801.contrastors.ParsingLevelContrastor;
+import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.CompositeStructType;
+import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.tranx.ModelMIMECoder;
 
 public interface AbstractCarrier {
 
@@ -72,19 +71,19 @@ public interface AbstractCarrier {
   }
 
   static KnowledgeCarrier of(byte[] encoded) {
-    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+    return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(encoded)
         .withLevel(ParsingLevelSeries.Encoded_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(InputStream stream) {
-    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+    return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(FileUtil.readBytes(stream).orElse(new byte[0]))
         .withLevel(ParsingLevelSeries.Encoded_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(String serialized) {
-    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+    return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(serialized)
         .withLevel(ParsingLevelSeries.Concrete_Knowledge_Expression);
   }
@@ -98,13 +97,13 @@ public interface AbstractCarrier {
   }
 
   static KnowledgeCarrier ofTree(Object parseTree) {
-    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+    return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(parseTree)
         .withLevel(ParsingLevelSeries.Parsed_Knowedge_Expression);
   }
 
   static KnowledgeCarrier ofAst(Object ast) {
-    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+    return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(ast)
         .withLevel(ParsingLevelSeries.Abstract_Knowledge_Expression);
   }
@@ -410,7 +409,7 @@ public interface AbstractCarrier {
 
 
   static SyntacticRepresentation rep(SyntacticRepresentation src) {
-    SyntacticRepresentation rep = new org.omg.spec.api4kp._1_0.services.SyntacticRepresentation();
+    SyntacticRepresentation rep = new org.omg.spec.api4kp._20200801.services.SyntacticRepresentation();
     src.copyTo(rep);
     return rep;
   }
@@ -551,7 +550,7 @@ public interface AbstractCarrier {
 
 
   static String codedRep(SyntacticRepresentation src) {
-    SyntacticRepresentation rep = new org.omg.spec.api4kp._1_0.services.SyntacticRepresentation();
+    SyntacticRepresentation rep = new org.omg.spec.api4kp._20200801.services.SyntacticRepresentation();
     src.copyTo(rep);
     return ModelMIMECoder.encode(rep);
   }

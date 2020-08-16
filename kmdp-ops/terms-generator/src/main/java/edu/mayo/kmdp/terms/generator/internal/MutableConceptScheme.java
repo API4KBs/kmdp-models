@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public class MutableConceptScheme extends AnonymousConceptScheme {
 

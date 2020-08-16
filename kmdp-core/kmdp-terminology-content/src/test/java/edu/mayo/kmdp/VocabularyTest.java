@@ -23,33 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.ontology.taxonomies.api4kp.knowledgeoperations.KnowledgeProcessingOperationSeries;
-import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
 import edu.mayo.ontology.taxonomies.ccgentries.ConceptDefinitionTypeSeries;
-import edu.mayo.ontology.taxonomies.iso639_2_languagecodes.Language;
-import edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique.KnowledgeProcessingTechniqueSeries;
-import edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRoleSeries;
-import edu.mayo.ontology.taxonomies.kao.publicationeventtype.PublicationEventTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries;
-import edu.mayo.ontology.taxonomies.kao.publishingrole.PublishingRoleSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.citationreltype.BibliographicCitationTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.relatedversiontype.RelatedVersionTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype.StructuralPartTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.summaryreltype.SummarizationTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.variantreltype.VariantTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
-import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
-import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfileSeries;
-import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
-import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
+import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.publicationeventtype.PublicationEventTypeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatusSeries;
+import edu.mayo.ontology.taxonomies.kmdo.publishingrole.PublishingRoleSeries;
 import edu.mayo.ontology.taxonomies.mimetype.MIMETypeSeries;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConceptSeries;
 import java.net.URI;
@@ -60,10 +40,30 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp.taxonomies.iso639_2_languagecodes.Language;
+import org.omg.spec.api4kp.taxonomies.iso639_2_languagecodes.LanguageSeries;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp.taxonomies.knowledgeoperations.KnowledgeProcessingOperationSeries;
+import org.omg.spec.api4kp.taxonomies.knowledgeprocessingtechnique.KnowledgeProcessingTechniqueSeries;
+import org.omg.spec.api4kp.taxonomies.krformat.SerializationFormatSeries;
+import org.omg.spec.api4kp.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import org.omg.spec.api4kp.taxonomies.krprofile.KnowledgeRepresentationLanguageProfileSeries;
+import org.omg.spec.api4kp.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
+import org.omg.spec.api4kp.taxonomies.languagerole.KnowledgeRepresentationLanguageRoleSeries;
+import org.omg.spec.api4kp.taxonomies.lexicon.LexiconSeries;
+import org.omg.spec.api4kp.taxonomies.parsinglevel.ParsingLevelSeries;
+import org.omg.spec.api4kp.taxonomies.rel.dependencyreltype.DependencyTypeSeries;
+import org.omg.spec.api4kp.taxonomies.rel.derivationreltype.DerivationTypeSeries;
+import org.omg.spec.api4kp.taxonomies.rel.relatedversiontype.RelatedVersionTypeSeries;
+import org.omg.spec.api4kp.taxonomies.rel.structuralreltype.StructuralPartTypeSeries;
+import org.omg.spec.api4kp.taxonomies.rel.summaryreltype.SummarizationTypeSeries;
+import org.omg.spec.api4kp.taxonomies.rel.variantreltype.VariantTypeSeries;
 
 public class VocabularyTest {
 
@@ -75,19 +75,19 @@ public class VocabularyTest {
     assertNotNull(KnowledgeRepresentationLanguageSerializationSeries.DMN_1_1_XML_Syntax);
     assertNotNull(LexiconSeries.LOINC);
     assertNotNull(LanguageSeries.Italian);
-    assertNotNull(DerivationTypeSeries.Derived_From);
-    assertNotNull(VariantTypeSeries.Rearrangement_Of);
-    assertNotNull(SummarizationTypeSeries.Digest_Of);
+    assertNotNull(DerivationTypeSeries.Is_Derived_From);
+    assertNotNull(VariantTypeSeries.Is_Rearrangement_Of);
+    assertNotNull(SummarizationTypeSeries.Is_Digest_Of);
     assertNotNull(DependencyTypeSeries.Depends_On);
-    assertNotNull(RelatedVersionTypeSeries.Has_Original);
-    assertNotNull(StructuralPartTypeSeries.Has_Part);
+    assertNotNull(RelatedVersionTypeSeries.Has_Next_Version);
+    assertNotNull(StructuralPartTypeSeries.Has_Structural_Component);
     assertNotNull(BibliographicCitationTypeSeries.Cites_As_Authority);
     assertNotNull(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines);
     assertNotNull(KnowledgeProcessingTechniqueSeries.Natural_Language_Processing_Technique);
     assertNotNull(KnowledgeAssetTypeSeries.Decision_Model);
     assertNotNull(RelatedConceptSeries.Has_Broader);
     assertNotNull(KnowledgeRepresentationLanguageRoleSeries.Expression_Language);
-    assertNotNull(KnowledgeProcessingOperationSeries.Translation_Task);
+    assertNotNull(KnowledgeProcessingOperationSeries.Syntactic_Translation_Task);
     assertNotNull(ParsingLevelSeries.Encoded_Knowledge_Expression);
     assertNotNull(KnowledgeAssetRoleSeries.Operational_Concept_Definition);
     assertNotNull(PublicationEventTypeSeries.Authoring);
@@ -108,7 +108,7 @@ public class VocabularyTest {
     assertNotNull(LanguageSeries.Chinese);
     assertNotNull(LanguageSeries.Spanish);
     assertNotNull(LanguageSeries.Vietnamese);
-    assertNotNull(edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries.Hmong);
+    assertNotNull(org.omg.spec.api4kp.taxonomies.iso639_2_languagecodes.LanguageSeries.Hmong);
     assertNotNull(LanguageSeries.Somali);
 
     assertEquals(366,LanguageSeries.values().length);
@@ -137,7 +137,7 @@ public class VocabularyTest {
         LanguageSeries.French.getTag());
 
     assertEquals("fr",
-        edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20190201.Language.French.getTag());
+        org.omg.spec.api4kp.taxonomies.iso639_1_languagecodes._20190201.Language.French.getTag());
 
   }
 
@@ -147,13 +147,14 @@ public class VocabularyTest {
     // preferring Alpha2 Codes
     assertEquals(2,tagLen);
 
-    Set<LanguageSeries> alpha3Languages = Arrays.stream(LanguageSeries.values())
+    Set<org.omg.spec.api4kp.taxonomies.iso639_2_languagecodes.LanguageSeries> alpha3Languages = Arrays.stream(
+        org.omg.spec.api4kp.taxonomies.iso639_2_languagecodes.LanguageSeries.values())
         .filter((lan) -> lan.getTag().length() != tagLen)
         .collect(Collectors.toSet());
     // some languages only have alpha3 codes
     assertEquals(194,alpha3Languages.size());
     assertTrue(alpha3Languages.contains(
-        edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries.Fanti));
+        org.omg.spec.api4kp.taxonomies.iso639_2_languagecodes.LanguageSeries.Fanti));
 
     assertEquals(new HashSet<>(Arrays.asList("fr","fra","fre")),
         new HashSet<>(LanguageSeries.French.getTags()));
@@ -172,16 +173,16 @@ public class VocabularyTest {
   @Test
   public void testKnownIdentifiers() {
 
-    assertEquals("https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#6047674c-0d9b-3c81-89a3-6943f3a7169b",
+    assertEquals("https://www.omg.org/spec/API4KP/taxonomies/kao/KnowledgeAssetType#6047674c-0d9b-3c81-89a3-6943f3a7169b",
         KnowledgeAssetTypeSeries.Nursing_Protocol.getConceptId().toString());
 
-    assertEquals("https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916",
+    assertEquals("https://www.omg.org/spec/API4KP/taxonomies/kao/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916",
         KnowledgeAssetTypeSeries.Semantic_Decision_Model.getConceptId().toString());
 
-    assertEquals("https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetCategory#d4b0e868-60c8-387d-a139-e3c35427bfb6",
+    assertEquals("https://www.omg.org/spec/API4KP/taxonomies/kao/KnowledgeAssetCategory#d4b0e868-60c8-387d-a139-e3c35427bfb6",
         KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models.getConceptId().toString());
 
-    assertEquals("https://ontology.mayo.edu/taxonomies/KRLanguage#0bf050a2-fbd6-38c2-a4ce-323fd91c7b24",
+    assertEquals("https://www.omg.org/spec/API4KP/taxonomies/KRLanguage#0bf050a2-fbd6-38c2-a4ce-323fd91c7b24",
         KnowledgeRepresentationLanguageSeries.DMN_1_2.getConceptId().toString());
   }
 
@@ -212,8 +213,8 @@ public class VocabularyTest {
     Optional<UUID> uid = ensureUUID(KnowledgeAssetCategorySeries.SCHEME_ID);
     assertTrue(uid.isPresent());
 
-    URI schemeURI = edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.schemeURI.getVersionId();
-    ResourceIdentifier nspace = edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.namespace;
+    URI schemeURI = KnowledgeAssetCategory.schemeURI.getVersionId();
+    ResourceIdentifier nspace = KnowledgeAssetCategory.namespace;
 
     assertNotNull(schemeURI);
     VersionIdentifier vid = SemanticIdentifier.newVersionId(schemeURI);

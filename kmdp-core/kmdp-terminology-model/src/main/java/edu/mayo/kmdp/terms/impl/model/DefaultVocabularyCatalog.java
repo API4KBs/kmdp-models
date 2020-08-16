@@ -22,7 +22,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public class DefaultVocabularyCatalog implements VocabularyCatalog {
 

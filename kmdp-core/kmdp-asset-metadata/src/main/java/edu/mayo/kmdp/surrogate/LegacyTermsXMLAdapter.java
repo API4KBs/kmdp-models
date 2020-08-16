@@ -17,8 +17,8 @@ import static edu.mayo.kmdp.surrogate.LegacyTermNamespaceMap.resolveKnownConcept
 
 import edu.mayo.kmdp.SurrogateHelper;
 import edu.mayo.kmdp.series.Series;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.identifiers.ConceptIdentifier;
 
 public class LegacyTermsXMLAdapter extends
     javax.xml.bind.annotation.adapters.XmlAdapter<ConceptIdentifier, Term> {

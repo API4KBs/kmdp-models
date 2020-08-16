@@ -49,13 +49,13 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.validation.Schema;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.URIIdentifier;
 import org.w3c.dom.Node;
 
 public class SurrogateHelper {
@@ -242,12 +242,12 @@ public class SurrogateHelper {
   }
 
 
-  public static org.omg.spec.api4kp._1_0.id.ConceptIdentifier fromLegacyConceptIdentifier(
+  public static org.omg.spec.api4kp._20200801.id.ConceptIdentifier fromLegacyConceptIdentifier(
       ConceptIdentifier v) {
     if (v == null) {
       return null;
     }
-    return new org.omg.spec.api4kp._1_0.id.ConceptIdentifier()
+    return new org.omg.spec.api4kp._20200801.id.ConceptIdentifier()
         .withUuid(v.getConceptUUID())
         .withResourceId(v.getConceptId())
         .withTag(v.getTag())
@@ -261,7 +261,7 @@ public class SurrogateHelper {
   }
 
   public static ConceptIdentifier toLegacyConceptIdentifier(
-      org.omg.spec.api4kp._1_0.id.ConceptIdentifier cId) {
+      org.omg.spec.api4kp._20200801.id.ConceptIdentifier cId) {
 
     ResourceIdentifier nsId = SemanticIdentifier.newNamespaceId(cId.getNamespaceUri());
 

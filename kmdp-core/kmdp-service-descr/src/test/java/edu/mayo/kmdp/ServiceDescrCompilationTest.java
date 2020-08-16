@@ -44,10 +44,10 @@ import java.util.UUID;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentation;
-import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentator;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.tranx.Transrepresentation;
+import org.omg.spec.api4kp._20200801.services.tranx.Transrepresentator;
 
 public class ServiceDescrCompilationTest {
 
@@ -61,8 +61,8 @@ public class ServiceDescrCompilationTest {
 
     try {
 
-      Class<?> txc = getNamedClass("org.omg.spec.api4kp._1_0.services.tranx.resources.Transrepresentator", tgt);
-      Class<?> txr = getNamedClass("org.omg.spec.api4kp._1_0.services.tranx.resources.Transrepresentation", tgt);
+      Class<?> txc = getNamedClass("org.omg.spec.api4kp._20200801.services.tranx.resources.Transrepresentator", tgt);
+      Class<?> txr = getNamedClass("org.omg.spec.api4kp._20200801.services.tranx.resources.Transrepresentation", tgt);
       assertNotNull(txc);
       assertNotNull(txr);
 

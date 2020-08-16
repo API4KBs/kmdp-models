@@ -38,18 +38,18 @@
   <uri name="http://kmdp.mayo.edu/metadata/surrogate/provenance"
     uri="metadata/surrogate/provenance/provenance.xsd"/>-->
   
-  <public publicId="http://www.omg.org/spec/API4KP/1.0/identifiers"
+  <public publicId="https://www.omg.org/spec/API4KP/20200801/identifiers"
     uri="API4KP/api4kp/identifiers/identifiers.xsd"/>
-  <system systemId="http://www.omg.org/spec/API4KP/1.0/identifiers"
+  <system systemId="https://www.omg.org/spec/API4KP/20200801/identifiers"
     uri="API4KP/api4kp/identifiers/identifiers.xsd"/>
-  <uri name="http://www.omg.org/spec/API4KP/1.0/identifiers"
+  <uri name="https://www.omg.org/spec/API4KP/20200801/identifiers"
     uri="API4KP/api4kp/identifiers/identifiers.xsd"/>
 
-  <public publicId="http://www.omg.org/spec/API4KP/1.0/identifiers/versions"
+  <public publicId="https://www.omg.org/spec/API4KP/20200801/identifiers/versions"
     uri="API4KP/api4kp/identifiers/tags/tags.xsd"/>
-  <system systemId="http://www.omg.org/spec/API4KP/1.0/identifiers/versions"
+  <system systemId="https://www.omg.org/spec/API4KP/20200801/identifiers/versions"
     uri="API4KP/api4kp/identifiers/tags/tags.xsd"/>
-  <uri name="http://www.omg.org/spec/API4KP/1.0/identifiers/versions"
+  <uri name="https://www.omg.org/spec/API4KP/20200801/identifiers/versions"
     uri="API4KP/api4kp/identifiers/tags/tags.xsd"/>
 
 

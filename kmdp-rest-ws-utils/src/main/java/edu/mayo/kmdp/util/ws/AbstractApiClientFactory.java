@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.omg.spec.api4kp._1_0.ServerSideException;
+import org.omg.spec.api4kp._20200801.ServerSideException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;

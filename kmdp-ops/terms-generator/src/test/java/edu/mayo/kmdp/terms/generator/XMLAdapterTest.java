@@ -27,7 +27,7 @@ import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ObjectFactory;
+import org.omg.spec.api4kp._20200801.id.ObjectFactory;
 
 class XMLAdapterTest {
 

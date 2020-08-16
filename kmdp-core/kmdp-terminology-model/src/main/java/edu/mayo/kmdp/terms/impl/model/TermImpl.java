@@ -6,9 +6,9 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public class TermImpl extends ConceptIdentifier implements TermDescription {
 

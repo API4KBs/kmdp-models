@@ -16,8 +16,8 @@ import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSerie
 import java.net.URI;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public class AssetSurrogateDiffTest {
 

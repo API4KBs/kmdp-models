@@ -19,8 +19,7 @@ import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Date;
-import java.util.List;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public class InternalTerm extends TermImpl {
 

@@ -49,9 +49,9 @@ import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.URIIdentifier;
 
 public class SurrogateBuilder {
 

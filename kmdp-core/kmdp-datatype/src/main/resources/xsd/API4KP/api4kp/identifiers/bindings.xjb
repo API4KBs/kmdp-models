@@ -18,7 +18,17 @@
   <jxb:bindings schemaLocation="identifiers.xsd">
     <xjc:simple/>
     <namespace:prefix name="id_old"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.identifiers"/>
+    </jxb:schemaBindings>
 
   </jxb:bindings>
 
+  <jxb:bindings schemaLocation="identifiers.openapi.xsd">
+    <xjc:simple/>
+    <namespace:prefix name="id_old-r"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.identifiers.resources"/>
+    </jxb:schemaBindings>
+  </jxb:bindings>
 </jxb:bindings>

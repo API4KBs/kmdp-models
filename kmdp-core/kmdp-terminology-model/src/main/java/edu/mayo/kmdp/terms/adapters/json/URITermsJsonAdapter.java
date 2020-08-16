@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

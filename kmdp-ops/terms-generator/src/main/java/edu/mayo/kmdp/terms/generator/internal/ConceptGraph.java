@@ -17,8 +17,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
 public class ConceptGraph {
 

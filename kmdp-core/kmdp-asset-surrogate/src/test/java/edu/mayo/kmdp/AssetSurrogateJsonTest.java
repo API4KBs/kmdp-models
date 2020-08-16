@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 
 import edu.mayo.kmdp.metadata.v2.surrogate.Citation;
 import edu.mayo.kmdp.metadata.v2.surrogate.Component;
@@ -60,8 +60,8 @@ import edu.mayo.ontology.taxonomies.kao.rel.citationreltype.BibliographicCitatio
 import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 
 
 public class AssetSurrogateJsonTest {
@@ -162,6 +162,7 @@ public class AssetSurrogateJsonTest {
         );
 
     String x = toJson(ks);
+    System.out.println(x);
     ks = JSonUtil.parseJson(x, KnowledgeAsset.class).orElse(null);
     assertNotNull(ks);
   }

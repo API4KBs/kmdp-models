@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <surr:knowledgeAsset
-  xmlns:id_old="http://www.omg.org/spec/API4KP/1.0/identifiers"
+  xmlns:id_old="https://www.omg.org/spec/API4KP/20200801/identifiers"
   xmlns:ann="http://kmdp.mayo.edu/metadata/annotations"
   xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

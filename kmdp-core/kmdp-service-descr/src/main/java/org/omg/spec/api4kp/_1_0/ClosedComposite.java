@@ -1,4 +1,4 @@
-package org.omg.spec.api4kp._1_0;
+package org.omg.spec.api4kp._20200801;
 
 import java.util.function.Function;
 import org.slf4j.Logger;

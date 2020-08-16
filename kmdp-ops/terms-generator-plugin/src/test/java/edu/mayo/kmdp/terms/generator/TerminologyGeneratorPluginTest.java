@@ -126,14 +126,19 @@ class TerminologyGeneratorPluginTest extends AbstractPluginTest {
 
     showDirContent(tmp.toFile());
 
-    applyJaxb(Arrays.asList(new File(genSource.getPath() + "/xsd/schema.xsd"),
-        new File(genSource.getPath() + "/xsd/terms")),
-        Arrays.asList(new File(genSource.getPath() + "/xsd/terms")),
+    applyJaxb(
+        Arrays.asList(
+            new File(genSource.getPath() + "/xsd/schema.xsd"),
+            new File(genSource.getPath() + "/xsd/terms")),
+        Arrays.asList(
+            new File(genSource.getPath() + "/xsd/terms")),
         genSource,
         null,
         new File(genSource.getPath() + "/xsd/api4kp-catalog.xml"),
         false,
         true);
+
+    showDirContent(tmp.toFile());
 
     purge(genSource);
   }
@@ -141,7 +146,7 @@ class TerminologyGeneratorPluginTest extends AbstractPluginTest {
   private void purge(File gen) {
     // In real scenarios, one would pass the episode file and the dependency to the already compiled datatypes.
     // For testing purposes, we let JaxB regenerate the files, then delete them before compilation
-    File omg = new File(gen.getAbsolutePath() + "/org/omg");
+    File omg = new File(gen.getAbsolutePath() + "/https");
     assertTrue(omg.isDirectory());
     FileUtil.delete(omg);
   }

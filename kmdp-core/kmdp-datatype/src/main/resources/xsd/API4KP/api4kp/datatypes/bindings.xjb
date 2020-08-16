@@ -1,7 +1,7 @@
 <jxb:bindings version="2.1"
   xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
-  xmlns:dtt="http://www.omg.org/spec/API4KP/1.0/datatypes"
+  xmlns:dtt="https://www.omg.org/spec/API4KP/20200801/datatypes"
   xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
   xmlns:ci="http://jaxb.dev.java.net/plugin/code-injector"
   xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
@@ -12,6 +12,9 @@
   <jxb:bindings schemaLocation="datatypes.xsd">
     <xjc:simple/>
     <namespace:prefix name="dtt"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.datatypes"/>
+    </jxb:schemaBindings>
 
     <jxb:bindings node="//xsd:complexType[@name='Map']">
       <inheritance:extends>edu.mayo.kmdp.id.adapter.CopyableHashMap&lt;String,Object,Map&gt;</inheritance:extends>

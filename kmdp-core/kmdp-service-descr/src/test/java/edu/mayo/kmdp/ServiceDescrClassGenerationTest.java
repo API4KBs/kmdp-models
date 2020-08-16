@@ -39,18 +39,18 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.GAVIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
-import org.omg.spec.api4kp._1_0.services.Job;
-import org.omg.spec.api4kp._1_0.services.JobStatus;
-import org.omg.spec.api4kp._1_0.services.KnowledgePlatformComponent;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._1_0.services.repository.KnowledgeArtifactRepository;
-import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentation;
-import org.omg.spec.api4kp._1_0.services.tranx.TransrepresentationOperator;
-import org.omg.spec.api4kp._1_0.services.tranx.Transrepresentator;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.GAVIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._20200801.services.Job;
+import org.omg.spec.api4kp._20200801.services.JobStatus;
+import org.omg.spec.api4kp._20200801.services.KnowledgePlatformComponent;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository;
+import org.omg.spec.api4kp._20200801.services.tranx.Transrepresentation;
+import org.omg.spec.api4kp._20200801.services.tranx.TransrepresentationOperator;
+import org.omg.spec.api4kp._20200801.services.tranx.Transrepresentator;
 
 public class ServiceDescrClassGenerationTest {
 
@@ -81,7 +81,7 @@ public class ServiceDescrClassGenerationTest {
             .withVersionTag("1")
             .withNamespaceUri(URI.create("edu.test")));
 
-    org.omg.spec.api4kp._1_0.services.tranx.ObjectFactory of = new org.omg.spec.api4kp._1_0.services.tranx.ObjectFactory();
+    org.omg.spec.api4kp._20200801.services.tranx.ObjectFactory of = new org.omg.spec.api4kp._20200801.services.tranx.ObjectFactory();
     String xml = JaxbUtil.marshallToString(Collections.singleton(of.getClass()),
         component,
         of::createTransrepresentator,
@@ -109,7 +109,7 @@ public class ServiceDescrClassGenerationTest {
       String genPath = f.getParent() +
           ".generated-sources.xjc.".replaceAll("\\.", Matcher.quoteReplacement(File.separator));
       f = new File(genPath
-          + org.omg.spec.api4kp._1_0.services.repository.KnowledgeArtifactRepository.class.getPackage().getName()
+          + org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository.class.getPackage().getName()
           .replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
       assertTrue(f.exists());
       assertTrue(f.isDirectory());
@@ -124,8 +124,8 @@ public class ServiceDescrClassGenerationTest {
 //      files.forEach(System.out::println);
 
       assertTrue(
-          files.contains(org.omg.spec.api4kp._1_0.services.repository.KnowledgeArtifactRepository.class.getName()));
-      assertFalse(files.contains(org.omg.spec.api4kp._1_0.services.tranx.Transrepresentation.class.getName()));
+          files.contains(org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository.class.getName()));
+      assertFalse(files.contains(org.omg.spec.api4kp._20200801.services.tranx.Transrepresentation.class.getName()));
 
     } catch (URISyntaxException e) {
       e.printStackTrace();

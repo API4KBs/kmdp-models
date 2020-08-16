@@ -19,8 +19,8 @@ import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLan
 import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.RDF_XML_Syntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
-import static org.omg.spec.api4kp._1_0.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
 
 import edu.mayo.kmdp.comparator.Contrastor.Comparison;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
@@ -30,8 +30,8 @@ import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresent
 import java.nio.charset.Charset;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.tranx.ModelMIMECoder;
 
 class RepresentationComparisonTest {
 

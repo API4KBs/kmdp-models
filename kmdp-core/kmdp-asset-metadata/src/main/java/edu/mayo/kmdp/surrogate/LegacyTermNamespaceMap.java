@@ -47,7 +47,7 @@ import edu.mayo.ontology.taxonomies.lexicon.Lexicon;
 import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import java.net.URI;
 import java.util.Optional;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public class LegacyTermNamespaceMap {
 

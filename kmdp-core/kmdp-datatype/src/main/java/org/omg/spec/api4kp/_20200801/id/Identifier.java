@@ -1,4 +1,4 @@
-package org.omg.spec.api4kp._1_0.id;
+package org.omg.spec.api4kp._20200801.id;
 
 import static edu.mayo.kmdp.util.Util.isOID;
 import static edu.mayo.kmdp.util.Util.isUUID;

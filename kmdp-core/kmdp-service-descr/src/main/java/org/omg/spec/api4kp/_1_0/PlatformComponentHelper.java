@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0;
+package org.omg.spec.api4kp._20200801;
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.util.Util.isEmpty;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_ZERO;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO;
 
 import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Option;
@@ -29,10 +29,10 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import javax.xml.namespace.QName;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.services.ParameterDefinition;
-import org.omg.spec.api4kp._1_0.services.repository.KnowledgeArtifactRepository;
-import org.omg.spec.api4kp._1_0.services.resources.ParameterDefinitions;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.services.ParameterDefinition;
+import org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository;
+import org.omg.spec.api4kp._20200801.services.resources.ParameterDefinitions;
 
 public class PlatformComponentHelper {
 
@@ -45,7 +45,7 @@ public class PlatformComponentHelper {
     if (isEmpty(identifier) || isEmpty(baseNamespace) || baseUrl == null) {
       return Optional.empty();
     }
-    return Optional.of(new org.omg.spec.api4kp._1_0.services.repository.resources.KnowledgeArtifactRepository()
+    return Optional.of(new org.omg.spec.api4kp._20200801.services.repository.resources.KnowledgeArtifactRepository()
         .withInstanceId(
             SemanticIdentifier.newId(BASE_UUID_URN_URI, UUID.randomUUID(), VERSION_ZERO))
         .withId(SemanticIdentifier.newId(URI.create(baseNamespace + "/repos/" + identifier)))
@@ -72,7 +72,7 @@ public class PlatformComponentHelper {
   }
 
   public static Properties defaults(
-      org.omg.spec.api4kp._1_0.services.ParameterDefinitions acceptableParams) {
+      org.omg.spec.api4kp._20200801.services.ParameterDefinitions acceptableParams) {
     Properties prop = new Properties();
     acceptableParams.getParameterDefinition().forEach(p -> {
       if ( !Util.isEmpty(p.getDefaultValue())) {

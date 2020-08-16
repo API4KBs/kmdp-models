@@ -20,13 +20,13 @@ import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.util.StreamUtil;
 import java.util.Arrays;
 import java.util.Optional;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public abstract class TermsXMLAdapter extends
-    javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._1_0.id.ConceptIdentifier, Term> {
+    javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._20200801.id.ConceptIdentifier, Term> {
 
   @Override
-  public Term unmarshal(org.omg.spec.api4kp._1_0.id.ConceptIdentifier v) {
+  public Term unmarshal(org.omg.spec.api4kp._20200801.id.ConceptIdentifier v) {
     return DatatypeHelper.resolveTerm(
         v.getTag(),
         v.getVersionTag() != null ? getValuesForVersion(v.getVersionTag()) : getValues(),
@@ -35,7 +35,7 @@ public abstract class TermsXMLAdapter extends
   }
 
   @Override
-  public org.omg.spec.api4kp._1_0.id.ConceptIdentifier marshal(Term v) {
+  public org.omg.spec.api4kp._20200801.id.ConceptIdentifier marshal(Term v) {
     return v != null ? v.asConceptIdentifier() : null;
   }
 

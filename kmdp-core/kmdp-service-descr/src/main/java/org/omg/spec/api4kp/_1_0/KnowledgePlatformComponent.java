@@ -1,4 +1,4 @@
-package org.omg.spec.api4kp._1_0;
+package org.omg.spec.api4kp._20200801;
 
 import edu.mayo.kmdp.util.StreamUtil;
 import java.util.Collection;
@@ -8,10 +8,10 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 
-public interface KnowledgePlatformComponent<T extends org.omg.spec.api4kp._1_0.services.KnowledgePlatformComponent> {
+public interface KnowledgePlatformComponent<T extends org.omg.spec.api4kp._20200801.services.KnowledgePlatformComponent> {
 
   UUID getComponentUuid();
 

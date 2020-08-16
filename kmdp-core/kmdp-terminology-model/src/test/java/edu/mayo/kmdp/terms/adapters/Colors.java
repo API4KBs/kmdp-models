@@ -24,9 +24,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
 /*
 	Example of generated 'terminology' class
@@ -62,7 +63,7 @@ public enum Colors implements IColors {
   }
 
   @Override
-  public org.omg.spec.api4kp._1_0.id.VersionIdentifier getVersionIdentifier() {
+  public VersionIdentifier getVersionIdentifier() {
     return SemanticIdentifier.newId(trm.getTag(),"0.0.1");
   }
 

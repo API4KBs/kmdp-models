@@ -33,8 +33,8 @@ import java.util.Optional;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.NamespaceIdentifier;
 
 public class RootElementTest {
 

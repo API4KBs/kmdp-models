@@ -17,7 +17,7 @@ package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.omg.spec.api4kp._1_0.PlatformComponentHelper.asParamDefinitions;
+import static org.omg.spec.api4kp._20200801.PlatformComponentHelper.asParamDefinitions;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.util.JSonUtil;
@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.services.ParameterDefinitions;
+import org.omg.spec.api4kp._20200801.services.ParameterDefinitions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

@@ -15,13 +15,14 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategory;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
+import org.omg.spec.api4kp.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -35,11 +36,11 @@ public class XSDCompilationTest {
 
   @Test
   public void testAssetOntology() {
-    KnowledgeAssetCategory kac = KnowledgeAssetCategory.Plans_Processes_Pathways_And_Protocol_Definitions;
-    assertEquals(6, KnowledgeAssetCategory.values().length);
+    KnowledgeAssetCategory kac = KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
+    assertEquals(6, KnowledgeAssetCategorySeries.values().length);
 
     KnowledgeAssetType kat = KnowledgeAssetTypeSeries.Clinical_Rule;
-    assertEquals("https://www.omg.org/spec/API4KP/api4kp-ckao/ClinicalRule", kat.getReferentId().toString());
+    assertEquals("http://ontology.mayo.edu/ontologies/clinicalknowledgeassets/ClinicalRule", kat.getReferentId().toString());
 
     KnowledgeRepresentationLanguage dmn = KnowledgeRepresentationLanguageSeries.DMN_1_1;
     KnowledgeRepresentationLanguage dmn2 = KnowledgeRepresentationLanguageSeries.DMN_1_2;

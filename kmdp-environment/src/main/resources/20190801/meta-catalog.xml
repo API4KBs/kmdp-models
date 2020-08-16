@@ -19,7 +19,7 @@
     publicId="urn:hl7-org:elm:r1"/>
 
   <public uri="file:///api4kp-catalog.xml"
-    publicId="http://www.omg.org/spec/API4KP/1.0"/>
+    publicId="https://www.omg.org/spec/API4KP/20200801"/>
 
   <public uri="file:///api4kp-catalog.xml"
     publicId="https://www.omg.org/spec/API4KP/1.0/"/>

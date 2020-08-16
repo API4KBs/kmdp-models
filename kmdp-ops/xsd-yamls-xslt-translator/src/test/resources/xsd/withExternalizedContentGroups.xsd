@@ -19,7 +19,7 @@
   xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
   xmlns:ns1="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetCategory/1.0"
   xmlns:ns2="http://terms.kmdp.mayo.edu/KAO/DecisionType/1.0"
-  xmlns:ns3="http://www.omg.org/spec/API4KP/1.0/identifiers"
+  xmlns:ns3="https://www.omg.org/spec/API4KP/20200801/identifiers"
   xmlns:ns4="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType/1.0"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   elementFormDefault="qualified"

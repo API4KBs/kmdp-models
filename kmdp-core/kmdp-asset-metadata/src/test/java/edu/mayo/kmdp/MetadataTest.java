@@ -45,8 +45,8 @@ import java.util.Optional;
 import javax.xml.validation.Schema;
 import org.javers.core.diff.Diff;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ID;
-import org.omg.spec.api4kp._1_0.identifiers.SimpleIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.ID;
+import org.omg.spec.api4kp._20200801.identifiers.SimpleIdentifier;
 
 public class MetadataTest {
 

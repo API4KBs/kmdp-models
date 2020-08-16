@@ -15,7 +15,7 @@ package edu.mayo.kmdp.metadata.v2.surrogate;
 
 import static edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries.English;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries.Operational_Concept_Definition;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_ZERO;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO;
 
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Applicability;
@@ -39,11 +39,11 @@ import edu.mayo.ontology.taxonomies.lexicon.LexiconSeries;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 
 public class SurrogateBuilder {
 

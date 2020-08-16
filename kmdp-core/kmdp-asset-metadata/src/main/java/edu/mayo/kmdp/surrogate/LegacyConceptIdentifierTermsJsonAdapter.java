@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.mayo.kmdp.util.JSonUtil;
 import java.io.IOException;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.ConceptIdentifier;
 
 public interface LegacyConceptIdentifierTermsJsonAdapter {
 

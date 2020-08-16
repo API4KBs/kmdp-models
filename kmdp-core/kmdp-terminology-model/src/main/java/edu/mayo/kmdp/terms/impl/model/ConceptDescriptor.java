@@ -1,8 +1,8 @@
 package edu.mayo.kmdp.terms.impl.model;
 
 import edu.mayo.kmdp.terms.ConceptTerm;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public class ConceptDescriptor extends ConceptIdentifier {
 

@@ -1,4 +1,4 @@
-package org.omg.spec.api4kp._1_0.id;
+package org.omg.spec.api4kp._20200801.id;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -6,11 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.kmdp.util.XMLUtil;
 import java.util.Optional;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 
 public class SerializationTest {
 

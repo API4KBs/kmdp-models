@@ -2,8 +2,8 @@ package edu.mayo.kmdp.terms.example.cito;
 
 import edu.mayo.kmdp.terms.VersionableTerm;
 import java.net.URI;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 
 public interface ICito extends VersionableTerm<ICito, CitoSeries> {
 

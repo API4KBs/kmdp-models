@@ -25,8 +25,8 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.NamespaceIdentifier;
 
 public class DatatypeJsonLDTest {
 

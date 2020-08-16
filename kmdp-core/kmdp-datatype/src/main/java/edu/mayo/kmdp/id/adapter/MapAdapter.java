@@ -18,7 +18,7 @@ package edu.mayo.kmdp.id.adapter;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import org.omg.spec.api4kp._1_0.datatypes.Map;
+import org.omg.spec.api4kp._20200801.datatypes.Map;
 import org.w3c.dom.Element;
 
 import javax.xml.bind.JAXBElement;

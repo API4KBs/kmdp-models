@@ -29,8 +29,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.id.Pointer;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.Pointer;
 
 public class DatatypeJSONTest {
 

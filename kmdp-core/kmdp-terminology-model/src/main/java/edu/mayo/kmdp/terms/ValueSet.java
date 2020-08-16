@@ -17,8 +17,8 @@ package edu.mayo.kmdp.terms;
 
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
 public interface ValueSet {
 

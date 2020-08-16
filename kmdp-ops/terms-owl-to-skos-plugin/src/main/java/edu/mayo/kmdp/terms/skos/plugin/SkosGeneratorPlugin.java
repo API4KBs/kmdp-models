@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.jena.base.Sys;
 import org.apache.jena.rdf.model.Model;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -423,7 +424,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
       URL catalogURL) {
     onto.directImportsDocuments().forEach(
         ontologyIRI -> {
-          if (manager.getOntology(ontologyIRI) == null) {
+          if (!isOntologyLoaded(manager,ontologyIRI)) {
             try {
               if (applyMappings(ontologyIRI, manager).isPresent()) {
                 OWLOntology importedOntology = manager
@@ -436,11 +437,17 @@ public class SkosGeneratorPlugin extends AbstractMojo {
                 preloadImports(manager, importedOntology, catalogURL);
               }
             } catch (OWLOntologyCreationException e) {
+              System.err.println(e.getMessage() + "  >>>>>>>>>>>>>>> " + ontologyIRI);
               logger.error(e.getMessage(), e);
             }
           }
         }
     );
+  }
+
+  private boolean isOntologyLoaded(OWLOntologyManager manager, IRI ontologyIRI) {
+    // different styles in the use of versioned vs series IRIs in import require to check both
+    return manager.contains(ontologyIRI) || manager.containsVersion(ontologyIRI);
   }
 
   private static Optional<IRI> applyMappings(IRI ontologyIRI, OWLOntologyManager manager) {

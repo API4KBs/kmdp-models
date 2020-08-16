@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp.terms;
 
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 /**
  * Copy of the official class for test purposes.
@@ -23,17 +23,17 @@ import org.omg.spec.api4kp._1_0.id.Term;
  */
 @Deprecated
 public abstract class MockTermsXMLAdapter extends
-    javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._1_0.id.ConceptIdentifier, Term> {
+    javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._20200801.id.ConceptIdentifier, Term> {
 
   @Override
-  public Term unmarshal(org.omg.spec.api4kp._1_0.id.ConceptIdentifier v) {
+  public Term unmarshal(org.omg.spec.api4kp._20200801.id.ConceptIdentifier v) {
     return java.util.Arrays.stream(getValues())
         .filter((x) -> x.getReferentId().equals(v.getReferentId()))
         .findFirst().orElse(null);
   }
 
   @Override
-  public org.omg.spec.api4kp._1_0.id.ConceptIdentifier marshal(Term v) {
+  public org.omg.spec.api4kp._20200801.id.ConceptIdentifier marshal(Term v) {
     return v != null ? v.asConceptIdentifier() : null;
   }
 

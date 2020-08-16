@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp.taxonomies.krformat.SerializationFormatSeries.XML_1_1;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -28,18 +29,18 @@ import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
-import edu.mayo.ontology.taxonomies.krformat.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp.taxonomies.krformat.SerializationFormat;
+import org.omg.spec.api4kp.taxonomies.krformat.SerializationFormatSeries;
+import org.omg.spec.api4kp.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
+import org.omg.spec.api4kp.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 
 public class TermsSerializationTest {
 
@@ -117,7 +118,7 @@ public class TermsSerializationTest {
   @Test
   public void testJSONWithInterface() {
     Baz b = new Baz();
-    b.format = SerializationFormatSeries.XML_1_1.getLatest();
+    b.format = XML_1_1.getLatest();
 
     String s = JSonUtil.writeJson(b)
         .flatMap(Util::asString)
@@ -128,7 +129,7 @@ public class TermsSerializationTest {
         .orElse(null);
     assertNotNull(b2);
 
-    assertSame(edu.mayo.ontology.taxonomies.krformat.snapshot.SerializationFormat.XML_1_1,
+    assertSame(org.omg.spec.api4kp.taxonomies.krformat.snapshot.SerializationFormat.XML_1_1,
         b2.getFormat());
   }
 
@@ -187,7 +188,7 @@ public class TermsSerializationTest {
 
   public static class Bar {
 
-    protected edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType type;
+    protected KnowledgeAssetType type;
 
     @JsonSerialize(using = UUIDTermsJsonAdapter.Serializer.class)
     @JsonDeserialize(using = BarDeserializer.class)

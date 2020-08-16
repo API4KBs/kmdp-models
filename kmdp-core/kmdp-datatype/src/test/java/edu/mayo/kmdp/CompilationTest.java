@@ -41,7 +41,7 @@ import java.util.UUID;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.omg.spec.api4kp._1_0.id.Pointer;
+import org.omg.spec.api4kp._20200801.id.Pointer;
 
 public class CompilationTest {
 
@@ -52,7 +52,7 @@ public class CompilationTest {
   public void testJaxbGeneration() {
     File tgt = compile();
 
-    Class<?> ptrClass = getNamedClass("org.omg.spec.api4kp._1_0.id.resources.Pointer", tgt);
+    Class<?> ptrClass = getNamedClass("org.omg.spec.api4kp._20200801.id.resources.Pointer", tgt);
     assertNotNull(ptrClass);
     assertTrue(Pointer.class.isAssignableFrom(ptrClass));
 

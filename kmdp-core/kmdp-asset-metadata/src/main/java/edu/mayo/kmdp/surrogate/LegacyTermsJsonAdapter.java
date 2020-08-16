@@ -11,8 +11,8 @@ import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.util.JSonUtil;
 import java.io.IOException;
 import java.util.Optional;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.identifiers.ConceptIdentifier;
 
 public class LegacyTermsJsonAdapter {
 

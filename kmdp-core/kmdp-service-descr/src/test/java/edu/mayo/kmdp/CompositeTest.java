@@ -8,11 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_LATEST;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_ZERO;
-import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.hashIdentifiers;
-import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.hashIdentifiers;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.TermsHelper;
@@ -35,14 +35,13 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.AbstractCarrier;
-import org.omg.spec.api4kp._1_0.Answer;
 import org.omg.spec.api4kp._1_0.id.Link;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
-import org.omg.spec.api4kp._1_0.services.CompositeStructType;
-import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.AbstractCarrier;
+import org.omg.spec.api4kp._20200801.Answer;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.CompositeStructType;
+import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 
 public class CompositeTest {
 

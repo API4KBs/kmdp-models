@@ -17,39 +17,39 @@
 -->
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
-  <public publicId="http://www.omg.org/spec/API4KP/1.0"
+  <public publicId="https://www.omg.org/spec/API4KP/20200801"
     uri="API4KP/api4kp/api4kp.xsd"/>
-  <system systemId="http://www.omg.org/spec/API4KP/1.0"
+  <system systemId="https://www.omg.org/spec/API4KP/20200801"
     uri="API4KP/api4kp/api4kp.xsd"/>
-  <uri name="http://www.omg.org/spec/API4KP/1.0"
+  <uri name="https://www.omg.org/spec/API4KP/20200801"
     uri="API4KP/api4kp/api4kp.xsd"/>
 
-  <public publicId="http://www.omg.org/spec/API4KP/1.0/identifiers"
+  <public publicId="https://www.omg.org/spec/API4KP/20200801/identifiers"
     uri="API4KP/api4kp/identifiers/identifiers.xsd"/>
-  <system systemId="http://www.omg.org/spec/API4KP/1.0/identifiers"
+  <system systemId="https://www.omg.org/spec/API4KP/20200801/identifiers"
     uri="API4KP/api4kp/identifiers/identifiers.xsd"/>
-  <uri name="http://www.omg.org/spec/API4KP/1.0/identifiers"
+  <uri name="https://www.omg.org/spec/API4KP/20200801/identifiers"
     uri="API4KP/api4kp/identifiers/identifiers.xsd"/>
 
-  <public publicId="http://www.omg.org/spec/API4KP/1.0/id"
+  <public publicId="https://www.omg.org/spec/API4KP/20200801/id"
     uri="API4KP/api4kp/id/id.xsd"/>
-  <system systemId="http://www.omg.org/spec/API4KP/1.0/id"
+  <system systemId="https://www.omg.org/spec/API4KP/20200801/id"
     uri="API4KP/api4kp/id/id.xsd"/>
-  <uri name="http://www.omg.org/spec/API4KP/1.0/id"
+  <uri name="https://www.omg.org/spec/API4KP/20200801/id"
     uri="API4KP/api4kp/id/id.xsd"/>
 
-  <public publicId="http://www.omg.org/spec/API4KP/1.0/datatypes"
+  <public publicId="https://www.omg.org/spec/API4KP/20200801/datatypes"
     uri="API4KP/api4kp/datatypes/datatypes.xsd"/>
-  <system systemId="http://www.omg.org/spec/API4KP/1.0/datatypes"
+  <system systemId="https://www.omg.org/spec/API4KP/20200801/datatypes"
     uri="API4KP/api4kp/datatypes/datatypes.xsd"/>
-  <uri name="http://www.omg.org/spec/API4KP/1.0/datatypes"
+  <uri name="https://www.omg.org/spec/API4KP/20200801/datatypes"
     uri="API4KP/api4kp/datatypes/datatypes.xsd"/>
 
-  <public publicId="http://www.omg.org/spec/API4KP/1.0/services"
+  <public publicId="https://www.omg.org/spec/API4KP/20200801/services"
     uri="API4KP/api4kp/services/services.xsd"/>
-  <system systemId="http://www.omg.org/spec/API4KP/1.0/services"
+  <system systemId="https://www.omg.org/spec/API4KP/20200801/services"
     uri="API4KP/api4kp/services/services.xsd"/>
-  <uri name="http://www.omg.org/spec/API4KP/1.0/services"
+  <uri name="https://www.omg.org/spec/API4KP/20200801/services"
     uri="API4KP/api4kp/services/services.xsd"/>
 
 

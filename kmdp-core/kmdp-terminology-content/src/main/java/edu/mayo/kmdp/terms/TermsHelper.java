@@ -18,7 +18,7 @@ package edu.mayo.kmdp.terms;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 
 public class TermsHelper {
 

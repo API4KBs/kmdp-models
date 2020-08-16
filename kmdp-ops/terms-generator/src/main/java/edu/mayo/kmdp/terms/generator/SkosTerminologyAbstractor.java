@@ -15,11 +15,10 @@ package edu.mayo.kmdp.terms.generator;
 
 import static edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters.VERSION_PATTERN;
 import static edu.mayo.kmdp.util.Util.isUUID;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNAPSHOT;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNAPSHOT_DATE_PATTERN;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNAPSHOT;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNAPSHOT_DATE_PATTERN;
 
 import edu.mayo.kmdp.terms.ConceptScheme;
-import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
@@ -53,9 +52,9 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.VersionTagType;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.VersionTagType;
 import org.semanticweb.HermiT.Configuration;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;

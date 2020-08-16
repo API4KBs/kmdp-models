@@ -8,15 +8,26 @@
   <jxb:bindings schemaLocation="id.xsd">
     <xjc:simple/>
     <namespace:prefix name="id"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.id"/>
+    </jxb:schemaBindings>
 
     <jxb:bindings node="//xsd:complexType[@name='ResourceIdentifier']">
-      <inheritance:implements>org.omg.spec.api4kp._1_0.id.SemanticIdentifier</inheritance:implements>
+      <inheritance:implements>org.omg.spec.api4kp._20200801.id.SemanticIdentifier</inheritance:implements>
     </jxb:bindings>
 
     <jxb:bindings node="//xsd:complexType[@name='ConceptIdentifier']">
-      <inheritance:implements>org.omg.spec.api4kp._1_0.id.Term</inheritance:implements>
+      <inheritance:implements>org.omg.spec.api4kp._20200801.id.Term</inheritance:implements>
     </jxb:bindings>
 
+  </jxb:bindings>
+
+  <jxb:bindings schemaLocation="id.openapi.xsd">
+    <xjc:simple/>
+    <namespace:prefix name="id-r"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.id.resources"/>
+    </jxb:schemaBindings>
   </jxb:bindings>
 
 </jxb:bindings>

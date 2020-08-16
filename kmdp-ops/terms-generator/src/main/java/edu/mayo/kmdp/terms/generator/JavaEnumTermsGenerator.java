@@ -21,7 +21,7 @@ import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public class JavaEnumTermsGenerator extends BaseEnumGenerator {
 

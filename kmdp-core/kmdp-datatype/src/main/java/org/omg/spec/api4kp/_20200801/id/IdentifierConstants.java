@@ -1,4 +1,4 @@
-package org.omg.spec.api4kp._1_0.id;
+package org.omg.spec.api4kp._20200801.id;
 
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;

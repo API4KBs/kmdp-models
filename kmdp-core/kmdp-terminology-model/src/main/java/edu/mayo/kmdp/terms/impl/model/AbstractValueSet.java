@@ -19,10 +19,10 @@ package edu.mayo.kmdp.terms.impl.model;
 import edu.mayo.kmdp.terms.ValueSet;
 import java.net.URI;
 import java.util.Optional;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
 public abstract class AbstractValueSet<T extends Term> implements ValueSet {
 

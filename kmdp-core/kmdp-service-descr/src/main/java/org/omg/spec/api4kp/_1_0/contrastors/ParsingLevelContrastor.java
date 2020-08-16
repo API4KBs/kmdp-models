@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0.contrastors;
+package org.omg.spec.api4kp._20200801.contrastors;
 
 import edu.mayo.kmdp.comparator.Contrastor;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevel;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
 import java.util.Comparator;
-import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 
 public class ParsingLevelContrastor extends Contrastor<ParsingLevel> implements
     Comparator<ParsingLevel> {

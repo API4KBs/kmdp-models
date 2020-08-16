@@ -12,8 +12,8 @@ import edu.mayo.kmdp.util.JSonUtil;
 import java.net.URI;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public class JsonAdaptersTest {
 

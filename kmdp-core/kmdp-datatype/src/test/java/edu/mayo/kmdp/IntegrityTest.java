@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.resources.Pointer;
+import org.omg.spec.api4kp._20200801.identifiers.resources.Pointer;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -33,7 +33,7 @@ public class IntegrityTest {
   public void noServiceFoundTest() {
     assertThrows(ClassNotFoundException.class,
         () -> {
-          Class.forName("org.omg.spec.api4kp._1_0.service.KnowledgePlatformComponent");
+          Class.forName("org.omg.spec.api4kp._20200801.service.KnowledgePlatformComponent");
         }
     );
   }
@@ -41,7 +41,7 @@ public class IntegrityTest {
   @Test
   public void testCommonPackage() {
     Pointer ptr = new Pointer();
-    assertTrue(ptr instanceof org.omg.spec.api4kp._1_0.identifiers.Pointer);
+    assertTrue(ptr instanceof org.omg.spec.api4kp._20200801.identifiers.Pointer);
 
     //System.out.println(Pointer.class.getPackage().getName());
     Reflections reflections = new Reflections(Pointer.class.getPackage().getName(),

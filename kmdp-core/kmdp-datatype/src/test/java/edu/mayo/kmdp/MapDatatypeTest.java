@@ -29,7 +29,7 @@ import java.io.InputStream;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.datatypes.Map;
+import org.omg.spec.api4kp._20200801.datatypes.Map;
 
 public class MapDatatypeTest {
 

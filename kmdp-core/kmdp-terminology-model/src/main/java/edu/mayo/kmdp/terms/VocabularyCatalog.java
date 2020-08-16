@@ -17,7 +17,7 @@ package edu.mayo.kmdp.terms;
 
 import java.net.URI;
 import java.util.Optional;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 /**
  * Catalog of Concept Schemes

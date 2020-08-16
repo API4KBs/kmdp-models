@@ -110,7 +110,7 @@
 
   <xsl:function name="xmi2xsd:qNameToPackageName" as="xs:string">
     <xsl:param name="qName" as="xs:QName"/>
-    <xsl:variable name="namespace" select="replace(namespace-uri-from-QName($qName),'http://','')"/>
+    <xsl:variable name="namespace" select="replace( replace(namespace-uri-from-QName($qName),'https://',''), 'http://', '')"/>
     <xsl:variable name="packFragments"
       select="xmi2xsd:toPackageNameFragment(tokenize($namespace,'/'))"/>
     <xsl:value-of

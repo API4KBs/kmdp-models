@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public interface ConceptScheme<T extends Term> extends SemanticIdentifier, Serializable {
 

@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.omg.spec.api4kp._1_0.id;
+package org.omg.spec.api4kp._20200801.id;
 
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSIONS;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS;
 
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
@@ -32,6 +32,9 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.id.ScopedIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
 
 public class DatatypeTest {

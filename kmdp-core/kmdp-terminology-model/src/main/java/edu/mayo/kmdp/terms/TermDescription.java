@@ -3,7 +3,7 @@ package edu.mayo.kmdp.terms;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public interface TermDescription extends Taxonomic<Term> {
 

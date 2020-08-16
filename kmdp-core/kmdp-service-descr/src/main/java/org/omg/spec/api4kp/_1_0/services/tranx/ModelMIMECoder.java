@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0.services.tranx;
+package org.omg.spec.api4kp._20200801.services.tranx;
 
 import static edu.mayo.kmdp.util.Util.isEmpty;
 import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.JSON;
@@ -21,7 +21,7 @@ import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TX
 import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.XML_1_1;
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.XHTML;
-import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 
 public class ModelMIMECoder {
 

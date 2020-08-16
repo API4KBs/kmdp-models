@@ -1,8 +1,8 @@
-package org.omg.spec.api4kp._1_0.id;
+package org.omg.spec.api4kp._20200801.id;
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSIONS_RX;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.VERSION_LATEST;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS_RX;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
@@ -433,7 +433,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   static Pointer newIdAsPointer(URI namespace, String tag) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
-    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
+    return new org.omg.spec.api4kp._20200801.id.resources.Pointer()
         .withNamespaceUri(namespace)
         .withTag(tag)
         .withResourceId(resourceId)
@@ -450,7 +450,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    */
   static Pointer newIdAsPointer(UUID tag, String versionTag) {
     URI resourceId = toResourceId(tag.toString(), BASE_UUID_URN_URI);
-    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
+    return new org.omg.spec.api4kp._20200801.id.resources.Pointer()
         .withNamespaceUri(resourceId)
         .withTag(tag.toString())
         .withVersionTag(versionTag)
@@ -474,7 +474,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
       String versionTag, URI locator) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
-    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
+    return new org.omg.spec.api4kp._20200801.id.resources.Pointer()
         .withNamespaceUri(namespace)
         .withTag(tag)
         .withVersionTag(versionTag)
@@ -489,7 +489,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
       String versionTag, String description, URI entityType, URI locator) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
-    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
+    return new org.omg.spec.api4kp._20200801.id.resources.Pointer()
         .withNamespaceUri(namespace)
         .withType(entityType)
         .withTag(tag)
@@ -511,7 +511,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   static Pointer newIdAsPointer(String tag) {
     checkTag(tag);
     URI resourceId = toResourceId(tag);
-    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
+    return new org.omg.spec.api4kp._20200801.id.resources.Pointer()
         .withTag(tag)
         .withResourceId(resourceId)
         // generate required UUID from resourceId
@@ -528,7 +528,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return A new Pointer derived from this ResourceIdentifier
    */
   default Pointer toPointer() {
-    return new org.omg.spec.api4kp._1_0.id.resources.Pointer()
+    return new org.omg.spec.api4kp._20200801.id.resources.Pointer()
         .withNamespaceUri(getNamespaceUri())
         .withTag(getTag())
         .withVersionTag(getVersionTag())

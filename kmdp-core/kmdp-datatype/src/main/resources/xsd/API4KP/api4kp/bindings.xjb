@@ -1,0 +1,17 @@
+<jxb:bindings version="2.1"
+  xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+  xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+  xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+  xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <jxb:bindings schemaLocation="api4kp.xsd">
+    <xjc:simple/>
+    <namespace:prefix name="api4kp"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801"/>
+    </jxb:schemaBindings>
+
+  </jxb:bindings>
+
+</jxb:bindings>

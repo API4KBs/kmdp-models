@@ -32,7 +32,7 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.identifiers.ConceptIdentifier;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;

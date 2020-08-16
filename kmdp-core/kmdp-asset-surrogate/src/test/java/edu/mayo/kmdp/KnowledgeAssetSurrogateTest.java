@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 
 import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.v2.surrogate.Derivative;
@@ -49,8 +49,8 @@ import java.util.Optional;
 import javax.xml.validation.Schema;
 import org.javers.core.diff.Diff;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.Term;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 
 public class KnowledgeAssetSurrogateTest {
 

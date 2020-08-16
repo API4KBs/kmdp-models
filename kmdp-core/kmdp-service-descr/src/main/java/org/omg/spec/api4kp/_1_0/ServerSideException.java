@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0;
+package org.omg.spec.api4kp._20200801;
 
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
 import java.util.List;
 import java.util.Map;
-import org.omg.spec.api4kp._1_0.services.Error;
+import org.omg.spec.api4kp._20200801.services.Error;
 
 public class ServerSideException extends RuntimeException {
   private final ResponseCode code;

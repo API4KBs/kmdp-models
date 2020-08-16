@@ -21,7 +21,7 @@
     <jxb:bindings node="//xsd:element[@type='tns:ConceptIdentifier'
                                     and not(namespace::tns[starts-with(.,'https://ontology.mayo.edu')])]"
       multiple="true"
-      xmlns:tns="http://www.omg.org/spec/API4KP/1.0/identifiers">
+      xmlns:tns="https://www.omg.org/spec/API4KP/20200801/identifiers">
       <annox:annotate target="field">
         <annox:annotate annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize"
           using="edu.mayo.kmdp.surrogate.LegacyConceptIdentifierTermsJsonAdapter.Serializer"/>
@@ -64,7 +64,7 @@
     <namespace:prefix name="ann"/>
 
     <jxb:bindings node="//xsd:element[@type='tns:ConceptIdentifier']" multiple="true"
-      xmlns:tns="http://www.omg.org/spec/API4KP/1.0/identifiers">
+      xmlns:tns="https://www.omg.org/spec/API4KP/20200801/identifiers">
       <annox:annotate target="field">
         <annox:annotate annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize"
           using="edu.mayo.kmdp.surrogate.LegacyConceptIdentifierTermsJsonAdapter.Serializer"/>

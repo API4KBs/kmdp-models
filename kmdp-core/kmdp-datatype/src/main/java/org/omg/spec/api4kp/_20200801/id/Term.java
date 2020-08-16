@@ -11,13 +11,13 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.omg.spec.api4kp._1_0.id;
+package org.omg.spec.api4kp._20200801.id;
 
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNOMED_BASE_URI;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNOMED_DATE;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNOMED_URI;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SNOMED_VERSION;
-import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.checkTag;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_BASE_URI;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_DATE;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_URI;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_VERSION;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.checkTag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;

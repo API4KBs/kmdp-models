@@ -18,15 +18,16 @@ package edu.mayo.kmdp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.TermsHelper;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import org.omg.spec.api4kp.taxonomies.rel.derivationreltype.DerivationType;
+import org.omg.spec.api4kp.taxonomies.rel.derivationreltype.DerivationTypeSeries;
 
 public class TermsTest {
 
@@ -52,8 +53,8 @@ public class TermsTest {
 
   @Test
   public void testEqualityBySamenessInSeries() {
-    KnowledgeAssetType earlyRule = KnowledgeAssetTypeSeries.Clinical_Trial_Protocol.asSeries().getEarliest();
-    KnowledgeAssetType lateRule = KnowledgeAssetTypeSeries.Clinical_Trial_Protocol.asSeries().getLatest();
+    DerivationType earlyRule = DerivationTypeSeries.Is_Derived_From.asSeries().getEarliest();
+    DerivationType lateRule = DerivationTypeSeries.Is_Derived_From.asSeries().getLatest();
 
     assertFalse(earlyRule.isSame(KnowledgeAssetTypeSeries.Cohort_Definition));
 

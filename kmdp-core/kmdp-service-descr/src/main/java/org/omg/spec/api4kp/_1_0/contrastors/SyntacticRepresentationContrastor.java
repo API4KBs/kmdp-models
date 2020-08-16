@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0.contrastors;
+package org.omg.spec.api4kp._20200801.contrastors;
 
 import edu.mayo.kmdp.comparator.Contrastor;
 import edu.mayo.kmdp.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevel;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 
 public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepresentation> {
 

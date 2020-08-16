@@ -26,7 +26,7 @@ public class TermsYamlTest {
   @Test
   public void testKAOTerms() {
     Swagger model = parseValidateGroup(
-        "/yaml/edu/mayo/ontology/taxonomies/kao/knowledgeassetcategory/_20190801/KnowledgeAssetCategory.yaml");
+        "/yaml/org/omg/spec/api4kp/taxonomies/knowledgeoperations/_20200801/KnowledgeProcessingOperation.yaml");
     assertEquals(2, model.getDefinitions().size());
   }
 

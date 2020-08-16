@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0;
+package org.omg.spec.api4kp._20200801;
 
 
 import edu.mayo.kmdp.util.StreamUtil;
@@ -42,7 +42,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.http.HttpHeaders;
-import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
@@ -37,7 +37,6 @@ import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.nio.file.Path;

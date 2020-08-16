@@ -1,7 +1,7 @@
-package org.omg.spec.api4kp._1_0.id;
+package org.omg.spec.api4kp._20200801.id;
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
-import static org.omg.spec.api4kp._1_0.id.IdentifierConstants.SEMVER_RX;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SEMVER_RX;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.UnexpectedCharacterException;

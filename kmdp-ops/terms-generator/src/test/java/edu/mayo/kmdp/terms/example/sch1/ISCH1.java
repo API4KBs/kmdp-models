@@ -2,8 +2,8 @@ package edu.mayo.kmdp.terms.example.sch1;
 
 import edu.mayo.kmdp.terms.VersionableTerm;
 import java.net.URI;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = SCH1Series.JsonDeserializer.class)
 public interface ISCH1 extends VersionableTerm<ISCH1, SCH1Series> {

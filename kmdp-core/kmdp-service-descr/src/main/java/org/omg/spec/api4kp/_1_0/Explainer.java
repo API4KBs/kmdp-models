@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omg.spec.api4kp._1_0;
+package org.omg.spec.api4kp._20200801;
 
-import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 
 /**
  * Specialization of the Writer monad that handles 'explanations'
@@ -66,7 +66,7 @@ public abstract class Explainer {
   }
 
   private static KnowledgeCarrier ofNaturalLanguageRep(String str) {
-    return new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+    return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(str)
         .withLevel(ParsingLevelSeries.Concrete_Knowledge_Expression)
         .withRepresentation(

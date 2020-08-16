@@ -3,7 +3,7 @@ package edu.mayo.kmdp.series;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Optional;
-import org.omg.spec.api4kp._1_0.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
 public interface Versionable<T extends Versionable<T>> {
 

@@ -20,7 +20,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.stream.Stream;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 @SuppressWarnings("unchecked")
 public class DefaultValueSet<T extends Enum<T> & Term> extends AbstractValueSet implements

@@ -36,16 +36,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
-import static org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder.decode;
-import static org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder.encode;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.services.tranx.ModelMIMECoder.decode;
+import static org.omg.spec.api4kp._20200801.services.tranx.ModelMIMECoder.encode;
 
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder;
-import org.omg.spec.api4kp._1_0.services.tranx.ModelMIMECoder.WeightedRepresentation;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.tranx.ModelMIMECoder;
+import org.omg.spec.api4kp._20200801.services.tranx.ModelMIMECoder.WeightedRepresentation;
 
 public class MimeCoderTest {
 

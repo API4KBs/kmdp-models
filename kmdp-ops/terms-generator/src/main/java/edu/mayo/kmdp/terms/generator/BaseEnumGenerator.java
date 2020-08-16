@@ -47,8 +47,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
 
 public abstract class BaseEnumGenerator {
 
