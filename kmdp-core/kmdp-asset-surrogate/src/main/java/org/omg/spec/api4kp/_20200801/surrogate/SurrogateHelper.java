@@ -13,16 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.metadata.v2.surrogate;
+package org.omg.spec.api4kp._20200801.surrogate;
 
-import static edu.mayo.kmdp.util.StreamUtil.filterAs;
-
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
-import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRole;
-import edu.mayo.ontology.taxonomies.krformat.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,6 +28,9 @@ import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp.taxonomy.krformat.SerializationFormat;
+import org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
+import org.omg.spec.api4kp.taxonomy.languagerole.KnowledgeRepresentationLanguageRole;
 
 public class SurrogateHelper {
 
@@ -44,7 +40,7 @@ public class SurrogateHelper {
 
   public static Optional<Schema> getSchema() {
     return XMLUtil.getSchemas(
-        SurrogateHelper.class.getResource("/xsd/metadata/v2/surrogate/surrogate.xsd"),
+        SurrogateHelper.class.getResource("/xsd/metadata/surrogate/surrogate.xsd"),
         XMLUtil.catalogResolver("/xsd/km-metadata-catalog.xml", "/xsd/terms-catalog.xml"));
   }
 
@@ -59,12 +55,10 @@ public class SurrogateHelper {
 
 
   public static SyntacticRepresentation canonicalRepresentationOf(KnowledgeAsset asset) {
-    if (asset == null
-        || asset.getCarriers().isEmpty()
-        || !(asset.getCarriers().get(0) instanceof ComputableKnowledgeArtifact)) {
+    if (asset.getCarriers().isEmpty()) {
       return null;
     }
-    ComputableKnowledgeArtifact artifact = (ComputableKnowledgeArtifact) asset.getCarriers().get(0);
+    KnowledgeArtifact artifact = asset.getCarriers().get(0);
     return artifact.getRepresentation();
   }
 
@@ -91,18 +85,6 @@ public class SurrogateHelper {
         .collect(Collectors.toSet());
   }
 
-  /**
-   * Helper method that looks for any ComputableKnowledgeArtifact among the Artifacts
-   * referenced in a Knowledge Asset Surrogate
-   * @param surr  The Surrogate of the Asset for which a Computable Manifestation is requested
-   * @return  Any Computable Variant of the asset, if present
-   */
-  public static Optional<ComputableKnowledgeArtifact> getComputableCarrierMetadata(
-      KnowledgeAsset surr) {
-    return surr.getCarriers().stream()
-        .flatMap(StreamUtil.filterAs(ComputableKnowledgeArtifact.class))
-        .findAny();
-  }
 
   /**
    * Helper method that looks for the ComputableKnowledgeArtifact with a given ID and version
@@ -112,7 +94,7 @@ public class SurrogateHelper {
    * @param surr  The Surrogate of the Asset for which a Computable Manifestation is requested
    * @return  The Computable Variant of the asset with the given ID and version, if present
    */
-  public static Optional<ComputableKnowledgeArtifact> getComputableCarrierMetadata(
+  public static Optional<KnowledgeArtifact> getComputableCarrierMetadata(
       UUID carrierId, String carrierVersionTag, KnowledgeAsset surr) {
     return getInnerArtifact(carrierId,carrierVersionTag,surr,KnowledgeAsset::getCarriers);
   }
@@ -125,18 +107,17 @@ public class SurrogateHelper {
    * @param surr  The Surrogate of the Asset for which a Computable Surrogate Metadata record is requested
    * @return  The Surrogate Metadata with the given ID and version, if present
    */
-  public static Optional<ComputableKnowledgeArtifact> getComputableSurrogateMetadata(
+  public static Optional<KnowledgeArtifact> getComputableSurrogateMetadata(
       UUID surrogateId, String surrogateVersionTag, KnowledgeAsset surr) {
     return getInnerArtifact(surrogateId,surrogateVersionTag,surr,KnowledgeAsset::getSurrogate);
   }
 
-  private static Optional<ComputableKnowledgeArtifact> getInnerArtifact(
+  private static Optional<KnowledgeArtifact> getInnerArtifact(
       UUID artifactId, String artifactVersionTag, KnowledgeAsset surr,
       Function<KnowledgeAsset, List<KnowledgeArtifact>> mapper) {
     ResourceIdentifier aId = SurrogateBuilder.artifactId(artifactId,artifactVersionTag);
     return mapper.apply(surr).stream()
         .filter(a -> aId.sameAs(a.getArtifactId()))
-        .flatMap(StreamUtil.filterAs(ComputableKnowledgeArtifact.class))
         .findAny();
   }
 
@@ -149,10 +130,9 @@ public class SurrogateHelper {
    * @param surrogateFormat The representation format of the desired surrogate
    * @return The id of the Chosen Surrogate
    */
-  public static Optional<ComputableKnowledgeArtifact> getSurrogateMetadata(KnowledgeAsset assetSurrogate,
+  public static Optional<KnowledgeArtifact> getSurrogateMetadata(KnowledgeAsset assetSurrogate,
       KnowledgeRepresentationLanguage surrogateModel, SerializationFormat surrogateFormat) {
     return assetSurrogate.getSurrogate().stream()
-        .flatMap(filterAs(ComputableKnowledgeArtifact.class))
         .filter(cka -> surrogateModel.sameAs(cka.getRepresentation().getLanguage())
             && (surrogateFormat == null || surrogateFormat.sameAs(cka.getRepresentation().getFormat())))
         .findFirst();
@@ -184,7 +164,6 @@ public class SurrogateHelper {
       KnowledgeRepresentationLanguage surrogateModel, SerializationFormat surrogateFormat,
       ResourceIdentifier newSurrogateId) {
     return assetSurrogate.getSurrogate().stream()
-        .flatMap(filterAs(ComputableKnowledgeArtifact.class))
         .filter(cka -> surrogateModel.sameAs(cka.getRepresentation().getLanguage())
             && (surrogateFormat == null || surrogateFormat.sameAs(cka.getRepresentation().getFormat())))
         .findFirst()

@@ -7,5 +7,14 @@
             uri="{{uri}}"/>
     <uri name="{{id}}"
             uri="{{uri}}"/>
+
+    {{#seriesUri}}
+    <system systemId="{{seriesId}}"
+            uri="{{seriesUri}}"/>
+    <public publicId="{{seriesId}}"
+            uri="{{seriesUri}}"/>
+    <uri name="{{seriesId}}"
+            uri="{{seriesUri}}"/>
+    {{/seriesUri}}
 {{/entries}}
 </catalog>

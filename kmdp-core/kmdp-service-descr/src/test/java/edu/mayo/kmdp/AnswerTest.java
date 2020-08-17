@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
+import org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries;
 
 class AnswerTest {
 
@@ -44,7 +44,7 @@ class AnswerTest {
     KnowledgeCarrier expl = ans.getExplanation();
     assertNotNull(expl);
     assertNotNull(expl.getExpression());
-    assertEquals(ParsingLevelSeries.Concrete_Knowledge_Expression, expl.getLevel().asSeries());
+    assertEquals(ParsingLevelSeries.Externalized_Knowledge_Expression, expl.getLevel().asSeries());
 
     assertTrue(ans.isSuccess());
     assertFalse(ans.isFailure());

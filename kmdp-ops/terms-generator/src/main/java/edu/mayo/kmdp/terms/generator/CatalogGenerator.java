@@ -85,9 +85,10 @@ public class CatalogGenerator extends BaseEnumGenerator {
 
     private String id;
     private String uri;
+    private String seriesId;
+    private String seriesUri;
 
     public CatalogEntry(ConceptScheme scheme) {
-
 
       this.id = removeFragment(scheme.getVersionId()).toString();
       this.uri = NameUtils.namespaceURIStringToPackage(removeTrailingPart(scheme.getVersionId().toString()))
@@ -95,11 +96,21 @@ public class CatalogGenerator extends BaseEnumGenerator {
           + "/"
           + NameUtils.getTermCodeSystemName(scheme.getPublicName())
           + ".xsd";
+
+      this.seriesId = removeFragment(scheme.getResourceId()).toString();
+      this.seriesUri = NameUtils
+          .namespaceURIStringToPackage(removeTrailingPart(scheme.getResourceId().toString()))
+          .replace(".", "/")
+          + "/"
+          + NameUtils.getTermCodeSystemName(scheme.getPublicName())
+          + ".series.xsd";
     }
 
-    public CatalogEntry(String id, String uri) {
+    public CatalogEntry(String id, String uri, String seriesId, String seriesUri) {
       this.id = id;
       this.uri = uri;
+      this.seriesId = seriesId;
+      this.seriesUri = seriesUri;
     }
 
     public String getId() {
@@ -108,6 +119,14 @@ public class CatalogGenerator extends BaseEnumGenerator {
 
     public String getUri() {
       return uri;
+    }
+    
+    public String getSeriesId() {
+      return seriesId;
+    }
+
+    public String getSeriesUri() {
+      return seriesUri;
     }
 
     @Override

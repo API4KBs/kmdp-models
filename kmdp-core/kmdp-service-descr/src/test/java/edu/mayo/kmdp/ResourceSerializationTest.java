@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp;
 
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.PlatformComponentHelper.asParamDefinitions;
@@ -72,7 +73,9 @@ public class ResourceSerializationTest {
     ParameterDefinitions pd = asParamDefinitions(cfg);
 
     Optional<String> optXML = JaxbUtil
-        .marshall(Collections.singletonList(ParameterDefinitions.class), pd,
+        .marshall(
+            singletonList(org.omg.spec.api4kp._20200801.services.resources.ParameterDefinitions.class),
+            pd,
             JaxbUtil.defaultProperties())
         .flatMap(Util::asString);
 
@@ -81,7 +84,7 @@ public class ResourceSerializationTest {
     Optional<Document> optDox = XMLUtil.loadXMLDocument(optXML.get().getBytes());
     assertTrue(optDox.isPresent());
 
-    NodeList nodes = new XPathUtil().xList(optDox.get(), "//api:parameterDefinitions/api:parameterDefinition/@name");
+    NodeList nodes = new XPathUtil().xList(optDox.get(), "//@name");
     Set<String> paramNames = XMLUtil.asAttributeStream(nodes)
         .map(Node::getTextContent)
         .collect(Collectors.toSet());

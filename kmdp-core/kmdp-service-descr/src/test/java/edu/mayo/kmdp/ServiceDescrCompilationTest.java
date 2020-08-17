@@ -26,14 +26,14 @@ import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
 
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
@@ -46,8 +46,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._20200801.services.tranx.Transrepresentation;
-import org.omg.spec.api4kp._20200801.services.tranx.Transrepresentator;
+import org.omg.spec.api4kp._20200801.services.transrepresentation.Transrepresentation;
+import org.omg.spec.api4kp._20200801.services.transrepresentation.Transrepresentator;
 
 public class ServiceDescrCompilationTest {
 
@@ -61,8 +61,8 @@ public class ServiceDescrCompilationTest {
 
     try {
 
-      Class<?> txc = getNamedClass("org.omg.spec.api4kp._20200801.services.tranx.resources.Transrepresentator", tgt);
-      Class<?> txr = getNamedClass("org.omg.spec.api4kp._20200801.services.tranx.resources.Transrepresentation", tgt);
+      Class<?> txc = getNamedClass("org.omg.spec.api4kp._20200801.services.transrepresentation.resources.Transrepresentator", tgt);
+      Class<?> txr = getNamedClass("org.omg.spec.api4kp._20200801.services.transrepresentation.resources.Transrepresentation", tgt);
       assertNotNull(txc);
       assertNotNull(txr);
 
@@ -86,19 +86,19 @@ public class ServiceDescrCompilationTest {
       assertTrue(asTrp.isPresent());
 
       Transrepresentator anew = asTrp.get();
-      assertEquals(KnowledgeRepresentationLanguage.BPMN_2_0,
-          anew.getTxions().get(0).getConsumes().get(0).getLanguage());
+      assertTrue(BPMN_2_0.isSame(
+          anew.getTxions().get(0).getConsumes().get(0).getLanguage()));
 
       Transrepresentator t2 = new Transrepresentator();
       anew.copyTo(t2);
 
-      assertFalse(tp.getClass() == t2.getClass());
+      assertNotSame(tp.getClass(), t2.getClass());
 
       Transrepresentator t3 = new Transrepresentator();
       tp.copyTo(t3);
 
-      assertEquals(t2, t3);
-      assertEquals(tp.getTxions(), t2.getTxions());
+      assertEquals(t2.getInstanceId(), t3.getInstanceId());
+      assertEquals(t2.getKind(), t3.getKind());
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -115,24 +115,22 @@ public class ServiceDescrCompilationTest {
     File gen = initGenSourceFolder(folder);
     File tgt = initTargetFolder(folder);
 
-    deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.openapi.xsd");
-    deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd");
     deploy(src, "/xsd/API4KP/api4kp/id/id.xsd");
-    deploy(src, "/xsd/API4KP/api4kp/identifiers/bindings.xjb");
+    deploy(src, "/xsd/API4KP/api4kp/id/bindings.xjb");
     deploy(src, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd");
     deploy(src, "/xsd/API4KP/api4kp/datatypes/bindings.xjb");
 
     deploy(src, "/xsd/terms-bindings.xjb");
 
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/kao/languagerole/_20190801/KnowledgeRepresentationLanguageRole.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krformat/_20190801/SerializationFormat.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krlanguage/_20190801/KnowledgeRepresentationLanguage.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krprofile/_20190801/KnowledgeRepresentationLanguageProfile.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/krserialization/_20190801/KnowledgeRepresentationLanguageSerialization.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/api4kp/parsinglevel/_20190801/ParsingLevel.xsd");
-    deploy(src, "/xsd/edu/mayo/ontology/taxonomies/lexicon/_20190801/Lexicon.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/languagerole/KnowledgeRepresentationLanguageRole.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/krformat/SerializationFormat.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/krlanguage/KnowledgeRepresentationLanguage.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/krprofile/KnowledgeRepresentationLanguageProfile.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/krserialization/KnowledgeRepresentationLanguageSerialization.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/parsinglevel/ParsingLevel.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/lexicon/Lexicon.series.xsd");
     deploy(src,
-        "/xsd/edu/mayo/ontology/taxonomies/iso639_2_languagecodes/_20190201/Language.xsd");
+        "/xsd/org/omg/spec/api4kp/taxonomy/iso639_2_languagecode/Language.series.xsd");
 
     deploy(src, "/xsd/API4KP/api4kp/services/services.xsd");
     deploy(src, "/xsd/API4KP/api4kp/services/services.openapi.xsd");
@@ -159,7 +157,7 @@ public class ServiceDescrCompilationTest {
 
 
   private void init(Transrepresentator component, Transrepresentation rep) {
-    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KnowledgeRepresentationLanguage.BPMN_2_0);
+    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(BPMN_2_0);
     component
         .withInstanceId(SemanticIdentifier.newId(UUID.randomUUID()))
         .withTxions(new Transrepresentation()

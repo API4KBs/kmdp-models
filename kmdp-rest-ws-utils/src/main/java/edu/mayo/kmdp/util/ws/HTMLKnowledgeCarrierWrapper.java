@@ -15,8 +15,9 @@
  */
 package edu.mayo.kmdp.util.ws;
 
-import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TXT;
-import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+
+import static org.omg.spec.api4kp.taxonomy.krformat.SerializationFormatSeries.TXT;
+import static org.omg.spec.api4kp.taxonomy.krlanguage.snapshot.KnowledgeRepresentationLanguage.HTML;
 
 import java.io.IOException;
 import java.util.Collections;

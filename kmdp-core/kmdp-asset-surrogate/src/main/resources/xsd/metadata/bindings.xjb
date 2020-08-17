@@ -15,20 +15,26 @@
       adapter="edu.mayo.kmdp.util.adapters.URIAdapter"/>
   </jxb:globalBindings>
 
-  <jxb:bindings schemaLocation="v2/surrogate/surrogate.xsd">
+  <jxb:bindings schemaLocation="surrogate/surrogate.xsd">
     <xjc:simple/>
     <namespace:prefix name="surr"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.surrogate"/>
+    </jxb:schemaBindings>
     <jxb:bindings node="//xsd:complexType[@name='Link']">
       <inheritance:implements>org.omg.spec.api4kp._1_0.id.Link</inheritance:implements>
     </jxb:bindings>
   </jxb:bindings>
 
-
-  <jxb:bindings schemaLocation="v2/surrogate/annotations/annotations.xsd">
+  <jxb:bindings schemaLocation="surrogate/surrogate.openapi.xsd">
     <xjc:simple/>
-    <namespace:prefix name="ann"/>
-
+    <namespace:prefix name="surrx"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.surrogate.resources"/>
+    </jxb:schemaBindings>
   </jxb:bindings>
+
+
 
   <!--<jxb:bindings schemaLocation="surrogate/provenance/provenance.xsd">
     <xjc:simple/>

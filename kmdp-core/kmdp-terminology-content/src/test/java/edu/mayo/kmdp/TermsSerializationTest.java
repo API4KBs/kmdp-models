@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.omg.spec.api4kp.taxonomies.krformat.SerializationFormatSeries.XML_1_1;
+import static org.omg.spec.api4kp.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -35,12 +35,12 @@ import java.util.UUID;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.Term;
-import org.omg.spec.api4kp.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
-import org.omg.spec.api4kp.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
-import org.omg.spec.api4kp.taxonomies.krformat.SerializationFormat;
-import org.omg.spec.api4kp.taxonomies.krformat.SerializationFormatSeries;
-import org.omg.spec.api4kp.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
-import org.omg.spec.api4kp.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import org.omg.spec.api4kp.taxonomy.knowledgeassettype.KnowledgeAssetType;
+import org.omg.spec.api4kp.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp.taxonomy.krformat.SerializationFormat;
+import org.omg.spec.api4kp.taxonomy.krformat.SerializationFormatSeries;
+import org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
+import org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 
 public class TermsSerializationTest {
 
@@ -129,7 +129,7 @@ public class TermsSerializationTest {
         .orElse(null);
     assertNotNull(b2);
 
-    assertSame(org.omg.spec.api4kp.taxonomies.krformat.snapshot.SerializationFormat.XML_1_1,
+    assertSame(org.omg.spec.api4kp.taxonomy.krformat.snapshot.SerializationFormat.XML_1_1,
         b2.getFormat());
   }
 

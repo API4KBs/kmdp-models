@@ -12,6 +12,10 @@
 
   <jxb:bindings schemaLocation="services.xsd">
     <namespace:prefix name="api"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.services"/>
+    </jxb:schemaBindings>
+
     <jxb:bindings node="//xsd:complexType[@name='KnowledgeCarrier']">
       <inheritance:implements>org.omg.spec.api4kp._20200801.AbstractCarrier</inheritance:implements>
     </jxb:bindings>
@@ -20,19 +24,56 @@
     </jxb:bindings>
   </jxb:bindings>
 
+  <jxb:bindings schemaLocation="services.openapi.xsd">
+    <namespace:prefix name="apix"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.services.resources"/>
+    </jxb:schemaBindings>
+  </jxb:bindings>
+
   <jxb:bindings schemaLocation="inference/inference.xsd">
     <xjc:simple/>
     <namespace:prefix name="inf"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.services.inference"/>
+    </jxb:schemaBindings>
+  </jxb:bindings>
+  <jxb:bindings schemaLocation="inference/inference.openapi.xsd">
+    <xjc:simple/>
+    <namespace:prefix name="infx"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.services.inference.resources"/>
+    </jxb:schemaBindings>
   </jxb:bindings>
 
   <jxb:bindings schemaLocation="transrepresentation/transrepresentation.xsd">
     <xjc:simple/>
     <namespace:prefix name="tx"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.services.transrepresentation"/>
+    </jxb:schemaBindings>
+  </jxb:bindings>
+  <jxb:bindings schemaLocation="transrepresentation/transrepresentation.openapi.xsd">
+    <xjc:simple/>
+    <namespace:prefix name="txx"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.services.transrepresentation.resources"/>
+    </jxb:schemaBindings>
   </jxb:bindings>
 
   <jxb:bindings schemaLocation="repository/repository.xsd">
     <xjc:simple/>
     <namespace:prefix name="repo"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.services.repository"/>
+    </jxb:schemaBindings>
+  </jxb:bindings>
+  <jxb:bindings schemaLocation="repository/repository.openapi.xsd">
+    <xjc:simple/>
+    <namespace:prefix name="repox"/>
+    <jxb:schemaBindings>
+      <jxb:package name="org.omg.spec.api4kp._20200801.services.repository.resources"/>
+    </jxb:schemaBindings>
   </jxb:bindings>
 
 </jxb:bindings>

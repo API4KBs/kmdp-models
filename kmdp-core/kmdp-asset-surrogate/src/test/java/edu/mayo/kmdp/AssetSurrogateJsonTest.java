@@ -13,55 +13,55 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries.Italian;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.KnowledgeArtifactCategorySeries.Software;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique.KnowledgeProcessingTechniqueSeries.Logic_Based_Technique;
-import static edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRoleSeries.Schema_Language;
-import static edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries.Published;
-import static edu.mayo.ontology.taxonomies.kao.rel.citationreltype.BibliographicCitationTypeSeries.Cites_As_Authority;
-import static edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries.Depends_On;
-import static edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries.Abdridgement_Of;
-import static edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries.Derived_From;
-import static edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries.Inspired_By;
-import static edu.mayo.ontology.taxonomies.kao.rel.relatedversiontype.RelatedVersionTypeSeries.Has_Original;
-import static edu.mayo.ontology.taxonomies.kao.rel.structuralreltype.StructuralPartTypeSeries.Has_Part;
-import static edu.mayo.ontology.taxonomies.kao.rel.summaryreltype.SummarizationTypeSeries.Compact_Representation_Of;
-import static edu.mayo.ontology.taxonomies.kao.rel.variantreltype.VariantTypeSeries.Adaptation_Of;
-import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.TXT;
-import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_1;
-import static edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfileSeries.CQL_Essentials;
-import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_1_XML_Syntax;
-import static edu.mayo.ontology.taxonomies.lexicon.LexiconSeries.SNOMED_CT;
+import static edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries.Cites;
+import static edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries.Cites_As_Authority;
+import static edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatusSeries.Published;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
+import static org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationTypeSeries.Is_Adaptation_Of;
+import static org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationTypeSeries.Is_Derived_From;
+import static org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationTypeSeries.Is_Revision_Of;
+import static org.omg.spec.api4kp.taxonomy.iso639_2_languagecode.LanguageSeries.Italian;
+import static org.omg.spec.api4kp.taxonomy.knowledgeartifactcategory.KnowledgeArtifactCategorySeries.Software;
+import static org.omg.spec.api4kp.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
+import static org.omg.spec.api4kp.taxonomy.knowledgeassetrole.KnowledgeAssetRoleSeries.Operational_Concept_Definition;
+import static org.omg.spec.api4kp.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
+import static org.omg.spec.api4kp.taxonomy.knowledgeprocessingtechnique.KnowledgeProcessingTechniqueSeries.Query_Technique;
+import static org.omg.spec.api4kp.taxonomy.krformat.SerializationFormatSeries.TXT;
+import static org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_1;
+import static org.omg.spec.api4kp.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries.CQL_Essentials;
+import static org.omg.spec.api4kp.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_1_XML_Syntax;
+import static org.omg.spec.api4kp.taxonomy.languagerole.KnowledgeRepresentationLanguageRoleSeries.Schema_Language;
+import static org.omg.spec.api4kp.taxonomy.lexicon.LexiconSeries.SNOMED_CT;
+import static org.omg.spec.api4kp.taxonomy.relatedversiontype.RelatedVersionTypeSeries.Has_Previous_Version;
+import static org.omg.spec.api4kp.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structural_Component;
+import static org.omg.spec.api4kp.taxonomy.summaryreltype.SummarizationTypeSeries.Summarizes;
+import static org.omg.spec.api4kp.taxonomy.variantreltype.VariantTypeSeries.Is_Translation_Of;
 
-import edu.mayo.kmdp.metadata.v2.surrogate.Citation;
-import edu.mayo.kmdp.metadata.v2.surrogate.Component;
-import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
-import edu.mayo.kmdp.metadata.v2.surrogate.Dependency;
-import edu.mayo.kmdp.metadata.v2.surrogate.Derivative;
-import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
-import edu.mayo.kmdp.metadata.v2.surrogate.Summary;
-import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateBuilder;
-import edu.mayo.kmdp.metadata.v2.surrogate.Variant;
-import edu.mayo.kmdp.metadata.v2.surrogate.Version;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Applicability;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRoleSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.citationreltype.BibliographicCitationTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.surrogate.Citation;
+import org.omg.spec.api4kp._20200801.surrogate.Component;
+import org.omg.spec.api4kp._20200801.surrogate.Dependency;
+import org.omg.spec.api4kp._20200801.surrogate.Derivative;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.surrogate.Publication;
+import org.omg.spec.api4kp._20200801.surrogate.Summary;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder;
+import org.omg.spec.api4kp._20200801.surrogate.Variant;
+import org.omg.spec.api4kp._20200801.surrogate.Version;
+import org.omg.spec.api4kp._20200801.surrogate.Annotation;
+import org.omg.spec.api4kp._20200801.surrogate.Applicability;
 
 
 public class AssetSurrogateJsonTest {
@@ -128,26 +128,26 @@ public class AssetSurrogateJsonTest {
         .withAssetId(newId("http://foo.bar", "142412"))
         .withFormalCategory(Rules_Policies_And_Guidelines)
         .withFormalType(Clinical_Rule)
-        .withProcessingMethod(Logic_Based_Technique)
-        .withRole(KnowledgeAssetRoleSeries.Operational_Concept_Definition)
+        .withProcessingMethod(Query_Technique)
+        .withRole(Operational_Concept_Definition)
         .withLinks(
-            new Component().withRel(Has_Part))
+            new Component().withRel(Has_Structural_Component))
         .withLinks(
-            new Derivative().withRel(Inspired_By))
+            new Derivative().withRel(Is_Adaptation_Of))
         .withLinks(
             new Dependency().withRel(Depends_On))
         .withLinks(
-            new Variant().withRel(Adaptation_Of))
+            new Variant().withRel(Is_Translation_Of))
         .withLinks(
-            new Version().withRel(Has_Original))
+            new Version().withRel(Has_Previous_Version))
         .withCitations(
             new Citation().withRel(Cites_As_Authority))
         .withCarriers(
-            new ComputableKnowledgeArtifact()
+            new KnowledgeArtifact()
                 .withLocalization(Italian)
                 .withExpressionCategory(Software)
                 .withSummary(
-                    new Summary().withRel(Compact_Representation_Of))
+                    new Summary().withRel(Summarizes))
                 .withRepresentation(new SyntacticRepresentation()
                     .withLanguage(DMN_1_1)
                     .withProfile(CQL_Essentials)
@@ -183,14 +183,14 @@ public class AssetSurrogateJsonTest {
             .withRef(Term.mock("fooLabel", "123456").asConceptIdentifier()))
 
         .withLinks(new Derivative()
-                .withRel(Abdridgement_Of)
+                .withRel(Is_Revision_Of)
                 .withHref(SurrogateBuilder.artifactId("234", "0.0.0")),
             new Derivative()
-                .withRel(Derived_From)
+                .withRel(Is_Derived_From)
                 .withHref(newId("http://foo.bar/234")))
         .withCitations(
             new Citation()
-                .withRel(BibliographicCitationTypeSeries.Cites)
+                .withRel(Cites)
                 .withBibliography("Joe,D. On everything. 2001"));
     assertNotNull(ks);
 

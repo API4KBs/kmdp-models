@@ -1,28 +1,10 @@
-package edu.mayo.kmdp.metadata.v2.surrogate;
+package org.omg.spec.api4kp._20200801.surrogate;
 
 import edu.mayo.kmdp.comparator.AbstractDiffer;
 import edu.mayo.kmdp.terms.VersionableTerm;
-import edu.mayo.ontology.taxonomies.iso639_2_languagecodes.Language;
-import edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.IKnowledgeArtifactCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetrole.KnowledgeAssetRole;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.knowledgeprocessingtechnique.KnowledgeProcessingTechnique;
-import edu.mayo.ontology.taxonomies.kao.languagerole.KnowledgeRepresentationLanguageRole;
-import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatus;
-import edu.mayo.ontology.taxonomies.kao.publishingrole.PublishingRole;
-import edu.mayo.ontology.taxonomies.kao.rel.citationreltype.BibliographicCitationType;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyType;
-import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationType;
-import edu.mayo.ontology.taxonomies.kao.rel.relatedversiontype.RelatedVersionType;
-import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype.StructuralPartType;
-import edu.mayo.ontology.taxonomies.kao.rel.summaryreltype.SummarizationType;
-import edu.mayo.ontology.taxonomies.kao.rel.variantreltype.VariantType;
-import edu.mayo.ontology.taxonomies.krformat.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguage;
-import edu.mayo.ontology.taxonomies.krprofile.KnowledgeRepresentationLanguageProfile;
-import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerialization;
-import edu.mayo.ontology.taxonomies.lexicon.Lexicon;
+import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationType;
+import edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatus;
+import edu.mayo.ontology.taxonomies.kmdo.publishingrole.PublishingRole;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +12,24 @@ import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
 import org.javers.core.MappingStyle;
 import org.javers.core.metamodel.clazz.EntityDefinition;
+import org.omg.spec.api4kp.taxonomy.dependencyreltype.DependencyType;
+import org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationType;
+import org.omg.spec.api4kp.taxonomy.iso639_2_languagecode.Language;
+import org.omg.spec.api4kp.taxonomy.knowledgeartifactcategory.IKnowledgeArtifactCategory;
+import org.omg.spec.api4kp.taxonomy.knowledgeassetcategory.KnowledgeAssetCategory;
+import org.omg.spec.api4kp.taxonomy.knowledgeassetrole.KnowledgeAssetRole;
+import org.omg.spec.api4kp.taxonomy.knowledgeassettype.KnowledgeAssetType;
+import org.omg.spec.api4kp.taxonomy.knowledgeprocessingtechnique.KnowledgeProcessingTechnique;
+import org.omg.spec.api4kp.taxonomy.krformat.SerializationFormat;
+import org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
+import org.omg.spec.api4kp.taxonomy.krprofile.KnowledgeRepresentationLanguageProfile;
+import org.omg.spec.api4kp.taxonomy.krserialization.KnowledgeRepresentationLanguageSerialization;
+import org.omg.spec.api4kp.taxonomy.languagerole.KnowledgeRepresentationLanguageRole;
+import org.omg.spec.api4kp.taxonomy.lexicon.Lexicon;
+import org.omg.spec.api4kp.taxonomy.relatedversiontype.RelatedVersionType;
+import org.omg.spec.api4kp.taxonomy.structuralreltype.StructuralPartType;
+import org.omg.spec.api4kp.taxonomy.summaryreltype.SummarizationType;
+import org.omg.spec.api4kp.taxonomy.variantreltype.VariantType;
 
 public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 

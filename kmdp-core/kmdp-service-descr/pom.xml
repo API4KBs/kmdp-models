@@ -104,16 +104,6 @@
                   <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                   <includes>**/*.xsd,**/*.xjb,**/*catalog*.xml</includes>
                 </artifactItem>
-                <artifactItem>
-                  <groupId>edu.mayo.kmdp</groupId>
-                  <artifactId>kmdp-asset-metadata</artifactId>
-                  <version>${project.version}</version>
-
-                  <type>jar</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                  <includes>**/*.xsd,**/*.xjb,**/*catalog*.xml</includes>
-                </artifactItem>
               </artifactItems>
             </configuration>
           </execution>
@@ -143,6 +133,7 @@
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
               <bindingIncludes>
+                <include>org/omg/spec/api4kp/taxonomy/**/*.xjb</include>
                 <include>edu/mayo/ontology/**/*.xjb</include>
                 <include>API4KP/api4kp/services/**/*.xjb</include>
                 <include>**/*.episode</include>
@@ -153,6 +144,7 @@
                   <fileset>
                     <directory>${project.build.outputDirectory}/xsd</directory>
                     <includes>
+                      <include>org/omg/spec/api4kp/taxonomy/**/*.xsd</include>
                       <include>edu/mayo/ontology/**/*.xsd</include>
                       <include>API4KP/api4kp/services/**/*.xsd</include>
                     </includes>

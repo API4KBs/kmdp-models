@@ -1,7 +1,6 @@
-package edu.mayo.kmdp;
+package org.omg.spec.api4kp._20200801.surrogate;
 
 import edu.mayo.kmdp.comparator.Contrastor;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 
 public class SurrogateContrastor extends Contrastor<KnowledgeAsset> {
 

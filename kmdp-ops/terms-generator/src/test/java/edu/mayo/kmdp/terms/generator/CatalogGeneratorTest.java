@@ -45,7 +45,7 @@ public class CatalogGeneratorTest {
     String id = "baz";
 
     List<CatalogEntry> entries = new ArrayList<>();
-    entries.add(new CatalogEntry(id,uri.toString()));
+    entries.add(new CatalogEntry(id, uri.toString(), namespace, namespace));
 
     Map<String,Object> context = new HashMap<>();
     context.put("targetNamespace",namespace);
@@ -62,7 +62,7 @@ public class CatalogGeneratorTest {
       parser.parse(is, handler);
 
       XMLCatalog xmlCatalog = handler.getCatalog();
-      assertEquals(3, xmlCatalog.getEntries().size());
+      assertEquals(6, xmlCatalog.getEntries().size());
 
       assertTrue(xmlCatalog.getEntries().stream()
           .filter(UriEntry.class::isInstance)

@@ -101,10 +101,11 @@ public abstract class CodeGenTestBase {
     if (enablePrintout) {
       String msg = String.format("%s : %s",tab(i),file.getName());
       logger.info(msg);
-    }
-    if (file.isDirectory()) {
-      FileUtil.streamChildFiles(file)
-          .forEach(sub -> showDirContent(sub, i + 1, enablePrintout));
+
+      if (file.isDirectory()) {
+        FileUtil.streamChildFiles(file)
+            .forEach(sub -> showDirContent(sub, i + 1, enablePrintout));
+      }
     }
   }
 

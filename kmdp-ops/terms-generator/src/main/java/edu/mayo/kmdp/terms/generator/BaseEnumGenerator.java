@@ -76,8 +76,12 @@ public abstract class BaseEnumGenerator {
         getResource("java/concepts-java-series.mustache"));
     registry.put("concepts-xsd",
         getResource("concepts-xsd.mustache"));
+    registry.put("concepts-xsd-series",
+        getResource("concepts-xsd-series.mustache"));
     registry.put("concepts-xjb",
         getResource("concepts-xjb.mustache"));
+    registry.put("concepts-xjb-series",
+        getResource("concepts-xjb-series.mustache"));
     registry.put("catalog",
         getResource("catalog.mustache"));
   }

@@ -62,6 +62,13 @@ public class XSDEnumTermsGenerator extends BaseEnumGenerator {
 
     this.writeToFile(mainText,
         getFile(outputDir, context, ".xsd"));
+
+    if (! context.get("namespace").equals(context.get("seriesNamespace"))) {
+      String seriesText = fromTemplate("concepts-xsd-series", context);
+      this.writeToFile(seriesText,
+          getFile(outputDir, (String) context.get("intfPackageName"),
+              (String) context.get("typeName"), ".series.xsd"));
+    }
   }
 
   private void generateXJB(Map<String, Object> context, File outputDir) {
@@ -69,6 +76,13 @@ public class XSDEnumTermsGenerator extends BaseEnumGenerator {
 
     this.writeToFile(mainText,
         getFile(outputDir, context, ".xjb"));
+
+    if (! context.get("namespace").equals(context.get("seriesNamespace"))) {
+      String seriesText = fromTemplate("concepts-xjb-series", context);
+      this.writeToFile(seriesText,
+          getFile(outputDir, (String) context.get("intfPackageName"),
+              (String) context.get("typeName"), ".series.xjb"));
+    }
   }
 
 

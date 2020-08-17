@@ -23,10 +23,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
 
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,16 +41,14 @@ import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
-import org.omg.spec.api4kp._20200801.identifiers.GAVIdentifier;
-import org.omg.spec.api4kp._20200801.identifiers.URIIdentifier;
 import org.omg.spec.api4kp._20200801.services.Job;
 import org.omg.spec.api4kp._20200801.services.JobStatus;
 import org.omg.spec.api4kp._20200801.services.KnowledgePlatformComponent;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository;
-import org.omg.spec.api4kp._20200801.services.tranx.Transrepresentation;
-import org.omg.spec.api4kp._20200801.services.tranx.TransrepresentationOperator;
-import org.omg.spec.api4kp._20200801.services.tranx.Transrepresentator;
+import org.omg.spec.api4kp._20200801.services.transrepresentation.Transrepresentation;
+import org.omg.spec.api4kp._20200801.services.transrepresentation.Transrepresentator;
+import org.omg.spec.api4kp._20200801.services.transrepresentation.resources.TransrepresentationOperator;
 
 public class ServiceDescrClassGenerationTest {
 
@@ -69,7 +67,7 @@ public class ServiceDescrClassGenerationTest {
 
   @Test
   public void testSerialization() {
-    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(KnowledgeRepresentationLanguage.BPMN_2_0);
+    SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(BPMN_2_0);
 
     Transrepresentator component = new Transrepresentator()
         .withInstanceId(SemanticIdentifier.newId(UUID.randomUUID()))
@@ -81,7 +79,7 @@ public class ServiceDescrClassGenerationTest {
             .withVersionTag("1")
             .withNamespaceUri(URI.create("edu.test")));
 
-    org.omg.spec.api4kp._20200801.services.tranx.ObjectFactory of = new org.omg.spec.api4kp._20200801.services.tranx.ObjectFactory();
+    org.omg.spec.api4kp._20200801.services.transrepresentation.ObjectFactory of = new org.omg.spec.api4kp._20200801.services.transrepresentation.ObjectFactory();
     String xml = JaxbUtil.marshallToString(Collections.singleton(of.getClass()),
         component,
         of::createTransrepresentator,
@@ -125,7 +123,7 @@ public class ServiceDescrClassGenerationTest {
 
       assertTrue(
           files.contains(org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository.class.getName()));
-      assertFalse(files.contains(org.omg.spec.api4kp._20200801.services.tranx.Transrepresentation.class.getName()));
+      assertFalse(files.contains(org.omg.spec.api4kp._20200801.services.transrepresentation.Transrepresentation.class.getName()));
 
     } catch (URISyntaxException e) {
       e.printStackTrace();

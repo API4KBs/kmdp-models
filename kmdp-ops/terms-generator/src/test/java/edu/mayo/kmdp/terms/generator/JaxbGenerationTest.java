@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.Arrays;
 import org.omg.spec.api4kp._20200801.id.Term;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
@@ -60,7 +61,7 @@ import java.util.regex.Pattern;
 import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.omg.spec.api4kp._20200801.identifiers.ObjectFactory;
+import org.omg.spec.api4kp._20200801.id.ObjectFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -121,7 +122,7 @@ public class JaxbGenerationTest {
     assertNotNull(scheme);
 
     try {
-      Object i = info.newInstance();
+      Object i = info.getConstructor().newInstance();
       Field fld1 = info.getDeclaredField("test");
 
       assertNotNull(fld1);
@@ -252,8 +253,12 @@ public class JaxbGenerationTest {
 
     showDirContent(folder,true);
 
-    applyJaxb(singletonList(new File(src.getAbsolutePath() + "/parent.xsd")),
-        singletonList(new File(src.getAbsolutePath())),
+    applyJaxb(singletonList(
+        new File(src.getAbsolutePath() + "/parent.xsd")),
+        Arrays.asList(
+            new File(src.getAbsolutePath() + "/test/generator/v20180210/SCH1.xjb"),
+            new File(src.getAbsolutePath() + "/bindings.xjb")
+            ),
         gen,
         new File(src.getAbsolutePath() + "/xsd/api4kp-catalog.xml"));
 

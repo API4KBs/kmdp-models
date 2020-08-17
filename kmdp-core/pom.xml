@@ -19,7 +19,6 @@
     <module>kmdp-service-descr</module>
     <module>kmdp-terminology-model</module>
     <module>kmdp-terminology-content</module>
-    <module>kmdp-asset-metadata</module>
     <module>kmdp-asset-surrogate</module>
   </modules>
 

@@ -5,6 +5,16 @@
   xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
+  <jxb:globalBindings>
+    <jxb:serializable uid="0001"/>
+    <xjc:javaType name="java.util.Date" xmlType="xsd:date"
+      adapter="edu.mayo.kmdp.util.adapters.DateAdapter"/>
+    <xjc:javaType name="java.util.Date" xmlType="xsd:dateTime"
+      adapter="edu.mayo.kmdp.util.adapters.DateAdapter"/>
+    <xjc:javaType name="java.net.URI" xmlType="xsd:anyURI"
+      adapter="edu.mayo.kmdp.util.adapters.URIAdapter"/>
+  </jxb:globalBindings>
+
   <jxb:bindings schemaLocation="id.xsd">
     <xjc:simple/>
     <namespace:prefix name="id"/>
@@ -24,7 +34,7 @@
 
   <jxb:bindings schemaLocation="id.openapi.xsd">
     <xjc:simple/>
-    <namespace:prefix name="id-r"/>
+    <namespace:prefix name="idx"/>
     <jxb:schemaBindings>
       <jxb:package name="org.omg.spec.api4kp._20200801.id.resources"/>
     </jxb:schemaBindings>

@@ -26,9 +26,9 @@ public class DatatypeYamlTest {
 
   @Test
   public void testSchemaGeneration() {
-    Swagger model = parseValidateGroup("/yaml/API4KP/api4kp/identifiers/identifiers.yaml");
+    Swagger model = parseValidateGroup("/yaml/API4KP/api4kp/id/id.yaml");
     assertNotNull(model);
-    assertTrue(model.getDefinitions().containsKey("VersionIdentifier"));
+    assertTrue(model.getDefinitions().containsKey("ResourceIdentifier"));
   }
 
 

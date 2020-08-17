@@ -112,8 +112,8 @@ public class CompilationTest {
     File gen = initGenSourceFolder(folder);
     File tgt = initTargetFolder(folder);
 
-    deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.openapi.xsd", CompilationTest.class);
-    deploy(src, "/xsd/API4KP/api4kp/identifiers/identifiers.xsd", CompilationTest.class);
+    deploy(src, "/xsd/API4KP/api4kp/id/id.openapi.xsd", CompilationTest.class);
+    deploy(src, "/xsd/API4KP/api4kp/id/id.xsd", CompilationTest.class);
     deploy(src, "/xsd/API4KP/api4kp/datatypes/datatypes.xsd", CompilationTest.class);
 
     showDirContent(folder);

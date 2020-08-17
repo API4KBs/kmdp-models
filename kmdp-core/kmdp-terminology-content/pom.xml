@@ -117,7 +117,7 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/ConstructedLanguage</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/KRLanguage</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KRLanguage</skosNamespace>
               <schemeName>KnowledgeRepresentationLanguages</schemeName>
               <topConceptName>KnowledgeRepresentationLanguage</topConceptName>
 
@@ -146,7 +146,7 @@
               <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Profile</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/KRProfile</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KRProfile</skosNamespace>
               <schemeName>KnowledgeRepresentationLanguageProfiles</schemeName>
               <topConceptName>KnowledgeRepresentationLanguageProfile</topConceptName>
 
@@ -176,7 +176,7 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/MetaFormat</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/KRFormat</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KRFormat</skosNamespace>
               <schemeName>SerializationFormats</schemeName>
               <topConceptName>SerializationFormat</topConceptName>
 
@@ -207,7 +207,7 @@
               <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Serialization</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/KRSerialization</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KRSerialization</skosNamespace>
               <schemeName>KnowledgeRepresentationLanguageSerializations</schemeName>
               <topConceptName>KnowledgeRepresentationLanguageSerialization</topConceptName>
 
@@ -236,7 +236,7 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/Lexicon</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/Lexicon</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/Lexicon</skosNamespace>
               <schemeName>Lexica</schemeName>
               <topConceptName>Lexicon</topConceptName>
 
@@ -263,7 +263,7 @@
               <targetURI>https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguage</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/ISO639-2-LanguageCodes</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/ISO639-2-LanguageCode</skosNamespace>
               <schemeName>Languages</schemeName>
               <topConceptName>Language</topConceptName>
 
@@ -291,7 +291,7 @@
               </targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/ISO639-1-LanguageCodes</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/ISO639-1-LanguageCode</skosNamespace>
               <schemeName>Languages</schemeName>
               <topConceptName>Language</topConceptName>
 
@@ -316,7 +316,7 @@
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/isDerivedFrom</targetURI>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/rel/DerivationRelType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/DerivationRelType</skosNamespace>
               <schemeName>DerivationTypes</schemeName>
               <topConceptName>DerivationType</topConceptName>
 
@@ -342,7 +342,7 @@
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/isVariantOf</targetURI>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/rel/VariantRelType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/VariantRelType</skosNamespace>
               <schemeName>VariantTypes</schemeName>
               <topConceptName>VariantType</topConceptName>
 
@@ -368,7 +368,7 @@
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/abbreviates</targetURI>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/rel/SummaryRelType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/SummaryRelType</skosNamespace>
               <schemeName>SummarizationTypes</schemeName>
               <topConceptName>SummarizationType</topConceptName>
 
@@ -394,7 +394,7 @@
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/dependsOn</targetURI>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/rel/DependencyRelType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/DependencyRelType</skosNamespace>
               <schemeName>DependencyTypes</schemeName>
               <topConceptName>DependencyType</topConceptName>
 
@@ -421,7 +421,7 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp-series/isInSeriesWith</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/rel/RelatedVersionType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/RelatedVersionType</skosNamespace>
               <schemeName>RelatedVersionTypes</schemeName>
               <topConceptName>RelatedVersionType</topConceptName>
 
@@ -447,7 +447,7 @@
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/hasStructuralComponent</targetURI>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/rel/StructuralRelType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/StructuralRelType</skosNamespace>
               <schemeName>StructuralPartTypes</schemeName>
               <topConceptName>StructuralPartType</topConceptName>
 
@@ -643,7 +643,7 @@
               <minDepth>1</minDepth>
               <maxDepth>1</maxDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/kao/KnowledgeAssetCategory</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeAssetCategory</skosNamespace>
               <schemeName>KnowledgeAssetCategories</schemeName>
               <topConceptName>KnowledgeAssetCategory</topConceptName>
 
@@ -672,7 +672,7 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp-kao/ExplicitRoleKnowledgeAsset</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/kao/KnowledgeAssetRole</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeAssetRole</skosNamespace>
               <schemeName>KnowledgeAssetRoles</schemeName>
               <topConceptName>KnowledgeAssetRole</topConceptName>
 
@@ -702,7 +702,7 @@
               <entityType>CLASS</entityType>
               <minDepth>2</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/kao/KnowledgeAssetType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeAssetType</skosNamespace>
               <schemeName>KnowledgeAssetTypes</schemeName>
               <topConceptName>KnowledgeAssetType</topConceptName>
 
@@ -730,7 +730,7 @@
               <targetURI>http://ontology.mayo.edu/ontologies/dcmitype/ContentType</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/kao/KnowledgeArtifactCategory</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeArtifactCategory</skosNamespace>
               <schemeName>KnowledgeArtifactCategories</schemeName>
               <topConceptName>KnowledgeArtifactCategory</topConceptName>
 
@@ -756,7 +756,7 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp-kao/Technique</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/KnowledgeProcessingTechnique</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeProcessingTechnique</skosNamespace>
               <schemeName>KnowledgeProcessingTechniques</schemeName>
               <topConceptName>KnowledgeProcessingTechnique</topConceptName>
 
@@ -809,7 +809,7 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp-lang/DedicatedLanguage</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/LanguageRole</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/LanguageRole</skosNamespace>
               <schemeName>KnowledgeRepresentationLanguageRoles</schemeName>
               <topConceptName>KnowledgeRepresentationLanguageRole</topConceptName>
 
@@ -836,7 +836,7 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp-ops/KnowledgeProcessingTask</targetURI>
               <minDepth>2</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/KnowledgeOperations</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeOperation</skosNamespace>
               <schemeName>KnowledgeProcessingOperations</schemeName>
               <topConceptName>KnowledgeProcessingOperation</topConceptName>
 
@@ -861,11 +861,10 @@
 
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/KnowledgeExpression</targetURI>
-              <minDepth>1</minDepth>
               <maxDepth>1</maxDepth>
 
               <schemeName>ParsingLevels</schemeName>
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomies/ParsingLevel</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/ParsingLevel</skosNamespace>
               <topConceptName>ParsingLevel</topConceptName>
 
               <skosOutputFiles>

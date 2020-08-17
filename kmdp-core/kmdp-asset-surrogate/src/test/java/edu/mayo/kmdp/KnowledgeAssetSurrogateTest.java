@@ -13,33 +13,23 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.metadata.v2.surrogate.SurrogateBuilder.randomArtifactId;
-import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatusSeries.Draft;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomArtifactId;
+import static org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationTypeSeries.Is_Derived_From;
+import static org.omg.spec.api4kp.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
+import static org.omg.spec.api4kp.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
+import static org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.KNART_1_3;
 
-import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
-import edu.mayo.kmdp.metadata.v2.surrogate.Derivative;
-import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.v2.surrogate.ObjectFactory;
-import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
-import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateDiffer;
-import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateHelper;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Applicability;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries;
-import edu.mayo.ontology.taxonomies.kao.rel.derivationreltype.DerivationTypeSeries;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -51,20 +41,30 @@ import org.javers.core.diff.Diff;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.surrogate.Derivative;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
+import org.omg.spec.api4kp._20200801.surrogate.ObjectFactory;
+import org.omg.spec.api4kp._20200801.surrogate.Publication;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateDiffer;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
+import org.omg.spec.api4kp._20200801.surrogate.Annotation;
+import org.omg.spec.api4kp._20200801.surrogate.Applicability;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp.taxonomy.knowledgeassetcategory.KnowledgeAssetCategory;
 
 public class KnowledgeAssetSurrogateTest {
 
 
   @Test
   void testKS() {
-    KnowledgeAssetCategory br = KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
+    KnowledgeAssetCategory br = Rules_Policies_And_Guidelines;
     KnowledgeAsset ks = new KnowledgeAsset()
         .withAssetId(newId(URI.create("http://foo.bar/"), "4523", "0.0.0"))
         .withName("Foo")
         .withFormalCategory(br)
-            .withCarriers(new ComputableKnowledgeArtifact()
+            .withCarriers(new KnowledgeArtifact()
                 .withArtifactId(randomArtifactId())
-                .withLifecycle(new Publication().withPublicationStatus(PublicationStatusSeries.Draft))
+                .withLifecycle(new Publication().withPublicationStatus(Draft))
                 .withRepresentation(new SyntacticRepresentation().withLanguage(HTML))
             )
         .withAnnotation(new Annotation()
@@ -98,30 +98,30 @@ public class KnowledgeAssetSurrogateTest {
         .withAssetId(newId(URI.create("http://foo.bar/"), "4523", "0.0.0"))
         .withName("Foo")
 
-        .withFormalCategory(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines)
-        .withFormalType(KnowledgeAssetTypeSeries.Clinical_Rule)
+        .withFormalCategory(Rules_Policies_And_Guidelines)
+        .withFormalType(Clinical_Rule)
 
         .withName("My Favorite Rule")
         .withDescription("When and Whether to Recommend What")
 
-        .withCarriers(new ComputableKnowledgeArtifact()
+        .withCarriers(new KnowledgeArtifact()
             .withArtifactId(newId(URI.create("urn:to:do")))
             .withName("Bar")
-            .withLifecycle(new Publication().withPublicationStatus(PublicationStatusSeries.Draft))
+            .withLifecycle(new Publication().withPublicationStatus(Draft))
             .withRepresentation(new SyntacticRepresentation()
-                .withLanguage(KnowledgeRepresentationLanguageSeries.KNART_1_3))
+                .withLanguage(KNART_1_3))
             // carrier + external catalog is not perfect
             .withSecondaryId(newId(URI.create("urn:poc:RUL-12345")))
             .withInlinedExpression("IF so and so DO nothing"))
 
         .withLinks(new Derivative()
-                .withRel(DerivationTypeSeries.Derived_From)
+                .withRel(Is_Derived_From)
                 // should I have an inverse flag here?
                 .withHref(newId(URI.create("urn:name:TODO"))));
 
     checkRoundTrip(ks);
 
-    assertEquals(KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines,
+    assertEquals(Rules_Policies_And_Guidelines,
         ks.getFormalCategory().get(0));
   }
 
@@ -134,12 +134,12 @@ public class KnowledgeAssetSurrogateTest {
         of::createKnowledgeAsset,
         JaxbUtil.defaultProperties()
             .with(JaxbOptions.SCHEMA_LOCATION,
-                "http://kmdp.mayo.edu/metadata/v2/surrogate /xsd/metadata/v2/surrogate/surrogate.xsd"))
+                "https://www.omg.org/spec/API4KP/20200801/surrogate /xsd/metadata/surrogate/surrogate.xsd"))
         .flatMap(Util::asString)
         .orElse("");
     assertFalse(Util.isEmpty(str));
 
-    assertTrue(str.contains("xmlns:surr=\"http://kmdp.mayo.edu/metadata/v2/surrogate\""));
+    assertTrue(str.contains("xmlns:surr=\"https://www.omg.org/spec/API4KP/20200801/surrogate\""));
 
     Optional<Schema> schema = SurrogateHelper.getSchema();
     assertTrue(schema.isPresent());

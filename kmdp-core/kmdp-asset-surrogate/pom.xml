@@ -10,13 +10,13 @@
     <version>7.0.1-SNAPSHOT</version>
   </parent>
 
-  <name>KMDP :: Lang :: API4KP :: Knowledge Resource Surrogate Model v2</name>
+  <name>KMDP :: Lang :: API4KP :: Knowledge Resource Surrogate Model</name>
 
   <artifactId>kmdp-asset-surrogate</artifactId>
 
   <properties>
-    <uml-model>metadata2.uml</uml-model>
-    <xsd-name>metadata/v2/surrogate/surrogate.xsd</xsd-name>
+    <uml-model>metadata.uml</uml-model>
+    <xsd-name>metadata/surrogate/surrogate.xsd</xsd-name>
     <s>${file.separator}</s>
   </properties>
 
@@ -109,9 +109,6 @@
             <goals>
               <goal>unpack</goal>
             </goals>
-            <configuration>
-              <excludes>**/metadata.uml</excludes>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -150,6 +147,7 @@
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
               <bindingIncludes>
+                <include>org/omg/spec/api4kp/taxonomy/**/*.xjb</include>
                 <include>edu/mayo/ontology/**/*.xjb</include>
                 <include>metadata/**/*.xjb</include>
                 <include>**/*.episode</include>
@@ -158,22 +156,33 @@
               <schemas>
                 <schema>
                   <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/edu/mayo/ontology</directory>
+                    <directory>${project.build.outputDirectory}/xsd</directory>
                     <includes>
-                      <include>**/*.xsd</include>
+                      <include>org/omg/spec/api4kp/taxonomy/**/*.xsd</include>
+                      <include>edu/mayo/ontology/**/*.xsd</include>
+                      <include>metadata/**/*.xsd</include>
                     </includes>
                   </fileset>
                 </schema>
-                <schema>
-                  <fileset>
-                    <directory>${project.build.outputDirectory}/xsd/metadata/v2</directory>
-                    <includes>
-                      <include>**/*.xsd</include>
-                    </includes>
-                  </fileset>
-                </schema>
-
               </schemas>
+
+<!--              <schemas>-->
+<!--                <schema>-->
+<!--                  <fileset>-->
+<!--                    <directory>${project.build.outputDirectory}/xsd/edu/mayo/ontology</directory>-->
+<!--                    <includes>-->
+<!--                      <include>**/*.xsd</include>-->
+<!--                    </includes>-->
+<!--                  </fileset>-->
+<!--                </schema>-->
+<!--                <schema>-->
+<!--                  <fileset>-->
+<!--                    <directory>${project.build.outputDirectory}/xsd/metadata/</directory>-->
+<!--                    <includes>-->
+<!--                      <include>**/*.xsd</include>-->
+<!--                    </includes>-->
+<!--                  </fileset>-->
+<!--                </schema>-->
 
             </configuration>
           </execution>

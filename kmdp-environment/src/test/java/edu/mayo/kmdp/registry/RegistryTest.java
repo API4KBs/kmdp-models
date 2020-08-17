@@ -50,12 +50,14 @@ public class RegistryTest {
     assertEquals("urn:hl7-org:elm:r1", getNS("elm-v12"));
     assertEquals("http://www.w3.org/2001/XMLSchema", getNS("xsd"));
     assertEquals("http://kmdp.mayo.edu/metadata/surrogate", getNS("surr-v1"));
-    assertEquals("http://kmdp.mayo.edu/metadata/v2/surrogate", getNS("surr-v2"));
+    assertEquals("https://www.omg.org/spec/API4KP/20200801/surrogate", getNS("surr"));
   }
 
   @Test
   public void testSchemas() {
 
+    assertEquals("https://www.omg.org/spec/API4KP/20200801/surrogate",
+        getSchema("https://www.omg.org/spec/API4KP/20200801/metadata"));
     assertEquals("http://www.omg.org/spec/DMN/20151101/dmn.xsd",
         getSchema("https://www.omg.org/spec/DMN/1.1/"));
     assertEquals("http://www.omg.org/spec/CMMN/20151109/MODEL",

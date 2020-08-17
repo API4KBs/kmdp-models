@@ -1,23 +1,24 @@
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.metadata.v2.surrogate.SurrogateBuilder.randomArtifactId;
-import static edu.mayo.kmdp.metadata.v2.surrogate.SurrogateBuilder.randomAssetId;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
+import static edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatusSeries.Draft;
+import static edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatusSeries.Published;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomArtifactId;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.omg.spec.api4kp.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
 
 import edu.mayo.kmdp.comparator.AbstractDiffer.Mode;
 import edu.mayo.kmdp.comparator.Contrastor.Comparison;
-import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
-import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
-import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateDiffer;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
-import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.surrogate.Publication;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateDiffer;
 import java.net.URI;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 
 public class AssetSurrogateDiffTest {
 
@@ -45,17 +46,17 @@ public class AssetSurrogateDiffTest {
     KnowledgeAsset base = new KnowledgeAsset()
         .withAssetId(randomAssetId())
         .withFormalType(Clinical_Rule)
-        .withCarriers(new ComputableKnowledgeArtifact()
+        .withCarriers(new KnowledgeArtifact()
             .withArtifactId(randomArtifactId())
             .withLifecycle(new Publication()
                 .withCreatedOn(new Date())
-                .withPublicationStatus(PublicationStatusSeries.Draft)));
+                .withPublicationStatus(Draft)));
 
     KnowledgeAsset mod = ((KnowledgeAsset) base.clone());
     mod.getCarriers().get(0)
         .withLifecycle(new Publication()
             .withCreatedOn(new Date())
-            .withPublicationStatus(PublicationStatusSeries.Published));
+            .withPublicationStatus(Published));
 
     Comparison delta = differ.contrast(mod, base);
     assertSame(Comparison.EQUIVALENT, delta);
