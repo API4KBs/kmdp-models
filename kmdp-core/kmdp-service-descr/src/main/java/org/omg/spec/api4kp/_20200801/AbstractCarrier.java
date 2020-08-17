@@ -22,6 +22,10 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.randomId;
 import static org.omg.spec.api4kp.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 import static org.omg.spec.api4kp.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
+import static org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries.Abstract_Knowledge_Expression;
+import static org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries.Concrete_Knowledge_Expression;
+import static org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
+import static org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries.Serialized_Knowledge_Expression;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.util.FileUtil;
@@ -66,19 +70,19 @@ public interface AbstractCarrier {
   static KnowledgeCarrier of(byte[] encoded) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(encoded)
-        .withLevel(ParsingLevelSeries.Encoded_Knowledge_Expression);
+        .withLevel(Encoded_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(InputStream stream) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(FileUtil.readBytes(stream).orElse(new byte[0]))
-        .withLevel(ParsingLevelSeries.Encoded_Knowledge_Expression);
+        .withLevel(Encoded_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(String serialized) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(serialized)
-        .withLevel(ParsingLevelSeries.Externalized_Knowledge_Expression);
+        .withLevel(ParsingLevelSeries.Serialized_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(Document dox) {
@@ -92,13 +96,13 @@ public interface AbstractCarrier {
   static KnowledgeCarrier ofTree(Object parseTree) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(parseTree)
-        .withLevel(ParsingLevelSeries.Concrete_Knowledge_Expression);
+        .withLevel(Concrete_Knowledge_Expression);
   }
 
   static KnowledgeCarrier ofAst(Object ast) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(ast)
-        .withLevel(ParsingLevelSeries.Abstract_Knowledge_Expression);
+        .withLevel(Abstract_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(byte[] encoded, SyntacticRepresentation rep) {
@@ -158,7 +162,7 @@ public interface AbstractCarrier {
       case Concrete_Knowledge_Expression:
         return ofTree(artifact)
             .withLevel(level);
-      case Externalized_Knowledge_Expression:
+      case Serialized_Knowledge_Expression:
         return of(artifact.toString())
             .withLevel(level);
       case Encoded_Knowledge_Expression:

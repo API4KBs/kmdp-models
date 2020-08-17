@@ -44,7 +44,7 @@ class AnswerTest {
     KnowledgeCarrier expl = ans.getExplanation();
     assertNotNull(expl);
     assertNotNull(expl.getExpression());
-    assertEquals(ParsingLevelSeries.Externalized_Knowledge_Expression, expl.getLevel().asSeries());
+    assertEquals(ParsingLevelSeries.Serialized_Knowledge_Expression, expl.getLevel().asSeries());
 
     assertTrue(ans.isSuccess());
     assertFalse(ans.isFailure());

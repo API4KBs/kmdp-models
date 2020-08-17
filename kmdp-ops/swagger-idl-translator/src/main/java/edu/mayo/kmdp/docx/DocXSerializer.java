@@ -188,13 +188,14 @@ public class DocXSerializer {
   private static String formatSignature(Operation op, Interface intf) {
     return
         intf.getName()
-            + "::"
+            + " :: "
+            + op.getReturnType().getName()
+            + " "
             + op.getName()
             + "( "
             + op.getInputs().stream().map(DocXSerializer::formatParameterInSignature)
             .collect(Collectors.joining(", "))
-            + " ) : "
-            + op.getReturnType().getName();
+            + " )";
   }
 
   private static String formatParameterInSignature(Parameter p) {

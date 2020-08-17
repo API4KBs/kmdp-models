@@ -25,7 +25,6 @@ public class LoaderHelper {
   public final static String tranxSource = "/yaml/API4KP/api4kp/services/transrepresentation/transrepresentation.yaml";
 
   public final static String metadata = "/yaml/metadata/surrogate/surrogate.yaml";
-  public final static String annotations = "/yaml/metadata/surrogate/annotations/annotations.yaml";
 
 
   public static List<String> loadSchemas() {
@@ -38,7 +37,6 @@ public class LoaderHelper {
     files.add(infSource);
     files.add(tranxSource);
     files.add(metadata);
-    files.add(annotations);
 
     try {
       Path resRoot = Paths.get(LoaderHelper.class.getResource("/yaml").toURI());

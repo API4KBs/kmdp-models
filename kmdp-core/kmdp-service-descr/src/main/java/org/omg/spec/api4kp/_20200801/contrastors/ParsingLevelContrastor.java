@@ -15,6 +15,12 @@
  */
 package org.omg.spec.api4kp._20200801.contrastors;
 
+import static org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries.Abstract_Knowledge_Expression;
+import static org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries.Concrete_Knowledge_Expression;
+import static org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
+import static org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries.Knowledge_Expression;
+import static org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries.Serialized_Knowledge_Expression;
+
 import edu.mayo.kmdp.comparator.Contrastor;
 import java.util.Comparator;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
@@ -37,56 +43,56 @@ public class ParsingLevelContrastor extends Contrastor<ParsingLevel> implements
     }
     SyntacticRepresentation rep = carrier.getRepresentation();
     if (rep == null) {
-      return ParsingLevelSeries.Knowledge_Expression;
+      return Knowledge_Expression;
     }
 
     if (rep.getEncoding() != null) {
-      return ParsingLevelSeries.Encoded_Knowledge_Expression;
+      return Encoded_Knowledge_Expression;
     }
     if (rep.getCharset() != null) {
-      return ParsingLevelSeries.Externalized_Knowledge_Expression;
+      return Serialized_Knowledge_Expression;
     }
     if (rep.getFormat() != null || rep.getSerialization() != null) {
-      return ParsingLevelSeries.Concrete_Knowledge_Expression;
+      return Concrete_Knowledge_Expression;
     }
     if (rep.getLanguage() != null) {
-      return ParsingLevelSeries.Abstract_Knowledge_Expression;
+      return Abstract_Knowledge_Expression;
     }
-    return ParsingLevelSeries.Knowledge_Expression;
+    return Knowledge_Expression;
   }
 
   public static ParsingLevel detectLevel(SyntacticRepresentation rep) {
     if (rep == null) {
-      return ParsingLevelSeries.Knowledge_Expression;
+      return Knowledge_Expression;
     }
 
     if (rep.getEncoding() != null) {
-      return ParsingLevelSeries.Encoded_Knowledge_Expression;
+      return Encoded_Knowledge_Expression;
     }
     if (rep.getCharset() != null) {
-      return ParsingLevelSeries.Externalized_Knowledge_Expression;
+      return Serialized_Knowledge_Expression;
     }
     if (rep.getFormat() != null || rep.getSerialization() != null) {
-      return ParsingLevelSeries.Concrete_Knowledge_Expression;
+      return Concrete_Knowledge_Expression;
     }
     if (rep.getLanguage() != null) {
-      return ParsingLevelSeries.Abstract_Knowledge_Expression;
+      return Abstract_Knowledge_Expression;
     }
-    return ParsingLevelSeries.Knowledge_Expression;
+    return Knowledge_Expression;
   }
 
   public int compare(ParsingLevel l1, ParsingLevel l2) {
-    if (l1 == l2 || l1.asEnum() == ParsingLevelSeries.Knowledge_Expression
-        || l2.asEnum() == ParsingLevelSeries.Knowledge_Expression) {
+    if (l1 == l2 || l1.asEnum() == Knowledge_Expression
+        || l2.asEnum() == Knowledge_Expression) {
       return 0;
     }
     switch (l1.asEnum()) {
       case Abstract_Knowledge_Expression:
         return 1;
       case Concrete_Knowledge_Expression:
-        return l2.asEnum() == ParsingLevelSeries.Abstract_Knowledge_Expression ? -1 : 1;
-      case Externalized_Knowledge_Expression:
-        return l2.asEnum() == ParsingLevelSeries.Encoded_Knowledge_Expression ? 1 : -1;
+        return l2.asEnum() == Abstract_Knowledge_Expression ? -1 : 1;
+      case Serialized_Knowledge_Expression:
+        return l2.asEnum() == Encoded_Knowledge_Expression ? 1 : -1;
       case Encoded_Knowledge_Expression:
         return -1;
       default:

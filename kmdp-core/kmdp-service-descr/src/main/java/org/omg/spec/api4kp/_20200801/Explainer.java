@@ -18,6 +18,7 @@ package org.omg.spec.api4kp._20200801;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries.Serialized_Knowledge_Expression;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
@@ -68,7 +69,7 @@ public abstract class Explainer {
   private static KnowledgeCarrier ofNaturalLanguageRep(String str) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(str)
-        .withLevel(ParsingLevelSeries.Externalized_Knowledge_Expression)
+        .withLevel(Serialized_Knowledge_Expression)
         .withRepresentation(
             // TODO ADD "Natural Language" to the list of languages
             rep(HTML,TXT));
@@ -80,7 +81,7 @@ public abstract class Explainer {
       if (this.explanation == null) {
         this.explanation = other;
       } else {
-        KnowledgeCarrier s = (KnowledgeCarrier) explanation;
+        KnowledgeCarrier s = explanation;
         s.setExpression(s.asString() + "\n" + other.asString());
       }
     }
