@@ -50,7 +50,7 @@ public class AssetSurrogateIntegrityTest {
 
     Set<Class<?>> allClasses = reflections.getTypesAnnotatedWith(XmlRootElement.class);
 
-    assertEquals(2,
+    assertEquals(3,
         allClasses.size(),
         "Defensive programming: a new 'Resource' class may have been declared, removed, " +
             "or the code generation process has been corrupted");
