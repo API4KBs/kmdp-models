@@ -26,7 +26,7 @@
   elementFormDefault="qualified"
   targetNamespace="http://kmdp.mock.edu/metadata/surrogate">
   <xs:import namespace="http://www.test.org/mock/1.0/identifiers"
-    schemaLocation="../../mock/identifiers/identifiers.xsd"/>
+    schemaLocation="../../mock/identifiers/mockIdentifiers.xsd"/>
   <xs:import namespace="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetCategory/1.0"/>
   <xs:import namespace="http://kmdp.mock.edu/metadata/iso11179"
     schemaLocation="../iso11179/iso11179.xsd"/>

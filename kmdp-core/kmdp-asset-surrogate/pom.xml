@@ -15,8 +15,9 @@
   <artifactId>kmdp-asset-surrogate</artifactId>
 
   <properties>
-    <uml-model>metadata.uml</uml-model>
-    <xsd-name>metadata/surrogate/surrogate.xsd</xsd-name>
+    <uml-model>api4kp.uml</uml-model>
+    <uml-included-packages>surrogate</uml-included-packages>
+    <xsd-name>API4KP/surrogate/surrogate.xsd</xsd-name>
     <s>${file.separator}</s>
   </properties>
 
@@ -149,7 +150,7 @@
               <bindingIncludes>
                 <include>org/omg/spec/api4kp/taxonomy/**/*.xjb</include>
                 <include>edu/mayo/ontology/**/*.xjb</include>
-                <include>metadata/**/*.xjb</include>
+                <include>API4KP/surrogate/**/*.xjb</include>
                 <include>**/*.episode</include>
               </bindingIncludes>
 
@@ -160,29 +161,11 @@
                     <includes>
                       <include>org/omg/spec/api4kp/taxonomy/**/*.xsd</include>
                       <include>edu/mayo/ontology/**/*.xsd</include>
-                      <include>metadata/**/*.xsd</include>
+                      <include>API4KP/surrogate/**/*.xsd</include>
                     </includes>
                   </fileset>
                 </schema>
               </schemas>
-
-<!--              <schemas>-->
-<!--                <schema>-->
-<!--                  <fileset>-->
-<!--                    <directory>${project.build.outputDirectory}/xsd/edu/mayo/ontology</directory>-->
-<!--                    <includes>-->
-<!--                      <include>**/*.xsd</include>-->
-<!--                    </includes>-->
-<!--                  </fileset>-->
-<!--                </schema>-->
-<!--                <schema>-->
-<!--                  <fileset>-->
-<!--                    <directory>${project.build.outputDirectory}/xsd/metadata/</directory>-->
-<!--                    <includes>-->
-<!--                      <include>**/*.xsd</include>-->
-<!--                    </includes>-->
-<!--                  </fileset>-->
-<!--                </schema>-->
 
             </configuration>
           </execution>

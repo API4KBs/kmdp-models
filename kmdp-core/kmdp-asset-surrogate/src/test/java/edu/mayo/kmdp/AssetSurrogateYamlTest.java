@@ -26,7 +26,7 @@ public class AssetSurrogateYamlTest {
 
   @Test
   public void testSchemaGeneration() {
-    Swagger model = parseValidateGroup("/yaml/metadata/surrogate/surrogate.yaml");
+    Swagger model = parseValidateGroup("/yaml/API4KP/surrogate/surrogate.yaml");
 
     assertTrue(model.getDefinitions().containsKey(KnowledgeAsset.class.getSimpleName()));
   }

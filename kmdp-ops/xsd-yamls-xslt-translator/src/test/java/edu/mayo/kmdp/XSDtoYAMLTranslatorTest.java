@@ -44,7 +44,7 @@ public class XSDtoYAMLTranslatorTest {
 
   @Test
   public void testComplexXSLT() {
-    String source = "/xsd/metadata/surrogate/surrogate.xsd";
+    String source = "/xsd/metadata/surrogate/mokSurrogate.xsd";
 
     URL xslt = XSDtoYAMLTranslatorTest.class.getResource("/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl");
     URL catalog = XSDtoYAMLTranslatorTest.class.getResource("/catalog-yaml.xml");
@@ -61,7 +61,7 @@ public class XSDtoYAMLTranslatorTest {
 
   @Test
   public void testXMLNamespaceWithInheritance() {
-    String source = "/xsd/metadata/surrogate/surrogate.xsd";
+    String source = "/xsd/metadata/surrogate/mokSurrogate.xsd";
 
     URL xslt = XSDtoYAMLTranslatorTest.class.getResource("/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl");
     URL catalog = XSDtoYAMLTranslatorTest.class.getResource("/catalog-yaml.xml");
@@ -107,7 +107,7 @@ public class XSDtoYAMLTranslatorTest {
 
   @Test
   public void testWithXSDImport() {
-    String source = "/xsd/mock/identifiers/identifiers.xsd";
+    String source = "/xsd/mock/identifiers/mockIdentifiers.xsd";
 
     URL xslt = XSDtoYAMLTranslatorTest.class.getResource("/edu/mayo/kmdp/xsd/xsd-to-yamls.xsl");
     URL sourceUrl = XSDtoYAMLTranslatorTest.class.getResource(source);

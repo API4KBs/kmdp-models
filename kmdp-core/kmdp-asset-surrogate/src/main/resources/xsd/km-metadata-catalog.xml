@@ -17,19 +17,13 @@
 -->
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
-  <public publicId="http://kmdp.mayo.edu/metadata/v2/surrogate"
-    uri="metadata/v2/surrogate/surrogate.xsd"/>
-  <system systemId="http://kmdp.mayo.edu/metadata/v2/surrogate"
-    uri="metadata/v2/surrogate/surrogate.xsd"/>
-  <uri name="http://kmdp.mayo.edu/metadata/v2/surrogate"
-    uri="metadata/v2/surrogate/surrogate.xsd"/>
+  <public publicId="https://www.omg.org/spec/API4KP/20200801/surrogate"
+    uri="API4KP/surrogate/surrogate.xsd"/>
+  <system systemId="https://www.omg.org/spec/API4KP/20200801/surrogate"
+    uri="API4KP/surrogate/surrogate.xsd"/>
+  <uri name="https://www.omg.org/spec/API4KP/20200801/surrogate"
+    uri="API4KP/surrogate/surrogate.xsd"/>
 
-  <public publicId="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
-    uri="metadata/v2/surrogate/annotations/annotations.xsd"/>
-  <system systemId="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
-    uri="metadata/v2/surrogate/annotations/annotations.xsd"/>
-  <uri name="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
-    uri="metadata/v2/surrogate/annotations/annotations.xsd"/>
   
   <!--<public publicId="http://kmdp.mayo.edu/metadata/surrogate/provenance"
     uri="metadata/surrogate/provenance/provenance.xsd"/>

@@ -15,7 +15,7 @@
       adapter="edu.mayo.kmdp.util.adapters.URIAdapter"/>
   </jxb:globalBindings>
 
-  <jxb:bindings schemaLocation="surrogate/surrogate.xsd">
+  <jxb:bindings schemaLocation="surrogate.xsd">
     <xjc:simple/>
     <namespace:prefix name="surr"/>
     <jxb:schemaBindings>
@@ -26,7 +26,7 @@
     </jxb:bindings>
   </jxb:bindings>
 
-  <jxb:bindings schemaLocation="surrogate/surrogate.openapi.xsd">
+  <jxb:bindings schemaLocation="surrogate.openapi.xsd">
     <xjc:simple/>
     <namespace:prefix name="surrx"/>
     <jxb:schemaBindings>

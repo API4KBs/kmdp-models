@@ -24,7 +24,7 @@ public class LoaderHelper {
   public final static String infSource = "/yaml/API4KP/api4kp/services/inference/inference.yaml";
   public final static String tranxSource = "/yaml/API4KP/api4kp/services/transrepresentation/transrepresentation.yaml";
 
-  public final static String metadata = "/yaml/metadata/surrogate/surrogate.yaml";
+  public final static String metadata = "/yaml/API4KP/surrogate/surrogate.yaml";
 
 
   public static List<String> loadSchemas() {

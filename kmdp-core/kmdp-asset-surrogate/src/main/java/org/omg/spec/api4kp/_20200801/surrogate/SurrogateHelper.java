@@ -40,7 +40,7 @@ public class SurrogateHelper {
 
   public static Optional<Schema> getSchema() {
     return XMLUtil.getSchemas(
-        SurrogateHelper.class.getResource("/xsd/metadata/surrogate/surrogate.xsd"),
+        SurrogateHelper.class.getResource("/xsd/API4KP/surrogate/surrogate.xsd"),
         XMLUtil.catalogResolver("/xsd/km-metadata-catalog.xml", "/xsd/terms-catalog.xml"));
   }
 

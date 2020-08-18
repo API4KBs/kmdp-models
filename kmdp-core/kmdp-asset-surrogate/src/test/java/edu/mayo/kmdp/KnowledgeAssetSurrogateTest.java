@@ -134,7 +134,7 @@ public class KnowledgeAssetSurrogateTest {
         of::createKnowledgeAsset,
         JaxbUtil.defaultProperties()
             .with(JaxbOptions.SCHEMA_LOCATION,
-                "https://www.omg.org/spec/API4KP/20200801/surrogate /xsd/metadata/surrogate/surrogate.xsd"))
+                "https://www.omg.org/spec/API4KP/20200801/surrogate /xsd/API4KP/surrogate/surrogate.xsd"))
         .flatMap(Util::asString)
         .orElse("");
     assertFalse(Util.isEmpty(str));

@@ -16,6 +16,7 @@
 
   <properties>
     <uml-model>api4kp.uml</uml-model>
+    <uml-included-packages>services</uml-included-packages>
     <s>${file.separator}</s>
     <xsd-name>API4KP/api4kp/services/services.xsd</xsd-name>
   </properties>

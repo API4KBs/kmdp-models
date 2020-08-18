@@ -18,7 +18,7 @@
 -->
 <xs:schema xmlns="http://kmdp.mock.edu/metadata/surrogate"
   xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
-  xmlns:ns1="http://www.test.org/mock/1.0/identifiers"
+  xmlns:ns1="mockIdentifiers.xsd"
   xmlns:ns2="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetCategory/1.0"
   xmlns:ns3="http://kmdp.mock.edu/metadata/iso11179"
   xmlns:ns4="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType/1.0"
