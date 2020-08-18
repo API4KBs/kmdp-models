@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp.terms.adapters;
 
-import edu.mayo.kmdp.series.Series;
+import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.impl.model.TermImpl;

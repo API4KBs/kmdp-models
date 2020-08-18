@@ -25,6 +25,7 @@ import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
+import edu.mayo.kmdp.terms.generator.internal.AnonymousConceptScheme;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.internal.ConceptTermImpl;
 import edu.mayo.kmdp.terms.generator.internal.ConceptTermSeries;
@@ -149,7 +150,7 @@ public abstract class BaseEnumGenerator {
     context.put("baseXmlAdapter", options.get(EnumGenerationParams.XML_ADAPTER)
         .orElse(TermsXMLAdapter.class.getName()));
     context.put("implClassName",
-        edu.mayo.kmdp.terms.impl.model.AnonymousConceptScheme.class.getName());
+        AnonymousConceptScheme.class.getName());
     context.put("typeIntf", Term.class);
 
     context.put("jaxb", jaxb);

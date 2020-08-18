@@ -1,4 +1,4 @@
-package edu.mayo.kmdp.series;
+package org.omg.spec.api4kp._20200801.series;
 
 import java.util.Comparator;
 import java.util.Date;

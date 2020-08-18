@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.series.Versionable;
+import org.omg.spec.api4kp._20200801.series.Versionable;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
 import edu.mayo.ontology.taxonomies.ccgentries.ConceptDefinitionTypeSeries;

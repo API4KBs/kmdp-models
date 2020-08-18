@@ -18,7 +18,7 @@ package edu.mayo.kmdp.terms.example.cito;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
-import edu.mayo.kmdp.series.Series;
+import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.adapters.json.UUIDTermsJsonAdapter;

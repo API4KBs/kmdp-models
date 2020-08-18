@@ -20,12 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.kmdp.series.Series;
+import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.terms.TermsHelper;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
-import org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationType;
 import org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationTypeSeries;
 

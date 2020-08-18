@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.series.Series;
-import edu.mayo.kmdp.series.Versionable;
+import org.omg.spec.api4kp._20200801.series.Series;
+import org.omg.spec.api4kp._20200801.series.Versionable;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.VersionableTerm;

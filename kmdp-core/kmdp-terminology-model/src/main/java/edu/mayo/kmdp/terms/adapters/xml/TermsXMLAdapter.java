@@ -16,7 +16,7 @@
 package edu.mayo.kmdp.terms.adapters.xml;
 
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
-import edu.mayo.kmdp.series.Series;
+import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.util.StreamUtil;
 import java.util.Arrays;
 import java.util.Optional;

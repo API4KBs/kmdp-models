@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.kmdp.series.Series;
+import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.terms.example.sch1.ISCH1;
 import edu.mayo.kmdp.terms.example.sch1.SCH1;
 import edu.mayo.kmdp.terms.example.sch1.SCH1Old;

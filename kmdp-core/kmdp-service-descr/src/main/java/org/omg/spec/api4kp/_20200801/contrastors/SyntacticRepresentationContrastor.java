@@ -16,7 +16,7 @@
 package org.omg.spec.api4kp._20200801.contrastors;
 
 import edu.mayo.kmdp.comparator.Contrastor;
-import edu.mayo.kmdp.series.Series;
+import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.terms.ConceptTerm;
 import edu.mayo.kmdp.util.StreamUtil;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;

@@ -1,8 +1,10 @@
-package edu.mayo.kmdp.series;
+package org.omg.spec.api4kp._20200801.series;
 
 import com.github.zafarkhaja.semver.Version;
 import java.util.LinkedList;
 import java.util.List;
+import org.omg.spec.api4kp._20200801.series.SemVersionable;
+import org.omg.spec.api4kp._20200801.series.Series;
 
 public interface SemVerSeries<T extends SemVersionable<T>> extends Series<T> {
 

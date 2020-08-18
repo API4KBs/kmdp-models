@@ -13,26 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.terms.impl.model;
+package edu.mayo.kmdp.terms.generator.internal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.mayo.kmdp.terms.ConceptScheme;
 import java.net.URI;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 
-public class AnonymousConceptScheme
-    extends IdentifiedConceptScheme<Term> implements ConceptScheme<Term> {
+public class AnonymousConceptScheme implements ConceptScheme<Term> {
 
   private static final String NOT_SUPPORTED = "Unable to track Concepts in Anonymous Scheme";
 
   private URI versionId;
+  private ResourceIdentifier schemeId;
 
   public AnonymousConceptScheme(String schemeId, String versionTag,
       String schemeName, URI schemeURI, URI schemeVersionURI, Date pubDate) {
-    super(schemeURI, versionTag, schemeName, pubDate);
+    this.schemeId = SemanticIdentifier
+        .newId(schemeURI)
+        .withVersionTag(versionTag)
+        .withName(schemeName)
+        .withEstablishedOn(pubDate);
     this.versionId = schemeVersionURI;
   }
 
@@ -93,6 +100,52 @@ public class AnonymousConceptScheme
   @Override
   public boolean subsumes(Term sup, Term sub) {
     throw new UnsupportedOperationException(NOT_SUPPORTED);
+  }
+
+
+  @Override
+  public String getLabel() {
+    return schemeId.getName();
+  }
+
+  @Override
+  public String getTag() {
+    return schemeId.getTag();
+  }
+
+  @Override
+  public String getName() {
+    return schemeId.getName();
+  }
+
+  @Override
+  public Date getEstablishedOn() {
+    return schemeId.getEstablishedOn();
+  }
+
+  @Override
+  public URI getResourceId() {
+    return schemeId.getResourceId();
+  }
+
+
+  @Override
+  public String getVersionTag() {
+    return schemeId.getVersionTag();
+  }
+
+  public ResourceIdentifier asNamespace() {
+    return SemanticIdentifier.newNamespaceId(schemeId.getNamespaceUri());
+  }
+
+  @Override
+  public UUID getUuid() {
+    return schemeId.getUuid();
+  }
+
+  @Override
+  public URI getNamespaceUri() {
+    return schemeId.getResourceId();
   }
 
 }

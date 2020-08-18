@@ -20,7 +20,7 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
 import de.escalon.hypermedia.hydra.mapping.Expose;
-import edu.mayo.kmdp.series.Series;
+import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.terms.TermDescription;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;

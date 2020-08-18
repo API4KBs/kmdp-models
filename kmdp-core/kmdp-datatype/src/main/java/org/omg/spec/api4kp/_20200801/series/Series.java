@@ -1,4 +1,4 @@
-package edu.mayo.kmdp.series;
+package org.omg.spec.api4kp._20200801.series;
 
 import java.util.Collections;
 import java.util.Date;
@@ -9,6 +9,7 @@ import java.util.function.UnaryOperator;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.series.Versionable;
 
 public interface Series<T extends Versionable<T>> {
 

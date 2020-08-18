@@ -17,6 +17,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.series.SemVerSeries;
+import org.omg.spec.api4kp._20200801.series.SemVersionable;
+import org.omg.spec.api4kp._20200801.series.Series;
 
 class SeriesTest {
 
