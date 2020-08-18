@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import edu.mayo.kmdp.terms.ConceptScheme;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import java.io.File;

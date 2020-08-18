@@ -1,6 +1,6 @@
-package edu.mayo.kmdp.terms.impl.model;
+package org.omg.spec.api4kp._20200801.terms.model;
 
-import edu.mayo.kmdp.terms.TermDescription;
+import org.omg.spec.api4kp._20200801.terms.TermDescription;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Date;
@@ -17,7 +17,7 @@ public class TermImpl extends ConceptIdentifier implements TermDescription {
   private Term[] ancestors;
   private Term[] ancestorsClosure;
 
-  TermImpl() {
+  public TermImpl() {
 
   }
 

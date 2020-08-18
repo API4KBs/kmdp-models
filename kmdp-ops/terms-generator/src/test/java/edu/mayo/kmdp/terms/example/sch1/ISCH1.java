@@ -1,6 +1,6 @@
 package edu.mayo.kmdp.terms.example.sch1;
 
-import edu.mayo.kmdp.terms.VersionableTerm;
+import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 import java.net.URI;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;

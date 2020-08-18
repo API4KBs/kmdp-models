@@ -16,7 +16,7 @@
 package edu.mayo.kmdp.terms.generator.internal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.mayo.kmdp.terms.ConceptScheme;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import java.net.URI;
 import java.util.Date;
 import java.util.Optional;

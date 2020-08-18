@@ -20,7 +20,7 @@ import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import edu.mayo.kmdp.terms.ConceptScheme;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;

@@ -18,7 +18,7 @@ package edu.mayo.kmdp.terms.generator;
 import static edu.mayo.kmdp.util.NameUtils.removeFragment;
 import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 
-import edu.mayo.kmdp.terms.ConceptScheme;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;

@@ -1,6 +1,6 @@
-package edu.mayo.kmdp.terms.impl.model;
+package org.omg.spec.api4kp._20200801.terms.model;
 
-import edu.mayo.kmdp.terms.ConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 

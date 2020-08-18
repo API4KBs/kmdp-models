@@ -4,8 +4,7 @@ import static edu.mayo.kmdp.util.NameUtils.namespaceURIStringToPackage;
 import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 import static edu.mayo.kmdp.util.Util.ensureUTF8;
 
-import edu.mayo.kmdp.terms.ConceptScheme;
-import edu.mayo.kmdp.terms.impl.model.InternalTerm;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;

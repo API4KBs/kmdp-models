@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.terms;
+package org.omg.spec.api4kp._20200801.terms;
 
 import java.util.Arrays;
 import java.util.Optional;

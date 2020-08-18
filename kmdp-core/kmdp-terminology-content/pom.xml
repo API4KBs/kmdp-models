@@ -445,7 +445,7 @@
               </owlSourceURLs>
 
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
-              <targetURI>https://www.omg.org/spec/API4KP/api4kp/hasStructuralComponent</targetURI>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp/hasProperPart</targetURI>
 
               <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/StructuralRelType</skosNamespace>
               <schemeName>StructuralPartTypes</schemeName>

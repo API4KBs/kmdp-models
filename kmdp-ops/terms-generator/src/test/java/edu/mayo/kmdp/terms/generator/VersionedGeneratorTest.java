@@ -26,7 +26,7 @@ import org.omg.spec.api4kp._20200801.series.Series;
 import org.omg.spec.api4kp._20200801.series.Versionable;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
-import edu.mayo.kmdp.terms.VersionableTerm;
+import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;

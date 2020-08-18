@@ -1,4 +1,4 @@
-package edu.mayo.kmdp.terms;
+package org.omg.spec.api4kp._20200801.terms;
 
 import java.net.URI;
 import java.util.List;

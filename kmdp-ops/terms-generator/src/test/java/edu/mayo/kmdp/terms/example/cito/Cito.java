@@ -19,11 +19,11 @@ package edu.mayo.kmdp.terms.example.cito;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
 import org.omg.spec.api4kp._20200801.series.Series;
-import edu.mayo.kmdp.terms.ConceptTerm;
-import edu.mayo.kmdp.terms.TermDescription;
+import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.TermDescription;
 import edu.mayo.kmdp.terms.adapters.json.UUIDTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
-import edu.mayo.kmdp.terms.impl.model.TermImpl;
+import org.omg.spec.api4kp._20200801.terms.model.TermImpl;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,8 +1,9 @@
-package edu.mayo.kmdp.terms;
+package org.omg.spec.api4kp._20200801.terms;
 
 import org.omg.spec.api4kp._20200801.series.Series;
 import org.omg.spec.api4kp._20200801.series.Versionable;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
 
 public interface VersionableTerm<T extends Term & Versionable<T>,E extends Enum<E>>
     extends ConceptTerm<T>, Versionable<T> {

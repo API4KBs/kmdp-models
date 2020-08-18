@@ -21,11 +21,11 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
 import de.escalon.hypermedia.hydra.mapping.Expose;
 import org.omg.spec.api4kp._20200801.series.Series;
-import edu.mayo.kmdp.terms.TermDescription;
+import org.omg.spec.api4kp._20200801.terms.TermDescription;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.example.cito.ICito;
-import edu.mayo.kmdp.terms.impl.model.TermImpl;
+import org.omg.spec.api4kp._20200801.terms.model.TermImpl;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Collections;

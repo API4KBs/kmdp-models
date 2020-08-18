@@ -1,7 +1,7 @@
 package edu.mayo.kmdp.terms.generator.internal;
 
 
-import edu.mayo.kmdp.terms.ConceptScheme;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;

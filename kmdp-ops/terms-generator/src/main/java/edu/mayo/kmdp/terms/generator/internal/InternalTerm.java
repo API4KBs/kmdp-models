@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.terms.impl.model;
+package edu.mayo.kmdp.terms.generator.internal;
 
-import edu.mayo.kmdp.terms.ConceptScheme;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
+import org.omg.spec.api4kp._20200801.terms.model.TermImpl;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Date;

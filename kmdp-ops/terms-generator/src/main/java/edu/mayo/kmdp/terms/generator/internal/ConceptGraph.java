@@ -1,6 +1,6 @@
 package edu.mayo.kmdp.terms.generator.internal;
 
-import edu.mayo.kmdp.terms.ConceptScheme;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.graph.HierarchySorter;

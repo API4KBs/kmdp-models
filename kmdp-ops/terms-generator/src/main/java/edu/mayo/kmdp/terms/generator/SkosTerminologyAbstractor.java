@@ -18,7 +18,7 @@ import static edu.mayo.kmdp.util.Util.isUUID;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNAPSHOT;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNAPSHOT_DATE_PATTERN;
 
-import edu.mayo.kmdp.terms.ConceptScheme;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;

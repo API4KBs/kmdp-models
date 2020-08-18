@@ -1,7 +1,7 @@
 package org.omg.spec.api4kp._20200801.surrogate;
 
 import edu.mayo.kmdp.comparator.AbstractDiffer;
-import edu.mayo.kmdp.terms.VersionableTerm;
+import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationType;
 import edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatus;
 import edu.mayo.ontology.taxonomies.kmdo.publishingrole.PublishingRole;

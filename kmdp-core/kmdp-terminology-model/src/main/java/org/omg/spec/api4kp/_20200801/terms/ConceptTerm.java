@@ -1,10 +1,12 @@
-package edu.mayo.kmdp.terms;
+package org.omg.spec.api4kp._20200801.terms;
 
 import java.net.URI;
 import java.util.List;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.terms.Taxonomic;
+import org.omg.spec.api4kp._20200801.terms.TermDescription;
 
 public interface ConceptTerm<T extends Term> extends Term, Taxonomic<T> {
 
