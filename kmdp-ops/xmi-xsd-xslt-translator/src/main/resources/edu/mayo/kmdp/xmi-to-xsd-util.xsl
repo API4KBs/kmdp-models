@@ -20,9 +20,8 @@
   xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML"
-  xmlns:mvf="uri:urn:iso:11179-3"
+  xmlns:cpt="https://omg.org/spec/API4KP/20200801/umlprofile/cpt"
   xmlns:xmi2xsd="http://www.mayo.edu/kmdp/xmi2xsd"
-  xmlns:res="http://meta.kmdp.mayo.edu/Resource"
   xsi:schemaLocation="http://www.w3.org/1999/XSL/Transform
     https://www.w3.org/TR/xslt-30/schema-for-xslt30.xsd"
   xmi:version="2.5" version="3.0">
@@ -136,7 +135,7 @@
     <xsl:param name="entity" as="node()"/>
     <xsl:variable name="id" select="$entity/@xmi:id"/>
     <xsl:sequence
-      select="root($entity)//mvf:Conceptual[@base_Class = $id or @base_Property = $id or @base_Association = $id]/@concept"/>
+      select="root($entity)//cpt:Conceptual[@base_Class = $id or @base_Property = $id or @base_Association = $id]/@concept"/>
   </xsl:function>
 
   <xsl:function name="xmi2xsd:getDescendantIds" as="xs:string*">

@@ -91,8 +91,8 @@ public class SwaggerToIDLTranslatorTest {
   private void toIDL(String title, String... sourceFiles) {
     Path systemTmp = Paths.get(System.getProperty("java.io.tmpdir"));
 
-//    Path root = tmp;
-    Path root = systemTmp;
+    Path root = tmp;
+//    Path root = systemTmp;
 
     root = Paths.get(root.toString(), title);
     assertTrue(deleteDirectory(root));

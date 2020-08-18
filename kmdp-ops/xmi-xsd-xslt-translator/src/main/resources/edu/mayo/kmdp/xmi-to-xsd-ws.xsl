@@ -22,7 +22,7 @@
   xmlns:annox="http://annox.dev.java.net"
   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
   xmlns:map="http://www.w3.org/2005/xpath-functions/map"
-  xmlns:res="http://meta.kmdp.mayo.edu/Resource"
+  xmlns:res="https://omg.org/spec/API4KP/20200801/umlprofile/res"
   xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmlns:xmi2xsd="http://www.mayo.edu/kmdp/xmi2xsd"
   xsi:schemaLocation="http://www.w3.org/1999/XSL/Transform
                                     https://www.w3.org/TR/xslt-30/schema-for-xslt30.xsd"

@@ -18,10 +18,11 @@
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xmi="http://www.omg.org/spec/XMI/20131001"
-  xmlns:res="http://meta.kmdp.mayo.edu/Resource"
+  xmlns:res="https://omg.org/spec/API4KP/20200801/umlprofile/res"
   xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML"
   xmlns:map="http://www.w3.org/2005/xpath-functions/map"
-  xmlns:xmi2xsd="http://www.mayo.edu/kmdp/xmi2xsd" xmlns:vs="http://terms.kmdp.mayo.edu/ValueSet"
+  xmlns:xmi2xsd="http://www.mayo.edu/kmdp/xmi2xsd"
+  xmlns:vs="https://omg.org/spec/API4KP/20200801/umlprofile/vs"
   xmlns:fn="http://www.w3.org/2005/xpath-functions" exclude-result-prefixes="xs" version="3.0">
   <!-- TODO: Check the vs: namespace -->
 
@@ -98,9 +99,9 @@
           select="xmi2xsd:ownerPackage($type)"/>
         <xsl:variable name="nsURI">
           <xsl:choose>
-            <xsl:when test="//vs:Valueset[@base_Enumeration = current()/@xmi:id]">
+            <xsl:when test="//vs:ValueSet[@base_Enumeration = current()/@xmi:id]">
               <xsl:value-of
-                select="//vs:Valueset[@base_Enumeration = current()/@xmi:id]/@uri"/>
+                select="//vs:ValueSet[@base_Enumeration = current()/@xmi:id]/@uri"/>
             </xsl:when>
             <xsl:when test="$package">
               <xsl:value-of select="xmi2xsd:namespaceURI($package)"/>
@@ -147,11 +148,11 @@
     <xsl:element name="root">
       <xsl:for-each select="//packagedElement">
         <xsl:choose>
-          <xsl:when test="//vs:Valueset[@base_Enumeration = current()/@xmi:id]">
+          <xsl:when test="//vs:ValueSet[@base_Enumeration = current()/@xmi:id]">
             <xsl:element name="child">
               <xsl:attribute name="sourceId" select="../@xmi:id"/>
               <xsl:attribute name="tns"
-                select="//vs:Valueset[@base_Enumeration = current()/@xmi:id]/@uri"/>
+                select="//vs:ValueSet[@base_Enumeration = current()/@xmi:id]/@uri"/>
               <xsl:attribute name="schemaLocation" select="''"/>
             </xsl:element>
           </xsl:when>
@@ -255,13 +256,13 @@
   <xsl:function name="xmi2xsd:isTerminologyPackage" as="xs:boolean">
     <xsl:param name="pack" as="node()"/>
     <xsl:sequence
-      select="QName('http://terms.kmdp.mayo.edu/ValueSet','ConceptAware') = xmi2xsd:getProfiles($pack)"/>
+      select="QName('https://omg.org/spec/API4KP/20200801/umlprofile/vs','ConceptAware') = xmi2xsd:getProfiles($pack)"/>
   </xsl:function>
 
   <xsl:function name="xmi2xsd:isResourcePackage" as="xs:boolean">
     <xsl:param name="pack" as="node()"/>
     <xsl:sequence
-      select="QName('http://meta.kmdp.mayo.edu/Resource','Resource') = xmi2xsd:getProfiles($pack)"/>
+      select="QName('https://omg.org/spec/API4KP/20200801/umlprofile/res','Resource') = xmi2xsd:getProfiles($pack)"/>
   </xsl:function>
 
   <xsl:function name="xmi2xsd:isRestResource" as="xs:boolean">

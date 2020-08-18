@@ -21,8 +21,8 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
-  xmlns:annox="http://annox.dev.java.net" xmlns:res="http://meta.kmdp.mayo.edu/Resource"
-  xmlns:mvf="uri:urn:iso:11179-3" xmlns:xmi2xsd="http://www.mayo.edu/kmdp/xmi2xsd"
+  xmlns:annox="http://annox.dev.java.net" xmlns:res="https://omg.org/spec/API4KP/20200801/umlprofile/res"
+  xmlns:xmi2xsd="http://www.mayo.edu/kmdp/xmi2xsd"
   xmlns:xmi2xjld="http://www.mayo.edu/kmdp/xmi2jxb-jsonld"
   xsi:schemaLocation="http://www.w3.org/1999/XSL/Transform
                                     https://www.w3.org/TR/xslt-30/schema-for-xslt30.xsd"

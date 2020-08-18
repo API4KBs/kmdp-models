@@ -101,8 +101,8 @@ public class SwaggerToDocXTranslatorTest {
   private void preview(String title, byte[] data) {
     Path systemTmp = Paths.get(System.getProperty("java.io.tmpdir"));
 
-//    Path root = tmp;
-    Path root = systemTmp;
+    Path root = tmp;
+//    Path root = systemTmp;
 
     File tmpFile = new File(root.toString(), title + ".docx");
 
