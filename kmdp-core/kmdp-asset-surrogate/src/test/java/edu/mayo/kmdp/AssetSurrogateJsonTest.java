@@ -141,7 +141,7 @@ public class AssetSurrogateJsonTest {
         .withLinks(
             new Version().withRel(Has_Previous_Version))
         .withCitations(
-            new Citation().withRel(Cites_As_Authority))
+            new Citation().withRel(Cites_As_Authority.asConceptIdentifier()))
         .withCarriers(
             new KnowledgeArtifact()
                 .withLocalization(Italian)
@@ -190,7 +190,7 @@ public class AssetSurrogateJsonTest {
                 .withHref(newId("http://foo.bar/234")))
         .withCitations(
             new Citation()
-                .withRel(Cites)
+                .withRel(Cites.asConceptIdentifier())
                 .withBibliography("Joe,D. On everything. 2001"));
     assertNotNull(ks);
 
