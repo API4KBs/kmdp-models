@@ -82,7 +82,7 @@ public interface AbstractCarrier {
   static KnowledgeCarrier of(String serialized) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
         .withExpression(serialized)
-        .withLevel(ParsingLevelSeries.Serialized_Knowledge_Expression);
+        .withLevel(Serialized_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(Document dox) {
