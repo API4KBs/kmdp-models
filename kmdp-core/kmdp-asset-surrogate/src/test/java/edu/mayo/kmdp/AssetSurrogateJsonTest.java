@@ -15,7 +15,7 @@ package edu.mayo.kmdp;
 
 import static edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries.Cites;
 import static edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries.Cites_As_Authority;
-import static edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatusSeries.Published;
+import static org.omg.spec.api4kp.taxonomy.publicationstatus.PublicationStatusSeries.Published;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

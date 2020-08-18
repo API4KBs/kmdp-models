@@ -3,7 +3,6 @@ package org.omg.spec.api4kp._20200801.surrogate;
 import edu.mayo.kmdp.comparator.AbstractDiffer;
 import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationType;
-import edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatus;
 import edu.mayo.ontology.taxonomies.kmdo.publishingrole.PublishingRole;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +25,7 @@ import org.omg.spec.api4kp.taxonomy.krprofile.KnowledgeRepresentationLanguagePro
 import org.omg.spec.api4kp.taxonomy.krserialization.KnowledgeRepresentationLanguageSerialization;
 import org.omg.spec.api4kp.taxonomy.languagerole.KnowledgeRepresentationLanguageRole;
 import org.omg.spec.api4kp.taxonomy.lexicon.Lexicon;
+import org.omg.spec.api4kp.taxonomy.publicationstatus.PublicationStatus;
 import org.omg.spec.api4kp.taxonomy.relatedversiontype.RelatedVersionType;
 import org.omg.spec.api4kp.taxonomy.structuralreltype.StructuralPartType;
 import org.omg.spec.api4kp.taxonomy.summaryreltype.SummarizationType;

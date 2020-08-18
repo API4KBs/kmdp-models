@@ -1,7 +1,7 @@
 package edu.mayo.kmdp;
 
-import static edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatusSeries.Draft;
-import static edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatusSeries.Published;
+import static org.omg.spec.api4kp.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
+import static org.omg.spec.api4kp.taxonomy.publicationstatus.PublicationStatusSeries.Published;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomArtifactId;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
 import static org.junit.jupiter.api.Assertions.assertSame;

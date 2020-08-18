@@ -28,7 +28,7 @@ import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.publicationeventtype.PublicationEventTypeSeries;
-import edu.mayo.ontology.taxonomies.kmdo.publicationstatus.PublicationStatusSeries;
+import org.omg.spec.api4kp.taxonomy.publicationstatus.PublicationStatusSeries;
 import edu.mayo.ontology.taxonomies.kmdo.publishingrole.PublishingRoleSeries;
 import edu.mayo.ontology.taxonomies.mimetype.MIMETypeSeries;
 import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConceptSeries;

@@ -525,7 +525,7 @@
               <targetURI>http://purl.org/spar/pso/PublicationStatus</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://ontology.mayo.edu/taxonomies/KMDO/PublicationStatus</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/PublicationStatus</skosNamespace>
               <schemeName>PublicationStatuses</schemeName>
               <topConceptName>PublicationStatus</topConceptName>
 
