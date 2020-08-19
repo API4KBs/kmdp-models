@@ -22,6 +22,7 @@ import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
+import edu.mayo.kmdp.util.StreamUtil;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -44,6 +45,7 @@ import org.protege.xmlcatalog.owlapi.XMLCatalogIRIMapper;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
 import org.semanticweb.owlapi.io.StreamDocumentSource;
+import org.semanticweb.owlapi.model.HasOntologyID;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
 import org.semanticweb.owlapi.model.OWLDocumentFormat;
@@ -437,7 +439,6 @@ public class SkosGeneratorPlugin extends AbstractMojo {
                 preloadImports(manager, importedOntology, catalogURL);
               }
             } catch (OWLOntologyCreationException e) {
-              System.err.println(e.getMessage() + "  >>>>>>>>>>>>>>> " + ontologyIRI);
               logger.error(e.getMessage(), e);
             }
           }
@@ -447,7 +448,25 @@ public class SkosGeneratorPlugin extends AbstractMojo {
 
   private boolean isOntologyLoaded(OWLOntologyManager manager, IRI ontologyIRI) {
     // different styles in the use of versioned vs series IRIs in import require to check both
-    return manager.contains(ontologyIRI) || manager.containsVersion(ontologyIRI);
+    // TODO FIXME This is a workaround the known issue with the DOL ontology URI mismatches
+    // return manager.contains(ontologyIRI) || manager.containsVersion(ontologyIRI);
+    return manager.ontologies()
+        .map(HasOntologyID::getOntologyID)
+        .anyMatch(id -> matches(id, ontologyIRI));
+  }
+
+  private boolean matches(OWLOntologyID id, IRI ontologyIRI) {
+    return id.getOntologyIRI().map(oiri -> matchesIgnoreScheme(oiri,ontologyIRI)).orElse(false)
+        || id.getVersionIRI().map(viri -> matchesIgnoreScheme(viri,ontologyIRI)).orElse(false);
+  }
+
+  private boolean matchesIgnoreScheme(IRI tgtIri, IRI ontologyIRI) {
+    if (tgtIri == null || ontologyIRI == null) {
+      return false;
+    }
+    String s1 = tgtIri.toString().replace("https://", "http://");
+    String s2 = ontologyIRI.toString().replace("https://", "http://");
+    return s1.equals(s2);
   }
 
   private static Optional<IRI> applyMappings(IRI ontologyIRI, OWLOntologyManager manager) {

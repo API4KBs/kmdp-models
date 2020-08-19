@@ -57,6 +57,10 @@
     uri="DOL-terms.rdf"
     name="https://www.omg.org/spec/DOL/20171106/DOL-terms.rdf"/>
 
+  <uri id="DOL_3"
+    uri="DOL-terms.rdf"
+    name="https://www.omg.org/spec/DOL/DOL-terms"/>
+
   <uri id="Spec-Metadata"
     uri="SpecificationMetadata.rdf"
     name="http://www.omg.org/techprocess/ab/SpecificationMetadata/"/>
