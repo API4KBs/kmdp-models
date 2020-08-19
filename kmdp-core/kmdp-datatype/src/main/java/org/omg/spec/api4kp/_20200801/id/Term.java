@@ -52,6 +52,11 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
     return getResourceId();
   }
 
+  @JsonIgnore
+  default URI getDenotes() {
+    return getReferentId();
+  }
+
   /**
    * Alias 'name' as 'label' for terms
    * @return

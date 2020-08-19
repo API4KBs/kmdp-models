@@ -15,7 +15,7 @@ public interface Identifier {
 
   Date getEstablishedOn();
 
-  default URI denotes() { return getResourceId(); }
+  default URI identifies() { return getResourceId(); }
 
   URI getResourceId();
 
