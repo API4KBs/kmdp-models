@@ -20,7 +20,7 @@ import org.omg.spec.api4kp._20200801.series.Series;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
 import edu.mayo.kmdp.util.StreamUtil;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
-import org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevel;
+import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevel;
 
 public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepresentation> {
 

@@ -16,7 +16,7 @@
 package org.omg.spec.api4kp._20200801.contrastors;
 
 import edu.mayo.kmdp.comparator.Contrastor;
-import org.omg.spec.api4kp.taxonomy.krprofile.KnowledgeRepresentationLanguageProfile;
+import org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfile;
 
 public class ProfileContrastor extends Contrastor<KnowledgeRepresentationLanguageProfile> {
 

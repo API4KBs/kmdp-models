@@ -44,28 +44,28 @@ import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
-import org.omg.spec.api4kp.taxonomy.dependencyreltype.DependencyTypeSeries;
-import org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationTypeSeries;
-import org.omg.spec.api4kp.taxonomy.iso639_2_languagecode.Language;
-import org.omg.spec.api4kp.taxonomy.iso639_2_languagecode.LanguageSeries;
-import org.omg.spec.api4kp.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
-import org.omg.spec.api4kp.taxonomy.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
-import org.omg.spec.api4kp.taxonomy.knowledgeassetrole.KnowledgeAssetRoleSeries;
-import org.omg.spec.api4kp.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
-import org.omg.spec.api4kp.taxonomy.knowledgeoperation.KnowledgeProcessingOperationSeries;
-import org.omg.spec.api4kp.taxonomy.knowledgeprocessingtechnique.KnowledgeProcessingTechniqueSeries;
-import org.omg.spec.api4kp.taxonomy.krformat.SerializationFormatSeries;
-import org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
-import org.omg.spec.api4kp.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries;
-import org.omg.spec.api4kp.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
-import org.omg.spec.api4kp.taxonomy.languagerole.KnowledgeRepresentationLanguageRoleSeries;
-import org.omg.spec.api4kp.taxonomy.lexicon.LexiconSeries;
-import org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries;
-import org.omg.spec.api4kp.taxonomy.publicationstatus.PublicationStatusSeries;
-import org.omg.spec.api4kp.taxonomy.relatedversiontype.RelatedVersionTypeSeries;
-import org.omg.spec.api4kp.taxonomy.structuralreltype.StructuralPartTypeSeries;
-import org.omg.spec.api4kp.taxonomy.summaryreltype.SummarizationTypeSeries;
-import org.omg.spec.api4kp.taxonomy.variantreltype.VariantTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.Language;
+import org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.LanguageSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetrole.KnowledgeAssetRoleSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeoperation.KnowledgeProcessingOperationSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeprocessingtechnique.KnowledgeProcessingTechniqueSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.languagerole.KnowledgeRepresentationLanguageRoleSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.relatedversiontype.RelatedVersionTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.summaryreltype.SummarizationTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.variantreltype.VariantTypeSeries;
 
 public class VocabularyTest {
 
@@ -111,7 +111,7 @@ public class VocabularyTest {
     assertNotNull(LanguageSeries.Chinese);
     assertNotNull(LanguageSeries.Spanish);
     assertNotNull(LanguageSeries.Vietnamese);
-    assertNotNull(org.omg.spec.api4kp.taxonomy.iso639_2_languagecode.LanguageSeries.Hmong);
+    assertNotNull(org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.LanguageSeries.Hmong);
     assertNotNull(LanguageSeries.Somali);
 
     assertEquals(366,LanguageSeries.values().length);
@@ -140,7 +140,7 @@ public class VocabularyTest {
         LanguageSeries.French.getTag());
 
     assertEquals("fr",
-        org.omg.spec.api4kp.taxonomy.iso639_1_languagecode._20190201.Language.French.getTag());
+        org.omg.spec.api4kp._20200801.taxonomy.iso639_1_languagecode._20190201.Language.French.getTag());
 
   }
 
@@ -150,14 +150,14 @@ public class VocabularyTest {
     // preferring Alpha2 Codes
     assertEquals(2,tagLen);
 
-    Set<org.omg.spec.api4kp.taxonomy.iso639_2_languagecode.LanguageSeries> alpha3Languages = Arrays.stream(
-        org.omg.spec.api4kp.taxonomy.iso639_2_languagecode.LanguageSeries.values())
+    Set<org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.LanguageSeries> alpha3Languages = Arrays.stream(
+        org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.LanguageSeries.values())
         .filter((lan) -> lan.getTag().length() != tagLen)
         .collect(Collectors.toSet());
     // some languages only have alpha3 codes
     assertEquals(194,alpha3Languages.size());
     assertTrue(alpha3Languages.contains(
-        org.omg.spec.api4kp.taxonomy.iso639_2_languagecode.LanguageSeries.Fanti));
+        org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.LanguageSeries.Fanti));
 
     assertEquals(new HashSet<>(Arrays.asList("fr","fra","fre")),
         new HashSet<>(LanguageSeries.French.getTags()));
@@ -176,16 +176,16 @@ public class VocabularyTest {
   @Test
   public void testKnownIdentifiers() {
 
-    assertEquals("https://www.omg.org/spec/API4KP/taxonomy/KnowledgeAssetType#6047674c-0d9b-3c81-89a3-6943f3a7169b",
+    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#6047674c-0d9b-3c81-89a3-6943f3a7169b",
         KnowledgeAssetTypeSeries.Nursing_Protocol.getConceptId().toString());
 
-    assertEquals("https://www.omg.org/spec/API4KP/taxonomy/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916",
+    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916",
         KnowledgeAssetTypeSeries.Semantic_Decision_Model.getConceptId().toString());
 
-    assertEquals("https://www.omg.org/spec/API4KP/taxonomy/KnowledgeAssetCategory#d4b0e868-60c8-387d-a139-e3c35427bfb6",
+    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory#d4b0e868-60c8-387d-a139-e3c35427bfb6",
         KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models.getConceptId().toString());
 
-    assertEquals("https://www.omg.org/spec/API4KP/taxonomy/KRLanguage#0bf050a2-fbd6-38c2-a4ce-323fd91c7b24",
+    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KRLanguage#0bf050a2-fbd6-38c2-a4ce-323fd91c7b24",
         KnowledgeRepresentationLanguageSeries.DMN_1_2.getConceptId().toString());
   }
 

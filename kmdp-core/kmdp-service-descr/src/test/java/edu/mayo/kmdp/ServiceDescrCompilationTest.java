@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
 
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -122,15 +122,15 @@ public class ServiceDescrCompilationTest {
 
     deploy(src, "/xsd/terms-bindings.xjb");
 
-    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/languagerole/KnowledgeRepresentationLanguageRole.series.xsd");
-    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/krformat/SerializationFormat.series.xsd");
-    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/krlanguage/KnowledgeRepresentationLanguage.series.xsd");
-    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/krprofile/KnowledgeRepresentationLanguageProfile.series.xsd");
-    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/krserialization/KnowledgeRepresentationLanguageSerialization.series.xsd");
-    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/parsinglevel/ParsingLevel.series.xsd");
-    deploy(src, "/xsd/org/omg/spec/api4kp/taxonomy/lexicon/Lexicon.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/_20200801/taxonomy/languagerole/KnowledgeRepresentationLanguageRole.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/_20200801/taxonomy/krformat/SerializationFormat.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/_20200801/taxonomy/krlanguage/KnowledgeRepresentationLanguage.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/_20200801/taxonomy/krprofile/KnowledgeRepresentationLanguageProfile.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/_20200801/taxonomy/krserialization/KnowledgeRepresentationLanguageSerialization.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/_20200801/taxonomy/parsinglevel/ParsingLevel.series.xsd");
+    deploy(src, "/xsd/org/omg/spec/api4kp/_20200801/taxonomy/lexicon/Lexicon.series.xsd");
     deploy(src,
-        "/xsd/org/omg/spec/api4kp/taxonomy/iso639_2_languagecode/Language.series.xsd");
+        "/xsd/org/omg/spec/api4kp/_20200801/taxonomy/iso639_2_languagecode/Language.series.xsd");
 
     deploy(src, "/xsd/API4KP/api4kp/services/services.xsd");
     deploy(src, "/xsd/API4KP/api4kp/services/services.openapi.xsd");

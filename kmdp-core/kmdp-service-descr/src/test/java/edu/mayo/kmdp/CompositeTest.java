@@ -11,8 +11,8 @@ import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATES
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.hashIdentifiers;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
-import static org.omg.spec.api4kp.taxonomy.krformat.SerializationFormatSeries.TXT;
-import static org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.TermsHelper;

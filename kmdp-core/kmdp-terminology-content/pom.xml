@@ -117,12 +117,12 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/ConstructedLanguage</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KRLanguage</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KRLanguage</skosNamespace>
               <schemeName>KnowledgeRepresentationLanguages</schemeName>
               <topConceptName>KnowledgeRepresentationLanguage</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>KRLanguage.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeRepresentationLanguages.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -146,12 +146,12 @@
               <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Profile</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KRProfile</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KRProfile</skosNamespace>
               <schemeName>KnowledgeRepresentationLanguageProfiles</schemeName>
               <topConceptName>KnowledgeRepresentationLanguageProfile</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>KRProfile.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeRepresentationLanguageProfiles.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -176,12 +176,12 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/MetaFormat</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KRFormat</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KRFormat</skosNamespace>
               <schemeName>SerializationFormats</schemeName>
               <topConceptName>SerializationFormat</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>KRFormat.skos.rdf</skosOutputFile>
+                <skosOutputFile>SerializationFormats.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -207,12 +207,12 @@
               <targetURI>http://www.omg.org/spec/DOL/DOL-terms/Serialization</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KRSerialization</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KRSerialization</skosNamespace>
               <schemeName>KnowledgeRepresentationLanguageSerializations</schemeName>
               <topConceptName>KnowledgeRepresentationLanguageSerialization</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>KRSerialization.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeRepresentationLanguageSerializations.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -236,12 +236,12 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/Lexicon</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/Lexicon</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/Lexicon</skosNamespace>
               <schemeName>Lexica</schemeName>
               <topConceptName>Lexicon</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>Lexicon.skos.rdf</skosOutputFile>
+                <skosOutputFile>Lexica.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -263,7 +263,7 @@
               <targetURI>https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/LivingLanguage</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/ISO639-2-LanguageCode</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/ISO639-2-LanguageCode</skosNamespace>
               <schemeName>Languages</schemeName>
               <topConceptName>Language</topConceptName>
 
@@ -291,7 +291,7 @@
               </targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/ISO639-1-LanguageCode</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/ISO639-1-LanguageCode</skosNamespace>
               <schemeName>Languages</schemeName>
               <topConceptName>Language</topConceptName>
 
@@ -316,13 +316,13 @@
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/isDerivedFrom</targetURI>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/DerivationRelType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/DerivationRelType</skosNamespace>
               <schemeName>DerivationTypes</schemeName>
               <topConceptName>DerivationType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>rel-deriv.skos.rdf</skosOutputFile>
-                <skosOutputFile>rel-deriv_20200801.skos.rdf</skosOutputFile>
+                <skosOutputFile>DerivationTypes.skos.rdf</skosOutputFile>
+                <skosOutputFile>DerivationTypes_20200801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -342,13 +342,13 @@
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/isVariantOf</targetURI>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/VariantRelType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/VariantRelType</skosNamespace>
               <schemeName>VariantTypes</schemeName>
               <topConceptName>VariantType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>rel-variant.skos.rdf</skosOutputFile>
-                <skosOutputFile>rel-variant_20200801.skos.rdf</skosOutputFile>
+                <skosOutputFile>VariantTypes.skos.rdf</skosOutputFile>
+                <skosOutputFile>VariantTypes_20200801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -368,13 +368,13 @@
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/abbreviates</targetURI>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/SummaryRelType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/SummaryRelType</skosNamespace>
               <schemeName>SummarizationTypes</schemeName>
               <topConceptName>SummarizationType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>rel-summary.skos.rdf</skosOutputFile>
-                <skosOutputFile>rel-summary_2020801.skos.rdf</skosOutputFile>
+                <skosOutputFile>SummarizationTypes.skos.rdf</skosOutputFile>
+                <skosOutputFile>SummarizationTypes_2020801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -394,13 +394,13 @@
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/dependsOn</targetURI>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/DependencyRelType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/DependencyRelType</skosNamespace>
               <schemeName>DependencyTypes</schemeName>
               <topConceptName>DependencyType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>rel-deps.skos.rdf</skosOutputFile>
-                <skosOutputFile>rel-deps_2020801.skos.rdf</skosOutputFile>
+                <skosOutputFile>DependencyTypes.skos.rdf</skosOutputFile>
+                <skosOutputFile>DependencyTypes-deps_2020801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -421,13 +421,13 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp-series/isInSeriesWith</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/RelatedVersionType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/RelatedVersionType</skosNamespace>
               <schemeName>RelatedVersionTypes</schemeName>
               <topConceptName>RelatedVersionType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>rel-series.skos.rdf</skosOutputFile>
-                <skosOutputFile>rel-series_20200801.skos.rdf</skosOutputFile>
+                <skosOutputFile>RelatedVersionTypes.skos.rdf</skosOutputFile>
+                <skosOutputFile>RelatedVersionTypes_20200801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -447,13 +447,13 @@
               <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-rel/</owlNamespace>
               <targetURI>https://www.omg.org/spec/API4KP/api4kp/hasProperPart</targetURI>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/StructuralRelType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/StructuralRelType</skosNamespace>
               <schemeName>StructuralPartTypes</schemeName>
               <topConceptName>StructuralPartType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>rel-part.skos.rdf</skosOutputFile>
-                <skosOutputFile>rel-part_20200801.skos.rdf</skosOutputFile>
+                <skosOutputFile>StructuralPartTypes.skos.rdf</skosOutputFile>
+                <skosOutputFile>StructuralPartTypes_20200801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -478,7 +478,7 @@
               <topConceptName>BibliographicCitationType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>rel-cites.skos.rdf</skosOutputFile>
+                <skosOutputFile>BibliographicCitationTypes.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -504,7 +504,7 @@
               <topConceptName>PublishingRole</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>prov-pro.skos.rdf</skosOutputFile>
+                <skosOutputFile>PublishingRoles.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -525,12 +525,12 @@
               <targetURI>http://purl.org/spar/pso/PublicationStatus</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/PublicationStatus</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus</skosNamespace>
               <schemeName>PublicationStatuses</schemeName>
               <topConceptName>PublicationStatus</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>prov-pso.skos.rdf</skosOutputFile>
+                <skosOutputFile>PublicationStatuses.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -559,7 +559,7 @@
               <topConceptName>PublicationEventType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>prov-pub-ev.skos.rdf</skosOutputFile>
+                <skosOutputFile>PublicationEventTypes.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -590,7 +590,7 @@
               <topConceptName>SemanticAnnotationRelType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>ann.skos.rdf</skosOutputFile>
+                <skosOutputFile>SemanticAnnotationRelTypes.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -618,7 +618,7 @@
               <topConceptName>MIMEType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>mime.skos.rdf</skosOutputFile>
+                <skosOutputFile>MIMETypes.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -643,12 +643,12 @@
               <minDepth>1</minDepth>
               <maxDepth>1</maxDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeAssetCategory</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory</skosNamespace>
               <schemeName>KnowledgeAssetCategories</schemeName>
               <topConceptName>KnowledgeAssetCategory</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>kac_20190801.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeAssetCategories_20190801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -672,12 +672,12 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp-kao/ExplicitRoleKnowledgeAsset</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeAssetRole</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetRole</skosNamespace>
               <schemeName>KnowledgeAssetRoles</schemeName>
               <topConceptName>KnowledgeAssetRole</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>kar_20190801.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeAssetRoles_20190801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -702,12 +702,12 @@
               <entityType>CLASS</entityType>
               <minDepth>2</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeAssetType</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType</skosNamespace>
               <schemeName>KnowledgeAssetTypes</schemeName>
               <topConceptName>KnowledgeAssetType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>kat_20190801.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeAssetTypes_20190801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -730,12 +730,12 @@
               <targetURI>http://ontology.mayo.edu/ontologies/dcmitype/ContentType</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeArtifactCategory</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeArtifactCategory</skosNamespace>
               <schemeName>KnowledgeArtifactCategories</schemeName>
               <topConceptName>KnowledgeArtifactCategory</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>karc.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeArtifactCategories.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -756,13 +756,13 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp-kao/Technique</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeProcessingTechnique</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeProcessingTechnique</skosNamespace>
               <schemeName>KnowledgeProcessingTechniques</schemeName>
               <topConceptName>KnowledgeProcessingTechnique</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>kpm.skos.rdf</skosOutputFile>
-                <skosOutputFile>kpm_20200801.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeProcessingTechniques.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeProcessingTechniques_20200801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -788,7 +788,7 @@
               <topConceptName>RelatedConcept</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>skos.skos.rdf</skosOutputFile>
+                <skosOutputFile>RelatedConcepts.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -809,13 +809,13 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp-lang/DedicatedLanguage</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/LanguageRole</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/LanguageRole</skosNamespace>
               <schemeName>KnowledgeRepresentationLanguageRoles</schemeName>
               <topConceptName>KnowledgeRepresentationLanguageRole</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>langrol.skos.rdf</skosOutputFile>
-                <skosOutputFile>langrol_20200801.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeRepresentationLanguageRoles.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeRepresentationLanguageRoles_20200801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -836,13 +836,13 @@
               <targetURI>https://www.omg.org/spec/API4KP/api4kp-ops/KnowledgeProcessingTask</targetURI>
               <minDepth>2</minDepth>
 
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/KnowledgeOperation</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeOperation</skosNamespace>
               <schemeName>KnowledgeProcessingOperations</schemeName>
               <topConceptName>KnowledgeProcessingOperation</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>ops.skos.rdf</skosOutputFile>
-                <skosOutputFile>ops_20200801.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeProcessingOperations.skos.rdf</skosOutputFile>
+                <skosOutputFile>KnowledgeProcessingOperations_20200801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -864,12 +864,12 @@
               <maxDepth>1</maxDepth>
 
               <schemeName>ParsingLevels</schemeName>
-              <skosNamespace>https://www.omg.org/spec/API4KP/taxonomy/ParsingLevel</skosNamespace>
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/ParsingLevel</skosNamespace>
               <topConceptName>ParsingLevel</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>level.skos.rdf</skosOutputFile>
-                <skosOutputFile>level_20200801.skos.rdf</skosOutputFile>
+                <skosOutputFile>ParsingLevels.skos.rdf</skosOutputFile>
+                <skosOutputFile>ParsingLevels_20200801.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -895,7 +895,7 @@
               <topConceptName>ResponseCode</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>resp-codes.skos.rdf</skosOutputFile>
+                <skosOutputFile>ResponseCodes.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -920,7 +920,7 @@
               <topConceptName>ConceptDefinitionType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>ccg.skos.rdf</skosOutputFile>
+                <skosOutputFile>ConceptDefinitionTypes.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -945,7 +945,7 @@
               <topConceptName>DecisionType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>dmn.skos.rdf</skosOutputFile>
+                <skosOutputFile>DecisionTypes.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>

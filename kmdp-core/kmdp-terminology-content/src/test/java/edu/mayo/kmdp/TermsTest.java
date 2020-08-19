@@ -24,9 +24,9 @@ import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.terms.TermsHelper;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
-import org.omg.spec.api4kp.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
-import org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationType;
-import org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationType;
+import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries;
 
 public class TermsTest {
 

@@ -1,11 +1,11 @@
 package edu.mayo.kmdp;
 
-import static org.omg.spec.api4kp.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
-import static org.omg.spec.api4kp.taxonomy.publicationstatus.PublicationStatusSeries.Published;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomArtifactId;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.omg.spec.api4kp.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
 
 import edu.mayo.kmdp.comparator.AbstractDiffer.Mode;
 import edu.mayo.kmdp.comparator.Contrastor.Comparison;

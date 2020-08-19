@@ -130,7 +130,7 @@
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
               <bindingIncludes>
-                <include>org/omg/spec/api4kp/taxonomy/**/*.xjb</include>
+                <include>org/omg/spec/api4kp/_20200801/taxonomy/**/*.xjb</include>
                 <include>edu/mayo/ontology/**/*.xjb</include>
                 <include>API4KP/api4kp/services/**/*.xjb</include>
                 <include>**/*.episode</include>
@@ -141,7 +141,7 @@
                   <fileset>
                     <directory>${project.build.outputDirectory}/xsd</directory>
                     <includes>
-                      <include>org/omg/spec/api4kp/taxonomy/**/*.xsd</include>
+                      <include>org/omg/spec/api4kp/_20200801/taxonomy/**/*.xsd</include>
                       <include>edu/mayo/ontology/**/*.xsd</include>
                       <include>API4KP/api4kp/services/**/*.xsd</include>
                     </includes>
