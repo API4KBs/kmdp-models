@@ -24,15 +24,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.mayo.kmdp.registry.Registry;
 import org.omg.spec.api4kp._20200801.series.Versionable;
 import edu.mayo.kmdp.util.DateTimeUtil;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
-import edu.mayo.ontology.taxonomies.ccgentries.ConceptDefinitionTypeSeries;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
+import edu.mayo.ontology.taxonomies.kao.ccgentries.ConceptDefinitionTypeSeries;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.publicationeventtype.PublicationEventTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.publishingrole.PublishingRoleSeries;
-import edu.mayo.ontology.taxonomies.mimetype.MIMETypeSeries;
-import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConceptSeries;
+import edu.mayo.ontology.taxonomies.ws.mimetype.MIMETypeSeries;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.relatedconcept.RelatedConceptSeries;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -87,7 +88,7 @@ public class VersionAgnosticVocabularyTest {
     assertNotNull(PublishingRoleSeries.Author);
     assertNotNull(PublicationStatusSeries.Draft);
     assertNotNull(PublicationEventTypeSeries.Authoring);
-    assertNotNull(AnnotationRelTypeSeries.Defines);
+    assertNotNull(SemanticAnnotationRelTypeSeries.Defines);
 
     assertNotNull(RelatedConceptSeries.Has_Broader);
 
@@ -103,6 +104,7 @@ public class VersionAgnosticVocabularyTest {
     assertNotNull(ConceptDefinitionTypeSeries.Interactive_Concept_Definition);
     
     assertNotNull(MIMETypeSeries.Application_Xml);
+    assertNotNull(ResponseCodeSeries.OK);
     assertNotNull(ResponseCodeSeries.SwitchingProtocols);
   }
 

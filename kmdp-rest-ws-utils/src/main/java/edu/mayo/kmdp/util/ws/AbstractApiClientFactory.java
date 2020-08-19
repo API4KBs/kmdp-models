@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp.util.ws;
 
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;

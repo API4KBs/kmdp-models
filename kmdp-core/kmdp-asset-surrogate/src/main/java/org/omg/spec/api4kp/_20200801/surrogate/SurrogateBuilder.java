@@ -44,7 +44,7 @@ import static org.omg.spec.api4kp.taxonomy.lexicon.LexiconSeries.SKOS;
 
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.UUID;
@@ -178,17 +178,17 @@ public class SurrogateBuilder {
     get().withRole(Operational_Concept_Definition);
 
     if (proposition != null) {
-      this.withAnnotation(AnnotationRelTypeSeries.Defines.asConceptIdentifier(),
+      this.withAnnotation(SemanticAnnotationRelTypeSeries.Defines.asConceptIdentifier(),
           proposition.asConceptIdentifier());
     }
 
     if (subject != null) {
-      this.withAnnotation(AnnotationRelTypeSeries.Has_Primary_Subject.asConceptIdentifier(),
+      this.withAnnotation(SemanticAnnotationRelTypeSeries.Has_Primary_Subject.asConceptIdentifier(),
           subject.asConceptIdentifier());
     }
 
     Arrays.stream(inputs).forEach(input ->
-        this.withAnnotation(AnnotationRelTypeSeries.In_Terms_Of.asConceptIdentifier(),
+        this.withAnnotation(SemanticAnnotationRelTypeSeries.In_Terms_Of.asConceptIdentifier(),
             input.asConceptIdentifier())
     );
 

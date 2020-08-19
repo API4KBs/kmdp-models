@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -76,8 +76,8 @@ class AnswerTest {
   @Test
   void testCode() {
     Answer<String> ans1 = Answer.of(202, "foo", Collections.emptyMap());
-    Answer<String> ans2 = Answer.of(ResponseCode.OK.getTag(), "foo", Collections.emptyMap());
-    Answer<String> ans3 = Answer.of(ResponseCode.OK, "foo", Collections.emptyMap());
+    Answer<String> ans2 = Answer.of(ResponseCodeSeries.OK.getTag(), "foo", Collections.emptyMap());
+    Answer<String> ans3 = Answer.of(ResponseCodeSeries.OK, "foo", Collections.emptyMap());
 
     assertTrue(ans1.isSuccess());
     assertTrue(ans2.isSuccess());
@@ -91,7 +91,7 @@ class AnswerTest {
     Map<String, List<String>> headers = new HashMap<>();
     headers.put("Link", Collections.singletonList(backLink));
 
-    Answer<String> ans = Answer.of(ResponseCode.OK, "foo", headers);
+    Answer<String> ans = Answer.of(ResponseCodeSeries.OK, "foo", headers);
 
     assertEquals(backLink, ans.getMeta("Link").orElse("META not found"));
   }
@@ -99,7 +99,7 @@ class AnswerTest {
   @Test
   void testExplanationConstruction() {
     String msg = "This is the history";
-    Answer<String> ans = Answer.of(ResponseCode.OK, "foo").withExplanation(msg);
+    Answer<String> ans = Answer.of(ResponseCodeSeries.OK, "foo").withExplanation(msg);
     assertEquals(msg, ans.printExplanation());
   }
 

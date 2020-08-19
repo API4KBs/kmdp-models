@@ -25,8 +25,8 @@ import static org.omg.spec.api4kp.taxonomy.krlanguage.KnowledgeRepresentationLan
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.mimetype.IMIMEType;
-import edu.mayo.ontology.taxonomies.mimetype.MIMETypeSeries;
+import edu.mayo.ontology.taxonomies.ws.mimetype.IMIMEType;
+import edu.mayo.ontology.taxonomies.ws.mimetype.MIMETypeSeries;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.StringTokenizer;

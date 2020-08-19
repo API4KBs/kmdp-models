@@ -12,7 +12,7 @@ import edu.mayo.kmdp.idl.Type;
 import edu.mayo.kmdp.idl.ext.Service;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.Parameter;

@@ -33,7 +33,7 @@ public class TermsYamlTest {
   @Test
   public void testSkosTerms() {
     Swagger model = parseValidateGroup(
-        "/yaml/edu/mayo/ontology/taxonomies/skos/relatedconcept/RelatedConcept.yaml");
+        "/yaml/edu/mayo/ontology/taxonomies/kmdo/relatedconcept/RelatedConcept.yaml");
     assertEquals(2, model.getDefinitions().size());
   }
 }

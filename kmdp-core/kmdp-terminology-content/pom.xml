@@ -585,9 +585,9 @@
               <entityType>OBJ_PROP</entityType>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://ontology.mayo.edu/taxonomies/KMDO/AnnotationRelType</skosNamespace>
-              <schemeName>AnnotationRelTypes</schemeName>
-              <topConceptName>AnnotationRelType</topConceptName>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType</skosNamespace>
+              <schemeName>SemanticAnnotationRelTypes</schemeName>
+              <topConceptName>SemanticAnnotationRelType</topConceptName>
 
               <skosOutputFiles>
                 <skosOutputFile>ann.skos.rdf</skosOutputFile>
@@ -613,7 +613,7 @@
               <minDepth>1</minDepth>
               <reason>true</reason>
 
-              <skosNamespace>https://ontology.mayo.edu/taxonomies/MIMEType</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/ws/MIMEType</skosNamespace>
               <schemeName>MIMETypes</schemeName>
               <topConceptName>MIMEType</topConceptName>
 
@@ -783,7 +783,7 @@
               <owlNamespace>http://www.w3.org/2004/02/skos/core</owlNamespace>
               <targetURI>http://www.w3.org/2004/02/skos/core#semanticRelation</targetURI>
 
-              <skosNamespace>https://ontology.mayo.edu/taxonomies/skos/RelatedConcept</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/KMDO/RelatedConcept</skosNamespace>
               <schemeName>RelatedConcepts</schemeName>
               <topConceptName>RelatedConcept</topConceptName>
 
@@ -890,7 +890,7 @@
               <targetURI>http://www.w3.org/2011/http#StatusCode</targetURI>
               <entityType>INST</entityType>
 
-              <skosNamespace>https://ontology.mayo.edu/taxonomies/API4KP/ResponseCodes</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/ws/ResponseCodes</skosNamespace>
               <schemeName>ResponseCodes</schemeName>
               <topConceptName>ResponseCode</topConceptName>
 
@@ -915,7 +915,7 @@
               <targetURI>http://ontology.mayo.edu/ontologies/CCG/ConceptGlossaryEntry</targetURI>
               <minDepth>1</minDepth>
 
-              <skosNamespace>https://ontology.mayo.edu/taxonomies/ccgEntries</skosNamespace>
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/kao/ccgEntries</skosNamespace>
               <schemeName>ConceptDefinitionTypes</schemeName>
               <topConceptName>ConceptDefinitionType</topConceptName>
 

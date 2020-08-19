@@ -9,7 +9,7 @@ import edu.mayo.kmdp.idl.Struct;
 import edu.mayo.kmdp.idl.Type;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.StreamUtil;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes._2011.ResponseCode;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import io.swagger.models.ComposedModel;
 import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
@@ -153,8 +153,8 @@ class TypeProvider {
 
   Type getReturnType(Operation swaggerOp) {
     return Optional.ofNullable(swaggerOp.getResponses()
-        .getOrDefault(ResponseCode.Created.getTag(),
-            swaggerOp.getResponses().getOrDefault(ResponseCode.OK.getTag(),
+        .getOrDefault(ResponseCodeSeries.Created.getTag(),
+            swaggerOp.getResponses().getOrDefault(ResponseCodeSeries.OK.getTag(),
                 null)))
         .map(this::toIDLType)
         .orElse(new Type(VOID));

@@ -15,7 +15,7 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConcept;
+import edu.mayo.ontology.taxonomies.kmdo.relatedconcept.RelatedConcept;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp.taxonomy.knowledgeassetcategory.KnowledgeAssetCategory;
 import org.omg.spec.api4kp.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;

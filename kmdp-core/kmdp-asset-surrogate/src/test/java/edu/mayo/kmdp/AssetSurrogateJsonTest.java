@@ -44,7 +44,7 @@ import static org.omg.spec.api4kp.taxonomy.variantreltype.VariantTypeSeries.Is_T
 
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.Term;
@@ -179,7 +179,7 @@ public class AssetSurrogateJsonTest {
         .withDescription("This is a test")
 
         .withAnnotation(new Annotation()
-            .withRel(AnnotationRelTypeSeries.Has_Primary_Subject.getLatest().asConceptIdentifier())
+            .withRel(SemanticAnnotationRelTypeSeries.Has_Primary_Subject.getLatest().asConceptIdentifier())
             .withRef(Term.mock("fooLabel", "123456").asConceptIdentifier()))
 
         .withLinks(new Derivative()

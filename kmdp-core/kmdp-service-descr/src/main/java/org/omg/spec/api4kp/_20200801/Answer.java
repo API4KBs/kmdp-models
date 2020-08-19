@@ -18,8 +18,8 @@ package org.omg.spec.api4kp._20200801;
 
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCode;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;

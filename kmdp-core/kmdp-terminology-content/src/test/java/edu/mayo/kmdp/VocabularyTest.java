@@ -23,15 +23,16 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.ontology.taxonomies.ccgentries.ConceptDefinitionTypeSeries;
+import edu.mayo.ontology.taxonomies.kao.ccgentries.ConceptDefinitionTypeSeries;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.publicationeventtype.PublicationEventTypeSeries;
-import org.omg.spec.api4kp.taxonomy.publicationstatus.PublicationStatusSeries;
 import edu.mayo.ontology.taxonomies.kmdo.publishingrole.PublishingRoleSeries;
-import edu.mayo.ontology.taxonomies.mimetype.MIMETypeSeries;
-import edu.mayo.ontology.taxonomies.skos.relatedconcept.RelatedConceptSeries;
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.relatedconcept.RelatedConceptSeries;
+import edu.mayo.ontology.taxonomies.ws.mimetype.MIMETypeSeries;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -43,6 +44,8 @@ import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp.taxonomy.dependencyreltype.DependencyTypeSeries;
+import org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationTypeSeries;
 import org.omg.spec.api4kp.taxonomy.iso639_2_languagecode.Language;
 import org.omg.spec.api4kp.taxonomy.iso639_2_languagecode.LanguageSeries;
 import org.omg.spec.api4kp.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
@@ -58,8 +61,7 @@ import org.omg.spec.api4kp.taxonomy.krserialization.KnowledgeRepresentationLangu
 import org.omg.spec.api4kp.taxonomy.languagerole.KnowledgeRepresentationLanguageRoleSeries;
 import org.omg.spec.api4kp.taxonomy.lexicon.LexiconSeries;
 import org.omg.spec.api4kp.taxonomy.parsinglevel.ParsingLevelSeries;
-import org.omg.spec.api4kp.taxonomy.dependencyreltype.DependencyTypeSeries;
-import org.omg.spec.api4kp.taxonomy.derivationreltype.DerivationTypeSeries;
+import org.omg.spec.api4kp.taxonomy.publicationstatus.PublicationStatusSeries;
 import org.omg.spec.api4kp.taxonomy.relatedversiontype.RelatedVersionTypeSeries;
 import org.omg.spec.api4kp.taxonomy.structuralreltype.StructuralPartTypeSeries;
 import org.omg.spec.api4kp.taxonomy.summaryreltype.SummarizationTypeSeries;
@@ -95,7 +97,8 @@ public class VocabularyTest {
 
     assertNotNull(PublicationStatusSeries.Draft);
     assertNotNull(MIMETypeSeries.Application_Pdf);
-    assertNotNull(AnnotationRelTypeSeries.Defines);
+    assertNotNull(ResponseCodeSeries.OK);
+    assertNotNull(SemanticAnnotationRelTypeSeries.Defines);
     assertNotNull(DecisionTypeSeries.Aggregation_Decision);
     assertNotNull(ConceptDefinitionTypeSeries.Interactive_Concept_Definition);
   }
