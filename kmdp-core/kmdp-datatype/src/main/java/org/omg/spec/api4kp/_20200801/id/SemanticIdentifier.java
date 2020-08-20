@@ -13,7 +13,9 @@ import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -618,7 +620,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   static URI toResourceId(String tag, URI namespace, UUID uuid) {
     String base = NameUtils.separatingName(namespace.toString());
     if (tag != null) {
-      return URI.create(base + tag);
+      return URI.create(base + URLEncoder.encode(tag, Charset.defaultCharset()));
     } else if (uuid != null) {
       return Util.ensureUUID(uuid.toString())
           .map(uuid1 -> URI.create(base + uuid1.toString()))
