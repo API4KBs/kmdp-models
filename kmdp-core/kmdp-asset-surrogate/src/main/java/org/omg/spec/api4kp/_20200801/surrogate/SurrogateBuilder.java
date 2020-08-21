@@ -329,12 +329,18 @@ public class SurrogateBuilder {
   }
 
   public static ResourceIdentifier assetId(UUID uuid, String versionTag) {
-    return assetId(uuid.toString(),versionTag);
+    return assetId(uuid.toString(),
+        VersionIdentifier.toSemVer(versionTag));
   }
 
   public static ResourceIdentifier randomAssetId() {
     return assetId(UUID.randomUUID(),VERSION_ZERO);
   }
+
+  public static ResourceIdentifier randomAssetId(URI baseNamespace) {
+    return SemanticIdentifier.newId(baseNamespace,UUID.randomUUID(),VERSION_ZERO);
+  }
+
 
   public static ResourceIdentifier artifactId(String uuid, String versionTag) {
     return SemanticIdentifier.newId(Registry.MAYO_ARTIFACTS_BASE_URI_URI, uuid,
@@ -342,11 +348,16 @@ public class SurrogateBuilder {
   }
 
   public static ResourceIdentifier artifactId(UUID uuid, String versionTag) {
-    return artifactId(uuid.toString(),versionTag);
+    return artifactId(uuid.toString(),
+        VersionIdentifier.toSemVer(versionTag));
   }
 
   public static ResourceIdentifier randomArtifactId() {
     return artifactId(UUID.randomUUID(),VERSION_ZERO);
+  }
+
+  public static ResourceIdentifier randomArtifactId(URI baseNamespace) {
+    return SemanticIdentifier.newId(baseNamespace,UUID.randomUUID(),VERSION_ZERO);
   }
 
 }
