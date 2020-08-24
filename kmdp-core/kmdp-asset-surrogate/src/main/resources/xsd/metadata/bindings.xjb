@@ -2,6 +2,7 @@
   xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
   xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
+  xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
   xmlns:annox="http://annox.dev.java.net"
   xmlns:fn="http://www.w3.org/2005/xpath-functions"
   jxb:extensionBindingPrefixes="xjc annox"
@@ -17,7 +18,9 @@
   <jxb:bindings schemaLocation="v2/surrogate/surrogate.xsd">
     <xjc:simple/>
     <namespace:prefix name="surr"/>
-
+    <jxb:bindings node="//xsd:complexType[@name='Link']">
+      <inheritance:implements>org.omg.spec.api4kp._1_0.id.Link</inheritance:implements>
+    </jxb:bindings>
   </jxb:bindings>
 
 
