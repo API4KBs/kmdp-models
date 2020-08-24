@@ -45,6 +45,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.variantreltype.VariantTypeS
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
+import java.net.URI;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.Term;
@@ -125,7 +126,7 @@ public class AssetSurrogateJsonTest {
   @Test
   void testDeserializationOfKnownVocabularies() {
     KnowledgeAsset ks = new KnowledgeAsset()
-        .withAssetId(newId("http://foo.bar", "142412"))
+        .withAssetId(newId(URI.create("http://foo.bar"), "baz", "142412"))
         .withFormalCategory(Rules_Policies_And_Guidelines)
         .withFormalType(Clinical_Rule)
         .withProcessingMethod(Query_Technique)
