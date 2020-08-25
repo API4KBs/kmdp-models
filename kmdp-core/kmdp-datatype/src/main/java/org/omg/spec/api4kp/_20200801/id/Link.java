@@ -1,8 +1,6 @@
-package org.omg.spec.api4kp._1_0.id;
+package org.omg.spec.api4kp._20200801.id;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.mayo.kmdp.id.Term;
-
 import java.net.URI;
 
 public interface Link {

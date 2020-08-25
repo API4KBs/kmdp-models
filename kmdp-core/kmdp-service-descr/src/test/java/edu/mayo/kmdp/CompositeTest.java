@@ -13,12 +13,11 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.hashIdentifier
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structural_Component;
 
-import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.kmdp.util.StreamUtil;
-import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype.StructuralPartTypeSeries;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -35,10 +34,12 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.Link;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
+import org.omg.spec.api4kp._20200801.id.Link;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.CompositeStructType;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
@@ -144,18 +145,18 @@ public class CompositeTest {
                 artifact ->
                     JenaUtil.objA(
                         ckc.getAssetId().getVersionId().toString(),
-                        StructuralPartTypeSeries.Has_Structural_Component.getRef().toString(),
+                        Has_Structural_Component.getReferentId().toString(),
                         newId(uuid(artifact), VERSION_ZERO).getVersionId().toString()))
             .collect(Collectors.toList());
     hasStructuralStatements.add(
         JenaUtil.objA(
             newId(uuid("A"), VERSION_ZERO).getVersionId().toString(),
-            mockLinkB.getRel().getConceptId().toString(),
+            mockLinkB.getRel().getResourceId().toString(),
             mockLinkB.getHrefVersionURI().toString()));
     hasStructuralStatements.add(
         JenaUtil.objA(
             newId(uuid("A"), VERSION_ZERO).getVersionId().toString(),
-            mockLinkC.getRel().getConceptId().toString(),
+            mockLinkC.getRel().getResourceId().toString(),
             mockLinkC.getHrefVersionURI().toString()));
 
     String actualStruct = ckc.getStruct().getExpression().toString();
