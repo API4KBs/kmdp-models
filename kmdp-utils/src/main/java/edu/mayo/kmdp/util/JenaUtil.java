@@ -20,10 +20,20 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.apache.jena.rdf.model.ResourceFactory.createStringLiteral;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -46,8 +56,8 @@ import org.apache.jena.util.PrintUtil;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class JenaUtil {
   

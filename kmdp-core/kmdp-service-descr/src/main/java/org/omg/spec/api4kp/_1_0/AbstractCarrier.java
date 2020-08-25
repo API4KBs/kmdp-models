@@ -25,7 +25,11 @@ import static org.omg.spec.api4kp._1_0.id.SemanticIdentifier.randomId;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
-import edu.mayo.kmdp.util.*;
+import edu.mayo.kmdp.util.FileUtil;
+import edu.mayo.kmdp.util.JSonUtil;
+import edu.mayo.kmdp.util.JenaUtil;
+import edu.mayo.kmdp.util.Util;
+import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevel;
 import edu.mayo.ontology.taxonomies.api4kp.parsinglevel.ParsingLevelSeries;
 import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype.StructuralPartTypeSeries;
@@ -38,15 +42,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-
-import org.apache.jena.Jena;
-import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.Statement;
 import org.omg.spec.api4kp._1_0.contrastors.ParsingLevelContrastor;
-import org.omg.spec.api4kp._1_0.id.*;
+import org.omg.spec.api4kp._1_0.id.KeyIdentifier;
+import org.omg.spec.api4kp._1_0.id.Link;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.CompositeStructType;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;

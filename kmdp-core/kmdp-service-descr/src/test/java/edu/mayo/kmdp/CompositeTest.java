@@ -18,14 +18,18 @@ import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.terms.TermsHelper;
 import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.kmdp.util.StreamUtil;
-
+import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype.StructuralPartTypeSeries;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import edu.mayo.ontology.taxonomies.kao.rel.structuralreltype.StructuralPartTypeSeries;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
