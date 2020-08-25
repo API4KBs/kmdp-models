@@ -30,6 +30,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSe
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JSonUtil;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayOutputStream;
@@ -40,6 +41,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.omg.spec.api4kp._20200801.contrastors.ParsingLevelContrastor;
 import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
@@ -313,6 +315,22 @@ public interface AbstractCarrier {
       }
     }
     return (KnowledgeCarrier) this;
+  }
+
+  default <T> T mainComponentAs(Class<T> klass) {
+    return mainComponent()
+        .as(klass)
+        .orElseThrow(IllegalStateException::new);
+  }
+
+  default <T> Stream<T> componentsAs(Class<T> klass) {
+    if (this instanceof CompositeKnowledgeCarrier) {
+      return ((CompositeKnowledgeCarrier) this).getComponent().stream()
+          .map(kc -> kc.as(klass))
+          .flatMap(StreamUtil::trimStream);
+    } else {
+      return Stream.of(mainComponentAs(klass));
+    }
   }
 
 

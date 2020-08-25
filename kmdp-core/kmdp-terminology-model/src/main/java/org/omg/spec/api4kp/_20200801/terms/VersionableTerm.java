@@ -1,9 +1,9 @@
 package org.omg.spec.api4kp._20200801.terms;
 
+import java.util.Collection;
+import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.series.Series;
 import org.omg.spec.api4kp._20200801.series.Versionable;
-import org.omg.spec.api4kp._20200801.id.Term;
-import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
 
 public interface VersionableTerm<T extends Term & Versionable<T>,E extends Enum<E>>
     extends ConceptTerm<T>, Versionable<T> {
@@ -15,6 +15,14 @@ public interface VersionableTerm<T extends Term & Versionable<T>,E extends Enum<
 
   default boolean isSame(Term other) {
     return isSameVersion(other);
+  }
+
+  default boolean isAnyOf(Collection<? extends Term> others) {
+    return others.stream().anyMatch(this::isSame);
+  }
+
+  default boolean isNoneOf(Collection<? extends Term> others) {
+    return ! isAnyOf(others);
   }
 
   default boolean sameAs(Term other) {
