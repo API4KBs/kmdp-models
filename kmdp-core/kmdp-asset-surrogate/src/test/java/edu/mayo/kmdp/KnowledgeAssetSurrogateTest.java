@@ -35,6 +35,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Optional;
 import javax.xml.validation.Schema;
 import org.javers.core.diff.Diff;
@@ -64,7 +65,9 @@ public class KnowledgeAssetSurrogateTest {
         .withFormalCategory(br)
             .withCarriers(new KnowledgeArtifact()
                 .withArtifactId(randomArtifactId())
-                .withLifecycle(new Publication().withPublicationStatus(Draft))
+                .withLifecycle(new Publication()
+                    .withIssuedOn(new Date())
+                    .withPublicationStatus(Draft))
                 .withRepresentation(new SyntacticRepresentation().withLanguage(HTML))
             )
         .withAnnotation(new Annotation()
