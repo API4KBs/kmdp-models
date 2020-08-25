@@ -43,6 +43,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
+import org.apache.jena.Jena;
 import org.apache.jena.rdf.model.*;
 import org.omg.spec.api4kp._1_0.contrastors.ParsingLevelContrastor;
 import org.omg.spec.api4kp._1_0.id.*;
@@ -220,15 +221,11 @@ public interface AbstractCarrier {
     hashComponentIds(artifacts, assetIdentificator, ckc);
 
     // create a Struct in RDF
-    String struct = artifacts.stream()
-        .map(assetIdentificator)
-        .map(id -> new StringBuilder()
-            .append("<").append(ckc.getAssetId().getVersionId()).append(">")
-            .append(" ").append(HAS_MEMBER).append(" ")
-            .append("<").append(id.getVersionId()).append(">")
-            .append(".")
-        ).collect(Collectors.joining("\n"));
-    ckc.withStruct(of(struct)
+    List<Statement> structs = artifacts.stream()
+            .map(assetIdentificator)
+            .map(id -> JenaUtil.objA(ckc.getAssetId().getVersionId().toString(), StructuralPartTypeSeries.Has_Structural_Component.getRef().toString(), id.getVersionId().toString()))
+            .collect(Collectors.toList());
+    ckc.withStruct(of(JenaUtil.fromStatementsToString(structs))
         .withAssetId(ckc.getAssetId())
         .withArtifactId(randomId())
         .withRepresentation(rep(OWL_2,Turtle,TXT)));
