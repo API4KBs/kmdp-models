@@ -266,7 +266,7 @@ public interface AbstractCarrier {
       SyntacticRepresentation rep,
       Function<T, ResourceIdentifier> assetIdentificator,
       Function<T, ResourceIdentifier> artifactidentificator,
-      Function<T, Collection<Link>> visitor,
+      Function<T, Collection<? extends Link>> visitor,
       ResourceIdentifier rootId,
       Map<SemanticIdentifier, T> artifacts) {
     CompositeKnowledgeCarrier ckc =
