@@ -186,7 +186,7 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
 
   @Override
   public Date getEstablishedOn() {
-    return getVersions().get(0).getEstablishedOn();
+    return getVersions().get(getVersions().size() - 1).getEstablishedOn();
   }
 
   @Override

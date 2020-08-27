@@ -114,7 +114,7 @@ public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
 
   @Override
   public Date getEstablishedOn() {
-    return getVersions().get(schemeVersions.size() - 1).getEstablishedOn();
+    return getVersions().get(getVersions().size() - 1).getEstablishedOn();
   }
 
   @Override

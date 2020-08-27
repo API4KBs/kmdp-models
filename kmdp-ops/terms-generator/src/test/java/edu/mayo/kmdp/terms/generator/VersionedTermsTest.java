@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.terms.example.sch1.ISCH1;
 import edu.mayo.kmdp.terms.example.sch1.SCH1;
 import edu.mayo.kmdp.terms.example.sch1.SCH1Old;
@@ -30,8 +29,10 @@ import edu.mayo.kmdp.terms.example.sch1.SCH1Series;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.series.Series;
 
 class VersionedTermsTest {
 
@@ -71,6 +72,15 @@ class VersionedTermsTest {
     Optional<? extends ISCH1> y = SCH1Series.resolve("6789");
     assertTrue(y.isPresent());
 
+  }
+
+  @Test
+  public void testVersionEstablished() {
+    assertEquals(
+        SCH1Series.count(),
+        (int) Arrays.stream(SCH1Series.values())
+            .map(SCH1Series::getEstablishedOn)
+            .filter(Objects::nonNull).count());
   }
 
   @Test
