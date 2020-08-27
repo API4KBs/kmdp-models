@@ -13,6 +13,9 @@
  */
 package org.omg.spec.api4kp._20200801.surrogate;
 
+import static edu.mayo.kmdp.util.Util.uuid;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO;
 import static org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.LanguageSeries.English;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models;
@@ -32,6 +35,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.YAML_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.FHIRPath_STU1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.FHIR_STU3;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HL7_CQL;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate;
@@ -39,13 +43,12 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OpenAPI_2_X;
 import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries.OWL2_DL;
 import static org.omg.spec.api4kp._20200801.taxonomy.languagerole.KnowledgeRepresentationLanguageRoleSeries.Schema_Language;
-import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.KRR_Technique;
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.SKOS;
 
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.UUID;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
@@ -53,8 +56,6 @@ import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._20200801.surrogate.Annotation;
-import org.omg.spec.api4kp._20200801.surrogate.Applicability;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategory;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
@@ -87,7 +88,7 @@ public class SurrogateBuilder {
 
   private SurrogateBuilder withCanonicalSurrogate(ResourceIdentifier assetId) {
     ResourceIdentifier surrogateId = artifactId(
-        Util.uuid(assetId.getResourceId().toString()),
+        uuid(assetId.getResourceId().toString()),
         "1.0.0"
     );
     get().withSurrogate(
@@ -257,14 +258,19 @@ public class SurrogateBuilder {
     return this;
   }
 
-
   public SurrogateBuilder withInlinedFhirPath(String expr) {
+    return withInlinedFhirPath(expr, FHIR_STU3);
+  }
+
+  public SurrogateBuilder withInlinedFhirPath(String expr,
+      KnowledgeRepresentationLanguage schemaLanguage) {
     if (get().getCarriers().isEmpty()) {
       get().withCarriers(new KnowledgeArtifact()
-          .withArtifactId(artifactId(expr != null ? Util.uuid(expr) : UUID.randomUUID(), "LATEST"))
-          .withRepresentation(new SyntacticRepresentation()
-              .withLanguage(FHIRPath_STU1)
-              .withFormat(TXT))
+          .withArtifactId(
+              artifactId(expr != null ? uuid(expr) : UUID.randomUUID(),VERSION_LATEST))
+          .withRepresentation(
+              rep(FHIRPath_STU1,TXT,Charset.defaultCharset())
+              .withSubLanguage(rep(schemaLanguage).withRole(Schema_Language)))
           .withInlinedExpression(expr));
     }
     return this;

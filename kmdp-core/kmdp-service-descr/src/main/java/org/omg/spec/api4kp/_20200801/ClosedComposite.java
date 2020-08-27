@@ -22,6 +22,8 @@ public interface ClosedComposite<T,S, K extends ClosedComposite<T,S,K>> extends 
         fun,
         // preserve S (immutable)
         t -> t,
+        // preserve Rep (immutable)
+        rep -> rep,
         // clone K to hold the transformed components
         () -> (K) createNewInstance());
   }

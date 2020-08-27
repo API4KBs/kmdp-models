@@ -1,7 +1,8 @@
 package org.omg.spec.api4kp._20200801.surrogate;
 
+import static java.util.Collections.singletonList;
+
 import edu.mayo.kmdp.comparator.AbstractDiffer;
-import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationType;
 import edu.mayo.ontology.taxonomies.kmdo.publishingrole.PublishingRole;
 import java.util.Arrays;
@@ -11,6 +12,8 @@ import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
 import org.javers.core.MappingStyle;
 import org.javers.core.metamodel.clazz.EntityDefinition;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyType;
 import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationType;
 import org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.Language;
@@ -30,6 +33,7 @@ import org.omg.spec.api4kp._20200801.taxonomy.relatedversiontype.RelatedVersionT
 import org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartType;
 import org.omg.spec.api4kp._20200801.taxonomy.summaryreltype.SummarizationType;
 import org.omg.spec.api4kp._20200801.taxonomy.variantreltype.VariantType;
+import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 
 public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 
@@ -46,11 +50,13 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
         .withMappingStyle(MappingStyle.BEAN)
 
         .registerEntity(
-            new EntityDefinition(KnowledgeAsset.class, "assetId",
-                Arrays.asList("carriers", "annotation")))
+            new EntityDefinition(KnowledgeAsset.class,
+                "assetId",
+                singletonList("lifecycle")))
         .registerEntity(
-            new EntityDefinition(KnowledgeArtifact.class, "artifactId")
-        );
+            new EntityDefinition(KnowledgeArtifact.class,
+                "artifactId",
+                singletonList("lifecycle")));
 
     configureTerminology(builder);
 
@@ -91,6 +97,9 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 
     valuesetKlasses.forEach(klass ->
         builder.registerValue(klass, VersionableTerm::isSameEntity, Objects::toString));
+
+    builder.registerValue(ConceptIdentifier.class,
+        SemanticIdentifier::sameAs, c -> c.getResourceId() + " | " + c.getLabel());
 
   }
 }

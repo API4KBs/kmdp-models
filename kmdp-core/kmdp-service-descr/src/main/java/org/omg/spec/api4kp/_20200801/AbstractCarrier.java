@@ -224,6 +224,8 @@ public interface AbstractCarrier {
     CompositeKnowledgeCarrier ckc =
         new CompositeKnowledgeCarrier().withStructType(CompositeStructType.SET);
     ParsingLevel level = ParsingLevelContrastor.detectLevel(rep);
+    ckc.withRepresentation(rep);
+    ckc.withLevel(level);
 
     // wrap the components into KnowledgeCarriers
     wrapComponents(rep, artifacts, level, assetIdentificator, artifactidentificator, ckc);
@@ -272,6 +274,8 @@ public interface AbstractCarrier {
     CompositeKnowledgeCarrier ckc =
         new CompositeKnowledgeCarrier().withStructType(CompositeStructType.TREE);
     ParsingLevel level = ParsingLevelContrastor.detectLevel(rep);
+    ckc.withRepresentation(rep);
+    ckc.withLevel(level);
 
     // wrap the components into KnowledgeCarriers
     wrapComponents(rep, artifacts.values(), level, assetIdentificator, artifactidentificator, ckc);
@@ -426,6 +430,17 @@ public interface AbstractCarrier {
           .flatMap(StreamUtil::trimStream);
     } else {
       return Stream.of(mainComponentAs(klass));
+    }
+  }
+
+  default <T> Optional<T> componentAs(SemanticIdentifier id, Class<T> klass) {
+    if (this instanceof CompositeKnowledgeCarrier) {
+      return ((CompositeKnowledgeCarrier) this).getComponent().stream()
+          .filter(kc -> kc.getAssetId().asKey().equals(id.asKey()))
+          .findFirst()
+          .flatMap(kc -> kc.as(klass));
+    } else {
+      return this.as(klass);
     }
   }
 

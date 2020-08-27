@@ -15,7 +15,14 @@
  */
 package org.omg.spec.api4kp._20200801.surrogate;
 
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
+
+import com.google.common.base.Functions;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,13 +31,20 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.validation.Schema;
+import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.Link;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.CompositeStructType;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.languagerole.KnowledgeRepresentationLanguageRole;
+import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 
 public class SurrogateHelper {
 
@@ -170,5 +184,68 @@ public class SurrogateHelper {
         .map(cka -> cka.withArtifactId(newSurrogateId))
         .map(KnowledgeArtifact::getArtifactId)
         .orElse(null);
+  }
+
+
+  /**
+   * Constructs a Composite Surrogate for a Composite Asset, instantiating a CompositeKnowledgeCarrier
+   * whose components are Asset Surrogates
+   *
+   * @param rootAssetId The root component (if the Struct is TREE-based, null otherwise)
+   * @param components The components, which must be KnowledgeAsset surrogates
+   * @param structType The type of structure (supports SET and TREE)
+   * @return a CompositeKnowledgeCarrier with wrapped KnowledgeAsset components
+   */
+  public static CompositeKnowledgeCarrier toCompositeAsset(
+      ResourceIdentifier rootAssetId,
+      Collection<KnowledgeAsset> components,
+      CompositeStructType structType) {
+
+    switch (structType) {
+      case SET:
+        return AbstractCarrier.ofIdentifiableSet(
+            rep(Knowledge_Asset_Surrogate_2_0),
+            KnowledgeAsset::getAssetId,
+            ka -> SurrogateHelper.getSurrogateId(ka, Knowledge_Asset_Surrogate_2_0, JSON)
+                .orElseGet(SurrogateBuilder::randomArtifactId),
+            components
+        );
+      case TREE:
+        return AbstractCarrier.ofIdentifiableTree(
+            rep(Knowledge_Asset_Surrogate_2_0),
+            KnowledgeAsset::getAssetId,
+            ka -> SurrogateHelper.getSurrogateId(ka, Knowledge_Asset_Surrogate_2_0, JSON)
+                .orElseGet(SurrogateBuilder::randomArtifactId),
+            KnowledgeAsset::getLinks,
+            rootAssetId,
+            components.stream().collect(
+                Collectors.toMap(
+                    KnowledgeAsset::getAssetId,
+                    Functions.identity()
+                )
+            )
+        ).withRootId(rootAssetId);
+      case GRAPH:
+      default:
+        throw new UnsupportedOperationException();
+    }
+  }
+
+  /** Filter utility method that, given a KnowledgeAsset Surrogate,
+   *  allows to retrieve the 'related' assets by relationship type
+   *
+   * @param surr the Surrogate to navigate
+   * @param relClass the type of Link (dependency, component, etc)
+   * @param relType an optional semantic type
+   * @return a Stream of the (IDs of the) related Assets
+   */
+  public static Stream<SemanticIdentifier> links(
+      KnowledgeAsset surr, Class<? extends Link> relClass, VersionableTerm<?,?> relType ) {
+    return surr.getLinks().stream()
+        .flatMap(StreamUtil.filterAs(relClass))
+        .filter(rel -> relType == null || relType.sameAs(rel.getRel())
+            || (rel.getRel() instanceof ConceptTerm && ((ConceptTerm<?>) rel.getRel()).hasAncestor(relType))
+        )
+        .map(Link::getHref);
   }
 }

@@ -1,6 +1,7 @@
 package org.omg.spec.api4kp._20200801.id;
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
+import static java.util.Arrays.copyOfRange;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS_RX;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
 
@@ -84,6 +85,26 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
             : Util.uuid(tag));
   }
 
+
+  /**
+   * Generate a ResourceIdentifier from a URN
+   * that follows the pattern [base_urn]:{uuid}:{versionTag}
+   *
+   * @return ResourceIdentifier with required values set
+   */
+  static ResourceIdentifier newUrnVersionId(String versionUrn) {
+    String[] segments = versionUrn.split(":");
+    int n = segments.length;
+    if (n < 2) {
+      throw new IllegalArgumentException("Unable to construct a URN-based versioned URI from " + versionUrn);
+    }
+    String versionTag = segments[n-1];
+    String tag = segments[n-2];
+    URI base = n > 2
+        ? URI.create(String.join(":", copyOfRange(segments, 0, n - 2)))
+        : BASE_UUID_URN_URI;
+    return newId(base, tag, versionTag);
+  }
 
   /**
    * Generate resourceIdentifier for URI that includes version information according to known

@@ -1,26 +1,30 @@
 package edu.mayo.kmdp;
 
-import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
-import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomArtifactId;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
 
 import edu.mayo.kmdp.comparator.AbstractDiffer.Mode;
 import edu.mayo.kmdp.comparator.Contrastor.Comparison;
-import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
-import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
-import org.omg.spec.api4kp._20200801.surrogate.Publication;
-import org.omg.spec.api4kp._20200801.surrogate.SurrogateDiffer;
 import java.net.URI;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
+import org.omg.spec.api4kp._20200801.surrogate.Dependency;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.surrogate.Publication;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateDiffer;
+import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.snapshot.DependencyType;
 
-public class AssetSurrogateDiffTest {
+class AssetSurrogateDiffTest {
 
 
   @Test
@@ -42,21 +46,31 @@ public class AssetSurrogateDiffTest {
   @Test
   void testDiffExclusion() {
     SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
+    ResourceIdentifier tgtRef = randomAssetId();
 
     KnowledgeAsset base = new KnowledgeAsset()
         .withAssetId(randomAssetId())
         .withFormalType(Clinical_Rule)
         .withCarriers(new KnowledgeArtifact()
-            .withArtifactId(randomArtifactId())
-            .withLifecycle(new Publication()
-                .withCreatedOn(new Date())
-                .withPublicationStatus(Draft)));
+            .withArtifactId(randomArtifactId()));
 
     KnowledgeAsset mod = ((KnowledgeAsset) base.clone());
+
     mod.getCarriers().get(0)
         .withLifecycle(new Publication()
             .withCreatedOn(new Date())
             .withPublicationStatus(Published));
+    base.getCarriers().get(0)
+        .withLifecycle(new Publication()
+            .withCreatedOn(new Date())
+            .withPublicationStatus(Draft));
+
+    base.withLinks(new Dependency()
+        .withRel(Depends_On)
+        .withHref(tgtRef));
+    mod.withLinks(new Dependency()
+        .withRel(DependencyType.Depends_On)
+        .withHref(tgtRef));
 
     Comparison delta = differ.contrast(mod, base);
     assertSame(Comparison.EQUIVALENT, delta);
@@ -89,7 +103,6 @@ public class AssetSurrogateDiffTest {
     SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
 
     ConceptIdentifier trm = Term.mock("Foo", "1234").asConceptIdentifier();
-
     KnowledgeAsset base = new KnowledgeAsset()
         .withAssetId(randomAssetId())
         .withAnnotation(new Annotation()
