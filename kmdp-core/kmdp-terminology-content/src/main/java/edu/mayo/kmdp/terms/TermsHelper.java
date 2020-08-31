@@ -78,6 +78,7 @@ public class TermsHelper {
     return new ConceptIdentifier()
         .withName(label)
         .withTag(code)
+        .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
         .withNamespaceUri(URI.create("http://ontology.mayo.edu/taxonomies/TODO"))
         .withResourceId(URI.create("http://ontology.mayo.edu/taxonomies/TODO#" + code))
         .withReferentId(URI.create("http://ontology.mayo.edu/taxonomies/TODO#" + code));
