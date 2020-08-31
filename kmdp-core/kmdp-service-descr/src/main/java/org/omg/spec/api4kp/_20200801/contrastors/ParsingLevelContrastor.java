@@ -82,7 +82,7 @@ public class ParsingLevelContrastor extends Contrastor<ParsingLevel> implements
   }
 
   public int compare(ParsingLevel l1, ParsingLevel l2) {
-    if (l1 == l2 || l1.asEnum() == Knowledge_Expression
+    if (l1 == l2 || l1.sameAs(l2) || l1.asEnum() == Knowledge_Expression
         || l2.asEnum() == Knowledge_Expression) {
       return 0;
     }
