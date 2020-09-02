@@ -28,9 +28,9 @@ public abstract class TermsXMLAdapter extends
   @Override
   public Term unmarshal(org.omg.spec.api4kp._20200801.id.ConceptIdentifier v) {
     return DatatypeHelper.resolveTerm(
-        v.getTag(),
+        v.getUuid(),
         v.getVersionTag() != null ? getValuesForVersion(v.getVersionTag()) : getValues(),
-        Term::getTag)
+        Term::getUuid)
         .orElse(null);
   }
 
@@ -41,6 +41,8 @@ public abstract class TermsXMLAdapter extends
 
   protected abstract Term[] getValues();
 
+  @Deprecated
+  // Need performance improvement
   protected Term[] getValuesForVersion( final String versionTag ) {
     return Arrays.stream(getValues())
         .map(x -> getVersion(x,versionTag))
@@ -49,9 +51,22 @@ public abstract class TermsXMLAdapter extends
   }
 
   private Optional<? extends Term> getVersion(Term x, String versionTag) {
-    return x instanceof Series
-        ? (Optional<? extends Term>) ((Series<?>) x).getVersion(versionTag)
-        : Optional.of(x);
+    if (x instanceof Series) {
+        Series<? extends Term> series = ((Series<? extends Term>) x);
+        Optional<? extends Term> termVersion
+            = series.getVersion(versionTag);
+        if (termVersion.isEmpty() && isSnapshot(versionTag)) {
+          termVersion
+              = Optional.ofNullable(series.getLatest());
+        }
+        return termVersion;
+    } else {
+      return Optional.of(x);
+    }
+  }
+
+  private boolean isSnapshot(String versionTag) {
+    return versionTag.contains("-");
   }
 
 }

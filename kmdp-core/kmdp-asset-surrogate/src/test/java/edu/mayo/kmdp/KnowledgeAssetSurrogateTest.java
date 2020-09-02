@@ -13,18 +13,19 @@
  */
 package edu.mayo.kmdp;
 
-import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomArtifactId;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
 import static org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries.Is_Derived_From;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.KNART_1_3;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
 
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
@@ -42,15 +43,18 @@ import org.javers.core.diff.Diff;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.surrogate.Annotation;
+import org.omg.spec.api4kp._20200801.surrogate.Applicability;
+import org.omg.spec.api4kp._20200801.surrogate.Dependency;
 import org.omg.spec.api4kp._20200801.surrogate.Derivative;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.surrogate.Link;
 import org.omg.spec.api4kp._20200801.surrogate.ObjectFactory;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateDiffer;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
-import org.omg.spec.api4kp._20200801.surrogate.Annotation;
-import org.omg.spec.api4kp._20200801.surrogate.Applicability;
-import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategory;
 
 public class KnowledgeAssetSurrogateTest {
@@ -87,6 +91,27 @@ public class KnowledgeAssetSurrogateTest {
     assertNotNull(ks);
     ks = checkRoundTrip(ks);
     assertEquals("x123", ks.getApplicableIn().getSituation().get(0).getTag());
+  }
+
+  @Test
+  public void testLinks() {
+    KnowledgeAsset ks = new KnowledgeAsset()
+        .withAssetId(newId(URI.create("http://foo.bar/"), "89341", "0.0.0"))
+        .withName("Foo")
+        .withLinks(new Dependency()
+            .withRel(DependencyTypeSeries.Imports)
+            .withHref(randomAssetId()));
+    assertNotNull(ks);
+
+    ks = checkRoundTrip(ks);
+    assertFalse(ks.getLinks().isEmpty());
+
+    Link link = ks.getLinks().get(0);
+    assertTrue(link instanceof Dependency);
+
+    Dependency dep = (Dependency) link;
+    assertNotNull(dep.getHref());
+    assertNotNull(dep.getRel());
   }
 
   @Test

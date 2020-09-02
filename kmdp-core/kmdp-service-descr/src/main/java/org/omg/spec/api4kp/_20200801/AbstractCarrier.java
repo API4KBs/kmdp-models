@@ -721,7 +721,7 @@ public interface AbstractCarrier {
       return JSonUtil.writeJsonAsString(this.getExpression());
     }
     if (this.getExpression() != null) {
-      return Optional.ofNullable(this.getExpression() != null ? this.getExpression().toString() : null);
+      return Optional.ofNullable(this.getExpression().toString());
     }
     return Optional.empty();
   }
