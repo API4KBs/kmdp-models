@@ -91,4 +91,15 @@ class DateTimeUtilTest {
     assertNotNull(d);
   }
 
+  @Test
+  public void testIsSameDay() {
+    Date d1 = DateTimeUtil.parseDateTime(
+        "2019-08-06T22:16:54Z",
+        "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    Date d2 = DateTimeUtil.parseDate(
+        "2019-08-06");
+
+    assertTrue(DateTimeUtil.isSameDay(d1,d2));
+  }
+
 }

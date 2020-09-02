@@ -445,5 +445,11 @@ public class DateTimeUtil {
     }
   }
 
+  public static boolean isSameDay(Date d1, Date d2) {
+    if (d1 == null || d2 == null) {
+      return false;
+    }
+    return toLocalDate(d1).atStartOfDay().equals(toLocalDate(d2).atStartOfDay());
+  }
 
 }
