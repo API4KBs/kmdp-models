@@ -24,7 +24,7 @@
   <public uri="file:///api4kp-catalog.xml"
     publicId="https://www.omg.org/spec/API4KP/1.0/"/>
 
-  <public uri="file:///km-metadata-catalog.xml"
-    publicId="http://kmdp.mayo.edu/metadata/surrogate"/>
+  <public uri="file:///km-surrogate-catalog.xml"
+    publicId="https://www.omg.org/spec/API4KP/20200801/metadata"/>
 
 </catalog>

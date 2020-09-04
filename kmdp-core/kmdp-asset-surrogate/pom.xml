@@ -144,7 +144,7 @@
             </goals>
             <phase>process-resources</phase>
             <configuration>
-              <catalog>${project.build.outputDirectory}${s}xsd${s}km-metadata-catalog.xml</catalog>
+              <catalog>${project.build.outputDirectory}${s}xsd${s}km-surrogate-catalog.xml</catalog>
 
               <bindingDirectory>${project.build.outputDirectory}${s}xsd</bindingDirectory>
               <bindingIncludes>
