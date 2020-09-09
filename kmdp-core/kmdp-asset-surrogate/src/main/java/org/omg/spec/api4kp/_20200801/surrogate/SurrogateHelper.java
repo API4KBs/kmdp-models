@@ -18,6 +18,8 @@ package org.omg.spec.api4kp._20200801.surrogate;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Concrete_Knowledge_Expression;
+import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Knowledge_Expression;
 
 import com.google.common.base.Functions;
 import edu.mayo.kmdp.util.StreamUtil;
@@ -39,6 +41,7 @@ import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.CompositeStructType;
+import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
@@ -247,5 +250,31 @@ public class SurrogateHelper {
             || (rel.getRel() instanceof ConceptTerm && ((ConceptTerm<?>) rel.getRel()).hasAncestor(relType))
         )
         .map(Link::getHref);
+  }
+
+  /**
+   * Converts a KnowledgeAsset Surrogate (KA) to a KnowledgeCarrier (KC)
+   * Both structures contain metadata about a Knowledge Artifact:
+   * KA is designed to be used 'at rest', while KC is optimized for processing.
+   *
+   * This function initializes a KC using the subset of relevant metadata contained in a KA,
+   * using the 'first' referenced carrier Artifact if present.
+   *
+   * @param surrogate The source Knowledge Asset Surrogate
+   * @return A KnowledgeCarrier that preserves the relevant metadata
+   */
+  public static KnowledgeCarrier toRuntimeSurrogate(KnowledgeAsset surrogate) {
+    Optional<KnowledgeArtifact> canonicalArtifact
+        = surrogate.getCarriers().stream().findFirst();
+    String inlined = canonicalArtifact.map(KnowledgeArtifact::getInlinedExpression).orElse(null);
+
+    return new KnowledgeCarrier()
+        .withAssetId(surrogate.getAssetId())
+        .withArtifactId(canonicalArtifact.map(KnowledgeArtifact::getArtifactId).orElse(null))
+        .withExpression(inlined)
+        .withLabel(surrogate.getName())
+        .withLevel(inlined != null ? Concrete_Knowledge_Expression : Knowledge_Expression)
+        .withRepresentation(canonicalArtifact.map(KnowledgeArtifact::getRepresentation).orElse(null))
+        .withHref(canonicalArtifact.map(KnowledgeArtifact::getLocator).orElse(null));
   }
 }
