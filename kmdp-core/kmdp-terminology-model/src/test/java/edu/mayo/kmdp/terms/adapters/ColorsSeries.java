@@ -101,6 +101,11 @@ public enum ColorsSeries implements IColors, Series<IColors> {
   }
 
   @Override
+  public URI getVersionId() {
+    return null;
+  }
+
+  @Override
   public String getVersionTag() {
     return null;
   }

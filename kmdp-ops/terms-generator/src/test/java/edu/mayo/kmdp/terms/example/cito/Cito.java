@@ -99,6 +99,10 @@ public enum Cito implements ICito {
     return SemanticIdentifier.newId(namespace.getResourceId(), this.getTag(), namespace.getVersionTag());
   }
 
+  public URI getVersionId() {
+    return description.getVersionId();
+  }
+
   @Override
   public CitoSeries asEnum() {
     return toSeries();

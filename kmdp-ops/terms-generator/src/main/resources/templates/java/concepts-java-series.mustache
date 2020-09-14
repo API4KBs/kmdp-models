@@ -91,7 +91,12 @@ public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
   @Override
   public VersionIdentifier getVersionIdentifier() {
     return getLatest().getVersionIdentifier();
-  }  
+  }
+
+  @Override
+  public URI getVersionId() {
+    return getLatest().getVersionId();
+  }
 
   @Override
   public boolean isSeriesExpired() {

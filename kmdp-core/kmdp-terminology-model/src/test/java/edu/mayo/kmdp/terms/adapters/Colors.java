@@ -67,6 +67,8 @@ public enum Colors implements IColors {
     return SemanticIdentifier.newId(trm.getTag(),"0.0.1");
   }
 
+
+
   @Override
   public ResourceIdentifier getNamespace() {
     return null;
@@ -100,6 +102,11 @@ public enum Colors implements IColors {
   @Override
   public URI getNamespaceUri() {
     return trm.getNamespaceUri();
+  }
+
+  @Override
+  public URI getVersionId() {
+    return trm.getVersionId();
   }
 
   @Override

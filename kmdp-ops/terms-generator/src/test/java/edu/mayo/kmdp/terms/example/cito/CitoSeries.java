@@ -53,7 +53,10 @@ public enum CitoSeries implements ICito, Series<ICito> {
     return getLatest().getVersionIdentifier();
   }
 
-
+  @Override
+  public URI getVersionId() {
+    return getLatest().getVersionId();
+  }
 
   public static Optional<ICito> resolve(final Term trm) {
     return resolveId(trm.getConceptId());

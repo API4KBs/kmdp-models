@@ -15,6 +15,8 @@
  */
 package edu.mayo.kmdp.terms;
 
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
+
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.UUID;
@@ -40,7 +42,8 @@ public class TermsHelper {
         .withNamespaceUri(URI.create("http://snomed.info/sct/900000000000207008"))
         .withResourceId(URI.create("http://snomed.info/id/" + code))
         .withReferentId(URI.create("http://snomed.info/id/" + code))
-        .withVersionTag("LATEST");
+        .withVersionTag("900000000000207008")
+        .withVersionId(URI.create("http://snomed.info/id/900000000000207008/" + code));
   }
 
   public static ConceptIdentifier lnc(String label, String code) {
@@ -52,7 +55,8 @@ public class TermsHelper {
         .withResourceId(URI.create("http://loinc.org/" + code))
         .withReferentId(URI.create("http://loinc.org/" + code))
         .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
-        .withVersionTag("LATEST");
+        .withVersionTag(VERSION_LATEST)
+        .withVersionId(URI.create("http://loinc.org/LATEST/" + code));
   }
 
   public static ConceptIdentifier rxn(String label, String code) {
@@ -64,7 +68,8 @@ public class TermsHelper {
         .withResourceId(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm/" + code))
         .withReferentId(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm/" + code))
         .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
-        .withVersionTag("LATEST");
+        .withVersionTag(VERSION_LATEST)
+        .withVersionId(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm/LATEST/" + code));
   }
 
 
@@ -81,6 +86,7 @@ public class TermsHelper {
         .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
         .withNamespaceUri(URI.create("http://ontology.mayo.edu/taxonomies/TODO"))
         .withResourceId(URI.create("http://ontology.mayo.edu/taxonomies/TODO#" + code))
+        .withVersionId(URI.create("http://ontology.mayo.edu/taxonomies/LATEST/TODO#" + code))
         .withReferentId(URI.create("http://ontology.mayo.edu/taxonomies/TODO#" + code));
   }
 }

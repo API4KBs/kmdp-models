@@ -134,6 +134,11 @@ public enum SCH1Old implements ISCH1 {
   }
 
   @Override
+  public URI getVersionId() {
+    return getDescription().getVersionId();
+  }
+
+  @Override
   public UUID getUuid() {
     return getDescription().getUuid();
   }

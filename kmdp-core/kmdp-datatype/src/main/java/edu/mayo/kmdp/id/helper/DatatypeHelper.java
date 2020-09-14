@@ -34,10 +34,9 @@ import java.util.stream.Collectors;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.id.VersionPatterns;
 import org.omg.spec.api4kp._20200801.id.VersionTagType;
 
-
-@Deprecated
 public class DatatypeHelper {
 
   protected DatatypeHelper() {
@@ -243,5 +242,37 @@ public class DatatypeHelper {
               effectiveTag,
               trm.getName()));
     }
+  }
+
+
+  public static URI getDefaultVersionId(URI resourceId, String versionTag) {
+    return getDefaultVersionId(resourceId,versionTag,VersionPatterns.KMDP_STYLE);
+  }
+
+  public static URI getDefaultVersionId(URI resourceId, String versionTag, VersionPatterns style) {
+    if (versionTag == null) {
+      return null;
+    }
+    URI uri = resourceId;
+    StringBuilder sb = new StringBuilder();
+    switch (style) {
+      case W3C_STYLE:
+        String baseUri = URIUtil.normalizeURI(uri).toString();
+        int split = baseUri.lastIndexOf('/');
+        sb.append(baseUri, 0, split)
+            .append('/')
+            .append(versionTag)
+            .append(baseUri.substring(split));
+        break;
+      case KMDP_STYLE:
+        sb.append(URIUtil.normalizeURI(uri).toString())
+            .append(getVersionSeparator(uri.toString()))
+            .append(versionTag);
+        if (!Util.isEmpty(uri.getFragment())) {
+          sb.append("#").append(uri.getFragment());
+        }
+        break;
+    }
+    return URI.create(sb.toString());
   }
 }

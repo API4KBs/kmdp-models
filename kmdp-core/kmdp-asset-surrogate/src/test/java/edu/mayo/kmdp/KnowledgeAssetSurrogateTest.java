@@ -201,7 +201,7 @@ public class KnowledgeAssetSurrogateTest {
             Term.newTerm(
                 URI.create("http://snomed.info/scg/"),
                 URLEncoder.encode("A + B", Charset.defaultCharset().name()),
-                "either A or B")
+                "2020")
             .asConceptIdentifier()));
 
     assertNotNull(asset.getApplicableIn());

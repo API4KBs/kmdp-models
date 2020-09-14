@@ -108,7 +108,7 @@ public abstract class BaseEnumGenerator {
 
     String defaultPackage = options.getTyped(EnumGenerationParams.PACKAGE_NAME);
     Properties overrides = PropertiesUtil
-        .doParse(options.getTyped(EnumGenerationParams.PACKAGE_OVERRIDES));
+        .parseProperties(options.getTyped(EnumGenerationParams.PACKAGE_OVERRIDES));
 
     String className = conceptScheme.getPublicName();
     String seriesName = conceptScheme.getPublicName() + "Series";

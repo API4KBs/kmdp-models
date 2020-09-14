@@ -9,7 +9,6 @@ import java.util.function.UnaryOperator;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
-import org.omg.spec.api4kp._20200801.series.Versionable;
 
 public interface Series<T extends Versionable<T>> {
 
@@ -141,8 +140,7 @@ public interface Series<T extends Versionable<T>> {
   }
 
   static ResourceIdentifier toVersion(ResourceIdentifier seriesId, String versionTag) {
-    return ((ResourceIdentifier) seriesId.clone())
-        .withVersionTag(versionTag);
+    return SemanticIdentifier.toVersionId(seriesId,versionTag);
   }
 
   default VersionIdentifier newIdentifier(String tag) {

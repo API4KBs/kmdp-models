@@ -21,6 +21,8 @@ public interface TermDescription extends Taxonomic<Term> {
 
   URI getResourceId();
 
+  URI getVersionId();
+
   URI getNamespaceUri();
 
 }

@@ -35,6 +35,8 @@ public interface VersionIdentifier extends Identifier {
     return IdentifierConstants.VERSION_ZERO + "-" + versionTag;
   }
 
+  URI getVersionId();
+
   String getVersionTag();
 
   @JsonIgnore
@@ -44,22 +46,6 @@ public interface VersionIdentifier extends Identifier {
     } catch (UnexpectedCharacterException ue) {
       return Version.valueOf(toSemVer(getVersionTag()));
     }
-  }
-
-  @JsonIgnore
-  default URI getVersionId() {
-    if (getVersionTag() == null) {
-      return null;
-    }
-    URI uri = getResourceId();
-    StringBuilder sb = new StringBuilder();
-    sb.append(URIUtil.normalizeURI(uri).toString())
-        .append(getVersionSeparator(uri.toString()))
-        .append(getVersionTag());
-    if (!Util.isEmpty(uri.getFragment())) {
-      sb.append("#").append(uri.getFragment());
-    }
-    return URI.create(sb.toString());
   }
 
   /**

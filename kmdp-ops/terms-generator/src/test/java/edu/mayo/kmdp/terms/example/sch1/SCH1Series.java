@@ -125,6 +125,12 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
   }
 
   @Override
+  public URI getVersionId() {
+    return getLatest().getVersionId();
+  }
+
+
+  @Override
   public boolean isSeriesExpired() {
     Date lastEstablished = getLatest().getVersionEstablishedOn();
     return schemeReleases.get(0).compareTo(lastEstablished) > 0;

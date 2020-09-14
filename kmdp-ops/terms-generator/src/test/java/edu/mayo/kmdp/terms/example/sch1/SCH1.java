@@ -122,6 +122,11 @@ public enum SCH1 implements ISCH1 {
   }
 
   @Override
+  public URI getVersionId() {
+    return getDescription().getVersionId();
+  }
+
+  @Override
   public SCH1Series asEnum() {
     return toSeries();
   }

@@ -94,6 +94,11 @@ public enum {{typeName}} implements {{intfPackageName}}.{{intfName}} {
   }
 
   @Override
+  public URI getVersionId() {
+    return getVersionIdentifier().getVersionId();
+  }
+
+  @Override
   public {{seriesName}} asEnum() {
     return toSeries();
   }

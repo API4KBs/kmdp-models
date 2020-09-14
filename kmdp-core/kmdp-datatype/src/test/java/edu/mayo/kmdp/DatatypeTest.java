@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -43,13 +44,13 @@ import org.omg.spec.api4kp._20200801.id.Term;
 public class DatatypeTest {
 
   @Test
-  public void testID() {
+  void testID() {
     // this should at least compile
     assertNotNull(SemanticIdentifier.newId(URI.create("http://foo.com/bar/1")));
   }
 
   @Test
-  public void testSimpleID() {
+  void testSimpleID() {
     SemanticIdentifier id = SemanticIdentifier.newId("thisId");
 
     assertEquals("thisId", id.getTag());
@@ -57,7 +58,7 @@ public class DatatypeTest {
   }
 
   @Test
-  public void testVersionedID() {
+  void testVersionedID() {
     SemanticIdentifier vid = new ResourceIdentifier()
         .withTag("1.3.6.1")
         .withVersionTag("42");
@@ -68,7 +69,7 @@ public class DatatypeTest {
   }
 
   @Test
-  public void testTerm() {
+  void testTerm() {
     Term term = new ConceptIdentifier()
         .withName("Foo bar and baz")
         .withReferentId(URI.create("http://foo.bar/kinda/123456"))
@@ -79,7 +80,7 @@ public class DatatypeTest {
     assertEquals("http://foo.bar/kinda/123456", term.getReferentId().toString());
     assertEquals("Foo bar and baz", term.getLabel());
 
-    SemanticIdentifier nsId = SemanticIdentifier.newVersionId(term.getNamespaceUri());
+    SemanticIdentifier nsId = newVersionId(term.getNamespaceUri());
 
     assertEquals("http://foo.bar/kinda", nsId.getResourceId().toString());
     assertEquals("kinda", nsId.getTag());
@@ -87,7 +88,7 @@ public class DatatypeTest {
   }
 
   @Test
-  public void testConceptIdentifier() {
+  void testConceptIdentifier() {
     ConceptIdentifier trm = new ConceptIdentifier()
         .withResourceId(URI.create("http://foo.bar/234"))
         .withUuid(UUID.randomUUID())
@@ -115,10 +116,10 @@ public class DatatypeTest {
 
 
   @Test
-  public void toURIIDentifier() {
+  void toURIIDentifier() {
     String versionedId = "http://foo.bar/baz/versions/1.2.0";
     String unversionedId = "http://foo.bar/baz";
-    ResourceIdentifier uid = SemanticIdentifier.newVersionId(URI.create(versionedId));
+    ResourceIdentifier uid = newVersionId(URI.create(versionedId));
 
     assertEquals("http://foo.bar/baz", uid.getResourceId().toString());
     assertEquals("1.2.0", uid.getVersionTag());

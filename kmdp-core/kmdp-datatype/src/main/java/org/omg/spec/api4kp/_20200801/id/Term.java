@@ -13,11 +13,13 @@
  */
 package org.omg.spec.api4kp._20200801.id;
 
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.getDefaultVersionId;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_BASE_URI;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_DATE;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_URI;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_VERSION;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.checkTag;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.toResourceId;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
@@ -99,7 +101,7 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
   static Term newTerm(UUID uuid) {
     SemanticIdentifier.checkUUID(uuid);
     // compose required resourceId from uuid
-    URI resourceId = SemanticIdentifier.toResourceId(uuid);
+    URI resourceId = toResourceId(uuid);
     return new ConceptIdentifier()
         // generate required tag from uuid
         // set required fields
@@ -128,20 +130,22 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
    */
   static Term newTerm(URI conceptId, String tag, UUID uuid, URI namespace, URI referentId,
       String versionTag, String name, Date establishedDate) {
+    URI uri = conceptId != null ? conceptId : toResourceId(tag, namespace, uuid);
     return new ConceptIdentifier()
         .withUuid(uuid)
         .withReferentId(referentId)
         .withTag(tag)
         .withNamespaceUri(namespace)
         .withVersionTag(versionTag)
-        .withResourceId(conceptId != null ? conceptId : SemanticIdentifier.toResourceId(tag, namespace, uuid))
+        .withResourceId(uri)
         .withName(name)
-        .withEstablishedOn(establishedDate);
+        .withEstablishedOn(establishedDate)
+        .withVersionId(getDefaultVersionId(uri,versionTag));
   }
 
   static Term newTerm(String tag) {
     checkTag(tag);
-    URI resourceId = SemanticIdentifier.toResourceId(tag);
+    URI resourceId = toResourceId(tag);
     return new ConceptIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
@@ -151,7 +155,7 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
 
   static Term newTerm(URI namespace, String tag) {
     checkTag(tag);
-    URI resourceId = SemanticIdentifier.toResourceId(tag, namespace);
+    URI resourceId = toResourceId(tag, namespace);
     return new ConceptIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
@@ -165,14 +169,15 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
   }
 
   static Term newTerm(URI namespace, String tag, String versionTag) {
-    URI resourceId = SemanticIdentifier.toResourceId(tag, namespace);
+    URI resourceId = toResourceId(tag, namespace);
     return new ConceptIdentifier()
         .withVersionTag(versionTag)
         // set required fields
         .withTag(tag)
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
-        .withNamespaceUri(namespace);
+        .withNamespaceUri(namespace)
+        .withVersionId(getDefaultVersionId(resourceId,versionTag));
   }
 
   static Term newTerm(String tag, Version version) {
@@ -181,13 +186,14 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
 
   static Term newTerm(String tag, String versionTag) {
     checkTag(tag);
-    URI resourceId = SemanticIdentifier.toResourceId(tag);
+    URI resourceId = toResourceId(tag);
     return new ConceptIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
-        .withVersionTag(versionTag);
+        .withVersionTag(versionTag)
+        .withVersionId(getDefaultVersionId(resourceId,versionTag));
   }
 
   /**
