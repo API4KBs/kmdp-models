@@ -104,7 +104,6 @@ public class XSLTTest {
 
     Document dox1 = xsd.get("Test/ids/ids.xsd");
     assertNotNull(xp.xNode(dox1, "//xsd:complexType[@name='Pointer']"));
-    assertNotNull(xp.xNode(dox1, "//xsd:complexType[@name='Pointer2']"));
 
     Map<String, Document> xsd2 = new XMIXSDTranslator()
         .doTranslate(XSLTTest.class.getResource(source),
@@ -122,7 +121,6 @@ public class XSLTTest {
     Document dox2 = xsd2.get("Test/ids/ids.openapi.xsd");
     assertNull(xp.xNode(dox2, "/xsd:schema/xsd:complexType[@name='Pointer']"));
 //		assertNotNull( xNode( dox2, "//xsd:complexType[@name='Pointer']" ) );
-    assertNull(xp.xNode(dox2, "//xsd:complexType[@name='Pointer2']"));
 
   }
 }

@@ -34,7 +34,7 @@
         </ownedAttribute>
       </packagedElement>
 
-      <packagedElement xmi:type="uml:Class" xmi:id="ptr2" name="Pointer2" visibility="public">
+      <packagedElement xmi:type="uml:Class" xmi:id="ptr2" name="Pointer" visibility="public">
         <ownedAttribute name="name" visibility="public">
           <type xmi:type="uml:PrimitiveType"
             href="pathmap://UML_LIBRARIES/XMLPrimitiveTypes.library.uml#String"/>
