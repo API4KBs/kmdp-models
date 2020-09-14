@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashSet;
@@ -231,6 +232,13 @@ public abstract class JenaUtil {
 
   public static Statement objA(String subjURI, Property prop, String obj) {
     return createStatement(createResource(subjURI), prop, createResource(obj));
+  }
+
+  public static Statement objA(URI subj, URI prop, URI obj) {
+    return createStatement(
+        createResource(subj.toString()),
+        createProperty(prop.toString()),
+        createResource(obj.toString()));
   }
 
   public static Statement datA(String subjURI, String propURI, String val) {

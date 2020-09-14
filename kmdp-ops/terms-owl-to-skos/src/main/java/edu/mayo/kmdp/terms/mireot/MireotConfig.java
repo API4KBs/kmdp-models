@@ -19,6 +19,8 @@ import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
 import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
+import edu.mayo.kmdp.util.PropertiesUtil;
+import java.net.URI;
 import java.util.Properties;
 
 public class MireotConfig extends ConfigProperties<MireotConfig, MireotParameters> {
@@ -38,14 +40,23 @@ public class MireotConfig extends ConfigProperties<MireotConfig, MireotParameter
     return MireotConfig.MireotParameters.values();
   }
 
+  public String encode() {
+    return PropertiesUtil.serializeProps(this);
+  }
 
   public enum MireotParameters implements Option<MireotConfig.MireotParameters> {
 
     BASE_URI( Opt.of(
-        "bareUri",
+        "baseUri",
         null,
         "The URI of the resulting ontology (should match the original)",
-        String.class,
+        URI.class,
+        true) ),
+    TARGET_URI( Opt.of(
+        "targetURI",
+        null,
+        "The URI of the entity to be extracted",
+        URI.class,
         true) ),
     ENTITY_TYPE( Opt.of(
         "entityType",

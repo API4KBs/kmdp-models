@@ -107,7 +107,7 @@ public class PropertiesUtil {
     }
   }
 
-  public static Properties doParse(String serializedProperties) {
+  public static Properties parseProperties(String serializedProperties) {
     return parse(serializedProperties).orElse(new Properties());
   }
 

@@ -47,28 +47,32 @@ public class MireotExtractor {
 
   private static final Logger logger = LoggerFactory.getLogger(MireotExtractor.class);
 
-  private static final String MIREOT_PATH = "/query/mireot/mireot.sparql";
-  private static final ParameterizedSparqlString MIREOT = new ParameterizedSparqlString(
+  public static final String MIREOT_PATH = "/query/mireot/mireot.sparql";
+  public static final ParameterizedSparqlString MIREOT = new ParameterizedSparqlString(
       JenaUtil.read(MIREOT_PATH));
 
 
   public Optional<Model> fetch(InputStream in, URI targetUri, MireotConfig cfg) {
-    String base = cfg.getTyped(MireotParameters.BASE_URI);
+    URI baseUri = cfg.getTyped(MireotParameters.BASE_URI);
+    String base = baseUri != null ? baseUri.toString() : null;
 
     Model source = ModelFactory.createDefaultModel().read(in, base);
 
-    if (Util.isEmpty(base)) {
+    if (baseUri == null) {
       base = detectOntologyIRI(source, base).orElse(base);
+      if (! Util.isEmpty(base)) {
+        baseUri = URI.create(base);
+      }
     }
-    final URI baseUri = Util.isEmpty(base) ? null : URI.create(base);
+    final URI finalBaseUri = baseUri;
     final URI versionUri = detectVersionIRI(source, base).map(URI::create).orElse(null);
 
     Optional<Model> result = (cfg.getTyped(MireotParameters.ENTITY_ONLY)
-        ? fetchResource(source, targetUri, baseUri)
-        : fetchResources(source, targetUri, baseUri, cfg)
+        ? fetchResource(source, targetUri, finalBaseUri)
+        : fetchResources(source, targetUri, finalBaseUri, cfg)
     );
 
-    return result.map(model -> asOntology(model, baseUri, versionUri));
+    return result.map(model -> asOntology(model, finalBaseUri, versionUri));
   }
 
 
