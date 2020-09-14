@@ -39,8 +39,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -70,25 +72,28 @@ public interface AbstractCarrier {
 
   //TODO This will become a controlled term in a future release of the ontologies (version 8+)
   String HAS_MEMBER = "<https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/hasMember>";
-  
+
   enum Encodings {
     DEFAULT;
   }
 
   static KnowledgeCarrier of(byte[] encoded) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
+        .withAssetId(randomId())
         .withExpression(encoded)
         .withLevel(Encoded_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(InputStream stream) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
+        .withAssetId(randomId())
         .withExpression(FileUtil.readBytes(stream).orElse(new byte[0]))
         .withLevel(Encoded_Knowledge_Expression);
   }
 
   static KnowledgeCarrier of(String serialized) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
+        .withAssetId(randomId())
         .withExpression(serialized)
         .withLevel(Serialized_Knowledge_Expression);
   }
@@ -103,12 +108,14 @@ public interface AbstractCarrier {
 
   static KnowledgeCarrier ofTree(Object parseTree) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
+        .withAssetId(randomId())
         .withExpression(parseTree)
         .withLevel(Concrete_Knowledge_Expression);
   }
 
   static KnowledgeCarrier ofAst(Object ast) {
     return new org.omg.spec.api4kp._20200801.services.resources.KnowledgeCarrier()
+        .withAssetId(randomId())
         .withExpression(ast)
         .withLevel(Abstract_Knowledge_Expression);
   }
@@ -158,6 +165,11 @@ public interface AbstractCarrier {
         .withRepresentation(rep);
   }
 
+  static KnowledgeCarrier ofTree(Object ptree, SyntacticRepresentation rep) {
+    return ofTree(ptree)
+        .withRepresentation(rep);
+  }
+
   /**
    * Constructs the appropriate type of KnowledgeCarrier for the
    * given artifact at the given abstraction level
@@ -201,7 +213,28 @@ public interface AbstractCarrier {
     return ofIdentifiableSet(rep,
         x -> randomId(),
         x -> randomId(),
+        x -> null,
         artifacts);
+  }
+
+  static CompositeKnowledgeCarrier ofIdentifiableSet(
+      Collection<KnowledgeCarrier> components) {
+
+    List<Object> expressions = new ArrayList<>();
+    Map<Object,ResourceIdentifier> assetIds = new IdentityHashMap<>();
+    Map<Object,ResourceIdentifier> artifactIds = new IdentityHashMap<>();
+    Map<Object,String> labels = new IdentityHashMap<>();
+    SyntacticRepresentation rep = components.isEmpty() ? null : components.iterator().next().getRepresentation();
+
+    components.forEach(comp -> {
+      Object expr = comp.getExpression();
+      expressions.add(expr);
+      assetIds.put(expr,comp.getAssetId());
+      artifactIds.put(expr,comp.getArtifactId());
+      labels.put(expr,comp.getLabel());
+    });
+
+    return ofIdentifiableSet(rep, assetIds::get, artifactIds::get, labels::get, expressions);
   }
 
   /**
@@ -212,14 +245,15 @@ public interface AbstractCarrier {
    * @param rep The common representation
    * @param artifacts The artifacts to be aggregated into the composite
    * @param assetIdentificator A function that allows to extract an (asset) ID from each of the artifacts
-   * @param assetIdentificator A function that allows to extract an (artifact) ID from each of the artifacts
+   * @param artifactIdentificator A function that allows to extract an (artifact) ID from each of the artifacts
    * @param <T> The common type of the artifacts
    * @return A set-oriented Composite Knowledge Carrier
    */
   static <T> CompositeKnowledgeCarrier ofIdentifiableSet(
       SyntacticRepresentation rep,
       Function<T, ResourceIdentifier> assetIdentificator,
-      Function<T, ResourceIdentifier> artifactidentificator,
+      Function<T, ResourceIdentifier> artifactIdentificator,
+      Function<T, String> assetLabeler,
       Collection<T> artifacts) {
     CompositeKnowledgeCarrier ckc =
         new CompositeKnowledgeCarrier().withStructType(CompositeStructType.SET);
@@ -228,7 +262,7 @@ public interface AbstractCarrier {
     ckc.withLevel(level);
 
     // wrap the components into KnowledgeCarriers
-    wrapComponents(rep, artifacts, level, assetIdentificator, artifactidentificator, ckc);
+    wrapComponents(rep, artifacts, level, assetIdentificator, artifactIdentificator, assetLabeler, ckc);
 
     // hash the (versioned) IDs of the components into an asset Id for the composite
     hashComponentIds(artifacts, assetIdentificator, ckc);
@@ -268,6 +302,7 @@ public interface AbstractCarrier {
       SyntacticRepresentation rep,
       Function<T, ResourceIdentifier> assetIdentificator,
       Function<T, ResourceIdentifier> artifactidentificator,
+      Function<T, String> assetLabeler,
       Function<T, Collection<? extends Link>> visitor,
       ResourceIdentifier rootId,
       Map<SemanticIdentifier, T> artifacts) {
@@ -278,7 +313,7 @@ public interface AbstractCarrier {
     ckc.withLevel(level);
 
     // wrap the components into KnowledgeCarriers
-    wrapComponents(rep, artifacts.values(), level, assetIdentificator, artifactidentificator, ckc);
+    wrapComponents(rep, artifacts.values(), level, assetIdentificator, artifactidentificator, assetLabeler, ckc);
 
     // hash the (versioned) IDs of the components into an asset Id for the composite
     hashComponentIds(artifacts.values(), assetIdentificator, ckc);
@@ -322,7 +357,8 @@ public interface AbstractCarrier {
       Collection<T> artifacts,
       ParsingLevel level,
       Function<T, ResourceIdentifier> assetIdentificator,
-      Function<T, ResourceIdentifier> artifactidentificator,
+      Function<T, ResourceIdentifier> artifactIdentificator,
+      Function<T, String> assetLabeler,
       CompositeKnowledgeCarrier ckc) {
 
     artifacts.stream()
@@ -331,7 +367,8 @@ public interface AbstractCarrier {
                 of(x, level)
                     .withRepresentation(rep)
                     .withAssetId(assetIdentificator.apply(x))
-                    .withArtifactId(artifactidentificator.apply(x)))
+                    .withArtifactId(artifactIdentificator.apply(x))
+                    .withLabel(assetLabeler.apply(x)))
         .forEach(ckc.getComponent()::add);
   }
 
@@ -441,6 +478,14 @@ public interface AbstractCarrier {
           .flatMap(kc -> kc.as(klass));
     } else {
       return this.as(klass);
+    }
+  }
+
+  default Stream<KnowledgeCarrier> components() {
+    if (this instanceof CompositeKnowledgeCarrier) {
+      return ((CompositeKnowledgeCarrier) this).getComponent().stream();
+    } else {
+      return Stream.of((KnowledgeCarrier)this);
     }
   }
 

@@ -82,6 +82,7 @@ public class CompositeTest {
                 rep(HTML, TXT, Charset.defaultCharset()),
                 s -> newId(uuid(s), VERSION_ZERO),
                 s -> newId(uuid(s.toLowerCase()), VERSION_ZERO),
+                s -> null,
                 Arrays.asList("A", "B", "C"));
 
     assertEquals(3, ckc.getComponent().size());
@@ -124,6 +125,7 @@ public class CompositeTest {
                 rep(HTML, TXT, Charset.defaultCharset()),
                 s -> newId(uuid(s), VERSION_ZERO),
                 s -> newId(uuid(s), VERSION_ZERO),
+                s -> null,
                 s -> {
                   switch (s) {
                     case "A":

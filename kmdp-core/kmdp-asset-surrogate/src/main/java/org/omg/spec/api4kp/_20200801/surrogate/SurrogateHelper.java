@@ -211,6 +211,7 @@ public class SurrogateHelper {
             KnowledgeAsset::getAssetId,
             ka -> SurrogateHelper.getSurrogateId(ka, Knowledge_Asset_Surrogate_2_0, JSON)
                 .orElseGet(SurrogateBuilder::randomArtifactId),
+            KnowledgeAsset::getName,
             components
         );
       case TREE:
@@ -219,6 +220,7 @@ public class SurrogateHelper {
             KnowledgeAsset::getAssetId,
             ka -> SurrogateHelper.getSurrogateId(ka, Knowledge_Asset_Surrogate_2_0, JSON)
                 .orElseGet(SurrogateBuilder::randomArtifactId),
+            KnowledgeAsset::getName,
             KnowledgeAsset::getLinks,
             rootAssetId,
             components.stream().collect(
