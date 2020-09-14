@@ -246,7 +246,12 @@ public class DatatypeHelper {
 
 
   public static URI getDefaultVersionId(URI resourceId, String versionTag) {
-    return getDefaultVersionId(resourceId,versionTag,VersionPatterns.KMDP_STYLE);
+    return getDefaultVersionId(
+        resourceId,
+        versionTag,
+        "urn".equals(resourceId.getScheme())
+            ? VersionPatterns.URN_STYLE
+            : VersionPatterns.KMDP_STYLE);
   }
 
   public static URI getDefaultVersionId(URI resourceId, String versionTag, VersionPatterns style) {
@@ -263,6 +268,11 @@ public class DatatypeHelper {
             .append('/')
             .append(versionTag)
             .append(baseUri.substring(split));
+        break;
+      case URN_STYLE:
+        sb.append(uri.toString())
+            .append(":")
+            .append(versionTag);
         break;
       case KMDP_STYLE:
         sb.append(URIUtil.normalizeURI(uri).toString())
