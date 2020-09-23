@@ -17,7 +17,7 @@ import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyType;
 import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationType;
 import org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.Language;
-import org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory.IKnowledgeArtifactCategory;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory.KnowledgeArtifactCategory;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategory;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetrole.KnowledgeAssetRole;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
@@ -85,7 +85,7 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
             PublicationStatus.class,
             PublishingRole.class,
             Language.class,
-            IKnowledgeArtifactCategory.class,
+            KnowledgeArtifactCategory.class,
             SummarizationType.class,
             KnowledgeRepresentationLanguage.class,
             KnowledgeRepresentationLanguageProfile.class,

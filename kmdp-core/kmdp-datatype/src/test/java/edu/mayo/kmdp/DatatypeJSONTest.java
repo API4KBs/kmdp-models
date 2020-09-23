@@ -61,7 +61,6 @@ public class DatatypeJSONTest {
       mapper.writerWithDefaultPrettyPrinter().writeValue(baos, ptr);
       String str = new String(baos.toByteArray());
 
-      System.out.println(str);
       assertTrue(str.contains("name=\"Name\""));
       assertTrue(str.contains("resourceId=\"uri:urn:faa\""));
     } catch (IOException e) {

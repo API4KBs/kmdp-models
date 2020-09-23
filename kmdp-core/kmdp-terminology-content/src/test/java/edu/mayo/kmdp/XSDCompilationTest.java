@@ -15,7 +15,15 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.ontology.taxonomies.kmdo.relatedconcept.RelatedConcept;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+
+import edu.mayo.ontology.taxonomies.kmdo.relatedconcept.IRelatedConcept;
+import edu.mayo.ontology.taxonomies.kmdo.relatedconcept.RelatedConceptSeries;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategory;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
@@ -24,26 +32,25 @@ import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetT
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class XSDCompilationTest {
 
   @Test
   public void testEnums() {
-    RelatedConcept rel = RelatedConcept.Has_Broader;
+    IRelatedConcept rel = RelatedConceptSeries.Has_Broader;
     assertEquals("has broader", rel.getLabel());
   }
 
   @Test
   public void testAssetOntology() {
-    KnowledgeAssetCategory kac = KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
+    KnowledgeAssetCategory kac = Plans_Processes_Pathways_And_Protocol_Definitions;
+    assertNotNull(kac);
     assertEquals(6, KnowledgeAssetCategorySeries.values().length);
 
-    KnowledgeAssetType kat = KnowledgeAssetTypeSeries.Clinical_Rule;
+    KnowledgeAssetType kat = Clinical_Rule;
     assertEquals("http://ontology.mayo.edu/ontologies/clinicalknowledgeassets/ClinicalRule", kat.getReferentId().toString());
 
-    KnowledgeRepresentationLanguage dmn = KnowledgeRepresentationLanguageSeries.DMN_1_1;
-    KnowledgeRepresentationLanguage dmn2 = KnowledgeRepresentationLanguageSeries.DMN_1_2;
+    KnowledgeRepresentationLanguage dmn = DMN_1_1;
+    KnowledgeRepresentationLanguage dmn2 = DMN_1_2;
     assertEquals("https://www.omg.org/spec/DMN/1.1/", dmn.getReferentId().toString());
     assertEquals("https://www.omg.org/spec/DMN/1.2/", dmn2.getReferentId().toString());
   }

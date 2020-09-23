@@ -33,7 +33,7 @@ public class MapAdapter extends XmlAdapter<Map, Map> {
   public Map marshal(Map map) {
     map.getAny().clear();
     map.forEach((k, v) -> map.getAny().add(
-        new JAXBElement(getKey(k), Object.class, v)));
+        new JAXBElement<>(getKey(k), Object.class, v)));
     return map;
   }
 
@@ -56,7 +56,7 @@ public class MapAdapter extends XmlAdapter<Map, Map> {
   private Optional<Class<?>> resolveType(Element el) {
     return XMLUtil.resolveXsiTypeClassName(el).flatMap(n -> {
       try {
-        return Optional.ofNullable(Class.forName(n));
+        return Optional.of(Class.forName(n));
       } catch (ClassNotFoundException e) {
         return Optional.of(Object.class);
       }

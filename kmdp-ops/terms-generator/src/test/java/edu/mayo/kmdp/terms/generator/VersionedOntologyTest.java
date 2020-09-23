@@ -110,7 +110,7 @@ public class VersionedOntologyTest {
     assertTrue(skosOntology.isPresent());
     ConceptGraph graph = new SkosTerminologyAbstractor()
         .traverse(skosOntology.get(), new SkosAbstractionConfig()
-            .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/(.*)/.*$")
+            .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/(.*)$")
             .with(SkosAbstractionParameters.REASON, true));
 
     Collection<ConceptScheme<Term>> schemes = graph.getConceptSchemes();

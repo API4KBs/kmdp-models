@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <rdf:RDF xmlns="http://www.invincea.com/ontologies/icas/1.0.1/mime#"
      xml:base="http://www.invincea.com/ontologies/icas/1.0.1/mime"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
-     xmlns:mime="http://www.invincea.com/ontologies/icas/1.0.1/mime#"
-     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-     xmlns:mime1="http://www.invincea.com/ontologies/icas/1.0.1/mime#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:swrlx="http://www.w3.org/2003/11/swrlx#"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
-     xmlns:tapio="http://www.invincea.com/ontologies/icas/1.0/tapio#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:foaf="http://xmlns.com/foaf/0.1/"
      xmlns:owl2="http://www.w3.org/2006/12/owl2#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:time="http://www.w3.org/2006/time#"
      xmlns:event="http://purl.org/NET/c4dm/event.owl#"
-     xmlns:foaf="http://xmlns.com/foaf/0.1/"
-     xmlns:dc="http://purl.org/dc/elements/1.1/">
+     xmlns:mime1="http://www.invincea.com/ontologies/icas/1.0.1/mime#"
+     xmlns:swrlx="http://www.w3.org/2003/11/swrlx#"
+     xmlns:tapio="http://www.invincea.com/ontologies/icas/1.0/tapio#">
     <owl:Ontology rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime">
-        <owl:versionInfo>1.0.1</owl:versionInfo>
-        <dc:date>2019</dc:date>
+        <owl:versionIRI rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime/1.0.1"/>
         <dc:creator xml:lang="en">Davide Sottara</dc:creator>
+        <dc:creator xml:lang="en">Invincea Labs</dc:creator>
+        <dc:date>2019</dc:date>
         <dc:description xml:lang="en">Describes elements related to the MIME content taxonomy and encoding standard</dc:description>
         <rdfs:comment xml:lang="en">Describes elements related to the MIME content taxonomy and encoding standard.</rdfs:comment>
-        <dc:creator xml:lang="en">Invincea Labs</dc:creator>
         <rdfs:label xml:lang="en">MultiPurpose Internet Mail Extensions ontology</rdfs:label>
+        <owl:versionInfo>1.0.1</owl:versionInfo>
     </owl:Ontology>
     
 
@@ -38,15 +38,27 @@
     
 
 
-    <!-- http://purl.org/dc/elements/1.1/identifier -->
+    <!-- http://purl.org/dc/elements/1.1/creator -->
 
-    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/identifier"/>
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/creator"/>
     
 
 
-    <!-- http://www.invincea.com/ontologies/icas/1.0.1/mime#mimeclass -->
+    <!-- http://purl.org/dc/elements/1.1/date -->
 
-    <owl:AnnotationProperty rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#mimeclass"/>
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/date"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/description -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/description"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/identifier -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/identifier"/>
     
 
 
@@ -283,7 +295,7 @@
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEType"/>
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
         <dc:identifier>text/css</dc:identifier>
-        <mime:mimeclass xml:lang="en">text-css</mime:mimeclass>
+        <mimeclass xml:lang="en">text-css</mimeclass>
         <rdfs:comment xml:lang="en">Cascading Style Sheet</rdfs:comment>
         <rdfs:label xml:lang="en">Cascading Style Sheet</rdfs:label>
     </owl:NamedIndividual>
@@ -295,7 +307,7 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#csv">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
         <dc:identifier>text/csv</dc:identifier>
-        <mime:mimeclass xml:lang="en">text-csv</mime:mimeclass>
+        <mimeclass xml:lang="en">text-csv</mimeclass>
         <rdfs:label xml:lang="en">Comma-Separated Values</rdfs:label>
     </owl:NamedIndividual>
     
@@ -306,7 +318,7 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#ecmascript">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
         <dc:identifier>application/ecmascript</dc:identifier>
-        <mime:mimeclass xml:lang="en">ecmascript</mime:mimeclass>
+        <mimeclass xml:lang="en">ecmascript</mimeclass>
         <rdfs:label xml:lang="en">application-ecmascript</rdfs:label>
     </owl:NamedIndividual>
     
@@ -427,7 +439,7 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#exe">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
         <dc:identifier>application/exe</dc:identifier>
-        <mime:mimeclass xml:lang="en">Application/exe</mime:mimeclass>
+        <mimeclass xml:lang="en">Application/exe</mimeclass>
         <rdfs:label xml:lang="en">Windows Executable</rdfs:label>
     </owl:NamedIndividual>
     
@@ -528,7 +540,7 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#jpeg">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Image"/>
         <dc:identifier>image/jpeg</dc:identifier>
-        <mime:mimeclass xml:lang="en">image/jpeg</mime:mimeclass>
+        <mimeclass xml:lang="en">image/jpeg</mimeclass>
         <rdfs:label xml:lang="en">JPEG Image</rdfs:label>
     </owl:NamedIndividual>
     
@@ -539,7 +551,7 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#json">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
         <dc:identifier>application/json</dc:identifier>
-        <mime:mimeclass xml:lang="en">application/json</mime:mimeclass>
+        <mimeclass xml:lang="en">application/json</mimeclass>
         <rdfs:label xml:lang="en">JSON Data</rdfs:label>
     </owl:NamedIndividual>
     
@@ -620,7 +632,7 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#octet-stream">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
         <dc:identifier>application/octet-stream</dc:identifier>
-        <mime:mimeclass xml:lang="en">application/octet-stream</mime:mimeclass>
+        <mimeclass xml:lang="en">application/octet-stream</mimeclass>
         <rdfs:label xml:lang="en">Octet-Stream</rdfs:label>
     </owl:NamedIndividual>
     
@@ -701,7 +713,7 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#plain">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Text"/>
         <dc:identifier>text/plain</dc:identifier>
-        <mime:mimeclass xml:lang="en">text/plain</mime:mimeclass>
+        <mimeclass xml:lang="en">text/plain</mimeclass>
         <rdfs:label xml:lang="en">ASCII Plain Text</rdfs:label>
     </owl:NamedIndividual>
     
@@ -712,7 +724,7 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#png">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Image"/>
         <dc:identifier>image/png</dc:identifier>
-        <mime:mimeclass xml:lang="en">image/png</mime:mimeclass>
+        <mimeclass xml:lang="en">image/png</mimeclass>
         <rdfs:label xml:lang="en">Portable Network Graphics Image</rdfs:label>
     </owl:NamedIndividual>
     
@@ -733,7 +745,7 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#quicktime">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Video"/>
         <dc:identifier>video/quicktime</dc:identifier>
-        <mime:mimeclass xml:lang="en">video/quicktime</mime:mimeclass>
+        <mimeclass xml:lang="en">video/quicktime</mimeclass>
         <rdfs:label xml:lang="en">Apple QuickTime Video</rdfs:label>
     </owl:NamedIndividual>
     
@@ -764,7 +776,7 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#rfc822">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Message"/>
         <dc:identifier>message/rfc822</dc:identifier>
-        <mime:mimeclass xml:lang="en">message/rfc822</mime:mimeclass>
+        <mimeclass xml:lang="en">message/rfc822</mimeclass>
         <rdfs:label xml:lang="en">RFC822 Email Message</rdfs:label>
     </owl:NamedIndividual>
     
@@ -1016,12 +1028,12 @@
     <owl:NamedIndividual rdf:about="http://www.invincea.com/ontologies/icas/1.0.1/mime#zip">
         <rdf:type rdf:resource="http://www.invincea.com/ontologies/icas/1.0.1/mime#Application"/>
         <dc:identifier>application/zip</dc:identifier>
-        <mime:mimeclass xml:lang="en">Application/zip</mime:mimeclass>
+        <mimeclass xml:lang="en">Application/zip</mimeclass>
         <rdfs:label xml:lang="en">Zip Archive File</rdfs:label>
     </owl:NamedIndividual>
 </rdf:RDF>
 
 
 
-<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
 

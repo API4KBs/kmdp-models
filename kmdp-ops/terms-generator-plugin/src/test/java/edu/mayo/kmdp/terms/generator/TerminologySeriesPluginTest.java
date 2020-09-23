@@ -70,6 +70,7 @@ class TerminologySeriesPluginTest extends AbstractPluginTest {
     plugin.setSourceCatalogPaths(
         Collections.singletonList(
             TerminologySeriesPluginTest.class.getResource("/test-catalog.xml").getPath()));
+    plugin.setVersionPattern(".*/(.*)");
     plugin.execute();
 
     ensureSuccessCompile(genSource, genSource, target);

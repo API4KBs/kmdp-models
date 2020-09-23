@@ -44,13 +44,13 @@ public class JSONLDSerializationTest {
 
     assertTrue(baos.isPresent());
 
-    //System.out.println(new String(baos.get().toByteArray()));
+    // System.out.println(new String(baos.get().toByteArray()));
 
     Optional<Model> model = JenaUtil.fromJsonLD(new String(baos.get().toByteArray()));
 
     assertTrue(model.isPresent());
 
-    System.out.println(JenaUtil.asString(model.get()));
+    // System.out.println(JenaUtil.asString(model.get()));
     assertEquals(37, (int) JenaUtil.sizeOf(model.get()));
 
 

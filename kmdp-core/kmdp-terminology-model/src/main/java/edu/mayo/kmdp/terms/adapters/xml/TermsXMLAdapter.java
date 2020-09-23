@@ -16,11 +16,11 @@
 package edu.mayo.kmdp.terms.adapters.xml;
 
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
-import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.util.StreamUtil;
 import java.util.Arrays;
 import java.util.Optional;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.series.Series;
 
 public abstract class TermsXMLAdapter extends
     javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._20200801.id.ConceptIdentifier, Term> {
@@ -52,14 +52,15 @@ public abstract class TermsXMLAdapter extends
 
   private Optional<? extends Term> getVersion(Term x, String versionTag) {
     if (x instanceof Series) {
-        Series<? extends Term> series = ((Series<? extends Term>) x);
-        Optional<? extends Term> termVersion
-            = series.getVersion(versionTag);
-        if (termVersion.isEmpty() && isSnapshot(versionTag)) {
-          termVersion
-              = Optional.ofNullable(series.getLatest());
-        }
-        return termVersion;
+      @SuppressWarnings("unchecked")
+      Series<? extends Term> series = ((Series<? extends Term>) x);
+      Optional<? extends Term> termVersion
+          = series.getVersion(versionTag);
+      if (termVersion.isEmpty() && isSnapshot(versionTag)) {
+        termVersion
+            = Optional.ofNullable(series.getLatest());
+      }
+      return termVersion;
     } else {
       return Optional.of(x);
     }

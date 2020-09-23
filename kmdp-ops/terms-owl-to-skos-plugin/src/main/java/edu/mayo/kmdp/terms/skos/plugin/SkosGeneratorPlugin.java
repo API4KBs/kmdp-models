@@ -359,16 +359,18 @@ public class SkosGeneratorPlugin extends AbstractMojo {
       Optional<Model> skosModel = mireotedModel
           .flatMap(ext -> new Owl2SkosConverter().apply(ext, cfg));
 
+      File f = new File(getOutputDirectory()
+          + File.separator
+          + outputFile);
+
       if (skosModel.isPresent()) {
-        if (!getOutputDirectory().exists()) {
-          boolean success = getOutputDirectory().mkdirs();
+        if (!f.getParentFile().exists()) {
+          boolean success = f.getParentFile().mkdirs();
           if (!success) {
             throw new IOException("Unable to create output folder " + getOutputDirectory());
           }
         }
-        File f = new File(getOutputDirectory()
-            + File.separator
-            + outputFile);
+
         try (FileOutputStream fos = new FileOutputStream(f)) {
           skosModel.get().write(fos);
         }

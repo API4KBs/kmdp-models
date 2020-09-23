@@ -18,11 +18,20 @@ package edu.mayo.kmdp.terms.util;
 import static edu.mayo.kmdp.util.NameUtils.strip;
 
 import edu.mayo.kmdp.terms.mireot.EntityTypes;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontology.Ontology;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.OWL2;
@@ -57,6 +66,36 @@ public class JenaUtil {
     } else {
       return EntityTypes.UNKNOWN;
     }
+  }
+
+  /**
+   * Copies the 'ontology' axioms from an OntModel to a regular Model
+   * @param root
+   * @param ontologyModel
+   */
+  public static void addOntologyAxioms(Model root, OntModel ontologyModel) {
+    Ontology onto = ontologyModel.listOntologies().next();
+    List<Statement> ontos =
+        ontologyModel.listStatements()
+            .filterKeep(st -> st.getSubject().getURI() != null && st.getSubject().getURI().equals(onto.getURI())).toList();
+    root.add(ontos);
+  }
+
+  /**
+   * Copies the 'ontology' axioms from an OntModel to a regular Model
+   * @param root
+   * @param ontologyModel
+   */
+  public static void addOntologyAxioms(Model root, Model ontologyModel) {
+    List<Resource> ontologies = ontologyModel.listStatements()
+        .filterKeep(st -> st.getPredicate().equals(RDF.type) && st.getObject().equals(OWL2.Ontology))
+        .mapWith(Statement::getSubject)
+        .toList();
+
+    List<Statement> ontos =
+        ontologyModel.listStatements()
+            .filterKeep(st -> st.getSubject().getURI() != null && ontologies.contains(st.getSubject())).toList();
+    root.add(ontos);
   }
 
   public static Optional<String> detectVersionIRI(Model source, String ontologyURI) {
@@ -110,20 +149,66 @@ public class JenaUtil {
   }
 
 
+  public static String applyVersionToURI(String baseURI, String versionFragment, int index, String sep) {
+    URI uri = URI.create(baseURI);
+    boolean hasPath = uri.getPath() != null;
+
+    String core = hasPath ? uri.getPath() : uri.getSchemeSpecificPart();
+    List<String> hops = new LinkedList<>(Arrays.asList(core.split(sep)));
+
+    boolean needsInitialPadding = hops.isEmpty();
+    boolean needFinalPadding = core.endsWith(sep);
+    boolean reverse = index < 0;
+
+    if (needsInitialPadding) {
+      // ensure the host and path will be separated
+      hops.add("");
+    }
+
+    if (reverse) {
+      // reverse the index
+      index = hops.size() - 1 + index;
+    }
+    // prevent under/overflow
+    index = Math.max(1, Math.min(index + 1, hops.size()));
+
+    if (needFinalPadding) {
+      // ensure a trailing separator will be added back at the end
+      hops.add("");
+      if (reverse) {
+        index++;
+      }
+    }
+
+    String effectiveVersionFragment = versionFragment;
+    if (versionFragment.startsWith(sep)) {
+      effectiveVersionFragment = effectiveVersionFragment.substring(sep.length());
+    }
+    if (versionFragment.endsWith(sep)) {
+      effectiveVersionFragment = effectiveVersionFragment.substring(0,effectiveVersionFragment.lastIndexOf(sep));
+    }
+    // insert the version fragment in the path
+    hops.add(index, effectiveVersionFragment);
+
+    try {
+      URI versionUri = hasPath
+          ? new URI(uri.getScheme(), uri.getHost(), String.join(sep, hops), uri.getFragment())
+          : new URI(uri.getScheme(), String.join(sep, hops), uri.getFragment());
+      return versionUri.toString();
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+
   public static String applyVersionToURI(String baseURI, String versionFragment) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(baseURI.endsWith("#")
-        ? baseURI.substring(0, baseURI.length() - 1)
-        : baseURI);
-    if (!(sb.toString().endsWith("/") || versionFragment.startsWith("/"))) {
-      sb.append("/");
-    }
-    if (sb.toString().endsWith("/") && versionFragment.startsWith("/")) {
-      sb.append(versionFragment.substring(1));
-    } else {
-      sb.append(versionFragment);
-    }
-    return sb.toString();
+    return applyVersionToURI(baseURI, versionFragment, Integer.MAX_VALUE - 1);
+  }
+
+  public static String applyVersionToURI(String baseURI, String versionFragment, int pos) {
+    String sep = baseURI.startsWith("urn") ? ":" : "/";
+    return applyVersionToURI(baseURI, versionFragment, pos, sep);
   }
 
 }

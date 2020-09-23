@@ -101,7 +101,7 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   }
 
   /**
-   * @parameter default-value="false"
+   * @parameter default-value=".*\/(.*)\/$"
    */
   private String versionPattern;
 

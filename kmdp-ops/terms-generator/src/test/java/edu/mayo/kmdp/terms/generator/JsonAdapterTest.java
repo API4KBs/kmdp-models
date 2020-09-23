@@ -127,7 +127,6 @@ class JsonAdapterTest {
 
   private String marshall(SomeBean bean) {
     String s = JSonUtil.writeJsonAsString(bean).orElse(null);
-    System.out.println(s);
     assertNotNull(s);
     return s;
   }

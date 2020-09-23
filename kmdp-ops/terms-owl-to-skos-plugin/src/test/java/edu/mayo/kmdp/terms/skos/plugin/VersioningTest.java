@@ -68,6 +68,29 @@ public class VersioningTest {
   }
 
   @Test
+  public void testVersionDetection2() {
+
+    Optional<Model> model = new MireotExtractor().fetch(
+        VersioningTest.class.getResourceAsStream("/dctype.rdf"),
+        URI.create("http://my.org.test/onto#Foo"),
+        new MireotConfig());
+
+    assertTrue(model.isPresent());
+
+    OntologyManager om = OntManagers.createONT();
+    OWLOntology x = om.addOntology(model.get().getGraph());
+
+    Optional<IRI> iri = x.getOntologyID().getOntologyIRI()
+        .filter((i) -> "http://ontology.mayo.edu/ontologies/dcmitype".equals(i.getIRIString()));
+    assertTrue(iri.isPresent());
+
+    Optional<IRI> viri = x.getOntologyID().getVersionIRI()
+        .filter((v) -> "http://ontology.mayo.edu/ontologies/2020-01-20/dcmitype".equals(v.getIRIString()));
+    assertTrue(viri.isPresent());
+
+  }
+
+  @Test
   public void testVersionPropagation() {
     String ontoURI = "http://foo.com/test";
 
@@ -94,6 +117,36 @@ public class VersioningTest {
     assertNotNull(v);
     assertEquals("http://foo.com/test/1.0.4", v.getObject().toString());
   }
+
+
+  @Test
+  public void testVersionPropagation2() {
+    String ontoURI = "http://ontology.mayo.edu/ontologies/dcmitype";
+
+    Optional<Model> mireot = new MireotExtractor().fetch(
+        VersioningTest.class.getResourceAsStream("/dctype.rdf"),
+        URI.create("http://ontology.mayo.edu/ontologies/dcmitype#Foo"),
+        new MireotConfig());
+
+    assertTrue(mireot.isPresent());
+
+    Owl2SkosConfig cfg = new Owl2SkosConfig()
+        .with(OWLtoSKOSTxParams.TGT_NAMESPACE,ontoURI)
+        .with(OWLtoSKOSTxParams.MODE,Modes.SKOS);
+    Optional<Model> skos = new Owl2SkosConverter().apply(mireot.get(), cfg);
+
+    assertTrue(skos.isPresent() && skos.get() instanceof OntModel);
+
+    OntModel onto = (OntModel) skos.get();
+    Ontology o = onto.getOntology(ontoURI);
+
+    assertNotNull(o);
+
+    Statement v = onto.getProperty(o, OWL2.versionIRI);
+    assertNotNull(v);
+    assertEquals("http://ontology.mayo.edu/ontologies/dcmitype/2020-01-20", v.getObject().toString());
+  }
+
 
   @Test
   public void testVersionFragmentExtraction() {
@@ -150,11 +203,11 @@ public class VersioningTest {
         applyVersionToURI("http://foo.com/sa/",
             "2012/"));
 
-    assertEquals("http://foo.com/sa/2012",
+    assertEquals("http://foo.com/sa/2012/",
         applyVersionToURI("http://foo.com/sa/",
             "/2012"));
 
-    assertEquals("http://foo.com/sa/2012/",
+    assertEquals("http://foo.com/sa/2012#",
         applyVersionToURI("http://foo.com/sa#",
             "2012/"));
   }

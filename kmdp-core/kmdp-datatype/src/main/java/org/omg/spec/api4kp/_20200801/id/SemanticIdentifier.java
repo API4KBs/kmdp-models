@@ -51,7 +51,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   static ResourceIdentifier newId(URI uri) {
     String uriStr = uri.toString();
     String tag = URIUtil.detectLocalName(uri);
-    URI nsUri = URI.create(uriStr.substring(0, uriStr.lastIndexOf(tag)));
+    URI nsUri = URI.create(uriStr.substring(0, uriStr.lastIndexOf(tag) - 1));
     if (!"urn".equals(nsUri.getScheme()) && nsUri.getAuthority() == null) {
       throw new IllegalArgumentException("Unable to split the URI into a namespace and a tag, "
           + "consider using newNamespaceId instead? " + nsUri);
@@ -205,13 +205,21 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     return id;
   }
 
-
   /**
    * Generate resourceIdentifier from a series URI and a version URI
    *
    * @return ResourceIdentifier with required values set
    */
   static ResourceIdentifier newVersionId(URI seriesUri, URI versionUri) {
+    return newVersionId(seriesUri,versionUri,null);
+  }
+
+  /**
+   * Generate resourceIdentifier from a series URI and a version URI, and a given name/label
+   *
+   * @return ResourceIdentifier with required values set
+   */
+  static ResourceIdentifier newVersionId(URI seriesUri, URI versionUri, String name) {
     String uriStr = seriesUri.toString();
     String tag = URIUtil.detectLocalName(seriesUri);
     URI nsUri = URI.create(uriStr.substring(0, uriStr.lastIndexOf(tag)));
@@ -236,7 +244,8 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withVersionTag(vTag)
         .withUuid(Util.isUUID(tag)
             ? UUID.fromString(tag)
-            : Util.uuid(tag));
+            : Util.uuid(tag))
+        .withName(name);
     if (rid.getVersionFormat() == VersionTagType.TIMESTAMP) {
       rid.withEstablishedOn(DateTimeUtil.parseDate(vTag));
     } else {
@@ -637,7 +646,8 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withResourceId(getResourceId())
         .withUuid(getUuid())
         .withEstablishedOn(getEstablishedOn())
-        .withVersionId(getVersionId());
+        .withVersionId(getVersionId())
+        .withName(getName());
   }
 
   /**
@@ -655,7 +665,8 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withVersionTag(getVersionTag())
         .withResourceId(getResourceId())
         .withUuid(getUuid())
-        .withEstablishedOn(getEstablishedOn());
+        .withEstablishedOn(getEstablishedOn())
+        .withName(getName());
   }
 
   default Pointer toPointer(URI locator) {

@@ -18,6 +18,7 @@ package edu.mayo.kmdp.terms.generator;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
+import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -128,7 +129,7 @@ public class TerminologyGeneratorTest {
               .with(EnumGenerationParams.PACKAGE_OVERRIDES,
                   "test.generator.v20180210=org.foo.test"),
           src);
-      //showDirContent(folder);
+      showDirContent(folder,true);
 
       ensureSuccessCompile(src, src, target);
 
@@ -185,7 +186,8 @@ public class TerminologyGeneratorTest {
 
       return new SkosTerminologyAbstractor()
           .traverse(o, new SkosAbstractionConfig()
-              .with(SkosAbstractionParameters.REASON, true));
+              .with(SkosAbstractionParameters.REASON, true)
+              .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/(.*)"));
     } catch (Exception e) {
       e.printStackTrace();
       fail(e.getMessage());

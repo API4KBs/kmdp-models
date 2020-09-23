@@ -22,24 +22,24 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.registry.Registry;
-import org.omg.spec.api4kp._20200801.series.Versionable;
 import edu.mayo.kmdp.util.DateTimeUtil;
-import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import edu.mayo.ontology.taxonomies.kao.ccgentries.ConceptDefinitionTypeSeries;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
-import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.publicationeventtype.PublicationEventTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.publishingrole.PublishingRoleSeries;
+import edu.mayo.ontology.taxonomies.kmdo.relatedconcept.RelatedConceptSeries;
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import edu.mayo.ontology.taxonomies.ws.mimetype.MIMETypeSeries;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
-import edu.mayo.ontology.taxonomies.kmdo.relatedconcept.RelatedConceptSeries;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.series.Versionable;
+import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.iso639_1_languagecode.LanguageSeries;
-import org.omg.spec.api4kp._20200801.taxonomy.iso639_1_languagecode._20190201.Language;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory.KnowledgeArtifactCategorySeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategory;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
@@ -54,8 +54,6 @@ import org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresent
 import org.omg.spec.api4kp._20200801.taxonomy.languagerole.KnowledgeRepresentationLanguageRoleSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries;
-import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
-import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.relatedversiontype.RelatedVersionTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries;
@@ -125,7 +123,7 @@ public class VersionAgnosticVocabularyTest {
         LexiconSeries.SNOMED_CT.getReferentId().toString());
 
     assertEquals("fr",
-        Language.French.getTag());
+        LanguageSeries.French.getTag());
 
   }
 

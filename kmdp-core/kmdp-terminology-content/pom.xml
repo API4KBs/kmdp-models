@@ -98,6 +98,59 @@
         </configuration>
         <executions>
 
+          <execution>
+            <id>mime</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlSourceURL>http://www.invincea.com/ontologies/icas/1.0.1/mime/</owlSourceURL>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
+              <owlNamespace>http://www.invincea.com/ontologies/icas/1.0.1/mime</owlNamespace>
+              <targetURI>http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype</targetURI>
+              <entityType>INST</entityType>
+              <minDepth>1</minDepth>
+              <reason>true</reason>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/ws/MIMEType</skosNamespace>
+              <schemeName>MIMETypes</schemeName>
+              <topConceptName>MIMEType</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>MIMETypes.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>karc-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlSourceURL>http://purl.org/dc/dcmitype/</owlSourceURL>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
+              <owlNamespace>http://ontology.mayo.edu/ontologies/dcmitype</owlNamespace>
+              <targetURI>http://ontology.mayo.edu/ontologies/dcmitype/ContentType</targetURI>
+              <minDepth>1</minDepth>
+
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeArtifactCategory</skosNamespace>
+              <schemeName>KnowledgeArtifactCategories</schemeName>
+              <topConceptName>KnowledgeArtifactCategory</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>KnowledgeArtifactCategories.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
 
           <execution>
             <id>lang-lang-skos</id>
@@ -595,34 +648,6 @@
             </configuration>
           </execution>
 
-          <execution>
-            <id>mime</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>owl-to-skos</goal>
-            </goals>
-            <configuration>
-              <owlSourceURL>http://www.invincea.com/ontologies/icas/1.0.1/mime/</owlSourceURL>
-              <catalogURLs>
-                <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
-              </catalogURLs>
-
-              <owlNamespace>http://www.invincea.com/ontologies/icas/mime/</owlNamespace>
-              <targetURI>http://www.invincea.com/ontologies/icas/1.0.1/mime#MIMEtype</targetURI>
-              <entityType>INST</entityType>
-              <minDepth>1</minDepth>
-              <reason>true</reason>
-
-              <skosNamespace>https://ontology.mayo.edu/taxonomies/ws/MIMEType</skosNamespace>
-              <schemeName>MIMETypes</schemeName>
-              <topConceptName>MIMEType</topConceptName>
-
-              <skosOutputFiles>
-                <skosOutputFile>MIMETypes.skos.rdf</skosOutputFile>
-              </skosOutputFiles>
-            </configuration>
-          </execution>
-
 
           <execution>
             <id>kac-skos</id>
@@ -708,34 +733,6 @@
 
               <skosOutputFiles>
                 <skosOutputFile>KnowledgeAssetTypes_20190801.skos.rdf</skosOutputFile>
-              </skosOutputFiles>
-            </configuration>
-          </execution>
-
-
-
-          <execution>
-            <id>karc-skos</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>owl-to-skos</goal>
-            </goals>
-            <configuration>
-              <owlSourceURL>http://purl.org/dc/dcmitype/</owlSourceURL>
-              <catalogURLs>
-                <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
-              </catalogURLs>
-
-              <owlNamespace>http://purl.org/dc/dcmitype/</owlNamespace>
-              <targetURI>http://ontology.mayo.edu/ontologies/dcmitype/ContentType</targetURI>
-              <minDepth>1</minDepth>
-
-              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeArtifactCategory</skosNamespace>
-              <schemeName>KnowledgeArtifactCategories</schemeName>
-              <topConceptName>KnowledgeArtifactCategory</topConceptName>
-
-              <skosOutputFiles>
-                <skosOutputFile>KnowledgeArtifactCategories.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -907,6 +904,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
               <owlSourceURLs>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/CCG/</owlSourceURL>
               </owlSourceURLs>
@@ -932,6 +932,9 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
               <owlSourceURLs>
                 <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/decisionmodels/</owlSourceURL>
               </owlSourceURLs>
@@ -966,11 +969,11 @@
         <artifactId>terms-generator-plugin</artifactId>
         <version>${project.version}</version>
         <configuration>
-          <outputDirectory>${skosDir}</outputDirectory>
+          <outputDirectory>${project.build.directory}${s}generated-sources${s}java</outputDirectory>
           <jaxb>true</jaxb>
           <jsonld>true</jsonld>
           <json>true</json>
-          <versionPattern>.*\/(.*)\/$</versionPattern>
+          <versionPattern>.*\/(.*)$</versionPattern>
           <sourceCatalogPaths>
             <sourceCatalogPath>${ontologyDir}${s}catalog.xml</sourceCatalogPath>
           </sourceCatalogPaths>

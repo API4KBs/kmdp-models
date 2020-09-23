@@ -303,6 +303,7 @@ public class JaxbGenerationTest {
 
       return new SkosTerminologyAbstractor()
           .traverse(o, new SkosAbstractionConfig()
+              .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/(.*)")
               .with(SkosAbstractionParameters.REASON, true));
     } catch (Exception e) {
       e.printStackTrace();

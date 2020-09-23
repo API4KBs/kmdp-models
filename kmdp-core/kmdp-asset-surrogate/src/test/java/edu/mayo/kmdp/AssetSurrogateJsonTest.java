@@ -163,7 +163,6 @@ public class AssetSurrogateJsonTest {
         );
 
     String x = toJson(ks);
-    System.out.println(x);
     ks = JSonUtil.parseJson(x, KnowledgeAsset.class).orElse(null);
     assertNotNull(ks);
   }

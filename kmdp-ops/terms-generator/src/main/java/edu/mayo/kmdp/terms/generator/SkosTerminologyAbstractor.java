@@ -13,12 +13,12 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import static edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters.ENFORCE_VERSION;
 import static edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters.VERSION_PATTERN;
 import static edu.mayo.kmdp.util.Util.isUUID;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNAPSHOT;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNAPSHOT_DATE_PATTERN;
 
-import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.CLOSURE_MODE;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
@@ -53,6 +53,7 @@ import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import org.semanticweb.HermiT.Configuration;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -81,7 +82,7 @@ import org.slf4j.LoggerFactory;
 
 public class SkosTerminologyAbstractor {
 
-  private static Logger logger = LoggerFactory.getLogger(SkosTerminologyAbstractor.class);
+  private static final Logger logger = LoggerFactory.getLogger(SkosTerminologyAbstractor.class);
 
   private static final IRI CONCEPT_SCHEME = iri(SKOS.ConceptScheme);
   private static final IRI CONCEPT = iri(SKOS.Concept);
@@ -127,7 +128,7 @@ public class SkosTerminologyAbstractor {
     // build the code systems first
     codeSystems = model.individualsInSignature(Imports.INCLUDED)
         .filter(i -> isConceptScheme(i, model))
-        .map(x -> toScheme(x, model, cfg))
+        .map(x -> toScheme(x, model))
         .collect(Collectors.toMap(ConceptScheme::getId,
             Function.identity()));
 
@@ -248,7 +249,7 @@ public class SkosTerminologyAbstractor {
 
     Collection<ConceptScheme<Term>> schems = getPropertyValues(ind, model, IN_SCHEME)
         .map(AsOWLNamedIndividual::asOWLNamedIndividual)
-        .map(sch -> codeSystems.computeIfAbsent(getURI(sch), k -> toScheme(sch, model, cfg)))
+        .map(sch -> codeSystems.computeIfAbsent(getURI(sch), k -> toScheme(sch, model)))
         .collect(Collectors.toSet());
 
     boolean enforceClosure = cfg.getTyped(SkosAbstractionParameters.ENFORCE_CLOSURE);
@@ -257,7 +258,7 @@ public class SkosTerminologyAbstractor {
           .filter(parent -> isTopConcept(parent, model))
           .flatMap(top -> getSchemesForTopConcept(top, model))
           .map(AsOWLNamedIndividual::asOWLNamedIndividual)
-          .map(sch -> codeSystems.computeIfAbsent(getURI(sch),k -> toScheme(sch, model, cfg)))
+          .map(sch -> codeSystems.computeIfAbsent(getURI(sch),k -> toScheme(sch, model)))
           .collect(Collectors.toSet());
     }
 
@@ -275,31 +276,68 @@ public class SkosTerminologyAbstractor {
     return schemes1.stream();
   }
 
-  private ConceptScheme<Term> toScheme(OWLNamedIndividual ind, OWLOntology model,
-      SkosAbstractionConfig cfg) {
+  private ConceptScheme<Term> toScheme(OWLNamedIndividual ind, OWLOntology model) {
     URI uri = getURI(ind);
-    URI version = applyVersion(ind, model, cfg.getTyped(SkosAbstractionParameters.ENFORCE_VERSION))
-        .orElse(uri);
+    URI version;
     String code = getCodedIdentifiers(ind, model).get(0);
     String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
 
-    // assume that ontologies use date-oriented version tags
-
-    String versionTag = extractVersionTag(version,
-        cfg.getTyped(VERSION_PATTERN))
+    String versionTag = detectOwlVersionTag(model, cfg.getTyped(ENFORCE_VERSION))
         .orElse(null);
+
+    // assume that ontologies use date-oriented version tags
     String dateFormatPattern = cfg.getTyped(SkosAbstractionParameters.DATE_PATTERN);
-    Date pubDate = DateTimeUtil.parseDateOrNow(
-        versionTag,
-        dateFormatPattern);
-    if (versionTag == null || SNAPSHOT.equals(versionTag)) {
+    Date pubDate = DateTimeUtil.parseDateOrNow(versionTag, dateFormatPattern);
+
+    if (versionTag == null) {
+      // use the date as a version tag, with no explicit version information
+      versionTag = DateTimeUtil.serializeDate(pubDate, dateFormatPattern);
+      version = uri;
+    } else if (SNAPSHOT.equals(versionTag)) {
+      // keep SNAPSHOT in the URI, but resolve it to a date for the version tag
+      version = applyVersion(ind, versionTag);
       versionTag = DateTimeUtil.serializeDate(pubDate, SNAPSHOT_DATE_PATTERN);
+    } else {
+      // use the detected versionTag
+      version = applyVersion(ind, versionTag);
     }
 
     MutableConceptScheme mcs = new MutableConceptScheme(
         uri, version, code, versionTag, label, pubDate);
     return mcs;
   }
+
+  private Optional<String> detectOwlVersionTag(OWLOntology model, boolean enforceVersion) {
+
+    String ontoUri = model.getOntologyID().getOntologyIRI().map(IRI::toString).orElse("");
+    Optional<String> versionUri = model.getOntologyID().getVersionIRI().map(IRI::toString);
+    Optional<String> versionFragment;
+
+    if (cfg.get(VERSION_PATTERN).isPresent()) {
+      versionFragment = versionUri
+          .map(URI::create)
+          .flatMap(vuri -> extractVersionTag(vuri, cfg.get(VERSION_PATTERN).orElseThrow()));
+    } else {
+      versionFragment = versionUri.map(vuri -> NameUtils.strip(ontoUri, vuri));
+    }
+
+    if (versionFragment.isEmpty() && enforceVersion) {
+      throw new IllegalArgumentException("Unable to detect required information for " + ontoUri);
+    }
+    return versionFragment;
+  }
+
+  private URI applyVersion(OWLNamedIndividual ind, String versionFragment) {
+    String indURI = ind.getIRI().toString();
+    String localId = NameUtils.getTrailingPart(ind.getIRI().toString());
+
+    final String detectedVersion = versionFragment;
+    return IRI.create(indURI.substring(0, indURI.lastIndexOf(localId) - 1)
+        + (detectedVersion.startsWith("/") ? detectedVersion : "/" + detectedVersion)
+        + "#" + localId)
+        .toURI();
+  }
+
 
   private Optional<String> extractVersionTag(URI version, String versionPattern) {
     if (version == null || Util.isEmpty(versionPattern)) {
@@ -343,36 +381,6 @@ public class SkosTerminologyAbstractor {
     }
   }
 
-  private Optional<URI> applyVersion(OWLNamedIndividual ind, OWLOntology model,
-      boolean enforceVersion) {
-    String ontoUri = model.getOntologyID().getOntologyIRI().map(IRI::toString).orElse("");
-    String versionUri = model.getOntologyID().getVersionIRI().map(IRI::toString).orElse("");
-    String versionFragment = NameUtils.strip(ontoUri, versionUri);
-
-    if (Util.isEmpty(versionFragment) && cfg.get(VERSION_PATTERN).isPresent()) {
-      Matcher m = Pattern.compile(cfg.get(VERSION_PATTERN).orElse("")).matcher(versionUri);
-      if (m.groupCount() == 1 && m.find()) {
-        versionFragment = m.group(1);
-        logger.warn("Ontology version URI coincides with series URI : {} "
-            + "- estimated version tag to be {}", versionUri, versionFragment);
-      }
-    }
-    if (Util.isEmpty(versionFragment) && enforceVersion) {
-      throw new IllegalArgumentException("Unable to detect required information for " + ontoUri);
-    }
-
-    String indURI = ind.getIRI().toString();
-    String localId = NameUtils.getTrailingPart(ind.getIRI().toString());
-
-    final String detectedVersion = versionFragment;
-    return model.getOntologyID().getVersionIRI()
-        .map(v -> IRI
-            .create(indURI.substring(0, indURI.lastIndexOf(localId) - 1)
-                + (detectedVersion.startsWith("/") ? detectedVersion : "/" + detectedVersion)
-                + "#" + localId)
-            .toURI());
-
-  }
 
 
   public Term toCode(OWLNamedIndividual ind,

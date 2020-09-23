@@ -86,7 +86,7 @@ public class VersionedGeneratorTest {
               .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
           src);
 
-      showDirContent(folder);
+      showDirContent(folder, true);
 
       ensureSuccessCompile(src, src, target);
 
@@ -139,8 +139,8 @@ public class VersionedGeneratorTest {
       assertTrue(releases.get(1).getTime() > releases.get(2).getTime());
 
 //      assertEquals("SNAPSHOT", releaseVersions.get(0));
-      assertEquals("20190605", releaseVersions.get(1));
-      assertEquals("20180210", releaseVersions.get(2));
+      assertEquals("v20190605", releaseVersions.get(1));
+      assertEquals("v20180210", releaseVersions.get(2));
 
 
       Field f = sseries.getDeclaredField("schemeVersions");
@@ -151,7 +151,8 @@ public class VersionedGeneratorTest {
       List<String> sv = (List<String>) schemeVersions;
       assertEquals(new HashSet<>(releaseVersions),new HashSet<>(sv));
 
-      Date effectiveDate = DateTimeUtil.parseDate(sv.get(1),"yyyyMMdd");
+      Date effectiveDate = DateTimeUtil.parseDate(sv.get(1).substring(1),"yyyyMMdd");
+      assertNotNull(effectiveDate);
       Optional<?> version = ((Series<?>)x.get()).asOf(effectiveDate);
       assertTrue(version.isPresent());
       assertTrue(version.get() instanceof VersionableTerm);
@@ -178,13 +179,15 @@ public class VersionedGeneratorTest {
 
       SkosTerminologyAbstractor abstractor = new SkosTerminologyAbstractor();
       ConceptGraph cg1 = abstractor.traverse(o1, new SkosAbstractionConfig()
-          .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/v(.*)")
+          .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/(v.*)$")
+          .with(SkosAbstractionParameters.DATE_PATTERN, "'v'yyyyMMdd")
           .with(SkosAbstractionParameters.REASON, true));
       ConceptGraph cg2 = abstractor.traverse(o2, new SkosAbstractionConfig()
-          .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/v(.*)")
+          .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/(v.*)$")
+          .with(SkosAbstractionParameters.DATE_PATTERN, "'v'yyyyMMdd")
           .with(SkosAbstractionParameters.REASON, true));
       ConceptGraph cg3 = abstractor.traverse(o3, new SkosAbstractionConfig()
-          .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/(.*)")
+          .with(SkosAbstractionParameters.VERSION_PATTERN, ".*/(.*)$")
           .with(SkosAbstractionParameters.REASON, true));
 
       return new VersionedConceptGraph(cg1).merge(cg2).merge(cg3);

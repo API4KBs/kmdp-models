@@ -25,7 +25,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.ws.mimetype.IMIMEType;
+import edu.mayo.ontology.taxonomies.ws.mimetype.MIMEType;
 import edu.mayo.ontology.taxonomies.ws.mimetype.MIMETypeSeries;
 import java.util.Arrays;
 import java.util.Optional;
@@ -205,7 +205,7 @@ public class ModelMIMECoder {
    * @param mimeType an encoded, standard MIME type
    * @return the formal re-encoding of the input MIME type
    */
-  private static Optional<String> mapKnownMimes(IMIMEType mimeType) {
+  private static Optional<String> mapKnownMimes(MIMEType mimeType) {
     String mappedMime = null;
     switch (mimeType.asEnum()) {
       case HyperText_Markup_Language:

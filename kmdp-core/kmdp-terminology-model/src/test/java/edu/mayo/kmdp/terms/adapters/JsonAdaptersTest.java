@@ -51,7 +51,6 @@ public class JsonAdaptersTest {
 
     Optional<String> s = JSonUtil.writeJsonAsString(f);
     assertTrue(s.isPresent());
-    System.out.println(s);
     assertTrue(s.orElse("").contains("{http://baz.com} http://foo.bar#bar"));
 
     Foo f2 = JSonUtil.parseJson(s.get(), Foo.class).orElse(null);
@@ -63,7 +62,6 @@ public class JsonAdaptersTest {
     c1.setResourceId(URI.create("http://baz.com#bar"));
     Optional<String> s2 = JSonUtil.writeJsonAsString(f);
     assertTrue(s2.isPresent());
-    System.out.println(s2);
     assertTrue(s2.orElse("").contains("http://baz.com#bar"));
 
     Foo f3 = JSonUtil.parseJson(s2.get(), Foo.class).orElse(null);

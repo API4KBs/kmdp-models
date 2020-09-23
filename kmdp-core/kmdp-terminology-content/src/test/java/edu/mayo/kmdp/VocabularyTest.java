@@ -21,6 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.SPARQL_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries.CQL_Essentials;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.ontology.taxonomies.kao.ccgentries.ConceptDefinitionTypeSeries;
@@ -28,10 +32,9 @@ import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.publicationeventtype.PublicationEventTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.publishingrole.PublishingRoleSeries;
-import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.relatedconcept.RelatedConceptSeries;
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import edu.mayo.ontology.taxonomies.ws.mimetype.MIMETypeSeries;
-import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
 import java.util.Arrays;
@@ -125,7 +128,7 @@ public class VocabularyTest {
         KnowledgeRepresentationLanguageSerializationSeries.OWL_Functional_Syntax.getTag());
 
     assertEquals("dmn-v12",
-        KnowledgeRepresentationLanguageSeries.DMN_1_2.getTag());
+        DMN_1_2.getTag());
 
     assertEquals("lnc",
         LexiconSeries.LOINC.getTag());
@@ -166,7 +169,7 @@ public class VocabularyTest {
   @Test
   public void testReferents() {
     assertEquals("https://www.omg.org/spec/DMN/1.2/",
-        KnowledgeRepresentationLanguageSeries.DMN_1_2.getReferentId().toString());
+        DMN_1_2.getReferentId().toString());
 
     assertEquals("https://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/Italian",
         LanguageSeries.Italian.getReferentId().toString());
@@ -186,7 +189,7 @@ public class VocabularyTest {
         KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models.getConceptId().toString());
 
     assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KRLanguage#0bf050a2-fbd6-38c2-a4ce-323fd91c7b24",
-        KnowledgeRepresentationLanguageSeries.DMN_1_2.getConceptId().toString());
+        DMN_1_2.getConceptId().toString());
   }
 
 
@@ -228,14 +231,14 @@ public class VocabularyTest {
 
   @Test
   public void testKRLanguages() {
-    assertNotNull(KnowledgeRepresentationLanguageSeries.SPARQL_1_1);
+    assertNotNull(SPARQL_1_1);
 
-    assertEquals(KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax,
-        Registry.getValidationSchema(KnowledgeRepresentationLanguageSeries.DMN_1_2.getReferentId())
+    assertEquals(DMN_1_2_XML_Syntax,
+        Registry.getValidationSchema(DMN_1_2.getReferentId())
             .flatMap(KnowledgeRepresentationLanguageSerializationSeries::resolveRef)
             .orElse(null));
 
-    assertNotNull(KnowledgeRepresentationLanguageProfileSeries.CQL_Essentials);
+    assertNotNull(CQL_Essentials);
   }
 
   @Test

@@ -42,10 +42,6 @@ public class ComparisonTest {
     ISCH1 s1 = SCH1.Specific_Concept;
     ISCH1 s2 = SCH1Old.Specific_Concept;
 
-    System.out.println(s0.hashCode());
-    System.out.println(s1.hashCode());
-    System.out.println(s2.hashCode());
-
     assertTrue(coll.contains(s0));
     assertTrue(coll.contains(s1));
     assertTrue(coll.contains(s2));

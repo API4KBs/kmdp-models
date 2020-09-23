@@ -18,6 +18,7 @@ package edu.mayo.kmdp.terms.generator;
 import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
 import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
 import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
+import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -45,8 +46,6 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 public class GenerateWithImportsTest {
 
-  private static ConceptGraph graph;
-
   @TempDir
   public Path tmp;
 
@@ -63,7 +62,7 @@ public class GenerateWithImportsTest {
             .with(EnumGenerationParams.JSON_ADAPTER, MockTermsJsonAdapter.class.getName())
             .with(EnumGenerationParams.XML_ADAPTER, MockTermsXMLAdapter.class.getName()),
         src);
-    //showDirContent(tmp.toFile(), true);
+    showDirContent(tmp.toFile(), true);
 
     ensureSuccessCompile(src, src, target);
 
