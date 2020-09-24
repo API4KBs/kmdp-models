@@ -9,7 +9,6 @@ import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATES
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.URIUtil;
@@ -22,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -132,12 +132,32 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
+   * Tentatively generate a resourceIdentifier for URI that includes version information
+   * according to known patterns
+   *
+   * @return ResourceIdentifier with required values set
+   */
+  static Optional<ResourceIdentifier> tryNewVersionId(URI versionUri) {
+    return tryNewVersionId(versionUri, VERSIONS_RX, 3, 2);
+  }
+
+  /**
    * Generate resourceIdentifier from a series URI and a version Tag
    *
    * @return ResourceIdentifier with required values set
    */
   static ResourceIdentifier newVersionId(URI seriesUri, String versionTag) {
     return newVersionId(
+        URI.create(seriesUri.toString() + IdentifierConstants.VERSIONS + versionTag));
+  }
+
+  /**
+   * Generate resourceIdentifier from a series URI and a version Tag
+   *
+   * @return ResourceIdentifier with required values set
+   */
+  static Optional<ResourceIdentifier> tryNewVersionId(URI seriesUri, String versionTag) {
+    return tryNewVersionId(
         URI.create(seriesUri.toString() + IdentifierConstants.VERSIONS + versionTag));
   }
 
@@ -157,7 +177,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    */
   static ResourceIdentifier newVersionId(URI versionUri, Pattern versionPattern,
       int versionGroupIdx, int tagGroupIdx) {
-    if (versionUri.getScheme().equals("urn")) {
+    if ("urn".equals(versionUri.getScheme())) {
       // assume pattern urn:uuid:tag:version
       String str = versionUri.toString();
       StringTokenizer tok = new StringTokenizer(str, ":");
@@ -180,6 +200,22 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     }
     logger.warn("Unable to detect version information from URI : {}", versionUri);
     return newId(versionUri);
+  }
+
+  static Optional<ResourceIdentifier> tryNewVersionId(URI versionUri, Pattern versionPattern,
+      int versionGroupIdx, int tagGroupIdx) {
+    if ("urn".equals(versionUri.getScheme())) {
+      StringTokenizer tok = new StringTokenizer(versionUri.toString(), ":");
+      if (tok.countTokens() < 4) {
+        return Optional.empty();
+      }
+    } else {
+      Matcher m = versionPattern.matcher(versionUri.toString());
+      if (!m.matches()) {
+        return Optional.empty();
+      }
+    }
+    return Optional.of(newVersionId(versionUri,versionPattern,versionGroupIdx,tagGroupIdx));
   }
 
   /**

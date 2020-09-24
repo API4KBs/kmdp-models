@@ -25,10 +25,12 @@ import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import javax.xml.namespace.QName;
+import org.omg.spec.api4kp._20200801.datatypes.Bindings;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.ParameterDefinition;
 import org.omg.spec.api4kp._20200801.services.ParameterDefinitions;
@@ -80,5 +82,11 @@ public class PlatformComponentHelper {
       }
     });
     return prop;
+  }
+
+  public static Bindings asBindings(Map<String, Object> map) {
+    Bindings bindings = new Bindings();
+    map.forEach(bindings::put);
+    return bindings;
   }
 }

@@ -118,6 +118,9 @@
                 <include>**/*.xjb</include>
                 <include>**/*.episode</include>
               </bindingIncludes>
+              <bindingExcludes>
+                <exclude>**/datatypes.xjb</exclude>
+              </bindingExcludes>
 
               <schemas>
                 <schema>

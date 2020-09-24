@@ -121,10 +121,10 @@ public class JsonRestWSUtils {
           switch (fhir) {
             case STU3:
               return TypeFactory.defaultInstance()
-                  .constructMapType(Map.class, String.class, Base.class);
+                  .constructMapType((Class<? extends Map<String,?>>) type, String.class, Base.class);
             case DSTU2:
               return TypeFactory.defaultInstance()
-                  .constructMapType(Map.class, String.class, BaseElement.class);
+                  .constructMapType((Class<? extends Map<String,?>>) type, String.class, BaseElement.class);
             case NONE:
             default:
               return super.getJavaType(type, contextClass);

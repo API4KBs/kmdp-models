@@ -1,7 +1,6 @@
 <jxb:bindings version="2.1"
   xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
-  xmlns:dtt="https://www.omg.org/spec/API4KP/20200801/datatypes"
   xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
   xmlns:ci="http://jaxb.dev.java.net/plugin/code-injector"
   xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
@@ -24,8 +23,12 @@
       </ci:code>
     </jxb:bindings>
 
+    <jxb:bindings node="//xsd:complexType[@name='Bindings']">
+      <jxb:class ref="org.omg.spec.api4kp._20200801.datatypes.Bindings"/>
+    </jxb:bindings>
+
     <jxb:bindings node="//xsd:simpleType[@name='UUID']">
-      <jxb:class ref="java.util.UUID" />
+      <jxb:class ref="java.util.UUID"/>
     </jxb:bindings>
 
   </jxb:bindings>
