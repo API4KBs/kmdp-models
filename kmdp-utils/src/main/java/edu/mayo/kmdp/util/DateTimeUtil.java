@@ -60,6 +60,10 @@ public class DateTimeUtil {
       new DateTimeFormatterBuilder().append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
           .optionalStart().appendOffsetId().toFormatter();
 
+  static final DateTimeFormatter instantFormatter =
+      new DateTimeFormatterBuilder().append(DateTimeFormatter.ISO_INSTANT)
+          .optionalStart().appendOffsetId().toFormatter();
+
 
   private DateTimeUtil() {
     // functions only
@@ -79,6 +83,10 @@ public class DateTimeUtil {
 
   public static boolean validateLocalTime(String instStr) {
     return canParse(instStr, localTimeFormatter);
+  }
+
+  public static boolean validateInstant(String instStr) {
+    return canParse(instStr, instantFormatter);
   }
 
 
@@ -201,6 +209,27 @@ public class DateTimeUtil {
   }
 
 
+  public static String serializeAsInstant(Date dt) {
+    if (dt == null) {
+      return null;
+    }
+    return serializeAsInstant(toLocalDateTime(dt));
+  }
+
+  public static String serializeAsInstant(LocalDateTime dt) {
+    if (dt == null) {
+      return null;
+    }
+    return instantFormatter.format(dt);
+  }
+
+  public static String serializeAsInstant(ZonedDateTime dt) {
+    if (dt == null) {
+      return null;
+    }
+    return instantFormatter.format(dt);
+  }
+
 
   public static Date parseDateTime(String dateTimeStr) {
     return fromZonedDateTime(ZonedDateTime.parse(dateTimeStr, dateTimeFormatter));
@@ -217,6 +246,11 @@ public class DateTimeUtil {
   public static Date parseLocalTime(String localTimeStr) {
     LocalTime time = LocalTime.parse(localTimeStr);
     return calendarToTime(time);
+  }
+
+  public static Date parseInstant(String instantStr) {
+    Instant time = Instant.parse(instantStr);
+    return Date.from(time);
   }
 
   public static Date dateToTime(Date date) {
@@ -369,6 +403,15 @@ public class DateTimeUtil {
 
   public static Date fromEpochTimestamp(long timestamp) {
     return from(Instant.ofEpochMilli(timestamp));
+  }
+
+  /**
+   * Parses a dateTime string into a Date, then maps the Date to a milliseconds from epoch
+   * @param dateTimeStr
+   * @return
+   */
+  public static String dateTimeStrToMillis(String dateTimeStr) {
+    return Long.toString(parseDateTime(dateTimeStr).getTime());
   }
 
   private static boolean canParse(String dtStr, DateTimeFormatter formatter) {

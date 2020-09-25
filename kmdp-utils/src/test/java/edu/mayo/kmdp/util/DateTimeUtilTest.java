@@ -37,7 +37,7 @@ class DateTimeUtilTest {
   }
 
   @Test
-  public void testParseDateDefault() {
+  void testParseDateDefault() {
     Date d = DateTimeUtil.parseDate("2015-08-14");
     assertNotNull(d);
 
@@ -48,7 +48,7 @@ class DateTimeUtilTest {
   }
 
   @Test
-  public void testParseWithCustomFormat() {
+  void testParseWithCustomFormat() {
     Date d = DateTimeUtil.tryParseDate("20190801","yyyyMMdd")
         .orElse(null);
     assertNotNull(d);
@@ -60,7 +60,7 @@ class DateTimeUtilTest {
   }
 
   @Test
-  public void testXMLFormat() {
+  void testXMLFormat() {
     Date d = DateTimeUtil.parseDate("2019-08-01");
     assertNotNull(d);
 
@@ -71,7 +71,7 @@ class DateTimeUtilTest {
   }
 
   @Test
-  public void testFullDate() {
+  void testFullDate() {
     Date d = DateTimeUtil.parseDateTime(
         "2019-08-06T22:16:54Z",
         "yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -85,14 +85,14 @@ class DateTimeUtilTest {
   }
 
   @Test
-  public void testIsDate() {
+  void testIsDate() {
     assertTrue(DateTimeUtil.validateDate("2019-08-06"));
     Date d = DateTimeUtil.parseDate("2019-08-06");
     assertNotNull(d);
   }
 
   @Test
-  public void testIsSameDay() {
+  void testIsSameDay() {
     Date d1 = DateTimeUtil.parseDateTime(
         "2019-08-06T22:16:54Z",
         "yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -100,6 +100,17 @@ class DateTimeUtilTest {
         "2019-08-06");
 
     assertTrue(DateTimeUtil.isSameDay(d1,d2));
+  }
+  
+  @Test
+  void testToEpochMillis() {
+    Date d = new Date();
+    long millis = d.getTime();
+
+    String dateStr = DateTimeUtil.serializeAsDateTime(d);
+    String millStr = DateTimeUtil.dateTimeStrToMillis(dateStr);
+
+    assertEquals(Long.toString(millis),millStr);
   }
 
 }
