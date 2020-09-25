@@ -22,11 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
@@ -136,6 +138,32 @@ class AnswerTest {
 
     Answer<String> ans3 = Answer.of("bbb");
     assertEquals("bbb", ans3.orElseGet(() -> { throw new RuntimeException(); }));
+  }
+
+
+  @Test
+  void testStreamReduce() {
+    Answer<?> ans = Answer.of(Stream.of(2,3,4,5));
+    assertTrue(ans.isSuccess());
+
+    Answer<Integer> ans2 = ans.reduce((x,y) -> x*y, Integer.class);
+    assertTrue(ans2.isSuccess());
+
+    assertEquals(2*3*4*5, ans2.orElse(-1));
+  }
+
+  @Test
+  void testListMap() {
+    Answer<?> ans = Answer.of(Arrays.asList(2,3,4,5));
+    assertTrue(ans.isSuccess());
+
+    Answer<List<Integer>> ans2 = ans.mapList(x -> x*2, Integer.class);
+    assertTrue(ans2.isSuccess());
+    assertEquals(Arrays.asList(4,6,8,10), ans2.orElse(Collections.emptyList()));
+
+    Answer<List<Integer>> ans3 = ans.flatList(x -> Answer.of(x*2), Integer.class);
+    assertTrue(ans3.isSuccess());
+    assertEquals(Arrays.asList(4,6,8,10), ans3.orElse(Collections.emptyList()));
   }
 
 }

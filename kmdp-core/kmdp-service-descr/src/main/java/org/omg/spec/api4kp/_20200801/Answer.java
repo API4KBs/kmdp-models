@@ -195,6 +195,9 @@ public class Answer<T> extends Explainer {
   public static <T> Collector<Answer<T>, Set<Answer<T>>, Answer<Set<T>>> toSet() {
     return toSet(ans -> true);
   }
+  public static <T> Collector<Answer<T>, Stream<Answer<T>>, Answer<Stream<T>>> toStream() {
+    return toStream(ans -> true);
+  }
 
   public static <T> Collector<Answer<T>, List<Answer<T>>, Answer<List<T>>> toList(
       Predicate<T> filter) {
@@ -236,6 +239,21 @@ public class Answer<T> extends Explainer {
     );
   }
 
+  public static <T> Collector<Answer<T>, Stream<Answer<T>>, Answer<Stream<T>>> toStream(
+      Predicate<T> filter) {
+    return Collector.of(
+        Stream::of,
+        (stream, member) -> {
+          if (member.isSuccess()
+              && member.map(filter::test).orElse(false).booleanValue()) {
+            Stream.concat(stream, Stream.of(member));
+          }
+        },
+        Stream::concat,
+        answerSet -> Answer.of(answerSet.map(Answer::get))
+    );
+  }
+
 
   /* Binders */
 
@@ -246,13 +264,25 @@ public class Answer<T> extends Explainer {
   public <U> Answer<U> flatOpt(Function<? super T, Optional<U>> mapper) {
     return getHandler().flatOpt(this, mapper);
   }
+  
+  public <U,X> Answer<List<U>> flatList(Function<? super X, Answer<U>> mapper, Class<X> memberClass) {
+    return getHandler().flatList((Answer<List<X>>) this, mapper);
+  }
 
   public <U> Answer<U> reduce(Function<Composite<? super T,?,?>, Answer<U>> mapper) {
     return getHandler().reduce(this, mapper);
   }
 
+  public <U> Answer<U> reduce(BinaryOperator<U> reducer, Class<U> type) {
+    return getHandler().reduce((Answer<Stream<U>>) this, reducer);
+  }
+
   public <U> Answer<U> map(Function<? super T, ? extends U> mapper) {
     return getHandler().map(this, mapper);
+  }
+  
+  public <U,X> Answer<List<U>> mapList(Function<? super X, ? extends U> mapper, Class<X> memberClass) {
+    return getHandler().mapList((Answer<List<X>>) this, mapper);
   }
 
   public void ifPresent(Consumer<? super T> consumer) {
@@ -575,7 +605,13 @@ public class Answer<T> extends Explainer {
 
     <U> Answer<U> flatOpt(Answer<T> tAnswer, Function<? super T, Optional<U>> mapper);
 
-    <U> Answer<U> reduce(Answer<T> srcAnswer, Function<Composite<? super T,?,?>,Answer<U>> reducer);
+    <U> Answer<U> reduce(Answer<T> srcAnswer, Function<Composite<? super T,?,?>, Answer<U>> reducer);
+
+    <U> Answer<U> reduce(Answer<Stream<U>> srcAnswer, BinaryOperator<U> reducer);
+
+    <U, X> Answer<List<U>> mapList(Answer<List<X>> listAnswer, Function<? super X,? extends U> mapper);
+
+    <U, X> Answer<List<U>> flatList(Answer<List<X>> listAnswer, Function<? super X, Answer<U>> mapper);
   }
 
   public static class SuccessOutcomeStrategy<T> implements OutcomeStrategy<T> {
@@ -655,6 +691,29 @@ public class Answer<T> extends Explainer {
       }
     }
 
+    @Override
+    public <U> Answer<U> reduce(Answer<Stream<U>> srcAnswer, BinaryOperator<U> reducer) {
+      return srcAnswer.flatOpt(s -> s.reduce(reducer));
+    }
+
+    @Override
+    public <U, X> Answer<List<U>> mapList(Answer<List<X>> listAnswer,
+        Function<? super X, ? extends U> mapper) {
+      return listAnswer.map(
+          l -> l.stream().map(mapper).collect(Collectors.toList())
+      );
+    }
+
+    @Override
+    public <U, X> Answer<List<U>> flatList(
+        Answer<List<X>> listAnswer,
+        Function<? super X, Answer<U>> mapper) {
+      return listAnswer
+          .flatMap(l -> l.stream()
+              .map(mapper)
+              .collect(Answer.toList()));
+    }
+
   }
 
   public static class FailureOutcomeStrategy<T> implements OutcomeStrategy<T> {
@@ -697,6 +756,32 @@ public class Answer<T> extends Explainer {
           .withCodedOutcome(srcAnswer.getCodedOutcome())
           .withExplanation(srcAnswer.explanation)
           .withMeta(srcAnswer.meta);
+    }
+
+    @Override
+    public <U> Answer<U> reduce(Answer<Stream<U>> srcAnswer, BinaryOperator<U> reducer) {
+      return new Answer<U>()
+          .withCodedOutcome(srcAnswer.getCodedOutcome())
+          .withExplanation(srcAnswer.explanation)
+          .withMeta(srcAnswer.meta);
+    }
+
+    @Override
+    public <U, X> Answer<List<U>> mapList(Answer<List<X>> listAnswer,
+        Function<? super X, ? extends U> mapper) {
+      return new Answer<List<U>>()
+          .withCodedOutcome(listAnswer.getCodedOutcome())
+          .withExplanation(listAnswer.explanation)
+          .withMeta(listAnswer.meta);
+    }
+
+    @Override
+    public <U, X> Answer<List<U>> flatList(Answer<List<X>> listAnswer,
+        Function<? super X, Answer<U>> mapper) {
+      return new Answer<List<U>>()
+          .withCodedOutcome(listAnswer.getCodedOutcome())
+          .withExplanation(listAnswer.explanation)
+          .withMeta(listAnswer.meta);
     }
   }
 
