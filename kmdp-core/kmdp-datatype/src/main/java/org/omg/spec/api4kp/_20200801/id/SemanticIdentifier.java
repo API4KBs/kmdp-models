@@ -722,7 +722,9 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
 
   default KeyIdentifier asKey() {
     final UUID id = getUuid();
-    final int vid = getVersionTag().hashCode();
+    final int vid = getVersionTag() != null
+        ? getVersionTag().hashCode()
+        : VERSION_LATEST.hashCode();
 
     return new KeyIdentifier() {
       @Override

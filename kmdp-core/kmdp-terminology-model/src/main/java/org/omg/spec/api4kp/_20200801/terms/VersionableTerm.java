@@ -18,7 +18,7 @@ public interface VersionableTerm<T extends Term & Versionable<T>,E extends Enum<
   }
 
   default boolean isAnyOf(Collection<? extends Term> others) {
-    return others.stream().anyMatch(this::isSame);
+    return others != null && others.stream().anyMatch(this::isSame);
   }
 
   default boolean isNoneOf(Collection<? extends Term> others) {
@@ -30,17 +30,19 @@ public interface VersionableTerm<T extends Term & Versionable<T>,E extends Enum<
   }
 
   default boolean isSameVersion(Term other) {
-    return this.getUuid().equals(other.getUuid())
+    return other != null
+        && this.getUuid().equals(other.getUuid())
         && this.getVersionTag().equals(other.getVersionTag());
   }
 
   default boolean isDifferentVersion(Term other) {
-    return this.getUuid().equals(other.getUuid())
+    return other != null
+        && this.getUuid().equals(other.getUuid())
         && ! this.getVersionTag().equals(other.getVersionTag());
   }
 
   default boolean isSameEntity(Term other) {
-    return this.getUuid().equals(other.getUuid());
+    return other != null && this.getUuid().equals(other.getUuid());
   }
 
 }
