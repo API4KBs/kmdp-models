@@ -22,12 +22,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
@@ -146,7 +149,7 @@ class AnswerTest {
     Answer<?> ans = Answer.of(Stream.of(2,3,4,5));
     assertTrue(ans.isSuccess());
 
-    Answer<Integer> ans2 = ans.reduce((x,y) -> x*y, Integer.class);
+    Answer<Integer> ans2 = ans.reduce(Integer.class, (x,y) -> x*y);
     assertTrue(ans2.isSuccess());
 
     assertEquals(2*3*4*5, ans2.orElse(-1));
@@ -157,13 +160,35 @@ class AnswerTest {
     Answer<?> ans = Answer.of(Arrays.asList(2,3,4,5));
     assertTrue(ans.isSuccess());
 
-    Answer<List<Integer>> ans2 = ans.mapList(x -> x*2, Integer.class);
+    Answer<List<Integer>> ans2 = ans.mapList(Integer.class, x -> x*2);
     assertTrue(ans2.isSuccess());
     assertEquals(Arrays.asList(4,6,8,10), ans2.orElse(Collections.emptyList()));
 
-    Answer<List<Integer>> ans3 = ans.flatList(x -> Answer.of(x*2), Integer.class);
+    Answer<List<Integer>> ans3 = ans.flatList(Integer.class, x -> Answer.of(x*2));
     assertTrue(ans3.isSuccess());
     assertEquals(Arrays.asList(4,6,8,10), ans3.orElse(Collections.emptyList()));
   }
+
+  @Test
+  void testForEeach() {
+    Answer<?> ans = Answer.of(Arrays.asList(2,3,4,5));
+    assertTrue(ans.isSuccess());
+
+    List<Integer> set = new ArrayList<>();
+    ans.forEach(Integer.class, i -> set.add(-i));
+    assertEquals(Arrays.asList(-2,-3,-4,-5), set);
+  }
+
+  @Test
+  void testCollectToList() {
+    List<Answer<Integer>> list = Arrays.asList(
+        Answer.of(1),
+        Answer.of(2)
+    );
+
+    Answer<List<Integer>> ans = list.stream().collect(Answer.toList());
+    assertEquals(Arrays.asList(1,2), ans.orElse(Collections.emptyList()));
+  }
+
 
 }

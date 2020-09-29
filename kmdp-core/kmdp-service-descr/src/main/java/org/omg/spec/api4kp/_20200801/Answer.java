@@ -265,7 +265,7 @@ public class Answer<T> extends Explainer {
     return getHandler().flatOpt(this, mapper);
   }
   
-  public <U,X> Answer<List<U>> flatList(Function<? super X, Answer<U>> mapper, Class<X> memberClass) {
+  public <U,X> Answer<List<U>> flatList(Class<X> memberClass, Function<? super X, Answer<U>> mapper) {
     return getHandler().flatList((Answer<List<X>>) this, mapper);
   }
 
@@ -273,7 +273,7 @@ public class Answer<T> extends Explainer {
     return getHandler().reduce(this, mapper);
   }
 
-  public <U> Answer<U> reduce(BinaryOperator<U> reducer, Class<U> type) {
+  public <U> Answer<U> reduce(Class<U> type, BinaryOperator<U> reducer) {
     return getHandler().reduce((Answer<Stream<U>>) this, reducer);
   }
 
@@ -281,13 +281,18 @@ public class Answer<T> extends Explainer {
     return getHandler().map(this, mapper);
   }
   
-  public <U,X> Answer<List<U>> mapList(Function<? super X, ? extends U> mapper, Class<X> memberClass) {
+  public <U,X> Answer<List<U>> mapList(Class<X> memberClass,
+      Function<? super X, ? extends U> mapper) {
     return getHandler().mapList((Answer<List<X>>) this, mapper);
   }
 
   public void ifPresent(Consumer<? super T> consumer) {
     if (value != null)
       consumer.accept(value);
+  }
+
+  public <X> Answer<Void> forEach(Class<X> memberClass, Consumer<? super X> mapper) {
+    return getHandler().forEach((Answer<List<X>>) this, mapper);
   }
 
   public Answer<T> or(Supplier<? extends Answer<? extends T>> supplier) {
@@ -612,6 +617,8 @@ public class Answer<T> extends Explainer {
     <U, X> Answer<List<U>> mapList(Answer<List<X>> listAnswer, Function<? super X,? extends U> mapper);
 
     <U, X> Answer<List<U>> flatList(Answer<List<X>> listAnswer, Function<? super X, Answer<U>> mapper);
+
+    <X> Answer<Void> forEach(Answer<List<X>> listAnswer, Consumer<? super X> mapper);
   }
 
   public static class SuccessOutcomeStrategy<T> implements OutcomeStrategy<T> {
@@ -714,6 +721,12 @@ public class Answer<T> extends Explainer {
               .collect(Answer.toList()));
     }
 
+    @Override
+    public <X> Answer<Void> forEach(Answer<List<X>> listAnswer, Consumer<? super X> mapper) {
+      listAnswer.orElseGet(Collections::emptyList).forEach(mapper);
+      return Answer.succeed();
+    }
+
   }
 
   public static class FailureOutcomeStrategy<T> implements OutcomeStrategy<T> {
@@ -779,6 +792,14 @@ public class Answer<T> extends Explainer {
     public <U, X> Answer<List<U>> flatList(Answer<List<X>> listAnswer,
         Function<? super X, Answer<U>> mapper) {
       return new Answer<List<U>>()
+          .withCodedOutcome(listAnswer.getCodedOutcome())
+          .withExplanation(listAnswer.explanation)
+          .withMeta(listAnswer.meta);
+    }
+
+    @Override
+    public <X> Answer<Void> forEach(Answer<List<X>> listAnswer, Consumer<? super X> mapper) {
+      return new Answer<Void>()
           .withCodedOutcome(listAnswer.getCodedOutcome())
           .withExplanation(listAnswer.explanation)
           .withMeta(listAnswer.meta);
