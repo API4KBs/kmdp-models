@@ -126,6 +126,10 @@ public class VocabularyTest {
 
     assertEquals("ofn",
         KnowledgeRepresentationLanguageSerializationSeries.OWL_Functional_Syntax.getTag());
+    assertEquals("brl",
+        KnowledgeRepresentationLanguageSerializationSeries.ODM_BRL_Syntax.getTag());
+    assertEquals("odm-bom-v8.10.x",
+        KnowledgeRepresentationLanguageSeries.ODM_BOM_8_10_X.getTag());
 
     assertEquals("dmn-v12",
         DMN_1_2.getTag());
