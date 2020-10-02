@@ -1,14 +1,12 @@
 package org.omg.spec.api4kp._20200801.id;
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
-import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SEMVER_RX;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SEMVER_FULL;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.UnexpectedCharacterException;
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
-import edu.mayo.kmdp.util.URIUtil;
-import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.regex.Matcher;
 
@@ -56,7 +54,16 @@ public interface VersionIdentifier extends Identifier {
   @JsonIgnore
   default VersionTagType getVersionFormat() {
     String versionTag = getVersionTag();
-    Matcher matcher = SEMVER_RX.matcher(versionTag);
+    return detectVersionTag(versionTag);
+  }
+
+  /**
+   * Assuming a versionTag is provided, detects the format
+   * @param versionTag
+   * @return
+   */
+  static VersionTagType detectVersionTag(String versionTag) {
+    Matcher matcher = SEMVER_FULL.matcher(versionTag);
     if (matcher.matches()) {
       return VersionTagType.SEM_VER;
     }
@@ -83,6 +90,5 @@ public interface VersionIdentifier extends Identifier {
         ? ":"
         : "/versions/";
   }
-
 
 }
