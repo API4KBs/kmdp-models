@@ -168,17 +168,30 @@ public class XMLUtil {
   }
 
   public static byte[] toByteArray(Document dox) {
+    if (dox == null) {
+      return new byte[0];
+    }
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamXMLDocument(dox, baos);
     return baos.toByteArray();
   }
 
   public static byte[] toByteArray(Node node) {
+    if (node == null) {
+      return new byte[0];
+    }
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamXMLNode(node, baos);
     return baos.toByteArray();
   }
 
+  public static String toString(Document dox) {
+    return new String(toByteArray(dox));
+  }
+
+  public static String toString(Node node) {
+    return new String(toByteArray(node));
+  }
 
   /**
    * Cleanup : removes empty nodes from an XML document
@@ -339,6 +352,9 @@ public class XMLUtil {
   }
 
   private static <T> Stream<T> asElementStream(NodeList nodes, Class<T> type) {
+    if (nodes == null) {
+      return Stream.empty();
+    }
     int numNodes = nodes.getLength();
     Collection<Node> nodeList = new ArrayList<>(numNodes);
     for (int j = 0; j < numNodes; j++) {
