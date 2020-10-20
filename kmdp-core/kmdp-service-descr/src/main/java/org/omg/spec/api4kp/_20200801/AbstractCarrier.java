@@ -417,6 +417,9 @@ public interface AbstractCarrier {
         .forEach(ckc.getComponent()::add);
 
     ckc.withAssetId(randomId());
+    ckc.withRepresentation(rep);
+    ckc.withLevel(level);
+    // struct and type are left 'null' - may need to revisit this decision
     return ckc;
   }
 

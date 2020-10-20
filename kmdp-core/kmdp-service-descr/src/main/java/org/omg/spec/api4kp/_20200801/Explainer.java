@@ -82,7 +82,7 @@ public abstract class Explainer {
         this.explanation = other;
       } else {
         KnowledgeCarrier s = explanation;
-        s.setExpression(s.asString() + "\n" + other.asString());
+        s.setExpression(s.asString().orElse("") + "\n" + other.asString().orElse(""));
       }
     }
   }
