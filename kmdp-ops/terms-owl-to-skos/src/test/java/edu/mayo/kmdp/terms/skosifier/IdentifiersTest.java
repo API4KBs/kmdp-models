@@ -136,6 +136,21 @@ public class IdentifiersTest extends TestBase {
             "klassID")));
   }
 
+  @Test
+  public void testNotationFromUUID() {
+
+    Owl2SkosConfig cfg = new Owl2SkosConfig()
+        .with(OWLtoSKOSTxParams.TGT_NAMESPACE, NS)
+        .with(OWLtoSKOSTxParams.MODE, Modes.SKOS.name());
+
+    Model m = run(singletonList("/ontology/singleClassWithUUID.owl"), cfg);
+
+    assertTrue(m.contains(
+        datA(NS + "#" + "3a5ba1ff-9eed-4051-87c9-120d6ef6496a",
+            SKOS.notation,
+            "3a5ba1ff-9eed-4051-87c9-120d6ef6496a")));
+  }
+
 
 
 }

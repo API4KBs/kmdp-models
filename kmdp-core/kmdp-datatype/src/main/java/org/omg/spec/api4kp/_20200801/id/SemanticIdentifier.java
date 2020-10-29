@@ -758,6 +758,10 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         int result = 31 + getUuid().hashCode();
         return 31 * result + getVersionHash();
       }
+
+      public String toString() {
+        return id + " # " + vid;
+      }
     };
   }
 

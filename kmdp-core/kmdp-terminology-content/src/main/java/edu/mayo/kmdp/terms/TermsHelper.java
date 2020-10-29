@@ -25,7 +25,7 @@ import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 public class TermsHelper {
 
   protected TermsHelper() {
-
+    // functions only
   }
 
   /**
@@ -51,12 +51,25 @@ public class TermsHelper {
         .withName(label)
         .withTag(code)
         .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
-        .withNamespaceUri(URI.create("https://loinc.org/oids/1.3.6.1.4.1.12009.10.2.3"))
+        .withNamespaceUri(URI.create("http://loinc.org"))
         .withResourceId(URI.create("http://loinc.org/" + code))
         .withReferentId(URI.create("http://loinc.org/" + code))
         .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
         .withVersionTag(VERSION_LATEST)
         .withVersionId(URI.create("http://loinc.org/LATEST/" + code));
+  }
+
+  public static ConceptIdentifier cpt(String label, String code) {
+    return new ConceptIdentifier()
+        .withName(label)
+        .withTag(code)
+        .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
+        .withNamespaceUri(URI.create("http://www.ama-assn.org/go/cpt"))
+        .withResourceId(URI.create("http://www.ama-assn.org/go/cpt/" + code))
+        .withReferentId(URI.create("http://www.ama-assn.org/go/cpt/" + code))
+        .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
+        .withVersionTag(VERSION_LATEST)
+        .withVersionId(URI.create("http://www.ama-assn.org/go/cpt/LATEST/" + code));
   }
 
   public static ConceptIdentifier rxn(String label, String code) {
@@ -71,6 +84,60 @@ public class TermsHelper {
         .withVersionTag(VERSION_LATEST)
         .withVersionId(URI.create("http://www.nlm.nih.gov/research/umls/rxnorm/LATEST/" + code));
   }
+
+  public static ConceptIdentifier icd10(String label, String code) {
+    return new ConceptIdentifier()
+        .withName(label)
+        .withTag(code)
+        .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
+        .withNamespaceUri(URI.create("http://hl7.org/fhir/sid/icd-10"))
+        .withResourceId(URI.create("http://hl7.org/fhir/sid/icd-10/" + code))
+        .withReferentId(URI.create("http://hl7.org/fhir/sid/icd-10/" + code))
+        .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
+        .withVersionTag(VERSION_LATEST)
+        .withVersionId(URI.create("http://hl7.org/fhir/sid/icd-10/LATEST/" + code));
+  }
+
+  public static ConceptIdentifier icd10pcs(String label, String code) {
+    return new ConceptIdentifier()
+        .withName(label)
+        .withTag(code)
+        .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
+        .withNamespaceUri(URI.create("http://hl7.org/fhir/sid/icd-10-pcs"))
+        .withResourceId(URI.create("http://hl7.org/fhir/sid/icd-10-pcs/" + code))
+        .withReferentId(URI.create("http://hl7.org/fhir/sid/icd-10-pcs/" + code))
+        .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
+        .withVersionTag(VERSION_LATEST)
+        .withVersionId(URI.create("http://hl7.org/fhir/sid/icd-10-pcs/LATEST/" + code));
+  }
+
+  public static ConceptIdentifier icd10cm(String label, String code) {
+    return new ConceptIdentifier()
+        .withName(label)
+        .withTag(code)
+        .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
+        .withNamespaceUri(URI.create("http://hl7.org/fhir/sid/icd-10-cm"))
+        .withResourceId(URI.create("http://hl7.org/fhir/sid/icd-10-cm/" + code))
+        .withReferentId(URI.create("http://hl7.org/fhir/sid/icd-10-cm/" + code))
+        .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
+        .withVersionTag(VERSION_LATEST)
+        .withVersionId(URI.create("http://hl7.org/fhir/sid/icd-10-cm/LATEST/" + code));
+  }
+
+  public static ConceptIdentifier hcpcs(String label, String code) {
+    return new ConceptIdentifier()
+        .withName(label)
+        .withTag(code)
+        .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
+        .withNamespaceUri(URI.create("urn:oid:2.16.840.1.113883.6.14"))
+        .withResourceId(URI.create("urn:oid:2.16.840.1.113883.6.14:" + code))
+        .withReferentId(URI.create("urn:oid:2.16.840.1.113883.6.14:" + code))
+        .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
+        .withVersionTag(VERSION_LATEST)
+        .withVersionId(URI.create("urn:oid:2.16.840.1.113883.6.14:LATEST:" + code));
+  }
+
+
 
 
   /**

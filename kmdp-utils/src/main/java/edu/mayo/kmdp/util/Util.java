@@ -66,6 +66,10 @@ public class Util {
     return str == null || str.trim().length() == 0;
   }
 
+  public static boolean isNotEmpty(String str) {
+    return ! isEmpty(str);
+  }
+
   public static String concat(List<String> str) {
     return str == null ? null : str.stream().collect(Collectors.joining());
   }

@@ -20,6 +20,7 @@ import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
@@ -78,7 +79,8 @@ public abstract class ConverterInitBase {
       if (!Util.isEmpty(nodeValue1.asString())) {
         cd = cd + "-" + nodeValue1.asString();
       }
-      return NodeValue.makeString(Util.uuid(cd).toString());
+      UUID tgtUUID = Util.isUUID(cd) ? UUID.fromString(cd) : Util.uuid(cd);
+      return NodeValue.makeString(tgtUUID.toString());
     }
 
   }

@@ -16,6 +16,8 @@ CONSTRUCT {
   ?Cid
     a owl:NamedIndividual;
     a skos:Concept;
+    rdfs:label ?Label;
+    skos:prefLabel ?Label;
     rdfs:isDefinedBy ?Definer;
 
     skos:inScheme ?Scheme;
@@ -49,6 +51,11 @@ WHERE {
         ?X a ?entity.
             FILTER isUri( ?X ).
             OPTIONAL { ?X owl:sameAs ?Z. }
+
+            BIND( f:localName( ?X ) as ?localName )
+            OPTIONAL { ?X rdfs:label ?lab. }
+            OPTIONAL { ?X skos:prefLabel ?pLab. }
+            BIND ( COALESCE( ?pLab, ?lab, ?localName ) as ?Label ).
 
             # Create a URI for the related concept
             OPTIONAL { ?X dc:identifier ?dcId. }

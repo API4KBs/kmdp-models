@@ -24,6 +24,7 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.toResourceId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
+import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Date;
@@ -153,31 +154,38 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
 
+  static Term newTerm(URI conceptUri) {
+    String tag = NameUtils.getTrailingPart(conceptUri.toString());
+    URI namespace = URI.create(conceptUri.toString().replace(tag, ""));
+    return newTerm(namespace, tag);
+  }
+
   static Term newTerm(URI namespace, String tag) {
-    checkTag(tag);
-    URI resourceId = toResourceId(tag, namespace);
-    return new ConceptIdentifier()
-        .withTag(tag)
-        .withResourceId(resourceId)
-        .withNamespaceUri(namespace)
-        // generate required UUID from resourceId
-        .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
+    return newTerm(namespace, tag, null, null);
+  }
+
+  static Term newTerm(URI namespace, String tag, String label) {
+    return newTerm(namespace, tag, null, label);
   }
 
   static Term newTerm(URI namespace, String tag, Version version) {
-    return newTerm(namespace, tag, version.toString());
+    return newTerm(namespace, tag, version.toString(), null);
   }
 
-  static Term newTerm(URI namespace, String tag, String versionTag) {
+  static Term newTerm(URI namespace, String tag, String versionTag, String label) {
     URI resourceId = toResourceId(tag, namespace);
-    return new ConceptIdentifier()
-        .withVersionTag(versionTag)
+    ConceptIdentifier cid = new ConceptIdentifier()
         // set required fields
         .withTag(tag)
+        .withName(label)
         .withResourceId(resourceId)
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
-        .withNamespaceUri(namespace)
-        .withVersionId(getDefaultVersionId(resourceId,versionTag));
+        .withNamespaceUri(namespace);
+    if (!Util.isEmpty(versionTag)) {
+      cid.withVersionTag(versionTag)
+          .withVersionId(getDefaultVersionId(resourceId, versionTag));
+    }
+    return cid;
   }
 
   static Term newTerm(String tag, Version version) {
