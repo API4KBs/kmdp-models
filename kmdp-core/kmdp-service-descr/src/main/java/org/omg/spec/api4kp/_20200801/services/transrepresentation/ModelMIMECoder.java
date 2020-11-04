@@ -27,11 +27,15 @@ import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.ws.mimetype.MIMEType;
 import edu.mayo.ontology.taxonomies.ws.mimetype.MIMETypeSeries;
+import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries;
@@ -57,8 +61,43 @@ public class ModelMIMECoder {
 
   private static final Pattern WX_PATTERN = Pattern.compile(WEIGHT_REGEXP);
 
+  public static List<WeightedRepresentation> decodeAll(String xAccept) {
+    return decodeAll(xAccept, null);
+  }
+
+  public static List<WeightedRepresentation> decodeAll(String xAccept, SyntacticRepresentation fallbackRepresentation) {
+    if (Util.isEmpty(xAccept)) {
+      return Collections.emptyList();
+    }
+    return Arrays.stream(xAccept.split(","))
+        .map(String::trim)
+        .map(code -> ModelMIMECoder.decodeWeighted(code, fallbackRepresentation))
+        .filter(wr -> wr.rep != null)
+        .sorted()
+        .collect(Collectors.toList());
+  }
+
+  public static String encodeAll(List<WeightedRepresentation> reps) {
+    return reps.stream()
+        .map(ModelMIMECoder::encode)
+        .collect(Collectors.joining(","));
+  }
+
+  private static String encode(WeightedRepresentation wrep) {
+    String w = new DecimalFormat("#.###").format(wrep.weight);
+    return encode(wrep.rep) + ";q=" + w;
+  }
+
   public static String encode(SyntacticRepresentation rep) {
     return encode(rep, true);
+  }
+
+  public static String recode(String mime) {
+    return decode(mime).map(ModelMIMECoder::encode).orElse(null);
+  }
+
+  public static String recodeAll(String mime) {
+    return encodeAll(decodeAll(mime));
   }
 
   public static String encode(SyntacticRepresentation rep, boolean withVersions) {
@@ -292,11 +331,15 @@ public class ModelMIMECoder {
     if (code.startsWith(TYPE)) {
       Optional<LangTags> tags = decompose(code);
       return tags
-          .map(t -> new WeightedRepresentation(
-              code,
-              tags.map(ModelMIMECoder::decodeTags)
-                  .orElse(null),
-              t.w))
+          .map(t -> {
+            SyntacticRepresentation syn = tags
+                .map(ModelMIMECoder::decodeTags)
+                .orElse(null);
+            if (syn.getLanguage() == null && rep != null) {
+              syn.withLanguage(rep.getLanguage());
+            }
+            return new WeightedRepresentation(code, syn, t.w);
+          })
           .orElseThrow(() ->
               new IllegalArgumentException("Unable to decode formal MIME code " + code));
     } else {

@@ -16,6 +16,8 @@
 package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,6 +30,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries.OWL2_QL;
@@ -40,6 +43,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.LOINC
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.RxNORM;
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.SNOMED_CT;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -182,5 +186,60 @@ public class MimeCoderTest {
     assertTrue(rep.getRep().isPresent());
     assertSame(JSON, rep.getRep().map(SyntacticRepresentation::getFormat).orElseGet(Assertions::fail));
     assertNull(rep.getRep().get().getLanguage());
+  }
+
+  @Test
+  void testDecomposeFormalWithVersionAndWeight() {
+    String mime = "model/bpmn-v2+xml;q=1";
+    WeightedRepresentation rep = ModelMIMECoder.decodeWeighted(mime);
+    assertNotNull(rep.getRep());
+  }
+
+  @Test
+  void testDecodeMultiple() {
+    String mime = "model/bpmn+xml, model/dmn+xml";
+    List<WeightedRepresentation> rep = ModelMIMECoder.decodeAll(mime);
+    assertEquals(2, rep.size());
+    String out = ModelMIMECoder.encodeAll(rep);
+    assertEquals("model/bpmn-v2+xml;q=1,model/dmn-v12+xml;q=1", out);
+    List<WeightedRepresentation> rep2 = ModelMIMECoder.decodeAll(out);
+
+    assertEquals(2,rep2.size());
+    assertTrue(rep2.stream().allMatch(r -> r.getRep().isPresent()));
+    assertTrue(rep2.stream()
+        .anyMatch(r -> r.getRep().map(x -> BPMN_2_0.sameAs(x.getLanguage())).orElse(false)));
+    assertTrue(rep2.stream()
+        .anyMatch(r -> r.getRep().map(x -> DMN_1_2.sameAs(x.getLanguage())).orElse(false)));
+  }
+
+  @Test
+  void testDecodeProperMetadata() {
+    String mime = "model/*+xml;q=1";
+    SyntacticRepresentation rep = ModelMIMECoder.decode(mime)
+    .orElseGet(Assertions::fail);
+    assertNull(rep.getLanguage());
+    assertNull(rep.getSerialization());
+    assertNull(rep.getEncoding());
+    assertNull(rep.getCharset());
+    assertTrue(XML_1_1.sameAs(rep.getFormat()));
+  }
+
+
+  @Test
+  void testDecodeWithDefault() {
+    String mime = "model/*+xml;q=1";
+
+    List<WeightedRepresentation> reps =
+        ModelMIMECoder.decodeAll(mime, rep(DMN_1_2));
+    assertFalse(reps.isEmpty());
+
+    SyntacticRepresentation rep = reps.get(0).getRep()
+        .orElseGet(Assertions::fail);
+
+    assertTrue(DMN_1_2.sameAs(rep.getLanguage()));
+    assertNull(rep.getSerialization());
+    assertNull(rep.getEncoding());
+    assertNull(rep.getCharset());
+    assertTrue(XML_1_1.sameAs(rep.getFormat()));
   }
 }
