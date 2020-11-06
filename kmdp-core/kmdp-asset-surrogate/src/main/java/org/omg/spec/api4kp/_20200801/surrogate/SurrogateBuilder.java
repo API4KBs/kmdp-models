@@ -29,6 +29,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Inquiry_Specification;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Service_Description;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Value_Set;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.RDF_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
@@ -38,7 +39,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.FHIR_STU3;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HL7_CQL;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OpenAPI_2_X;
 import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries.OWL2_DL;
@@ -87,16 +88,24 @@ public class SurrogateBuilder {
   }
 
   private SurrogateBuilder withCanonicalSurrogate(ResourceIdentifier assetId) {
-    ResourceIdentifier surrogateId = artifactId(
-        uuid(assetId.getResourceId().toString()),
-        "1.0.0"
-    );
-    get().withSurrogate(
-        new KnowledgeArtifact()
-            .withArtifactId(surrogateId)
-            .withRepresentation(new SyntacticRepresentation()
-                .withLanguage(Knowledge_Asset_Surrogate))
-    );
+    get()
+        .withSurrogate(
+            new KnowledgeArtifact()
+                .withArtifactId(artifactId(
+                    uuid(assetId.getResourceId().toString() + JSON.getTag()),
+                    "1.0.0"
+                ))
+                .withLocalization(English)
+                .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, JSON)))
+        .withSurrogate(
+            new KnowledgeArtifact()
+                .withArtifactId(artifactId(
+                    uuid(assetId.getResourceId().toString() + XML_1_1.getTag()),
+                    "1.0.0"
+                ))
+                .withLocalization(English)
+                .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, XML_1_1))
+        );
     return this;
   }
 
