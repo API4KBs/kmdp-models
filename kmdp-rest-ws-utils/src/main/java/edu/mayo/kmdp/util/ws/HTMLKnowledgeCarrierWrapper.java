@@ -20,6 +20,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.snapshot.KnowledgeRepresentationLanguage.HTML;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -41,17 +42,20 @@ public class HTMLKnowledgeCarrierWrapper implements HttpMessageConverter<Knowled
 
   @Override
   public boolean canRead(Class<?> clazz, MediaType mediaType) {
-    return KnowledgeCarrier.class.equals(clazz) && MediaType.TEXT_HTML.equals(mediaType);
+    return getSupportedMediaTypes().contains(mediaType)
+        && KnowledgeCarrier.class.isAssignableFrom(clazz);
   }
 
   @Override
   public boolean canWrite(Class<?> clazz, MediaType mediaType) {
-    return KnowledgeCarrier.class.equals(clazz) && MediaType.TEXT_HTML.equals(mediaType);
+    return getSupportedMediaTypes().contains(mediaType)
+        && KnowledgeCarrier.class.isAssignableFrom(clazz);
   }
+
 
   @Override
   public List<MediaType> getSupportedMediaTypes() {
-    return Collections.singletonList(MediaType.TEXT_HTML);
+    return Arrays.asList(MediaType.APPLICATION_XHTML_XML, MediaType.TEXT_HTML);
   }
 
   @Override
