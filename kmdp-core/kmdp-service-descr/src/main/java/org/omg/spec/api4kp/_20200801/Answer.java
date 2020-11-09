@@ -421,6 +421,21 @@ public class Answer<T> extends Explainer {
         .orElseGet(() -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
   }
 
+  public static <X,Y> Answer<Y> anyDo(Collection<X> delegates, Function<X,Answer<Y>> mapper,
+      Supplier<? extends Answer<Y>> fallback) {
+    return delegates.stream()
+        .map(x -> {
+          try {
+            return mapper.apply(x);
+          } catch (Exception e) {
+            return Answer.<Y>failed(e);
+          }
+        })
+        .filter(Answer::isSuccess)
+        .findAny()
+        .orElseGet(fallback);
+  }
+
   public static <X,Y> Answer<Y> firstDo(Collection<X> delegates, Function<X,Answer<Y>> mapper) {
     return delegates.stream()
         .map(x -> {
@@ -433,6 +448,21 @@ public class Answer<T> extends Explainer {
         .filter(Answer::isSuccess)
         .findFirst()
         .orElseGet(() -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
+  }
+
+  public static <X,Y> Answer<Y> firstDo(Collection<X> delegates, Function<X,Answer<Y>> mapper,
+      Supplier<? extends Answer<Y>> fallback) {
+    return delegates.stream()
+        .map(x -> {
+          try {
+            return mapper.apply(x);
+          } catch (Exception e) {
+            return Answer.<Y>failed(e);
+          }
+        })
+        .filter(Answer::isSuccess)
+        .findFirst()
+        .orElseGet(fallback);
   }
 
   public static <X, T> Answer<T> delegateTo(Optional<X> delegate,
