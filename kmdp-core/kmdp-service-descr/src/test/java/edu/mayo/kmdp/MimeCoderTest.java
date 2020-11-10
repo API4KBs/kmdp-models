@@ -43,6 +43,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.LOINC
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.RxNORM;
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.SNOMED_CT;
 
+import edu.mayo.kmdp.comparator.AbstractDiffer.Mode;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -241,5 +242,13 @@ public class MimeCoderTest {
     assertNull(rep.getEncoding());
     assertNull(rep.getCharset());
     assertTrue(XML_1_1.sameAs(rep.getFormat()));
+  }
+
+  @Test
+  void testUnknown() {
+    SyntacticRepresentation rep = ModelMIMECoder.decode(ModelMIMECoder.UNKNOWN)
+        .orElseGet(Assertions::fail);
+    assertNull(rep.getLanguage());
+    assertNull(rep.getFormat());
   }
 }

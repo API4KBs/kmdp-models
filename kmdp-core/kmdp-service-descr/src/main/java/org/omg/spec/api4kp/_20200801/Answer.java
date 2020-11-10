@@ -407,22 +407,15 @@ public class Answer<T> extends Explainer {
         .findAny();
   }
 
-  public static <X,Y> Answer<Y> anyDo(Collection<X> delegates, Function<X,Answer<Y>> mapper) {
-    return delegates.stream()
-        .map(x -> {
-          try {
-            return mapper.apply(x);
-          } catch (Exception e) {
-            return Answer.<Y>failed(e);
-          }
-        })
-        .filter(Answer::isSuccess)
-        .findAny()
-        .orElseGet(() -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
+  public static <X, Y> Answer<Y> anyDo(Collection<X> delegates, Function<X, Answer<Y>> mapper) {
+    return anyDo(
+        delegates,
+        mapper,
+        () -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
   }
 
-  public static <X,Y> Answer<Y> anyDo(Collection<X> delegates, Function<X,Answer<Y>> mapper,
-      Supplier<? extends Answer<Y>> fallback) {
+  public static <X, Y> Answer<Y> anyDo(Collection<X> delegates, Function<X, Answer<Y>> mapper,
+      Supplier<Answer<Y>> fallback) {
     return delegates.stream()
         .map(x -> {
           try {
@@ -437,21 +430,14 @@ public class Answer<T> extends Explainer {
   }
 
   public static <X,Y> Answer<Y> firstDo(Collection<X> delegates, Function<X,Answer<Y>> mapper) {
-    return delegates.stream()
-        .map(x -> {
-          try {
-            return mapper.apply(x);
-          } catch (Exception e) {
-            return Answer.<Y>failed(e);
-          }
-        })
-        .filter(Answer::isSuccess)
-        .findFirst()
-        .orElseGet(() -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
+    return firstDo(
+        delegates,
+        mapper,
+        () -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
   }
 
   public static <X,Y> Answer<Y> firstDo(Collection<X> delegates, Function<X,Answer<Y>> mapper,
-      Supplier<? extends Answer<Y>> fallback) {
+      Supplier<Answer<Y>> fallback) {
     return delegates.stream()
         .map(x -> {
           try {

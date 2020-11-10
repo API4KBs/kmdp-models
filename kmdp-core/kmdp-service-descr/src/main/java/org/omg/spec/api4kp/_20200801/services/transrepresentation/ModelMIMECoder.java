@@ -55,6 +55,8 @@ public class ModelMIMECoder {
   private static final String REGEXP = FileUtil
       .readStatic("/model.mime.regexp", ModelMIMECoder.class);
 
+  public static final String UNKNOWN = TYPE + "/unknown";
+
   private static final String WEIGHT_REGEXP = "(.+);q=([01].\\d+)(;.+)*";
 
   private static final Pattern RX_PATTERN = Pattern.compile(REGEXP);
@@ -101,6 +103,9 @@ public class ModelMIMECoder {
   }
 
   public static String encode(SyntacticRepresentation rep, boolean withVersions) {
+    if (rep == null) {
+      return UNKNOWN;
+    }
     StringBuilder sb = new StringBuilder(TYPE + "/");
     if (rep.getLanguage() != null) {
       String langTag = withVersions

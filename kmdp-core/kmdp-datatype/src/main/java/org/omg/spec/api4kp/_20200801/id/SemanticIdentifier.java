@@ -653,6 +653,11 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId));
   }
 
+  static Pointer newVersionIdAsPointer(URI versionURI) {
+    return newVersionId(versionURI)
+        .toPointer();
+  }
+
   static ResourceIdentifier randomId() {
     return newId(BASE_UUID_URN_URI, UUID.randomUUID(), IdentifierConstants.VERSION_LATEST);
   }
@@ -675,7 +680,10 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return A new Pointer derived from this ResourceIdentifier
    */
   default Pointer toPointer() {
-    return new org.omg.spec.api4kp._20200801.id.resources.Pointer()
+    if (this instanceof org.omg.spec.api4kp._20200801.id.resources.Pointer) {
+      return (Pointer) this;
+    }
+    Pointer ptr = new org.omg.spec.api4kp._20200801.id.resources.Pointer()
         .withNamespaceUri(getNamespaceUri())
         .withTag(getTag())
         .withVersionTag(getVersionTag())
@@ -684,6 +692,12 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withEstablishedOn(getEstablishedOn())
         .withVersionId(getVersionId())
         .withName(getName());
+    if (this instanceof Pointer) {
+      Pointer thisPtr = (Pointer) this;
+      ptr.withHref(thisPtr.getHref());
+      ptr.withMimeType(thisPtr.getMimeType());
+    }
+    return ptr;
   }
 
   /**
@@ -695,6 +709,9 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return A new Pointer derived from this ResourceIdentifier
    */
   default Pointer toInnerPointer() {
+    if (this instanceof Pointer) {
+      return (Pointer) this;
+    }
     return new Pointer()
         .withNamespaceUri(getNamespaceUri())
         .withTag(getTag())
