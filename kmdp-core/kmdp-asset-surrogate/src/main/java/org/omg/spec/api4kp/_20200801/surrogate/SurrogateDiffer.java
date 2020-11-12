@@ -33,6 +33,8 @@ import org.omg.spec.api4kp._20200801.taxonomy.relatedversiontype.RelatedVersionT
 import org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartType;
 import org.omg.spec.api4kp._20200801.taxonomy.summaryreltype.SummarizationType;
 import org.omg.spec.api4kp._20200801.taxonomy.variantreltype.VariantType;
+import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.TypedTerm;
 import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 
 public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
@@ -70,7 +72,7 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 
 
   public static void configureTerminology(JaversBuilder builder) {
-    List<Class<? extends VersionableTerm<?, ?>>> valuesetKlasses =
+    List<Class<? extends ConceptTerm>> valuesetKlasses =
         Arrays.asList(
             DependencyType.class,
             KnowledgeAssetCategory.class,
@@ -96,7 +98,7 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
         );
 
     valuesetKlasses.forEach(klass ->
-        builder.registerValue(klass, VersionableTerm::isSameEntity, Objects::toString));
+        builder.registerValue(klass, ConceptTerm::sameTermAs, Objects::toString));
 
     builder.registerValue(ConceptIdentifier.class,
         SemanticIdentifier::sameAs, c -> c.getResourceId() + " | " + c.getLabel());

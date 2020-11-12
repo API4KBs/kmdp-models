@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.omg.spec.api4kp._20200801.id.Term;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
@@ -30,6 +29,7 @@ import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.id.Term;
 import org.semanticweb.owlapi.model.OWLOntology;
 import ru.avicomp.ontapi.OntologyManager;
 
@@ -51,7 +51,7 @@ public class ReferentTest {
 
     String owlPath = "/singleClass.rdf";
 
-    OntologyManager manager = TestHelper.initManager();
+    OntologyManager manager = TermsGeneratorTestHelper.initManager();
 
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, "http://test.foo")
@@ -61,14 +61,14 @@ public class ReferentTest {
     Optional<Model> skosModel = new Owl2SkosConverter().apply(ModelFactory.createDefaultModel()
         .read(ReferentTest.class.getResourceAsStream(owlPath), null), cfg);
 
-    if (!skosModel.isPresent()) {
+    if (skosModel.isEmpty()) {
       fail("Unable to generate skos model");
     }
 
     Optional<OWLOntology> skosOntology = skosModel.map(Model::getGraph)
         .map(manager::addOntology);
 
-    if (!skosOntology.isPresent()) {
+    if (skosOntology.isEmpty()) {
       fail("Unable to extract graph");
     }
 

@@ -16,10 +16,17 @@
 package edu.mayo.kmdp.terms.example.cito;
 
 
+import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
+import edu.mayo.kmdp.terms.example.cito.ICito.ICitoVersion;
+import edu.mayo.kmdp.terms.example.sch1.SCH1;
+import edu.mayo.kmdp.terms.example.sch1.SCH1Series;
+import edu.mayo.kmdp.util.DateTimeUtil;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 import org.omg.spec.api4kp._20200801.series.Series;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.EnumeratedConceptTerm;
 import org.omg.spec.api4kp._20200801.terms.TermDescription;
 import edu.mayo.kmdp.terms.adapters.json.UUIDTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
@@ -38,7 +45,7 @@ import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 
-public enum Cito implements ICito {
+public enum Cito implements ICitoVersion, EnumeratedConceptTerm<Cito,ICitoVersion,ICito> {
 
   Cites("cites",
       UUID.nameUUIDFromBytes("cites".getBytes()).toString(),
@@ -61,17 +68,12 @@ public enum Cito implements ICito {
       new Term[]{Cito.Cites});
 
 
-  public static final ResourceIdentifier schemeURI = Series.toVersion(
-      ICito.seriesUri,
-      "test.foo");
+  public static final ResourceIdentifier schemeVersionIdentifier =
+      SemanticIdentifier.toVersionId(schemeSeriesIdentifier, "v01",
+          DateTimeUtil.parseDateOrNow("20190801", "yyyyMMdd"));
 
-  public static final ResourceIdentifier namespace = SemanticIdentifier.newNamedId(
-      schemeURI.getResourceId(),
-      ICito.schemeID,
-      ICito.schemeName);
 
-  public static final Map<UUID,Cito> index = Arrays.stream(Cito.values())
-      .collect(Collectors.toConcurrentMap(ConceptTerm::getUuid, Function.identity()));
+  public static final Map<UUID, Cito> index = indexByUUID(Cito.values());
 
   private TermDescription description;
   private CitoSeries series;
@@ -80,111 +82,51 @@ public enum Cito implements ICito {
     return description;
   }
 
-  Cito(final String conceptId, final String conceptUUID, String versionTag,
-      final String code, final List<String> additionalCodes,
+  Cito(final String code, final String conceptUUID, String versionTag,
+      final String conceptId, final List<String> additionalCodes,
       final String displayName, final String referent,
       final Term[] ancestors,
       final Term[] closure) {
     this.description = new TermImpl(conceptId, conceptUUID, versionTag, code, additionalCodes, displayName,
-        referent, ancestors, closure, new Date());
+        referent, ancestors, closure, DateTimeUtil.parseDateOrNow("20190801","yyyyMMdd"));
   }
+
 
   @Override
-  public ResourceIdentifier getNamespace() {
-    return namespace;
+  public Date getVersionEstablishedOn() {
+    return schemeVersionIdentifier.getEstablishedOn();
   }
 
-  @Override
-  public ResourceIdentifier getVersionIdentifier() {
-    return SemanticIdentifier.newId(namespace.getResourceId(), this.getTag(), namespace.getVersionTag());
-  }
-
-  public URI getVersionId() {
-    return description.getVersionId();
-  }
-
-  @Override
-  public CitoSeries asEnum() {
-    return toSeries();
-  }
-
-  @Override
-  public Series<ICito> asSeries() {
-    return toSeries();
-  }
-
-  private CitoSeries toSeries() {
+  public CitoSeries asSeries() {
     if (series == null) {
-      series = (CitoSeries) CitoSeries.resolveUUID(this.getUuid())
+      series = CitoSeries.resolveUUID(this.getUuid())
           .orElseThrow(IllegalStateException::new);
     }
     return series;
   }
 
   @Override
-  public URI getResourceId() {
-    return this.description.getResourceId();
+  public ResourceIdentifier getDefiningScheme() {
+    return schemeVersionIdentifier;
   }
 
-  @Override
-  public UUID getUuid() {
-    return this.description.getUuid();
-  }
 
   public static class Adapter extends TermsXMLAdapter {
     public static final TermsXMLAdapter instance = new Adapter();
     protected Term[] getValues() { return values(); }
   }
 
-  public static class JsonSerializer extends UUIDTermsJsonAdapter.Serializer { }
+  public static class JsonSerializer extends UUIDTermsJsonAdapter.Serializer<Cito> { }
 
-  public static class JsonDeserializer extends UUIDTermsJsonAdapter.Deserializer {
-    protected Term[] getValues() {
+  public static class JsonDeserializer extends UUIDTermsJsonAdapter.Deserializer<Cito> {
+    protected Cito[] getValues() {
       return values();
     }
   }
 
-  public static Optional<Cito> resolve(final Term trm) {
-    return resolveId(trm.getConceptId()); //TODO
-  }
-
-  public static Optional<Cito> resolve(final String tag) {
-    return resolveTag(tag);
-  }
-
-  public static Optional<Cito> resolveId(final String conceptId) {
-    return resolveId(URI.create(conceptId));
-  }
 
   public static Optional<Cito> resolveTag(final String tag) {
     return resolveTerm(tag, Cito.values(), Term::getTag);
-  }
-
-  public static Optional<Cito> resolveUUID(final UUID conceptId) {
-    return Optional.ofNullable(index.get(conceptId));
-  }
-
-  public static Optional<Cito> resolveId(final URI conceptId) {
-    return resolveTerm(conceptId, Cito.values(), Term::getConceptId);
-  }
-
-  public static Optional<Cito> resolveRef(final String refUri) {
-    return resolveTerm(refUri, Cito.values(), Term::getReferentId);
-  }
-
-  @Override
-  public Date getEstablishedOn() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Date getVersionEstablishedOn() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public String getVersionTag() {
-    return namespace.getVersionTag();
   }
 
 }

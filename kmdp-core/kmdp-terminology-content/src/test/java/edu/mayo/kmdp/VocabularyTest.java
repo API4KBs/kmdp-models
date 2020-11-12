@@ -70,10 +70,10 @@ import org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTy
 import org.omg.spec.api4kp._20200801.taxonomy.summaryreltype.SummarizationTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.variantreltype.VariantTypeSeries;
 
-public class VocabularyTest {
+class VocabularyTest {
 
   @Test
-  public void testGeneratedEnums() {
+  void testGeneratedEnums() {
     assertNotNull(KnowledgeRepresentationLanguageSeries.DMN_1_1);
     assertNotNull(KnowledgeRepresentationLanguageProfileSeries.OWL2_Full);
     assertNotNull(SerializationFormatSeries.JSON);
@@ -107,7 +107,7 @@ public class VocabularyTest {
   }
 
   @Test
-  public void testLanguages() {
+  void testLanguages() {
     assertNotNull(LanguageSeries.Italian);
     assertNotNull(LanguageSeries.Central_Khmer);
     assertNotNull(LanguageSeries.Arabic);
@@ -122,7 +122,7 @@ public class VocabularyTest {
 
 
   @Test
-  public void testKnownTags() {
+  void testKnownTags() {
 
     assertEquals("ofn",
         KnowledgeRepresentationLanguageSerializationSeries.OWL_Functional_Syntax.getTag());
@@ -152,7 +152,7 @@ public class VocabularyTest {
   }
 
   @Test
-  public void testTagConsistency() {
+  void testTagConsistency() {
     int tagLen = LanguageSeries.Italian.getTag().length();
     // preferring Alpha2 Codes
     assertEquals(2,tagLen);
@@ -171,7 +171,7 @@ public class VocabularyTest {
   }
 
   @Test
-  public void testReferents() {
+  void testReferents() {
     assertEquals("https://www.omg.org/spec/DMN/1.2/",
         DMN_1_2.getReferentId().toString());
 
@@ -181,7 +181,7 @@ public class VocabularyTest {
   }
 
   @Test
-  public void testKnownIdentifiers() {
+  void testKnownIdentifiers() {
 
     assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#6047674c-0d9b-3c81-89a3-6943f3a7169b",
         KnowledgeAssetTypeSeries.Nursing_Protocol.getConceptId().toString());
@@ -198,7 +198,7 @@ public class VocabularyTest {
 
 
   @Test
-  public void testResolveTags() {
+  void testResolveTags() {
     Optional<Language> l0 = LanguageSeries.resolve("fr");
     assertTrue(l0.isPresent());
     assertSame(LanguageSeries.French, l0.get());
@@ -219,22 +219,28 @@ public class VocabularyTest {
   }
 
   @Test
-  public void testGeneratedEnumsVersion() {
+  void testGeneratedEnumsVersion() {
     Optional<UUID> uid = ensureUUID(KnowledgeAssetCategorySeries.SCHEME_ID);
     assertTrue(uid.isPresent());
 
-    URI schemeURI = KnowledgeAssetCategory.schemeURI.getVersionId();
-    ResourceIdentifier nspace = KnowledgeAssetCategory.namespace;
+    ResourceIdentifier versionedScheme = KnowledgeAssetCategory.schemeVersionIdentifier;
+    URI schemeURI = versionedScheme.getVersionId();
+    ResourceIdentifier nspace = KnowledgeAssetCategory.values()[0].getNamespace();
 
     assertNotNull(schemeURI);
     VersionIdentifier vid = SemanticIdentifier.newVersionId(schemeURI);
 
     String version = vid.getVersionTag();
-    assertEquals(version, nspace.getVersionTag());
+    assertEquals(version, versionedScheme.getVersionTag());
+    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy",
+        versionedScheme.getNamespaceUri().toString());
+
+    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory",
+        nspace.getResourceId().toString());
   }
 
   @Test
-  public void testKRLanguages() {
+  void testKRLanguages() {
     assertNotNull(SPARQL_1_1);
 
     assertEquals(DMN_1_2_XML_Syntax,

@@ -15,8 +15,13 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.terms.example.cito.Cito;
+import edu.mayo.kmdp.terms.example.cito.CitoSeries;
+import edu.mayo.kmdp.terms.example.cito.ICito;
+import edu.mayo.kmdp.terms.example.cito.ICito.ICitoVersion;
 import edu.mayo.kmdp.terms.example.sch1.ISCH1;
 import edu.mayo.kmdp.terms.example.sch1.SCH1;
 import edu.mayo.kmdp.terms.example.sch1.SCH1Old;
@@ -24,13 +29,14 @@ import edu.mayo.kmdp.terms.example.sch1.SCH1Series;
 import java.util.Collection;
 import java.util.HashSet;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.series.Series;
 
-public class ComparisonTest {
+class ComparisonTest {
 
   @Test
   void testEqualityInCollections() {
 
-    Collection<ISCH1> coll = new HashSet<ISCH1>() {
+    Collection<ISCH1> coll = new HashSet<>() {
       public boolean contains(Object member) {
         return true;
       }
@@ -46,6 +52,30 @@ public class ComparisonTest {
     assertTrue(coll.contains(s1));
     assertTrue(coll.contains(s2));
 
+  }
 
+  @Test
+  void testComparability() {
+    Cito c1 = Cito.Cites;
+    ICito cs = CitoSeries.Cites;
+
+    CitoSeries xs = CitoSeries.resolve(c1);
+
+    assertTrue(xs.sameAs(c1));
+    assertTrue(xs.isSameEntity(c1));
+    assertTrue(xs.isEntityOf(c1));
+
+    assertTrue(xs.sameAs(cs));
+    assertTrue(xs.isSameEntity(cs));
+
+    CitoSeries xs2 = c1.asSeries();
+    assertTrue(xs.sameAs(xs2));
+    assertTrue(xs.isSameEntity(xs2));
+
+    assertTrue(c1.sameAs(c1));
+    assertTrue(c1.isSameVersion(c1));
+    assertFalse(c1.isDifferentVersion(c1));
+
+    assertTrue(c1.sameAs(cs));
   }
 }

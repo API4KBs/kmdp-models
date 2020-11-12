@@ -86,7 +86,7 @@ public class ServiceDescrCompilationTest {
       assertTrue(asTrp.isPresent());
 
       Transrepresentator anew = asTrp.get();
-      assertTrue(BPMN_2_0.isSame(
+      assertTrue(BPMN_2_0.sameAs(
           anew.getTxions().get(0).getConsumes().get(0).getLanguage()));
 
       Transrepresentator t2 = new Transrepresentator();

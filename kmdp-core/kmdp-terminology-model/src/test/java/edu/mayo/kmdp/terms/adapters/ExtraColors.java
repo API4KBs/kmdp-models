@@ -16,17 +16,16 @@
 package edu.mayo.kmdp.terms.adapters;
 
 import edu.mayo.kmdp.terms.adapters.IColors.IColorsVersion;
-import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._20200801.id.Identifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.series.Series;
 import org.omg.spec.api4kp._20200801.terms.EnumeratedConceptTerm;
 import org.omg.spec.api4kp._20200801.terms.TermDescription;
 import org.omg.spec.api4kp._20200801.terms.model.TermImpl;
@@ -35,22 +34,17 @@ import org.omg.spec.api4kp._20200801.terms.model.TermImpl;
 	Example of generated 'terminology' class
 *
 * */
-@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = Colors.JsonSerializer.class)
-@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = Colors.JsonDeserializer.class)
-public enum Colors implements IColorsVersion,
-    EnumeratedConceptTerm<Colors, IColorsVersion, IColors> {
+public enum ExtraColors implements IColorsVersion,
+    EnumeratedConceptTerm<ExtraColors, IColorsVersion, IColors> {
 
-  RED("red", ColorsSeries.RED),
+  BLACK("black"),
 
-  BLUE("blu", ColorsSeries.BLUE),
-
-  GREEN("grn", ColorsSeries.GREEN);
+  WHITE("white");
 
   TermDescription trm;
 
-  ColorsSeries series;
 
-  Colors(String code, ColorsSeries series) {
+  ExtraColors(String code) {
     UUID uuid = UUID.nameUUIDFromBytes(code.getBytes());
     trm = new TermImpl(
         URI.create("urn:uuid:" + uuid).toString(),
@@ -63,22 +57,11 @@ public enum Colors implements IColorsVersion,
         new Term[0],
         new Term[0],
         new Date());
-    this.series = series;
-  }
-
-  @Override
-  public Identifier getIdentifier() {
-    return SemanticIdentifier.newVersionId(getResourceId(), getVersionId());
-  }
-
-  @Override
-  public URI getResourceId() {
-    return trm.getResourceId();
   }
 
   @Override
   public VersionIdentifier getVersionIdentifier() {
-    return SemanticIdentifier.newVersionId(trm.getResourceId(), trm.getVersionId());
+    return SemanticIdentifier.newId(trm.getTag(),"0.0.1");
   }
 
   @Override
@@ -89,6 +72,11 @@ public enum Colors implements IColorsVersion,
   @Override
   public TermDescription getDescription() {
     return trm;
+  }
+
+  @Override
+  public URI getResourceId() {
+    return trm.getResourceId();
   }
 
   @Override
@@ -127,37 +115,14 @@ public enum Colors implements IColorsVersion,
   }
 
   @Override
-  public ColorsSeries asSeries() {
-    return series;
+  public Series<IColorsVersion, IColors> asSeries() {
+    return null;
   }
 
-  public static class JsonSerializer extends AbstractTermsJsonAdapter.AbstractSerializer<Colors> {
+  @Override
+  public Identifier getIdentifier() {
+    return SemanticIdentifier.newVersionId(trm.getResourceId(),trm.getVersionId());
   }
-
-  public static class JsonDeserializer extends AbstractTermsJsonAdapter.AbstractDeserializer<Colors> {
-    protected Colors[] getValues() {
-      return values();
-    }
-    @Override
-    protected Optional<Colors> resolveUUID(UUID uuid) {
-      return Colors.resolveUUID(uuid);
-    }
-  }
-
-
-  public static Optional<Colors> resolveUUID(final UUID uuid) {
-    if (RED.getUuid().equals(uuid)) {
-      return Optional.of(RED);
-    }
-    if (GREEN.getUuid().equals(uuid)) {
-      return Optional.of(GREEN);
-    }
-    if (BLUE.getUuid().equals(uuid)) {
-      return Optional.of(BLUE);
-    }
-    return Optional.empty();
-  }
-
 }
 
 

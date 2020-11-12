@@ -17,6 +17,7 @@ package edu.mayo.kmdp.terms.generator;
 
 import static edu.mayo.kmdp.util.Util.uuid;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -32,6 +33,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -42,6 +44,7 @@ public class ConcreteTopConceptHierarchyTest {
   @Test
   public void testGenerateConceptsHierarchy() {
     List<Term> list = doGenerate(Modes.SKOS);
+    assertNotNull(list);
     assertEquals(3, list.size());
 
     assertTrue(list.stream()
@@ -63,7 +66,7 @@ public class ConcreteTopConceptHierarchyTest {
 
   private List<Term> doGenerate(final Modes modes) {
     try {
-      OntologyManager manager = TestHelper.initManager();
+      OntologyManager manager = TermsGeneratorTestHelper.initManager();
 
       Optional<Model> skosModel = new MireotExtractor()
           .fetch(Owl2Skos2TermsTest.class.getResourceAsStream("/version.rdf"),
@@ -77,7 +80,7 @@ public class ConcreteTopConceptHierarchyTest {
                   .with(OWLtoSKOSTxParams.FLATTEN, true)
                   .with(OWLtoSKOSTxParams.VALIDATE, false)));
 
-      if (!skosModel.isPresent()) {
+      if (skosModel.isEmpty()) {
         fail("Unable to generate skos model");
       }
 
@@ -86,10 +89,9 @@ public class ConcreteTopConceptHierarchyTest {
       Optional<OWLOntology> skosOntology = Optional
           .ofNullable(manager.addOntology(om.getBaseModel().getGraph()));
 
-      List<Term> list = new SkosTerminologyAbstractor().traverse(skosOntology.get())
+      return new SkosTerminologyAbstractor()
+          .traverse(skosOntology.orElseGet(Assertions::fail))
           .getConceptList(URI.create("http://test.foo#" + uuid("test.foo")));
-
-      return list;
     } catch (Exception e) {
       e.printStackTrace();
       fail(e.getMessage());

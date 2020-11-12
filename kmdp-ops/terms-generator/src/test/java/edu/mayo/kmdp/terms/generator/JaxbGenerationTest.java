@@ -30,9 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.Arrays;
-import org.omg.spec.api4kp._20200801.id.Term;
-import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
@@ -52,6 +49,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -62,18 +60,20 @@ import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._20200801.id.ObjectFactory;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.w3c.dom.Document;
 
-public class JaxbGenerationTest {
+class JaxbGenerationTest {
 
   @TempDir
   public Path tmp;
 
 
-  private String parentXSD = "" +
+  private final String parentXSD = "" +
       "<?xml version=\"1.0\" encoding=\"utf-8\"?> " +
       "<xs:schema id=\"Parent\" " +
       "           targetNamespace=\"http://tempuri.org/parent\" " +
@@ -95,7 +95,7 @@ public class JaxbGenerationTest {
       "   " +
       "</xs:schema>";
 
-  private String bindings = "" +
+  private final String bindings = "" +
       "<jaxb:bindings version=\"2.1\"" +
       "               xmlns:jaxb=\"http://java.sun.com/xml/ns/jaxb\"\n" +
       "               xmlns:xjc=\"http://java.sun.com/xml/ns/jaxb/xjc\"\n" +

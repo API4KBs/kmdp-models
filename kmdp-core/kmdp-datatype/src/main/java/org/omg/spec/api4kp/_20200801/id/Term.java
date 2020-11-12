@@ -37,17 +37,13 @@ import java.util.UUID;
  * Provides factory methods for generating ConceptIdentifier
  *
  */
-public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIdentifier {
+public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifier, VersionIdentifier {
 
   URI getReferentId();
 
-  /*
-    Prefer the more clear 'getReferentId'
-   */
-  @Deprecated(forRemoval = true, since = "7.0.1")
-  @JsonIgnore
-  default URI getRef() {
-    return getReferentId();
+  @Override
+  default Identifier getIdentifier() {
+    return this;
   }
 
   @JsonIgnore
@@ -58,6 +54,39 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
   @JsonIgnore
   default URI getDenotes() {
     return getReferentId();
+  }
+
+  /**
+   * Compares two Terms based on their ID
+   * (Used to compare implementations of the same term)
+   * @param other
+   * @return true if the two Terms object represent the same Term
+   */
+  default boolean sameTermAs(Term other) {
+    return other != null
+        && getUuid().equals(other.getUuid());
+  }
+
+  /**
+   * Compares two Terms based on the ID of the concept they evoke
+   * (Used to compare alternative expressions)
+   * @param other
+   * @return true if the two Terms evoke the same concept
+   */
+  default boolean evokesSameAs(Term other) {
+    return other != null
+        && getEvokes().equals(other.getEvokes());
+  }
+
+  /**
+   * Compares two Terms based on the (ID of) the entity they denote
+   * (Used to compare alternative conceptualizations)
+   * @param other
+   * @return true if the two Terms denote the same entity
+   */
+  default boolean isCoreferent(Term other) {
+    return other != null
+        && getDenotes().equals(other.getDenotes());
   }
 
   /**
@@ -87,6 +116,7 @@ public interface Term extends ScopedIdentifier, UniversalIdentifier, VersionIden
   default String getPrefLabel() {
     return getName();
   }
+
 
   default ConceptIdentifier asConceptIdentifier() {
     return (ConceptIdentifier) this;

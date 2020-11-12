@@ -30,10 +30,10 @@ import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
 
-public class JSONLDSerializationTest {
+class JSONLDSerializationTest {
 
   @Test
-  public void testSemanticEnumSerialization() {
+  void testSemanticEnumSerialization() {
     SomeBean sb = new SomeBean();
     sb.setSchone(SCH1.Specific_Concept);
     sb.setSchones(new HashSet<>(Arrays.asList(SCH1.Nested_Specific_Concept, SCH1.Sub_Sub_Concept)));

@@ -19,15 +19,11 @@ import java.util.Arrays;
 import java.util.Optional;
 import org.omg.spec.api4kp._20200801.id.Term;
 
-public interface Taxonomic<T extends Term> {
+public interface Taxonomic {
 
   Term[] getAncestors();
 
   Term[] getClosure();
-
-  default Optional<T> getPivotalConcept() {
-    return Optional.empty();
-  }
 
   default boolean hasAncestor(Term candidateAncestor) {
     return Arrays.stream(this.getClosure())

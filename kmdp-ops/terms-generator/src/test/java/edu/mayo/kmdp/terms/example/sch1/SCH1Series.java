@@ -19,8 +19,11 @@ package edu.mayo.kmdp.terms.example.sch1;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
+import edu.mayo.kmdp.terms.example.sch1.ISCH1.ISCH1Version;
 import org.omg.spec.api4kp._20200801.series.Series;
+import org.omg.spec.api4kp._20200801.series.Versionable;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.EnumeratedConceptTerm;
 import org.omg.spec.api4kp._20200801.terms.TermDescription;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
@@ -43,14 +46,15 @@ import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 * */
 @com.fasterxml.jackson.databind.annotation.JsonSerialize( using = SCH1Series.JsonSerializer.class )
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = SCH1Series.JsonDeserializer.class )
-public enum SCH1Series implements ISCH1, Series<ISCH1> {
+public enum SCH1Series implements ISCH1, Series<ISCH1Version,ISCH1>,
+    EnumeratedConceptTerm<SCH1Series, ISCH1Version, ISCH1> {
 
   Specific_Concept(SCH1.Specific_Concept,SCH1Old.Specific_Concept),
   Nested_Specific_Concept(SCH1.Nested_Specific_Concept),
   Deprecated_Concept(SCH1Old.Deprecated_Concept),
   Sub_Sub_Concept(SCH1.Sub_Sub_Concept);
 
-  public static final List<String> schemeVersions =
+  public static final List<String> schemeVersionTags =
       java.util.Arrays.asList( "v01"  ,   "v00_Ancient"   );
 
   public static final List<Date> schemeReleases =
@@ -59,14 +63,14 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
 
   public static final Map<UUID, ISCH1> index = indexByUUID(SCH1Series.values());
 
+  private final List<ISCH1Version> versions;
 
-  private List<ISCH1> versions;
-
-  SCH1Series(ISCH1... versions) {
+  SCH1Series(ISCH1Version... versions) {
     this.versions = Arrays.asList(versions);
   }
 
-  public List<ISCH1> getVersions() {
+
+  public List<ISCH1Version> getVersions() {
     return versions;
   }
 
@@ -74,10 +78,9 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
     return values().length;
   }
 
-  public static int countUnexpired() {
-    return  (int) Arrays.stream(values())
-        .filter(x -> !x.isSeriesExpired())
-        .count();
+  @Override
+  public ResourceIdentifier getDefiningScheme() {
+    return schemeSeriesIdentifier;
   }
 
   @Override
@@ -86,21 +89,67 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
         .orElse(null);
   }
 
-  public ResourceIdentifier getNamespace() {
-    return ISCH1.seriesNamespace;
+  @Override
+  public Date getEstablishedOn() {
+    return getVersions().get(getVersions().size() - 1).getEstablishedOn();
+  }
+
+  public Date getVersionEstablishedOn() {
+    return getLatest().getEstablishedOn();
   }
 
 
-  public static Optional<ISCH1> resolve(final Term trm) {
-    return resolveId(trm.getConceptId());
+  @Override
+  public URI getResourceId() {
+    return getDescription().getResourceId();
+  }
+
+
+  @Override
+  public Series<ISCH1Version,ISCH1> asSeries() {
+    return this;
+  }
+
+  @Override
+  public boolean isSeriesExpired() {
+    Date lastEstablished = getLatest().getVersionEstablishedOn();
+    return schemeReleases.get(0).compareTo(lastEstablished) > 0;
+  }
+
+
+  @Override
+  public Optional<Date> getSeriesExpiredOn() {
+    Date lastEstablished = getLatest().getVersionEstablishedOn();
+    return schemeReleases.stream()
+        .filter(r -> r.compareTo(lastEstablished) > 0)
+        .min(Comparator.naturalOrder());
+  }
+
+
+
+
+
+  public static class Adapter extends TermsXMLAdapter {
+    public static final TermsXMLAdapter instance = new SCH1Series.Adapter();
+    protected SCH1Series[] getValues() { return values(); }
+  }
+
+  public static class JsonSerializer extends AbstractTermsJsonAdapter.AbstractSerializer<ISCH1> {
+
+  }
+
+  public static class JsonDeserializer extends AbstractTermsJsonAdapter.AbstractDeserializer<ISCH1> {
+    protected ISCH1[] getValues() {
+      return values();
+    }
+    @Override
+    protected Optional<ISCH1> resolveUUID(UUID uuid) {
+      return SCH1Series.resolveUUID(uuid);
+    }
   }
 
   public static Optional<ISCH1> resolve(final String tag) {
     return resolveTag(tag);
-  }
-
-  public static Optional<ISCH1> resolveId(final String conceptId) {
-    return resolveId(URI.create(conceptId));
   }
 
   public static Optional<ISCH1> resolveTag(final String tag) {
@@ -117,87 +166,6 @@ public enum SCH1Series implements ISCH1, Series<ISCH1> {
 
   public static Optional<ISCH1> resolveRef(final String refUri) {
     return resolveTerm(refUri, SCH1Series.values(), Term::getReferentId);
-  }
-
-  @Override
-  public VersionIdentifier getVersionIdentifier() {
-    return getLatest().getVersionIdentifier();
-  }
-
-  @Override
-  public URI getVersionId() {
-    return getLatest().getVersionId();
-  }
-
-
-  @Override
-  public boolean isSeriesExpired() {
-    Date lastEstablished = getLatest().getVersionEstablishedOn();
-    return schemeReleases.get(0).compareTo(lastEstablished) > 0;
-  }
-
-  @Override
-  public Optional<Date> getSeriesExpiredOn() {
-    Date lastEstablished = getLatest().getVersionEstablishedOn();
-    return schemeReleases.stream()
-        .filter(r -> r.compareTo(lastEstablished) > 0)
-        .min(Comparator.naturalOrder());
-  }
-
-  @Override
-  public SCH1Series asEnum() {
-    return this;
-  }
-
-  @Override
-  public Series<ISCH1> asSeries() {
-    return this;
-  }
-
-  @Override
-  public URI getResourceId() {
-    return getDescription().getResourceId();
-  }
-
-  @Override
-  public UUID getUuid() {
-    return getDescription().getUuid();
-  }
-
-  public static class Adapter extends TermsXMLAdapter {
-    public static final TermsXMLAdapter instance = new SCH1Series.Adapter();
-    protected SCH1Series[] getValues() { return values(); }
-  }
-
-
-  public static class JsonSerializer extends AbstractTermsJsonAdapter.AbstractSerializer<ISCH1> {
-
-  }
-
-  public static class JsonDeserializer extends AbstractTermsJsonAdapter.AbstractDeserializer<ISCH1> {
-    protected ISCH1[] getValues() {
-      return values();
-    }
-    @Override
-    protected Optional<ISCH1> resolveUUID(UUID uuid) {
-      return SCH1Series.resolveUUID(uuid);
-    }
-  }
-
-
-  @Override
-  public String getVersionTag() {
-    return getDescription().getVersionTag();
-  }
-
-  @Override
-  public Date getEstablishedOn() {
-    return getVersions().get(getVersions().size() - 1).getEstablishedOn();
-  }
-
-  @Override
-  public Date getVersionEstablishedOn() {
-    return getEstablishedOn();
   }
 
 }

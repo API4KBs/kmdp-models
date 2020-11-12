@@ -53,7 +53,7 @@ public abstract class TermsXMLAdapter extends
   private Optional<? extends Term> getVersion(Term x, String versionTag) {
     if (x instanceof Series) {
       @SuppressWarnings("unchecked")
-      Series<? extends Term> series = ((Series<? extends Term>) x);
+      Series<? extends Term,?> series = ((Series<? extends Term,?>) x);
       Optional<? extends Term> termVersion
           = series.getVersion(versionTag);
       if (termVersion.isEmpty() && isSnapshot(versionTag)) {

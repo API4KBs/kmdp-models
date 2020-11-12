@@ -157,7 +157,7 @@ public class VersionAgnosticVocabularyTest {
     Optional<UUID> uid = ensureUUID(KnowledgeAssetCategory.SCHEME_ID);
     assertTrue(uid.isPresent());
 
-    assertNull(KnowledgeAssetCategory.seriesUri.getVersionId());
+    assertNull(KnowledgeAssetCategory.schemeSeriesIdentifier.getVersionId());
   }
 
   @Test

@@ -66,6 +66,7 @@ import org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationL
 import org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerialization;
 import org.omg.spec.api4kp._20200801.taxonomy.lexicon.Lexicon;
 import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevel;
+import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries;
 import org.w3c.dom.Document;
 
 public interface AbstractCarrier {

@@ -73,8 +73,8 @@ public class ConceptDescriptor extends ConceptIdentifier {
         .withVersionTag(v.getVersionTag())
         .withNamespaceUri(v.getNamespaceUri());
 
-    if (v instanceof ConceptTerm<?>) {
-      ConceptTerm<?> ct = (ConceptTerm<?>) v;
+    if (v instanceof ConceptTerm) {
+      ConceptTerm ct = (ConceptTerm) v;
       cd.setAncestors(ct.getAncestors());
       cd.setClosure(ct.getClosure());
     }

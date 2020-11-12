@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.omg.spec.api4kp._20200801.id.Term;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
@@ -41,27 +40,28 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.id.Term;
 import org.semanticweb.owlapi.model.OWLOntology;
 import ru.avicomp.ontapi.OntologyManager;
 
-public class NotationTest {
+class NotationTest {
 
   private static OWLOntology ontology;
 
   @BeforeEach
-  public void init() {
+  void init() {
     ontology = doRead();
   }
 
   @Test
-  public void testNotationA() {
+  void testNotationA() {
     ConceptGraph graph = doGenerateGraph(ontology, "urn:CodeA");
     Term trm = getAndCheck(graph);
     assertEquals("123", trm.getTag());
   }
 
   @Test
-  public void testNotationB() {
+  void testNotationB() {
     ConceptGraph graph = doGenerateGraph(ontology, "urn:CodeB");
     Term trm = getAndCheck(graph);
     assertEquals("00", trm.getTag());
@@ -91,7 +91,7 @@ public class NotationTest {
             new SkosAbstractionConfig()
                 .with(SkosAbstractionParameters.TAG_TYPE, type)
                 .with(SkosAbstractionParameters.REASON, false));
-
+    assertNotNull(schemes);
     return schemes;
   }
 
@@ -99,7 +99,7 @@ public class NotationTest {
   private OWLOntology doRead() {
     try {
 
-      OntologyManager manager = TestHelper.initManager();
+      OntologyManager manager = TermsGeneratorTestHelper.initManager();
 
       Optional<Model> skosModel = new MireotExtractor()
           .fetch(NotationTest.class.getResourceAsStream("/multipleNotation.rdf"),
@@ -115,7 +115,7 @@ public class NotationTest {
                   .with(OWLtoSKOSTxParams.FLATTEN, true)
                   .with(OWLtoSKOSTxParams.VALIDATE, false)));
 
-      if (!skosModel.isPresent()) {
+      if (skosModel.isEmpty()) {
         fail("Unable to generate skos model");
       }
 

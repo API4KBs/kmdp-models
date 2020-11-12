@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Serialized_Knowledge_Expression;
 
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
@@ -49,7 +50,7 @@ class AnswerTest {
     KnowledgeCarrier expl = ans.getExplanation();
     assertNotNull(expl);
     assertNotNull(expl.getExpression());
-    assertEquals(ParsingLevelSeries.Serialized_Knowledge_Expression, expl.getLevel().asSeries());
+    assertEquals(Serialized_Knowledge_Expression, expl.getLevel().asEnum());
 
     assertTrue(ans.isSuccess());
     assertFalse(ans.isFailure());

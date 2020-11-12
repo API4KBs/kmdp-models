@@ -251,7 +251,7 @@ public class ModelMIMECoder {
    */
   private static Optional<String> mapKnownMimes(MIMEType mimeType) {
     String mappedMime = null;
-    switch (mimeType.asEnum()) {
+    switch (MIMETypeSeries.resolve(mimeType)) {
       case HyperText_Markup_Language:
         mappedMime = ModelMIMECoder.encode(rep(HTML,TXT));
         break;

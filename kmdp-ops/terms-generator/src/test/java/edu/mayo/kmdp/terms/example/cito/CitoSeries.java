@@ -4,9 +4,7 @@ package edu.mayo.kmdp.terms.example.cito;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
-import org.omg.spec.api4kp._20200801.series.Series;
-import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
-import org.omg.spec.api4kp._20200801.terms.TermDescription;
+import edu.mayo.kmdp.terms.example.cito.ICito.ICitoVersion;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Date;
@@ -16,23 +14,29 @@ import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
-import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.series.Series;
+import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.EnumeratedConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.TermDescription;
 
-public enum CitoSeries implements ICito, Series<ICito> {
+public enum CitoSeries implements
+    ICito,
+    Series<ICitoVersion,ICito>,
+    EnumeratedConceptTerm<CitoSeries,ICitoVersion,ICito> {
 
   Cites(Cito.Cites),
   Cites_As_Source_Document(Cito.Cites_As_Source_Document);
 
-  public static final Map<UUID,ICito> index = indexByUUID(CitoSeries.values());
+  public static final Map<UUID,CitoSeries> index = indexByUUID(CitoSeries.values());
 
 
-  private List<ICito> versions;
+  private List<ICitoVersion> versions;
 
-  CitoSeries(ICito... versions) {
+  CitoSeries(ICitoVersion... versions) {
     this.versions = Arrays.asList(versions);
   }
 
-  public List<ICito> getVersions() {
+  public List<ICitoVersion> getVersions() {
     return versions;
   }
 
@@ -42,73 +46,15 @@ public enum CitoSeries implements ICito, Series<ICito> {
         .orElse(null);
   }
 
-  @Override
-  public ResourceIdentifier getNamespace() {
-    return latest().map(ConceptTerm::getNamespace)
-        .orElse(null);
-  }
-
-  @Override
-  public VersionIdentifier getVersionIdentifier() {
-    return getLatest().getVersionIdentifier();
-  }
-
-  @Override
-  public URI getVersionId() {
-    return getLatest().getVersionId();
-  }
-
-  public static Optional<ICito> resolve(final Term trm) {
-    return resolveId(trm.getConceptId());
-  }
-
-  public static Optional<ICito> resolve(final String tag) {
-    return resolveTag(tag);
-  }
-
-  public static Optional<ICito> resolveId(final String conceptId) {
-    return resolveId(URI.create(conceptId));
-  }
-
-  public static Optional<ICito> resolveTag(final String tag) {
-    return resolveTerm(tag, CitoSeries.values(), Term::getTag);
-  }
-
-  public static Optional<ICito> resolveUUID(final UUID conceptId) {
-    return Optional.of(index.get(conceptId));
-  }
-
-  public static Optional<ICito> resolveId(final URI conceptId) {
-    return resolveTerm(conceptId, CitoSeries.values(), Term::getConceptId);
-  }
-
-  public static Optional<ICito> resolveRef(final String refUri) {
-    return resolveTerm(refUri, CitoSeries.values(), Term::getReferentId);
-  }
-
-  @Override
-  public CitoSeries asEnum() {
-    return this;
-  }
-
-  @Override
-  public Series<ICito> asSeries() {
-    return this;
-  }
-
-  @Override
-  public String getVersionTag() {
-    return getNamespace().getVersionTag();
-  }
 
   @Override
   public Date getEstablishedOn() {
-    return getVersions().get(0).getEstablishedOn();
+    return getVersions().get(getVersions().size() - 1).getEstablishedOn();
   }
 
   @Override
-  public Date getVersionEstablishedOn() {
-    return getEstablishedOn();
+  public ResourceIdentifier getDefiningScheme() {
+    return schemeSeriesIdentifier;
   }
 
   @Override
@@ -117,7 +63,64 @@ public enum CitoSeries implements ICito, Series<ICito> {
   }
 
   @Override
-  public UUID getUuid() {
-    return getDescription().getUuid();
+  public CitoSeries asEnum() {
+    return this;
   }
+
+  @Override
+  public CitoSeries asSeries() {
+    return this;
+  }
+
+
+  public static CitoSeries resolve(final Term term) {
+    return resolveUUID(term.getUuid())
+        .orElseThrow();
+  }
+
+  public static CitoSeries resolve(final ICito term) {
+    return resolveUUID(term.getUuid())
+        .orElseThrow();
+  }
+
+
+  public static Optional<CitoSeries> resolveId(final String conceptId) {
+    return resolveId(URI.create(conceptId));
+  }
+
+  public static Optional<CitoSeries> resolveTag(final String tag) {
+    return resolveTerm(tag, CitoSeries.values(), Term::getTag);
+  }
+
+  public static Optional<CitoSeries> resolveUUID(final UUID conceptId) {
+    return Optional.of(index.get(conceptId));
+  }
+
+  public static Optional<CitoSeries> resolveId(final URI conceptId) {
+    return resolveTerm(conceptId, CitoSeries.values(), Term::getConceptId);
+  }
+
+  public static Optional<CitoSeries> resolveRef(final String refUri) {
+    return resolveTerm(refUri, CitoSeries.values(), Term::getReferentId);
+  }
+
+//  @Override
+//  public boolean sameAs(ICito other) {
+//    return isSameVersion(other);
+//  }
+//
+//  @Override
+//  public boolean isSameEntity(ICito other) {
+//    return other.getUuid().equals(this.getUuid());
+//  }
+//
+//  @Override
+//  public boolean isSameVersion(ICito other) {
+//    return false;
+//  }
+//
+//  @Override
+//  public boolean isDifferentVersion(ICito other) {
+//    return false;
+//  }
 }

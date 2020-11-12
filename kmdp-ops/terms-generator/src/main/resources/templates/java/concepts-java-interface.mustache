@@ -1,38 +1,37 @@
 package {{intfPackageName}};
 
-import org.omg.spec.api4kp._20200801.terms.ControlledTerm;
+import org.omg.spec.api4kp._20200801.series.Series;
+import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.TypedTerm;
 import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 import java.net.URI;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
 @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( {{seriesName}}.Adapter.class )
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{seriesName}}.JsonDeserializer.class )
-public interface {{intfName}} extends ControlledTerm, VersionableTerm<{{intfName}}, {{seriesName}}> {
+public interface {{intfName}} extends ConceptTerm, TypedTerm<{{intfName}}> {
 
   String SCHEME_NAME = "{{conceptScheme.label}}";
   String SCHEME_ID = "{{conceptSchemeTag}}";
 
-  String seriesIdentifier = "{{seriesNamespace}}";
-  ResourceIdentifier seriesUri =
-      SemanticIdentifier.newId(URI.create("{{seriesNamespace}}"));
+  ResourceIdentifier schemeSeriesIdentifier =
+    SemanticIdentifier.newNamedId(
+      URI.create("{{seriesNamespace}}"),
+      SCHEME_ID,
+      SCHEME_NAME);
 
-  ResourceIdentifier seriesNamespace =
-      SemanticIdentifier.newNamedId(
-          seriesUri.getResourceId(),
-          SCHEME_ID,
-          SCHEME_NAME);
-
-  default ResourceIdentifier getSeriesUri() {
-    return (ResourceIdentifier) seriesUri.clone();
+  default {{seriesName}} asEnum() {
+    return {{seriesName}}.resolve(this);
   }
 
-  @Override
-  public ResourceIdentifier getNamespace();
+  interface {{intfName}}Version extends {{intfName}}, VersionableTerm<{{intfName}}.{{intfName}}Version, {{intfName}}> {
+    @Override
+    default VersionIdentifier getVersionIdentifier() {
+      return this;
+    }
 
-  @Override
-  default URI getNamespaceUri() {
-    return seriesUri.getResourceId();
+    Series<{{intfName}}Version,{{intfName}}> asSeries();
   }
-
 }

@@ -20,12 +20,9 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
 import de.escalon.hypermedia.hydra.mapping.Expose;
-import org.omg.spec.api4kp._20200801.series.Series;
-import org.omg.spec.api4kp._20200801.terms.TermDescription;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
-import edu.mayo.kmdp.terms.example.cito.ICito;
-import org.omg.spec.api4kp._20200801.terms.model.TermImpl;
+import edu.mayo.kmdp.terms.example.sch1.ISCH1.ISCH1Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Collections;
@@ -37,13 +34,16 @@ import java.util.UUID;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.terms.EnumeratedConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.TermDescription;
+import org.omg.spec.api4kp._20200801.terms.model.TermImpl;
 
 /*
 	Example of generated 'terminology' class
 *
 * */
 @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(SCH1Old.Adapter.class)
-public enum SCH1Old implements ISCH1 {
+public enum SCH1Old implements ISCH1Version, EnumeratedConceptTerm<SCH1Old, ISCH1Version, ISCH1> {
 
   @Expose("http://test/generator#specific_concept")
   Specific_Concept("6789",
@@ -54,8 +54,7 @@ public enum SCH1Old implements ISCH1 {
       "specific concept",
       "http://test/generator#specific_concept",
       new SCH1Old[0],
-      new SCH1Old[0],
-      SCH1Series.Specific_Concept),
+      new SCH1Old[0]),
   @Expose("http://test/generator#deprecated_concept")
   Deprecated_Concept("999",
       UUID.nameUUIDFromBytes("deprecated_concept".getBytes()).toString(),
@@ -65,19 +64,11 @@ public enum SCH1Old implements ISCH1 {
       "deprecated concept",
       "http://test/generator#deprecated_concept",
       new SCH1Old[0],
-      new SCH1Old[0],
-      SCH1Series.Deprecated_Concept);
+      new SCH1Old[0]);
 
-  public static final ResourceIdentifier schemeURI = Series.toVersion(
-      ICito.seriesUri,
-      "v00_Ancient");
-
-  public static final ResourceIdentifier namespace = SemanticIdentifier.newNamedId(
-      URI.create("http://test/generator#concept_scheme1"),
-      "concept_scheme_1",
-      "Concept Scheme 1",
-      "v00_Ancient",
-      DateTimeUtil.parseDate("1981-12-01"));
+  public static final ResourceIdentifier schemeVersionIdentifier =
+      SemanticIdentifier.toVersionId(schemeSeriesIdentifier, "v00_Ancient",
+          DateTimeUtil.parseDate("1981-12-01"));
 
   public static final Map<UUID,SCH1Old> index = indexByUUID(SCH1Old.values());
 
@@ -93,34 +84,18 @@ public enum SCH1Old implements ISCH1 {
       final String conceptId, final List<String> additionalCodes,
       final String displayName, final String referent,
       final Term[] ancestors,
-      final Term[] closure,
-      SCH1Series series) {
+      final Term[] closure) {
     this.description = new TermImpl(conceptId, conceptUUID, versionTag, code, additionalCodes, displayName,
         referent, ancestors, closure, DateTimeUtil.parseDate("1981-12-01"));
-    this.series = series;
   }
 
   @Override
-  public ResourceIdentifier getNamespace() {
-    return namespace;
+  public ResourceIdentifier getDefiningScheme() {
+    return schemeVersionIdentifier;
   }
 
   @Override
-  public ResourceIdentifier getVersionIdentifier() {
-    return SemanticIdentifier.newId(namespace.getNamespaceUri(), this.getTag(), namespace.getVersionTag());
-  }
-
-  @Override
-  public SCH1Series asEnum() {
-    return toSeries();
-  }
-
-  @Override
-  public Series<ISCH1> asSeries() {
-    return toSeries();
-  }
-
-  private SCH1Series toSeries() {
+  public SCH1Series asSeries() {
     if (series == null) {
       series = (SCH1Series) SCH1Series.resolveUUID(this.getUuid())
           .orElseThrow(IllegalStateException::new);
@@ -128,19 +103,10 @@ public enum SCH1Old implements ISCH1 {
     return series;
   }
 
-  @Override
-  public URI getResourceId() {
-    return getDescription().getResourceId();
-  }
 
   @Override
-  public URI getVersionId() {
-    return getDescription().getVersionId();
-  }
-
-  @Override
-  public UUID getUuid() {
-    return getDescription().getUuid();
+  public Date getVersionEstablishedOn() {
+    return schemeVersionIdentifier.getEstablishedOn();
   }
 
 
@@ -162,17 +128,6 @@ public enum SCH1Old implements ISCH1 {
   }
 
 
-  public static Optional<SCH1Old> resolve(final Term trm) {
-    return resolveId(trm.getConceptId()); //TODO
-  }
-
-  public static Optional<SCH1Old> resolve(final String tag) {
-    return resolveTag(tag);
-  }
-
-  public static Optional<SCH1Old> resolveId(final String conceptId) {
-    return resolveId(URI.create(conceptId));
-  }
 
   public static Optional<SCH1Old> resolveTag(final String tag) {
     return resolveTerm(tag, SCH1Old.values(), Term::getTag);
@@ -190,20 +145,6 @@ public enum SCH1Old implements ISCH1 {
     return resolveTerm(refUri, SCH1Old.values(), Term::getReferentId);
   }
 
-  public Date getEstablishedOn() {
-    return asSeries().getEarliest().getVersionEstablishedOn();
-  }
-
-  @Override
-  public Date getVersionEstablishedOn() {
-    int idx = SCH1Series.schemeVersions.indexOf(getVersionTag());
-    return SCH1Series.schemeReleases.get(idx);
-  }
-
-  @Override
-  public String getVersionTag() {
-    return namespace.getVersionTag();
-  }
 }
 
 

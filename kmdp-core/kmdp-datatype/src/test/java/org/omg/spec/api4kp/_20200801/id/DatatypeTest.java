@@ -579,4 +579,26 @@ public class DatatypeTest {
     assertEquals("2020", rid.getVersionTag());
   }
 
+  @Test
+  void testVersionIdWithFragments() {
+    URI uri = URI.create("http://foo.bar#x");
+    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri,"CURRENT");
+    assertEquals("http://foo.bar/versions/CURRENT#x", rid.getVersionId().toString());
+    assertEquals(uri, rid.getResourceId());
+  }
+
+  @Test
+  void testVersionIdWithURN() {
+    URI uri = URI.create("urn:uuid:x");
+    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri,"CURRENT");
+    assertEquals("urn:uuid:x:CURRENT", rid.getVersionId().toString());
+    assertEquals(uri, rid.getResourceId());
+  }
+
+  @Test
+  void testNamespaceWithURN() {
+    URI uri = URI.create("urn:uuid");
+    ResourceIdentifier nsId = SemanticIdentifier.newNamespaceId(uri);
+    assertEquals("urn:uuid", nsId.getResourceId().toString());
+  }
 }

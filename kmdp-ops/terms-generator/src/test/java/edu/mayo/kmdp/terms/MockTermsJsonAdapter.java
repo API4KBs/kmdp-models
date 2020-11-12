@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._20200801.id.Term;
 
-@Deprecated
 public abstract class MockTermsJsonAdapter {
 
   public static class Serializer<T extends Term> extends AbstractTermsJsonAdapter.AbstractSerializer<T> {

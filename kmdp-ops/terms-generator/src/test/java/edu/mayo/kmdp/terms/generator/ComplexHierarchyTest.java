@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
 import edu.mayo.kmdp.terms.mireot.MireotExtractor;
@@ -38,15 +37,17 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.OWL;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import org.semanticweb.owlapi.model.OWLOntology;
 import ru.avicomp.ontapi.OntologyManager;
 
-public class ComplexHierarchyTest {
+class ComplexHierarchyTest {
 
   @Test
-  public void testGenerateConceptsHierarchy() {
+  void testGenerateConceptsHierarchy() {
     ConceptScheme<Term> scheme = doGenerate(Modes.SKOS);
     assertNotNull(scheme);
 
@@ -59,7 +60,7 @@ public class ComplexHierarchyTest {
   }
 
   @Test
-  public void testGenerateConceptsHierarchyFromOntology() {
+  void testGenerateConceptsHierarchyFromOntology() {
     ConceptScheme<Term> scheme = doGenerate(Modes.SKOS);
     assertNotNull(scheme);
 
@@ -73,7 +74,7 @@ public class ComplexHierarchyTest {
 
 
   @Test
-  public void testTopConcept() {
+  void testTopConcept() {
     ConceptScheme<Term> scheme = doGenerate(Modes.SKOS);
     assertNotNull(scheme);
 
@@ -85,7 +86,7 @@ public class ComplexHierarchyTest {
 
   private ConceptScheme<Term> doGenerate(final Modes modes) {
     try {
-      OntologyManager manager = TestHelper.initManager();
+      OntologyManager manager = TermsGeneratorTestHelper.initManager();
 
       Optional<Model> skosModel = new MireotExtractor()
           .fetch(Owl2Skos2TermsTest.class.getResourceAsStream("/kac-test.rdf"),
@@ -100,7 +101,7 @@ public class ComplexHierarchyTest {
                   .with(OWLtoSKOSTxParams.FLATTEN, true)
                   .with(OWLtoSKOSTxParams.VALIDATE, false)));
 
-      if (!skosModel.isPresent()) {
+      if (skosModel.isEmpty()) {
         fail("Unable to generate skos model");
       }
 
@@ -115,7 +116,8 @@ public class ComplexHierarchyTest {
       Optional<OWLOntology> skosOntology = Optional
           .ofNullable(manager.addOntology(om.getBaseModel().getGraph()));
 
-      ConceptGraph schemes = new SkosTerminologyAbstractor().traverse(skosOntology.get());
+      ConceptGraph schemes = new SkosTerminologyAbstractor()
+          .traverse(skosOntology.orElseGet(Assertions::fail));
 
       Optional<ConceptScheme<Term>> scheme  = schemes.getConceptScheme(
           URI.create("http://test.foo#" + uuid("KnowledgeAssetCategories")));

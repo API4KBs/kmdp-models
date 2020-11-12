@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.omg.spec.api4kp._20200801.id.Term;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
@@ -45,6 +44,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.vocabulary.SKOS;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.omg.spec.api4kp._20200801.id.Term;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import ru.avicomp.ontapi.OntologyManager;
@@ -66,7 +66,7 @@ class Owl2Skos2TermsTest {
     File src = initFolder(folder,"src");
     File tgt = initFolder(folder,"tgt");
 
-    OntologyManager manager = TestHelper.initManager();
+    OntologyManager manager = TermsGeneratorTestHelper.initManager();
 
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, targetNS)
@@ -80,7 +80,7 @@ class Owl2Skos2TermsTest {
             new MireotConfig()).flatMap((extract) -> new Owl2SkosConverter().apply(extract, cfg));
 
 
-    if (!skosModel.isPresent()) {
+    if (skosModel.isEmpty()) {
       fail("Unable to generate skos model");
     }
     if (!manager.contains(IRI.create(SKOS.uri))) {

@@ -55,16 +55,12 @@ public class TermsTest {
     DerivationType earlyRule = DerivationTypeSeries.Is_Derived_From.asSeries().getEarliest();
     DerivationType lateRule = DerivationTypeSeries.Is_Derived_From.asSeries().getLatest();
 
-    assertFalse(earlyRule.isSame(KnowledgeAssetTypeSeries.Cohort_Definition));
-
-    assertTrue(earlyRule.isDifferentVersion(lateRule));
-    assertFalse(earlyRule.isSameVersion(lateRule));
-
-    assertTrue(Series.isSameEntity(earlyRule,lateRule));
-    assertTrue(earlyRule.isSameEntity(lateRule));
-
-    assertFalse(Series.isSame(earlyRule,lateRule));
-    assertFalse(earlyRule.isSame(lateRule));
+//    assertTrue(earlyRule.isDifferentVersion(lateRule));
+//    assertFalse(earlyRule.isSameVersion(lateRule));
+//
+//    assertTrue(earlyRule.isSameEntity(lateRule));
+//
+//    assertFalse(earlyRule.sameAs(lateRule));
     assertFalse(earlyRule.asConceptIdentifier().sameAs(lateRule.asConceptIdentifier()));
   }
 

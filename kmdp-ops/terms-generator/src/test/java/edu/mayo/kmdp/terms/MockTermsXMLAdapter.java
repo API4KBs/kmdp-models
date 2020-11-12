@@ -21,7 +21,6 @@ import org.omg.spec.api4kp._20200801.id.Term;
  * Copy of the official class for test purposes.
  * Duplicated in order to avoid a dependency on one additional module
  */
-@Deprecated
 public abstract class MockTermsXMLAdapter extends
     javax.xml.bind.annotation.adapters.XmlAdapter<org.omg.spec.api4kp._20200801.id.ConceptIdentifier, Term> {
 

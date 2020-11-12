@@ -2,14 +2,37 @@ package org.omg.spec.api4kp._20200801.terms;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
-import org.omg.spec.api4kp._20200801.terms.Taxonomic;
-import org.omg.spec.api4kp._20200801.terms.TermDescription;
 
-public interface ConceptTerm<T extends Term> extends Term, Taxonomic<T> {
+/**
+ * Interface that supports Terms that are part of a
+ * common, possibly hierarchical concept scheme
+ */
+public interface ConceptTerm extends Term, Taxonomic {
 
+  @Override
+  default UUID getUuid() {
+    return getDescription().getUuid();
+  }
+
+  @Override
+  default URI getResourceId() {
+    return getDescription().getResourceId();
+  }
+
+  @Override
+  default URI getVersionId() {
+    return getDescription().getVersionId();
+  }
+
+  @Override
+  default String getVersionTag() {
+    return getDescription().getVersionTag();
+  }
 
   @Override
   default String getName() {
@@ -39,8 +62,14 @@ public interface ConceptTerm<T extends Term> extends Term, Taxonomic<T> {
     throw new UnsupportedOperationException("IDs are immutable");
   }
 
-  ResourceIdentifier getNamespace();
-  
+  default URI getNamespaceUri() {
+    return getDescription().getNamespaceUri();
+  }
+
+  default ResourceIdentifier getNamespace() {
+    return SemanticIdentifier.newNamespaceId(getNamespaceUri());
+  }
+
   @Override
   default Term[] getClosure() {
     return getDescription().getClosure();

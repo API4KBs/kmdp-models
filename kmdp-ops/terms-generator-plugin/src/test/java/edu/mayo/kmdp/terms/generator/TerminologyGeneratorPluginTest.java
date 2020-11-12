@@ -103,7 +103,7 @@ class TerminologyGeneratorPluginTest extends AbstractPluginTest {
       assertNotNull(citoImpl);
       assertTrue(citoImpl.isEnum());
       Class[] intfs = citoImpl.getInterfaces();
-      assertEquals(1,intfs.length);
+      assertEquals(2,intfs.length);
 
       assertEquals(44, citoImpl.getEnumConstants().length);
     } catch (Exception e) {

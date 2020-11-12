@@ -3,9 +3,8 @@ package org.omg.spec.api4kp._20200801.terms;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-import org.omg.spec.api4kp._20200801.id.Term;
 
-public interface TermDescription extends Taxonomic<Term> {
+public interface TermDescription extends Taxonomic {
 
   UUID getUuid();
 

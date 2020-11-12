@@ -1,48 +1,62 @@
 package org.omg.spec.api4kp._20200801.terms;
 
-import java.util.Collection;
 import org.omg.spec.api4kp._20200801.id.Term;
-import org.omg.spec.api4kp._20200801.series.Series;
 import org.omg.spec.api4kp._20200801.series.Versionable;
 
-public interface VersionableTerm<T extends Term & Versionable<T>,E extends Enum<E>>
-    extends ConceptTerm<T>, Versionable<T> {
+/**
+ * This interface extends the notion of (Concept) Term with
+ * explicit version management.
+ * Versionable terms are mutable with immutable snapshots.
+ * Mutation can involve contigent properties of the term itself (e.g. labels),
+ * or be due to changes in the referent (assuming the referent is mutable)
+ *
+ * Mostly used with Terms where the mutable characteristic
+ * is the membership in one or more different Concept Schemes
+ * at different points in time
+ *
+ * @param <T> The actual type used to implements the mutable term snapshots
+ * @param <E> The type of the denoted entity
+ */
+public interface VersionableTerm<T extends VersionableTerm<T,E>, E extends Term>
+    extends ConceptTerm, Versionable<T, E> {
 
-  E asEnum();
 
-  Series<T> asSeries();
-
-
-  default boolean isSame(Term other) {
-    return isSameVersion(other);
-  }
-
-  default boolean isAnyOf(Collection<? extends Term> others) {
-    return others != null && others.stream().anyMatch(this::isSame);
-  }
-
-  default boolean isNoneOf(Collection<? extends Term> others) {
-    return ! isAnyOf(others);
-  }
-
-  default boolean sameAs(Term other) {
-    return isSameVersion(other);
-  }
-
-  default boolean isSameVersion(Term other) {
+  /**
+   * Return true if two Term are versions of the same mutable Term
+   *
+   * Under the assumption that the denoted entity is an essential
+   * characteristic of a Term (i.e. changing referent implies
+   * the creation of a new Term, rather than a new version),
+   * IF two term snapshots are version of the same term, then
+   * the two snapshots must be co-referent
+   */
+  @Override
+  default boolean ofSameAs(T other) {
     return other != null
-        && this.getUuid().equals(other.getUuid())
+        && this.getUuid().equals(other.getUuid());
+  }
+
+  /**
+   * Return true if two Term versions are actually
+   * the same version of the same Term
+   *
+   * @param other the Versionable Term to be compared to
+   * @return
+   */
+  @Override
+  default boolean isSameVersion(T other) {
+    return ofSameAs(other)
         && this.getVersionTag().equals(other.getVersionTag());
   }
 
-  default boolean isDifferentVersion(Term other) {
-    return other != null
-        && this.getUuid().equals(other.getUuid())
+  /**
+   * Return true if two Term versions are different
+   * versions of the same mutable Term
+   */
+  @Override
+  default boolean isDifferentVersion(T other) {
+    return ofSameAs(other)
         && ! this.getVersionTag().equals(other.getVersionTag());
-  }
-
-  default boolean isSameEntity(Term other) {
-    return other != null && this.getUuid().equals(other.getUuid());
   }
 
 }

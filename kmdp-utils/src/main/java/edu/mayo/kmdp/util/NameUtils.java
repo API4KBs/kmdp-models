@@ -732,15 +732,25 @@ public final class NameUtils {
       if (!Util.isEmpty(u.getFragment())) {
         return u.getFragment();
       }
-      return uri.substring(uri.lastIndexOf('/') + 1);
+      int idx = uri.lastIndexOf('/');
+      if (idx > 0) {
+        return uri.substring(uri.lastIndexOf('/') + 1);
+      } else if (uri.startsWith("urn")) {
+        return uri.substring(uri.lastIndexOf(':') + 1);
+      } else {
+        return uri.substring(uri.lastIndexOf('/') + 1);
+      }
     } catch (URISyntaxException e) {
       return uri;
     }
-
   }
 
   public static String removeTrailingPart(String uri) {
-    return uri.substring(0,uri.length() - getTrailingPart(uri).length());
+    String s = uri.substring(0, uri.length() - getTrailingPart(uri).length() );
+    if (s.endsWith("#")) {
+      s = s.substring(0, s.length() - 1);
+    }
+    return s;
   }
 
 

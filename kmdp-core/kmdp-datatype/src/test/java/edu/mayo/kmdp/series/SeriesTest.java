@@ -9,17 +9,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.DateTimeUtil;
+import java.net.URI;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.id.Identifiable;
+import org.omg.spec.api4kp._20200801.id.Identifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 import org.omg.spec.api4kp._20200801.series.SemVerSeries;
 import org.omg.spec.api4kp._20200801.series.SemVersionable;
-import org.omg.spec.api4kp._20200801.series.Series;
 
 class SeriesTest {
 
@@ -103,8 +106,8 @@ class SeriesTest {
 
   @Test
   void testSameNess() {
-    assertTrue(Series.isSameEntity(p.getLatest(), p.getVersion(2).orElse(null)));
-    assertTrue(Series.isDifferentVersion(p.getLatest(), p.getVersion(2).orElse(null)));
+    assertTrue(p.getLatest().ofSameAs(p.getVersion(2).orElse(null)));
+    assertTrue(p.getLatest().isDifferentVersion(p.getVersion(2).orElse(null)));
   }
 
   @Test
@@ -127,11 +130,14 @@ class SeriesTest {
   }
 
 
-  public static class Person implements SemVerSeries<PersonSnapshot> {
+  public static class Person implements SemVerSeries<PersonSnapshot, Person>, Identifiable {
+
+    ResourceIdentifier seriesId;
 
     private final List<PersonSnapshot> versions = new LinkedList<>();
 
     Person(String name, int age) {
+      seriesId = SemanticIdentifier.newId(name);
       addVersion(
           new PersonSnapshot(name, age),
           newIdentifier(name));
@@ -149,10 +155,19 @@ class SeriesTest {
       return versions;
     }
 
+    @Override
+    public Identifier getIdentifier() {
+      return seriesId;
+    }
+
+    @Override
+    public URI getResourceId() {
+      return getIdentifier().getResourceId();
+    }
   }
 
 
-  public static class PersonSnapshot implements SemVersionable<PersonSnapshot> {
+  public static class PersonSnapshot implements SemVersionable<PersonSnapshot, Person> {
 
     private ResourceIdentifier id;
     private int age;
@@ -208,6 +223,10 @@ class SeriesTest {
           + getVersionIdentifier().getEstablishedOn();
     }
 
+    @Override
+    public Identifier getIdentifier() {
+      return getVersionIdentifier();
+    }
   }
 
 

@@ -1,34 +1,32 @@
 package edu.mayo.kmdp.terms.example.sch1;
 
-import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 import java.net.URI;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.terms.TypedTerm;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.series.Series;
+import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = SCH1Series.JsonDeserializer.class)
-public interface ISCH1 extends VersionableTerm<ISCH1, SCH1Series> {
+public interface ISCH1 extends ConceptTerm, TypedTerm<ISCH1> {
 
   String schemeName = "SCH1";
   String schemeID = "0.0.0.0";
 
-  ResourceIdentifier seriesUri =
-      SemanticIdentifier.newId(URI.create("http://test/generator#concept_scheme1"));
-
-  ResourceIdentifier seriesNamespace =
+  ResourceIdentifier schemeSeriesIdentifier =
       SemanticIdentifier.newNamedId(
-          seriesUri.getResourceId(),
-          "concept_scheme_1",
-          "Concept Scheme 1");
+          URI.create("http://test/generator#concept_scheme1"),
+          schemeID,
+          schemeName);
 
-  default ResourceIdentifier getSeriesUri() {
-    return (ResourceIdentifier) seriesUri.clone();
-  }
+  interface ISCH1Version extends ISCH1, VersionableTerm<ISCH1Version, ISCH1> {
+    @Override
+    default VersionIdentifier getVersionIdentifier() {
+      return this;
+    }
 
-  default boolean equals(ISCH1 other) {
-    return true;
-  }
-
-  default URI getNamespaceUri() {
-    return seriesUri.getResourceId();
+    Series<ISCH1Version, ISCH1> asSeries();
   }
 }

@@ -6,6 +6,7 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
 import org.omg.spec.api4kp._20200801.series.Series;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
+import org.omg.spec.api4kp._20200801.terms.EnumeratedConceptTerm;
 import org.omg.spec.api4kp._20200801.terms.TermDescription;
 
 import java.net.URI;
@@ -28,7 +29,12 @@ import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 @com.fasterxml.jackson.databind.annotation.JsonSerialize( using = {{seriesName}}.JsonSerializer.class )
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{seriesName}}.JsonDeserializer.class )
 {{/json}}
-public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
+public enum {{seriesName}} implements {{intfPackageName}}.{{intfName}},
+  Series<{{intfPackageName}}.{{intfName}}.{{intfName}}Version, {{intfPackageName}}.{{intfName}}>,
+  EnumeratedConceptTerm<
+    {{seriesName}},
+    {{intfPackageName}}.{{intfName}}.{{intfName}}Version,
+    {{intfPackageName}}.{{intfName}}> {
 
    {{#conceptSeries}}
     {{term}}( {{#versions}} {{.}}  {{^-last}}, {{/-last}} {{/versions}} ) {{^-last}}, {{/-last}}
@@ -49,32 +55,22 @@ public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
 
   public static final URI latestVersionIdentifier = schemeVersionIdentifiers.get(0);
 
-  private List<{{intfName}}> versions;
+  private List<{{intfPackageName}}.{{intfName}}.{{intfName}}Version> versions;
 
-  {{seriesName}}({{intfName}}... versions) {
+  {{seriesName}}({{intfPackageName}}.{{intfName}}.{{intfName}}Version... versions) {
     this.versions = Arrays.asList(versions);
   }
 
-  public List<{{intfName}}> getVersions() {
+  public List<{{intfPackageName}}.{{intfName}}.{{intfName}}Version> getVersions() {
     return versions;
   }
 
-  public {{seriesName}} asEnum() {
-    return this;
-  }
-
-  public Series<{{intfName}}> asSeries() {
+  public {{seriesName}} asSeries() {
     return this;
   }
 
   public static int count() {
     return values().length;
-  }
-
-  public static int countUnexpired() {
-    return  (int) Arrays.stream(values())
-        .filter(x -> !x.isSeriesExpired())
-        .count();
   }
 
   @Override
@@ -84,18 +80,13 @@ public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
   }
 
   @Override
-  public ResourceIdentifier getNamespace() {
-    return {{intfName}}.seriesNamespace;
-  }
-  
-  @Override
-  public VersionIdentifier getVersionIdentifier() {
-    return getLatest().getVersionIdentifier();
+  public ResourceIdentifier getDefiningScheme() {
+    return schemeSeriesIdentifier;
   }
 
   @Override
-  public URI getVersionId() {
-    return getLatest().getVersionId();
+  public URI getResourceId() {
+    return getDescription().getResourceId();
   }
 
   @Override
@@ -113,65 +104,50 @@ public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
   }
 
   @Override
-  public String getVersionTag() {
-    return getDescription().getVersionTag();
-  }
-
-  @Override
   public Date getEstablishedOn() {
     return getVersions().get(getVersions().size() - 1).getEstablishedOn();
   }
 
-  @Override
-  public Date getVersionEstablishedOn() {
-    return getEstablishedOn();
+
+  public static {{seriesName}} resolve(final {{intfPackageName}}.{{intfName}} other) {
+    return ({{seriesName}}) resolveUUID(other.getUuid()).orElseThrow();
   }
 
-  @Override
-  public UUID getUuid() {
-    return getDescription().getUuid();
-  }
-
-  @Override
-  public URI getResourceId() {
-    return getDescription().getResourceId();
-  }
-
-  public static Optional<{{intfName}}> resolve(final Term trm) {
+  public static Optional<{{intfPackageName}}.{{intfName}}> resolve(final Term trm) {
     return trm != null ? resolveId(trm.getConceptId()) : Optional.empty();
   }
 
-  public static Optional<{{intfName}}> resolve(final String tag) {
+  public static Optional<{{intfPackageName}}.{{intfName}}> resolve(final String tag) {
     return tag != null ? resolveTag(tag) : Optional.empty();
   }
 
-  public static Optional<{{intfName}}> resolveId(final String conceptId) {
+  public static Optional<{{intfPackageName}}.{{intfName}}> resolveId(final String conceptId) {
     return conceptId != null ? resolveId(URI.create(conceptId)) : Optional.empty();
   }
 
-  public static Optional<{{intfName}}> resolveRef(final String refUri) {
+  public static Optional<{{intfPackageName}}.{{intfName}}> resolveRef(final String refUri) {
     return refUri != null ? resolveRef(URI.create(refUri)) : Optional.empty();
   }
 
-  public static Optional<{{intfName}}> resolveTag(final String tag) {
-    Optional<{{intfName}}> l = resolveTerm(tag,  {{seriesName}}.values(), Term::getTag);
+  public static Optional<{{intfPackageName}}.{{intfName}}> resolveTag(final String tag) {
+    Optional<{{intfPackageName}}.{{intfName}}> l = resolveTerm(tag,  {{seriesName}}.values(), Term::getTag);
     if (!l.isPresent()) {
       l = resolveAliases(tag,  {{seriesName}}.values(), ConceptTerm::getTags);
     }
     return l;
   }
 
-  public static Optional<{{intfName}}> resolveUUID(final UUID conceptId) {
+  public static Optional<{{intfPackageName}}.{{intfName}}> resolveUUID(final UUID conceptId) {
     return conceptId != null
       ? Optional.ofNullable(index.get(conceptId))
       : Optional.empty();
   }
 
-  public static Optional<{{intfName}}> resolveId(final URI conceptId) {
+  public static Optional<{{intfPackageName}}.{{intfName}}> resolveId(final URI conceptId) {
     return resolveTerm(conceptId, {{seriesName}}.values(), Term::getConceptId);
   }
 
-  public static Optional<{{intfName}}> resolveRef(final URI refUri) {
+  public static Optional<{{intfPackageName}}.{{intfName}}> resolveRef(final URI refUri) {
     return resolveTerm(refUri, {{seriesName}}.values(), Term::getReferentId);
   }
 
@@ -182,15 +158,15 @@ public enum {{seriesName}} implements {{intfName}}, Series<{{intfName}}> {
   }
 
 
-  public static class JsonSerializer extends {{baseJsonAdapter}}.Serializer<{{intfName}}> {
+  public static class JsonSerializer extends {{baseJsonAdapter}}.Serializer<{{intfPackageName}}.{{intfName}}> {
 
   }
 
-  public static class JsonDeserializer extends {{baseJsonAdapter}}.Deserializer<{{intfName}}> {
-    protected {{intfName}}[] getValues() { return values(); }
+  public static class JsonDeserializer extends {{baseJsonAdapter}}.Deserializer<{{intfPackageName}}.{{intfName}}> {
+    protected {{intfPackageName}}.{{intfName}}[] getValues() { return values(); }
 
     @Override
-    protected Optional<{{intfName}}> resolveUUID(UUID uuid) {
+    protected Optional<{{intfPackageName}}.{{intfName}}> resolveUUID(UUID uuid) {
       return {{seriesName}}.resolveUUID(uuid);
     }
   }

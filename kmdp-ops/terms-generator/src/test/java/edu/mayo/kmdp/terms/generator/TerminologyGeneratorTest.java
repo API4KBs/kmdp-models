@@ -24,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.omg.spec.api4kp._20200801.id.Term;
-import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
@@ -33,8 +31,8 @@ import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationP
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
-import edu.mayo.kmdp.terms.generator.internal.MutableConceptScheme;
 import edu.mayo.kmdp.terms.generator.internal.InternalTerm;
+import edu.mayo.kmdp.terms.generator.internal.MutableConceptScheme;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
@@ -43,28 +41,30 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-public class TerminologyGeneratorTest {
+class TerminologyGeneratorTest {
 
   private static ConceptGraph graph;
 
   @TempDir
-  public Path tmp;
+  Path tmp;
 
   @BeforeAll
-  public static void init() {
+  static void init() {
     graph = doGenerate();
   }
 
   @Test
-  public void testGenerateConceptSchemes() {
+  void testGenerateConceptSchemes() {
 
     assertEquals(1, graph.getConceptSchemes().size());
 
-    ConceptScheme cs = graph.getConceptSchemes().iterator().next();
+    ConceptScheme<?> cs = graph.getConceptSchemes().iterator().next();
 
     assertEquals("SCH1", cs.getLabel());
     assertEquals("http://test/generator#concept_scheme1", cs.getId().toString());
@@ -72,7 +72,7 @@ public class TerminologyGeneratorTest {
   }
 
   @Test
-  public void testGenerateConceptsWithReasoning() {
+  void testGenerateConceptsWithReasoning() {
     assertEquals(1, graph.getConceptSchemes().size());
 
     Stream<Term> concepts = graph.getConceptSchemes().iterator().next().getConcepts();
@@ -81,7 +81,7 @@ public class TerminologyGeneratorTest {
   }
 
   @Test
-  public void testGenerateConceptsPopulated() {
+  void testGenerateConceptsPopulated() {
     assertEquals(1, graph.getConceptSchemes().size());
 
     Stream<Term> concepts = graph.getConceptSchemes().iterator().next().getConcepts();
@@ -95,7 +95,7 @@ public class TerminologyGeneratorTest {
 
 
   @Test
-  public void testGenerateConceptsHierarchy() {
+  void testGenerateConceptsHierarchy() {
     assertEquals(1, graph.getConceptSchemes().size());
 
     Optional<Term> cd = graph.getConceptSchemes().iterator().next()
@@ -115,7 +115,7 @@ public class TerminologyGeneratorTest {
 
 
   @Test
-  public void testClassCompilation() {
+  void testClassCompilation() {
     try {
       File folder = tmp.toFile();
 
@@ -133,7 +133,7 @@ public class TerminologyGeneratorTest {
 
       ensureSuccessCompile(src, src, target);
 
-      Class scheme = getNamedClass("org.foo.test.SCH1", target);
+      Class<?> scheme = getNamedClass("org.foo.test.SCH1", target);
 
       Field ns = scheme.getField("SCHEME_ID");
       assertEquals("concept_scheme1", ns.get(null));
@@ -151,7 +151,7 @@ public class TerminologyGeneratorTest {
 
 
   @Test
-  public void testClassCompilationWithVersionedPackage() {
+  void testClassCompilationWithVersionedPackage() {
     try {
       File folder = tmp.toFile();
 
@@ -167,7 +167,7 @@ public class TerminologyGeneratorTest {
 
       ensureSuccessCompile(src, src, target);
 
-      Class scheme = getNamedClass("test.generator.v20180210.SCH1", target);
+      Class<?> scheme = getNamedClass("test.generator.v20180210.SCH1", target);
 
       assertEquals("test.generator.v20180210", scheme.getPackage().getName());
 
@@ -178,7 +178,7 @@ public class TerminologyGeneratorTest {
   }
 
 
-  public static ConceptGraph doGenerate() {
+  static ConceptGraph doGenerate() {
     try {
       OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
       OWLOntology o = owlOntologyManager.loadOntologyFromOntologyDocument(

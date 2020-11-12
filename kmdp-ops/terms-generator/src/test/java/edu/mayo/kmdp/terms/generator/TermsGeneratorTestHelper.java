@@ -28,7 +28,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import ru.avicomp.ontapi.OntManagers;
 import ru.avicomp.ontapi.OntologyManager;
 
-public class TestHelper {
+public class TermsGeneratorTestHelper {
 
   public static OntologyManager initManager() {
     OntologyManager manager = OntManagers.createONT();
@@ -47,11 +47,11 @@ public class TestHelper {
     return Arrays.asList(
         (OWLOntologyIRIMapper) ontologyIRI ->
             ontologyIRI.equals(IRI.create(URIUtil.normalizeURI(URI.create(SKOS.getURI()))))
-                ? IRI.create(TestHelper.class.getResource("/skos.rdf"))
+                ? IRI.create(TermsGeneratorTestHelper.class.getResource("/skos.rdf"))
                 : null,
         (OWLOntologyIRIMapper) ontologyIRI ->
             ontologyIRI.equals(IRI.create(URIUtil.normalizeURI(URI.create(DCTerms.getURI()))))
-                ? IRI.create(TestHelper.class.getResource("/dcterms.rdf"))
+                ? IRI.create(TermsGeneratorTestHelper.class.getResource("/dcterms.rdf"))
                 : null
     );
   }

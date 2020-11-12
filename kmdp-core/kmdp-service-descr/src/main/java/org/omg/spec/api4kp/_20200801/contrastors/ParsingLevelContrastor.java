@@ -81,18 +81,21 @@ public class ParsingLevelContrastor extends Contrastor<ParsingLevel> implements
     return Knowledge_Expression;
   }
 
-  public int compare(ParsingLevel l1, ParsingLevel l2) {
-    if (l1 == l2 || l1.sameAs(l2) || l1.asEnum() == Knowledge_Expression
-        || l2.asEnum() == Knowledge_Expression) {
+  public int compare(ParsingLevel pl1, ParsingLevel pl2) {
+    ParsingLevelSeries l1 = ParsingLevelSeries.resolve(pl1);
+    ParsingLevelSeries l2 = ParsingLevelSeries.resolve(pl2);
+    if (l1 == l2
+        || l1 == Knowledge_Expression
+        || l2 == Knowledge_Expression ) {
       return 0;
     }
-    switch (l1.asEnum()) {
+    switch (ParsingLevelSeries.resolve(l1)) {
       case Abstract_Knowledge_Expression:
         return 1;
       case Concrete_Knowledge_Expression:
-        return l2.asEnum() == Abstract_Knowledge_Expression ? -1 : 1;
+        return l2 == Abstract_Knowledge_Expression ? -1 : 1;
       case Serialized_Knowledge_Expression:
-        return l2.asEnum() == Encoded_Knowledge_Expression ? 1 : -1;
+        return l2 == Encoded_Knowledge_Expression ? 1 : -1;
       case Encoded_Knowledge_Expression:
         return -1;
       default:

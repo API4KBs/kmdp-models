@@ -44,13 +44,13 @@ import org.omg.spec.api4kp._20200801.id.Term;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-public class GenerateWithImportsTest {
+class GenerateWithImportsTest {
 
   @TempDir
-  public Path tmp;
+  Path tmp;
 
   @Test
-  public void testGenerateConceptsHierarchyWithImports() {
+  void testGenerateConceptsHierarchyWithImports() {
     ConceptGraph graph = doGenerate(CLOSURE_MODE.IMPORTS);
     assertNotNull(graph);
     assertEquals(2, graph.getConceptSchemes().size());
@@ -103,7 +103,7 @@ public class GenerateWithImportsTest {
 
 
   @Test
-  public void testGenerateConceptsHierarchyWithIncludes() {
+  void testGenerateConceptsHierarchyWithIncludes() {
     ConceptGraph graph = doGenerate(CLOSURE_MODE.INCLUDES);
     assertNotNull(graph);
     assertEquals(2, graph.getConceptSchemes().size());
@@ -170,11 +170,18 @@ public class GenerateWithImportsTest {
       Object prn = ancestors2[0];
       assertNotNull(prn);
 
-      Object sUri = prn.getClass().getMethod("getNamespace").invoke(prn);
-      assertTrue(sUri instanceof ResourceIdentifier);
+      Object ns = prn.getClass().getMethod("getNamespace").invoke(prn);
+      assertTrue(ns instanceof ResourceIdentifier);
 
+      assertEquals("https://test.foo/taxonomies/parent/",
+          ((ResourceIdentifier) ns).getResourceId().toString());
+
+      Object nsUri = prn.getClass().getMethod("getNamespaceUri").invoke(prn);
+      assertEquals("https://test.foo/taxonomies/parent/", nsUri.toString());
+
+      Object schemeId = prn.getClass().getMethod("getDefiningScheme").invoke(prn);
       assertEquals("https://foo.org/child/subScheme",
-          ((ResourceIdentifier) sUri).getResourceId().toString());
+          ((ResourceIdentifier) schemeId).getResourceId().toString());
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -185,9 +192,9 @@ public class GenerateWithImportsTest {
 
 
 
-  public static ConceptGraph doGenerate(CLOSURE_MODE closureMode) {
+  static ConceptGraph doGenerate(CLOSURE_MODE closureMode) {
     try {
-      OWLOntologyManager owlOntologyManager = TestHelper.initOWLManager();
+      OWLOntologyManager owlOntologyManager = TermsGeneratorTestHelper.initOWLManager();
 
       owlOntologyManager.loadOntologyFromOntologyDocument(
           GenerateWithImportsTest.class.getResourceAsStream("/supVocab.rdf"));

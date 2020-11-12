@@ -248,8 +248,9 @@ public class SurrogateHelper {
       KnowledgeAsset surr, Class<? extends Link> relClass, VersionableTerm<?,?> relType ) {
     return surr.getLinks().stream()
         .flatMap(StreamUtil.filterAs(relClass))
-        .filter(rel -> relType == null || relType.sameAs(rel.getRel())
-            || (rel.getRel() instanceof ConceptTerm && ((ConceptTerm<?>) rel.getRel()).hasAncestor(relType))
+        .filter(rel -> relType == null
+            || relType.sameTermAs(rel.getRel())
+            || (rel.getRel() instanceof ConceptTerm && ((ConceptTerm) rel.getRel()).hasAncestor(relType))
         )
         .map(Link::getHref);
   }

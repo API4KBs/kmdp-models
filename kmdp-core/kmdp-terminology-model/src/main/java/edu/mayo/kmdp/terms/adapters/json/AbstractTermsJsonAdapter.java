@@ -108,9 +108,9 @@ public interface AbstractTermsJsonAdapter {
 
     @SuppressWarnings("unchecked")
     protected Optional<T> resolveVersion(T resolvedTerm, TreeNode t) {
-      if (resolvedTerm instanceof Series<?>) {
+      if (resolvedTerm instanceof Series<?,?>) {
         Optional<T> versionedTerm = (Optional<T>) getVersionNode(t)
-            .flatMap(((Series<?>) resolvedTerm)::getVersion);
+            .flatMap(((Series<?,?>) resolvedTerm)::getVersion);
         if (versionedTerm.isPresent()) {
           return versionedTerm;
         }

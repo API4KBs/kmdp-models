@@ -19,8 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.omg.spec.api4kp._20200801.id.Term;
-import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
@@ -39,11 +37,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import org.semanticweb.owlapi.model.OWLOntology;
 import ru.avicomp.ontapi.OntologyManager;
 
 
-public class VersionedOntologyTest {
+class VersionedOntologyTest {
 
 
   String owl =
@@ -85,12 +85,12 @@ public class VersionedOntologyTest {
           + "</rdf:RDF>\n";
 
   @Test
-  public void testOWLtoTerms() {
+  void testOWLtoTerms() {
 
     String entityURI = "http://org.test/labelsTest#Parent";
     String targetNS = "http://test.skos.foo/Test";
 
-    OntologyManager manager = TestHelper.initManager();
+    OntologyManager manager = TermsGeneratorTestHelper.initManager();
 
     Owl2SkosConfig cfg = new Owl2SkosConfig()
         .with(OWLtoSKOSTxParams.TGT_NAMESPACE, targetNS)
@@ -125,7 +125,7 @@ public class VersionedOntologyTest {
   }
 
   @Test
-  public void testVersionTagPattern() {
+  void testVersionTagPattern() {
     String versionPattern = ".*/(.*)/$";
     URI uri = URI.create("https://o.m.e/t/Stuff/SNAPSHOT/#123");
     uri = URIUtil.normalizeURI(uri);

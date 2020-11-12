@@ -22,11 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.omg.spec.api4kp._20200801.series.Series;
-import org.omg.spec.api4kp._20200801.series.Versionable;
 import edu.mayo.kmdp.terms.MockTermsJsonAdapter;
 import edu.mayo.kmdp.terms.MockTermsXMLAdapter;
-import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
@@ -39,6 +36,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -49,31 +47,34 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
+import org.omg.spec.api4kp._20200801.series.Series;
+import org.omg.spec.api4kp._20200801.series.Versionable;
+import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-public class VersionedGeneratorTest {
+class VersionedGeneratorTest {
 
   private static ConceptGraph graph;
 
   @TempDir
-  public Path tmp;
+  Path tmp;
 
   @BeforeAll
-  public static void init() {
+  static void init() {
     graph = doGenerate();
   }
 
   @Test
-  public void testGenerateConceptSchemes() {
+  void testGenerateConceptSchemes() {
     assertEquals(3, graph.getConceptSchemes().size());
   }
 
 
   @Test
   @SuppressWarnings({"deprecation","unchecked"})
-  public void testClassCompilationWithVersionedPackage() {
+  void testClassCompilationWithVersionedPackage() {
     try {
       File folder = tmp.toFile();
 
@@ -119,7 +120,7 @@ public class VersionedGeneratorTest {
       assertEquals(URI.create("http://test/generator/SNAPSHOT"),u);
 
       assertTrue(x.get() instanceof Series);
-      List<?> versions = ((Series<?>)x.get()).getVersions();
+      List<?> versions = ((Series<?,?>)x.get()).getVersions();
 
       versions.forEach(ver -> assertTrue(ver instanceof Versionable));
       List<Versionable> versionables = versions.stream()
@@ -138,7 +139,8 @@ public class VersionedGeneratorTest {
       assertTrue(releases.get(0).getTime() > releases.get(1).getTime());
       assertTrue(releases.get(1).getTime() > releases.get(2).getTime());
 
-//      assertEquals("SNAPSHOT", releaseVersions.get(0));
+      String today = new SimpleDateFormat("yyyyMMdd").format(DateTimeUtil.today());
+      assertTrue(releaseVersions.get(0).startsWith(today));
       assertEquals("v20190605", releaseVersions.get(1));
       assertEquals("v20180210", releaseVersions.get(2));
 
@@ -153,12 +155,14 @@ public class VersionedGeneratorTest {
 
       Date effectiveDate = DateTimeUtil.parseDate(sv.get(1).substring(1),"yyyyMMdd");
       assertNotNull(effectiveDate);
-      Optional<?> version = ((Series<?>)x.get()).asOf(effectiveDate);
+      Optional<?> version = ((Series<?,?>)x.get()).asOf(effectiveDate);
       assertTrue(version.isPresent());
       assertTrue(version.get() instanceof VersionableTerm);
-      VersionableTerm vt = (VersionableTerm) version.get();
+      VersionableTerm<?,?> vt = (VersionableTerm<?,?>) version.get();
       assertEquals(vt.getVersionEstablishedOn(), effectiveDate);
-      assertEquals(vt.getVersionIdentifier().getEstablishedOn(), effectiveDate);
+
+      Date initialDate = DateTimeUtil.parseDate(sv.get(2).substring(1),"yyyyMMdd");
+      assertEquals(vt.getVersionIdentifier().getEstablishedOn(), initialDate);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -167,7 +171,7 @@ public class VersionedGeneratorTest {
   }
 
 
-  public static ConceptGraph doGenerate() {
+  static ConceptGraph doGenerate() {
     try {
       OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
       OWLOntology o1 = owlOntologyManager.loadOntologyFromOntologyDocument(

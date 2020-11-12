@@ -39,7 +39,7 @@ import org.xml.sax.InputSource;
 public class CatalogGeneratorTest {
 
   @Test
-  public void testCatalog() {
+  void testCatalog() {
     String namespace = "http://foo.bar";
     URI uri = URI.create("http//foo.bar/baz");
     String id = "baz";

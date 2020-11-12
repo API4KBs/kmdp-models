@@ -24,7 +24,6 @@ import edu.mayo.kmdp.terms.example.SomeBean;
 import edu.mayo.kmdp.terms.example.sch1.SCH1;
 import edu.mayo.kmdp.terms.example.sch1.SCH1Series;
 import edu.mayo.kmdp.util.JSonUtil;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class JsonAdapterTest {

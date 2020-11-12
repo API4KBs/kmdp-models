@@ -4,8 +4,11 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.getDefaultVersionId;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static java.util.Arrays.copyOfRange;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS_FRAG_RX;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS_RX;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.versionSeparator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
@@ -69,9 +72,9 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
-   * Create ResourceIdentifier for the URI provided. Will generate tag and resourceId as required
-   * values.
+   * Create ResourceIdentifier for the URI provided, which is expected to be a Namespace URI
    *
+   * @param uri A Namespace URI
    * @return ResourceIdentifier
    */
   static ResourceIdentifier newNamespaceId(URI uri) {
@@ -79,9 +82,10 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
-   * Create ResourceIdentifier for the URI provided. Will generate tag and resourceId as required
-   * values.
+   * Create ResourceIdentifier for the URI provided, which is expected to be a Namespace URI
    *
+   * @param uri A Namespace URI
+   * @param versionTag A Namespace version tag (assuming Namespaces are versioned)
    * @return ResourceIdentifier
    */
   static ResourceIdentifier newNamespaceId(URI uri, String versionTag) {
@@ -147,8 +151,13 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return ResourceIdentifier with required values set
    */
   static ResourceIdentifier newVersionId(URI seriesUri, String versionTag) {
-    return newVersionId(
-        URI.create(seriesUri.toString() + IdentifierConstants.VERSIONS + versionTag));
+    if (seriesUri.getFragment() == null) {
+      return newVersionId(
+          URI.create(seriesUri.toString() + versionSeparator(seriesUri) + versionTag));
+    } else {
+      String versionedURI = URIUtil.normalizeURIString(seriesUri) + versionSeparator(seriesUri) + versionTag + "#" + seriesUri.getFragment();
+      return newVersionId( URI.create(versionedURI), VERSIONS_FRAG_RX, 2, 3);
+    }
   }
 
   /**
@@ -157,8 +166,13 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return ResourceIdentifier with required values set
    */
   static Optional<ResourceIdentifier> tryNewVersionId(URI seriesUri, String versionTag) {
-    return tryNewVersionId(
-        URI.create(seriesUri.toString() + IdentifierConstants.VERSIONS + versionTag));
+    if (seriesUri.getFragment() == null) {
+      return tryNewVersionId(
+          URI.create(seriesUri.toString() + versionSeparator(seriesUri) + versionTag));
+    } else {
+      String versionedURI = URIUtil.normalizeURIString(seriesUri) + versionSeparator(seriesUri) + versionTag + "#" + seriesUri.getFragment();
+      return tryNewVersionId( URI.create(versionedURI), VERSIONS_FRAG_RX, 2, 3);
+    }
   }
 
   /**
@@ -672,6 +686,20 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     return ((ResourceIdentifier) seriesId.clone())
         .withVersionTag(versionTag)
         .withVersionId(getDefaultVersionId(seriesId.getResourceId(),versionTag));
+  }
+
+  /**
+   * Converts a Resource Identifier to a Resource Identifier with a specific version (tag and URI)
+   * and establish date
+   * @param seriesId
+   * @param versionTag
+   * @param establishedOn
+   * @return
+   */
+  static ResourceIdentifier toVersionId(ResourceIdentifier seriesId, String versionTag,
+      Date establishedOn) {
+    return toVersionId(seriesId,versionTag)
+        .withEstablishedOn(establishedOn);
   }
 
   /**

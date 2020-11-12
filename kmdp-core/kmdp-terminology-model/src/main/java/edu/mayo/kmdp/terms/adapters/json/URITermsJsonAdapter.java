@@ -71,7 +71,7 @@ public interface URITermsJsonAdapter {
     @SuppressWarnings("unchecked")
     private T resolveInSeries(T t, URI uri) {
       if (t instanceof Series) {
-        Series<? extends Versionable<?>> s = ((Series<? extends Versionable<?>>) t);
+        Series<?,?> s = ((Series<?,?>) t);
         Optional<?> opt = s.getVersions().stream()
             .flatMap(StreamUtil.filterAs(Term.class))
             .filter(v -> v.getNamespaceUri().equals(uri))
