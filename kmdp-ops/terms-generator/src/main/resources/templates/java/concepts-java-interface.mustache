@@ -1,5 +1,9 @@
 package {{intfPackageName}};
 
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Stream;
+
 import org.omg.spec.api4kp._20200801.series.Series;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
 import org.omg.spec.api4kp._20200801.terms.TypedTerm;
@@ -9,8 +13,8 @@ import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
-@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( {{seriesName}}.Adapter.class )
-@com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{seriesName}}.JsonDeserializer.class )
+@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( {{intfName}}.Adapter.class )
+@com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{intfName}}.JsonDeserializer.class )
 public interface {{intfName}} extends ConceptTerm, TypedTerm<{{intfName}}> {
 
   String SCHEME_NAME = "{{conceptScheme.label}}";
@@ -22,9 +26,6 @@ public interface {{intfName}} extends ConceptTerm, TypedTerm<{{intfName}}> {
       SCHEME_ID,
       SCHEME_NAME);
 
-  default {{seriesName}} asEnum() {
-    return {{seriesName}}.resolve(this);
-  }
 
   interface {{intfName}}Version extends {{intfName}}, VersionableTerm<{{intfName}}.{{intfName}}Version, {{intfName}}> {
     @Override
@@ -34,4 +35,30 @@ public interface {{intfName}} extends ConceptTerm, TypedTerm<{{intfName}}> {
 
     Series<{{intfName}}Version,{{intfName}}> asSeries();
   }
+
+  static {{intfName}}[] allValues() {
+      return Stream.of( {{#allSeries}}
+            {{.}}.values() {{^-last}}, {{/-last}}
+          {{/allSeries}} ).flatMap(Stream::of)
+          .toArray({{intfName}}[]::new);
+    }
+
+    public static class Adapter extends edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter {
+      public static final edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter instance = new {{intfName}}.Adapter();
+      protected {{intfName}}[] getValues() { return allValues(); }
+    }
+
+    public static class JsonDeserializer
+        extends edu.mayo.kmdp.terms.adapters.json.URITermsJsonAdapter.Deserializer<{{intfName}}> {
+      protected {{intfName}}[] getValues() { return allValues(); }
+
+      @Override
+      protected Optional<{{intfName}}> resolveUUID(UUID uuid) {
+        return Optional.<{{intfName}}>empty()
+            {{#allSeries}}
+              .or(() -> {{.}}.resolveUUID(uuid))
+            {{/allSeries}}
+            ;
+      }
+    }
 }

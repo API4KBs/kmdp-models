@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Case_Enrichment_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.SPARQL_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries.CQL_Essentials;
@@ -54,6 +55,7 @@ import org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.LanguageSeri
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetrole.KnowledgeAssetRoleSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeoperation.KnowledgeProcessingOperationSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeprocessingtechnique.KnowledgeProcessingTechniqueSeries;
@@ -260,4 +262,10 @@ class VocabularyTest {
     assertFalse(KnowledgeAssetRoleSeries.resolveId("urn:uuid:" + UUID.randomUUID().toString()).isPresent());
   }
 
+
+  @Test
+  void testPolymorph() {
+    KnowledgeAssetType kat = Case_Enrichment_Rule;
+    KnowledgeAssetType katVer = Case_Enrichment_Rule.getLatest();
+  }
 }

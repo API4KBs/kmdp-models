@@ -31,7 +31,7 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
 
   @Override
   public boolean comparable(SyntacticRepresentation sr1, SyntacticRepresentation sr2) {
-    if (sr1.getLanguage().asEnum() != sr2.getLanguage().asEnum()) {
+    if (! sr1.getLanguage().sameAs(sr2.getLanguage())) {
       return false;
     }
     Comparison profileComparison = ProfileContrastor.theProfileContrastor
@@ -40,11 +40,11 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
       return false;
     }
     if (sr1.getSerialization() != null && sr2.getSerialization() != null
-        && sr1.getSerialization().asEnum() != sr2.getSerialization().asEnum()) {
+        && ! sr1.getSerialization().sameAs(sr2.getSerialization())) {
       return false;
     }
     if (sr1.getFormat() != null && sr2.getFormat() != null
-        && sr1.getFormat().asEnum() != sr2.getFormat().asEnum()) {
+        && ! sr1.getFormat().sameAs(sr2.getFormat())) {
       return false;
     }
     return sr1.getLexicon().isEmpty()

@@ -15,6 +15,11 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
+import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationParams;
+import edu.mayo.kmdp.util.Util;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Optional;
 import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
@@ -67,18 +72,34 @@ public class JavaEnumTermsGenerator extends BaseEnumGenerator {
     for (ConceptScheme<Term> conceptScheme : conceptGraph.getDistinctConceptSchemes()) {
       Map<String, Object> context = contextCache.get(conceptScheme.hashCode());
 
-      this.writeToFile(fromTemplate("concepts-java-interface", context),
-          getFile(outputDir,
-              (String) context.get("intfPackageName"),
-              (String) context.get("intfName"),
-              EXTENSION));
+      if (! isOverridden(context.get("seriesNamespace").toString(),options)) {
+        this.writeToFile(fromTemplate("concepts-java-interface", context),
+            getFile(outputDir,
+                (String) context.get("intfPackageName"),
+                (String) context.get("intfName"),
+                EXTENSION));
+      }
+
 
       this.writeToFile(fromTemplate("concepts-java-series", context),
           getFile(outputDir,
-              (String) context.get("intfPackageName"),
+              (String) context.get("outerPackageName"),
               (String) context.get("seriesName"),
               EXTENSION));
     }
+  }
+
+  private boolean isOverridden(String seriesUri, EnumGenerationConfig options) {
+    Optional<String> overrides = options.get(EnumGenerationParams.INTERFACE_OVERRIDES);
+    if (overrides.isEmpty()) {
+      return false;
+    }
+    return Arrays.stream(overrides.get().split(","))
+        .filter(Util::isNotEmpty)
+        .map(s -> s.substring(0, s.indexOf('=')))
+        .map(s -> s.equals(seriesUri))
+        .findFirst()
+        .orElse(false);
   }
 
 

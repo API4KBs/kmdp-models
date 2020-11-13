@@ -26,6 +26,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSe
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Concrete_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Serialized_Knowledge_Expression;
+import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.asEnum;
 import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structural_Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -66,7 +67,6 @@ import org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationL
 import org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerialization;
 import org.omg.spec.api4kp._20200801.taxonomy.lexicon.Lexicon;
 import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevel;
-import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries;
 import org.w3c.dom.Document;
 
 public interface AbstractCarrier {
@@ -179,7 +179,7 @@ public interface AbstractCarrier {
    * @return a KnowledgeCarrier that wraps the artifact
    */
   static KnowledgeCarrier of(Object artifact, ParsingLevel level) {
-    switch (level.asEnum()) {
+    switch (asEnum(level)) {
       case Concrete_Knowledge_Expression:
         return ofTree(artifact)
             .withLevel(level);

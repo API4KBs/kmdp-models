@@ -67,6 +67,12 @@ public class EnumGenerationConfig extends
         "Override package names from URI-driven defaults, provided as a comma-separated list of <defaultName>=<overriddenName>",
         String.class,
         false)),
+    INTERFACE_OVERRIDES(Opt.of(
+        "interfaceOverrides",
+        "",
+        "Properties-encoded map that causes any scheme X to implement the interface derived from a scheme Y",
+        String.class,
+        false)),
     XML_ADAPTER(Opt.of(
         "baseXmlAdapter",
         "edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter",

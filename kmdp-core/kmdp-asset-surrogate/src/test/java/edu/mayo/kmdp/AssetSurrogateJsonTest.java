@@ -63,6 +63,7 @@ import org.omg.spec.api4kp._20200801.surrogate.Variant;
 import org.omg.spec.api4kp._20200801.surrogate.Version;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.surrogate.Applicability;
+import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 
 
 public class AssetSurrogateJsonTest {
@@ -193,6 +194,15 @@ public class AssetSurrogateJsonTest {
                 .withRel(Cites.asConceptIdentifier())
                 .withBibliography("Joe,D. On everything. 2001"));
     assertNotNull(ks);
+
+    assertNotNull(toJson(ks));
+  }
+
+  @Test
+  void testPolymorphicEnumerations() {
+    KnowledgeAsset ks = new KnowledgeAsset()
+        .withAssetId(newId("http://foo.bar", "234"))
+        .withFormalType(ClinicalKnowledgeAssetTypeSeries.Case_Enrichment_Rule);
 
     assertNotNull(toJson(ks));
   }

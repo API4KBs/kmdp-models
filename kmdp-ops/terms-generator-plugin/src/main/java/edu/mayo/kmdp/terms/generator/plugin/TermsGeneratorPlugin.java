@@ -296,6 +296,20 @@ public class TermsGeneratorPlugin extends AbstractMojo {
     this.tagFormat = tagFormat;
   }
 
+
+  /**
+   * @parameter
+   */
+  private List<String> interfaceOverrides;
+
+  public List<String> getInterfaceOverrides() {
+    return interfaceOverrides;
+  }
+
+  public void setInterfaceOverrides(List<String> interfaceOverrides) {
+    this.interfaceOverrides = interfaceOverrides;
+  }
+
   /**
    * @parameter
    */
@@ -400,6 +414,11 @@ public class TermsGeneratorPlugin extends AbstractMojo {
     if (packageName != null) {
       opts.with(EnumGenerationParams.PACKAGE_NAME, packageName);
     }
+
+    opts.with(EnumGenerationParams.INTERFACE_OVERRIDES,
+        interfaceOverrides != null
+            ? String.join(",", interfaceOverrides)
+            : "");
 
     JavaEnumTermsGenerator bjg =
         new JavaEnumTermsGenerator();

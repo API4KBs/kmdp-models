@@ -1,4 +1,4 @@
-package {{intfPackageName}};
+package {{outerPackageName}};
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveAliases;
@@ -108,6 +108,9 @@ public enum {{seriesName}} implements {{intfPackageName}}.{{intfName}},
     return getVersions().get(getVersions().size() - 1).getEstablishedOn();
   }
 
+  public static {{seriesName}} asEnum(final {{intfPackageName}}.{{intfName}} intf) {
+    return index.get(intf.getUuid());
+  }
 
   public static {{seriesName}} resolve(final {{intfPackageName}}.{{intfName}} other) {
     return ({{seriesName}}) resolveUUID(other.getUuid()).orElseThrow();

@@ -99,6 +99,36 @@
         <executions>
 
           <execution>
+            <id>ckao-kat-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
+              <owlSourceURLs>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-ckao/</owlSourceURL>
+              </owlSourceURLs>
+
+              <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-ckao/</owlNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp-ckao/ClinicalRule</targetURI>
+              <entityType>CLASS</entityType>
+              <minDepth>1</minDepth>
+
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/ClinicalKnowledgeAssetType</skosNamespace>
+              <schemeName>ClinicalKnowledgeAssetTypes</schemeName>
+              <topConceptName>ClinicalKnowledgeAssetType</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>ClinicalKnowledgeAssetTypes_SNAPSHOT.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+
+          <execution>
             <id>mime</id>
             <phase>generate-sources</phase>
             <goals>
@@ -994,6 +1024,9 @@
               <exclusions>
                 <exclusion>${skosDir}${s}ISO639_2_LanguageCode.skos.rdf</exclusion>
               </exclusions>
+              <interfaceOverrides>
+                <param>https://www.omg.org/spec/API4KP/20200801/taxonomy/ClinicalKnowledgeAssetType=https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType</param>
+              </interfaceOverrides>
             </configuration>
           </execution>
           <execution>

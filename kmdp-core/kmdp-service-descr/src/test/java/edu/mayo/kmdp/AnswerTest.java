@@ -50,7 +50,7 @@ class AnswerTest {
     KnowledgeCarrier expl = ans.getExplanation();
     assertNotNull(expl);
     assertNotNull(expl.getExpression());
-    assertEquals(Serialized_Knowledge_Expression, expl.getLevel().asEnum());
+    assertTrue(Serialized_Knowledge_Expression.sameAs(expl.getLevel()));
 
     assertTrue(ans.isSuccess());
     assertFalse(ans.isFailure());

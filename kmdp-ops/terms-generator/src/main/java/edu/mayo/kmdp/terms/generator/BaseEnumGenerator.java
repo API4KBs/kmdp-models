@@ -20,7 +20,6 @@ import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import edu.mayo.kmdp.terms.adapters.json.AbstractTermsJsonAdapter;
 import edu.mayo.kmdp.terms.adapters.xml.TermsXMLAdapter;
 import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig;
@@ -34,22 +33,28 @@ import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.PropertiesUtil;
 import edu.mayo.kmdp.util.StreamUtil;
+import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 
 public abstract class BaseEnumGenerator {
 
@@ -137,13 +142,33 @@ public abstract class BaseEnumGenerator {
 
     context.put("typeName", className);
     context.put("seriesName", seriesName);
-    context.put("intfName", interfaceName);
+
+    Optional<String> overrideOpt = getOverrideInterface(conceptScheme, options);
+    if (overrideOpt.isPresent()) {
+      String override = overrideOpt.get();
+      String overridePackage = getPackageName(URI.create(override +"/"),defaultPackage,overrides);
+      String overrideName = NameUtils.getTrailingPart(override);
+      context.put("intfName", overrideName);
+      context.put("intfPackageName", overridePackage);
+    } else {
+      context.put("intfName", interfaceName);
+      context.put("intfPackageName", outerPackageName);
+    }
+    context.put("outerPackageName", outerPackageName);
+
+    context.put("allSeries",
+        getImplementingSeries(
+            conceptScheme,
+            graph,
+            options,
+            cs -> cs.getPublicName() + "Series",
+            cs -> getPackageName(cs.getId(), defaultPackage, overrides)));
+
     context.put("seriesNamespace",
         edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.getId()));
     context.put("namespace",
         edu.mayo.kmdp.util.NameUtils.removeFragment(conceptScheme.getVersionId()));
     context.put("packageName", innerPackageName);
-    context.put("intfPackageName", outerPackageName);
     context.put("overridePk", overridePk(defaultPackage, overrides));
     context.put("baseJsonAdapter", options.get(EnumGenerationParams.JSON_ADAPTER)
         .orElse(AbstractTermsJsonAdapter.class.getName()));
@@ -160,6 +185,52 @@ public abstract class BaseEnumGenerator {
     contextCache.put(conceptScheme, context);
 
     return context;
+  }
+
+  private List<String> getImplementingSeries(
+      ConceptScheme<Term> cs,
+      ConceptGraph graph,
+      EnumGenerationConfig options,
+      Function<ConceptScheme<Term>,String> seriesNameMapper,
+      Function<ConceptScheme<Term>,String> seriesPackageMapper
+      ) {
+
+    List<String> allSeries = new ArrayList<>();
+    allSeries.add(seriesPackageMapper.apply(cs) + "." + seriesNameMapper.apply(cs));
+
+    Optional<String> overridesOpt = options.get(EnumGenerationParams.INTERFACE_OVERRIDES);
+    if (overridesOpt.isPresent() && ! Util.isEmpty(overridesOpt.get())) {
+      String overrides = overridesOpt.get();
+      Arrays.stream(overrides.split(","))
+          .forEach(override -> {
+            URI overridden = URI.create(override.substring(0, override.indexOf('=')));
+            URI overriding = URI.create(override.substring(override.indexOf('=') + 1));
+            if (overriding.equals(URIUtil.normalizeURI(cs.getId()))) {
+              ConceptScheme<Term> overriddenCS = graph.getConceptSchemes().stream()
+                  .filter(x -> URIUtil.normalizeURI(x.getId()).equals(overridden))
+                  .findFirst()
+                  .orElseThrow(() -> new IllegalStateException("Unable to find a scheme for " + overridden));
+              allSeries.add(seriesPackageMapper.apply(overriddenCS)
+                  + "." + seriesNameMapper.apply(overriddenCS));
+            }
+          });
+    }
+    return allSeries;
+  }
+
+  protected Optional<String> getOverrideInterface(ConceptScheme<Term> cs,
+      EnumGenerationConfig options) {
+    if (options.get(EnumGenerationParams.INTERFACE_OVERRIDES).isEmpty()) {
+      return Optional.empty();
+    }
+    String overrides = options.getTyped(EnumGenerationParams.INTERFACE_OVERRIDES);
+    if (Util.isEmpty(overrides)) {
+      return Optional.empty();
+    }
+    return Arrays.stream(overrides.split(","))
+        .filter(s -> s.substring(0, s.indexOf('=')).equals(URIUtil.normalizeURIString(cs.getId())))
+        .map(s -> s.substring(s.indexOf('=') + 1))
+        .findFirst();
   }
 
   private List<SeriesHolder> toSeries(
