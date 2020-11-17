@@ -99,24 +99,26 @@ public interface Versionable<T extends Versionable<T,E>, E extends Identifiable>
 
   /**
    * Compares a Versionable to a collection of Versionables,
-   * and returns true if at least of the members of the collection sameAs as this
+   * and returns true if at least of the members of the collection is the same
+   * version of the same entity as this
    * @param others
    * @return
    */
-  default boolean isAnyOf(Collection<? extends T> others) {
+  default boolean isAnyOfVersions(Collection<? extends T> others) {
     return others != null && others.stream().anyMatch(this::isSameVersion);
   }
 
   /**
    * Compares a Versionable to a collection of Versionables,
-   * and returns true if none of the members of the collection isSame as this
+   * and returns true if none of the members of the collection
+   * is the same version as this
    * (either because they are Versionable of a different Entity,
    * or different versions of the same entity)
    * @param others
    * @return
    */
-  default boolean isNoneOf(Collection<? extends T> others) {
-    return ! isAnyOf(others);
+  default boolean isNoneOfVersions(Collection<? extends T> others) {
+    return ! isAnyOfVersions(others);
   }
 
 

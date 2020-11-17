@@ -6,6 +6,7 @@ import static edu.mayo.kmdp.util.Util.isUUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.net.URI;
 import java.util.Date;
+import java.util.UUID;
 
 public interface Identifier {
 
@@ -18,6 +19,12 @@ public interface Identifier {
   default URI identifies() { return getResourceId(); }
 
   URI getResourceId();
+
+  default UUID getUuid() {
+    return getResourceId() != null
+        ? UUID.nameUUIDFromBytes(getResourceId().toString().getBytes())
+        : null;
+  }
 
   @JsonIgnore
   default IdentifierTagType getTagFormat() {
