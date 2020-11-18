@@ -47,7 +47,6 @@ import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.languagerole.KnowledgeRepresentationLanguageRole;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
-import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 
 public class SurrogateHelper {
 
@@ -245,7 +244,7 @@ public class SurrogateHelper {
    * @return a Stream of the (IDs of the) related Assets
    */
   public static Stream<SemanticIdentifier> links(
-      KnowledgeAsset surr, Class<? extends Link> relClass, VersionableTerm<?,?> relType ) {
+      KnowledgeAsset surr, Class<? extends Link> relClass, ConceptTerm relType ) {
     return surr.getLinks().stream()
         .flatMap(StreamUtil.filterAs(relClass))
         .filter(rel -> relType == null
