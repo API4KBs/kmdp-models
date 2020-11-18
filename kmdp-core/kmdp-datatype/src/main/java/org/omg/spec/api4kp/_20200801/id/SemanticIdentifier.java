@@ -633,7 +633,23 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withVersionId(getDefaultVersionId(resourceId,versionTag));
   }
 
-  static Pointer newIdAsPointer(URI namespace, String tag, String name,
+  /**
+   * Pointer for client/server interaction.
+   * Constructs (version) URIs from namespace + tag (+ versionTag) elements
+   *
+   * @param namespace   resource namespace
+   * @param resourceUUID  a UUID that denotes the referenced resource
+   * @param tag         a tag that, within the scope of the namespace, denotes the referenced resource
+   * @param description human readable description of the resource
+   * @param name        human readable name of the resource - denotes the resource, but is not an unabmbiguous identifier
+   * @param versionTag  version tag that denotes a specific version of the resource (assumed to be Versionable)
+   * @param entityType  type that classifies the resource
+   * @param locator     use for cases when the resource URI cannot be dereferenced or the server
+   *                    wants to point the client to a specific location where the denoted resource
+   *                    is available
+   * @return Pointer with required resourceid, tag, UUID and all other values provided set
+   */
+  static Pointer newIdAsPointer(URI namespace, UUID resourceUUID, String tag, String name,
       String versionTag, String description, URI entityType, URI locator) {
     checkTag(tag);
     URI resourceId = toResourceId(tag, namespace);
@@ -644,11 +660,41 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .withName(name)
         .withVersionTag(versionTag)
         .withResourceId(resourceId)
-        .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
+        .withUuid(resourceUUID)
         .withDescription(description)
         .withEstablishedOn(DateTimeUtil.today())
         .withHref(locator)
         .withVersionId(getDefaultVersionId(resourceId,versionTag));
+  }
+
+  /**
+   * Pointer for client/server interaction.
+   * Constructs (version) URIs from namespace + tag (+ versionTag) elements
+   * Constructs a UUID using the tag and/or the URI
+   *
+   * @param namespace   resource namespace
+   * @param tag         a tag that, within the scope of the namespace, denotes the referenced resource
+   * @param description human readable description of the resource
+   * @param name        human readable name of the resource - denotes the resource, but is not an unabmbiguous identifier
+   * @param versionTag  version tag that denotes a specific version of the resource (assumed to be Versionable)
+   * @param entityType  type that classifies the resource
+   * @param locator     use for cases when the resource URI cannot be dereferenced or the server
+   *                    wants to point the client to a specific location where the denoted resource
+   *                    is available
+   * @return Pointer with required resourceid, tag, UUID and all other values provided set
+   */
+  static Pointer newIdAsPointer(URI namespace, String tag, String name,
+      String versionTag, String description, URI entityType, URI locator) {
+    URI resourceId = toResourceId(tag, namespace);
+    return newIdAsPointer(
+        namespace,
+        UniversalIdentifier.toUUID(tag, resourceId),
+        tag,
+        name,
+        versionTag,
+        description,
+        entityType,
+        locator);
   }
 
   /**

@@ -12,15 +12,6 @@ import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = SCH1Series.JsonDeserializer.class)
 public interface ISCH1 extends ConceptTerm, TypedTerm<ISCH1> {
 
-  String schemeName = "SCH1";
-  String schemeID = "0.0.0.0";
-
-  ResourceIdentifier schemeSeriesIdentifier =
-      SemanticIdentifier.newNamedId(
-          URI.create("http://test/generator#concept_scheme1"),
-          schemeID,
-          schemeName);
-
   interface ISCH1Version extends ISCH1, VersionableTerm<ISCH1Version, ISCH1> {
     @Override
     default VersionIdentifier getVersionIdentifier() {

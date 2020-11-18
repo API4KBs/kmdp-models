@@ -41,7 +41,6 @@ import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSe
 import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.iso639_1_languagecode.LanguageSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory.KnowledgeArtifactCategorySeries;
-import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategory;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetrole.KnowledgeAssetRoleSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
@@ -153,15 +152,15 @@ public class VersionAgnosticVocabularyTest {
 
 
   @Test
-  public void testGeneratedEnumsVersion() {
-    Optional<UUID> uid = ensureUUID(KnowledgeAssetCategory.SCHEME_ID);
+  void testGeneratedEnumsVersion() {
+    Optional<UUID> uid = ensureUUID(KnowledgeAssetCategorySeries.SCHEME_ID);
     assertTrue(uid.isPresent());
 
-    assertNull(KnowledgeAssetCategory.schemeSeriesIdentifier.getVersionId());
+    assertNull(KnowledgeAssetCategorySeries.schemeSeriesIdentifier.getVersionId());
   }
 
   @Test
-  public void testKRLanguages() {
+  void testKRLanguages() {
     assertNotNull(KnowledgeRepresentationLanguageSeries.KNART_1_3);
 
     assertEquals(KnowledgeRepresentationLanguageSerializationSeries.DMN_1_1_XML_Syntax,

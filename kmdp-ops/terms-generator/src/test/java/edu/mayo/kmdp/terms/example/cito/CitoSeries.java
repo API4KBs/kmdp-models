@@ -104,23 +104,4 @@ public enum CitoSeries implements
     return resolveTerm(refUri, CitoSeries.values(), Term::getReferentId);
   }
 
-//  @Override
-//  public boolean sameAs(ICito other) {
-//    return isSameVersion(other);
-//  }
-//
-//  @Override
-//  public boolean isSameEntity(ICito other) {
-//    return other.getUuid().equals(this.getUuid());
-//  }
-//
-//  @Override
-//  public boolean isSameVersion(ICito other) {
-//    return false;
-//  }
-//
-//  @Override
-//  public boolean isDifferentVersion(ICito other) {
-//    return false;
-//  }
 }

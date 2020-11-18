@@ -66,8 +66,19 @@ public enum SCH1Old implements ISCH1Version, EnumeratedConceptTerm<SCH1Old, ISCH
       new SCH1Old[0],
       new SCH1Old[0]);
 
+  public static final String schemeName = "SCH1";
+  public static final String schemeID = "0.0.0.0";
+
+  public static final ResourceIdentifier schemeSeriesIdentifier =
+      SemanticIdentifier.newNamedId(
+          URI.create("http://test/generator#concept_scheme1"),
+          schemeID,
+          schemeName);
+
   public static final ResourceIdentifier schemeVersionIdentifier =
-      SemanticIdentifier.toVersionId(schemeSeriesIdentifier, "v00_Ancient",
+      SemanticIdentifier.toVersionId(
+          schemeSeriesIdentifier,
+          "v00_Ancient",
           DateTimeUtil.parseDate("1981-12-01"));
 
   public static final Map<UUID,SCH1Old> index = indexByUUID(SCH1Old.values());

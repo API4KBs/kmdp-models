@@ -20,6 +20,7 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.indexByUUID;
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.resolveTerm;
 
 import edu.mayo.kmdp.terms.example.sch1.ISCH1.ISCH1Version;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.series.Series;
 import org.omg.spec.api4kp._20200801.series.Versionable;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
@@ -53,6 +54,15 @@ public enum SCH1Series implements ISCH1, Series<ISCH1Version,ISCH1>,
   Nested_Specific_Concept(SCH1.Nested_Specific_Concept),
   Deprecated_Concept(SCH1Old.Deprecated_Concept),
   Sub_Sub_Concept(SCH1.Sub_Sub_Concept);
+
+  public static final String schemeName = "SCH1";
+  public static final String schemeID = "0.0.0.0";
+
+  public static final ResourceIdentifier schemeSeriesIdentifier =
+      SemanticIdentifier.newNamedId(
+          URI.create("http://test/generator#concept_scheme1"),
+          schemeID,
+          schemeName);
 
   public static final List<String> schemeVersionTags =
       java.util.Arrays.asList( "v01"  ,   "v00_Ancient"   );

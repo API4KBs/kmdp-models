@@ -17,15 +17,6 @@ import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 @com.fasterxml.jackson.databind.annotation.JsonDeserialize( using = {{intfName}}.JsonDeserializer.class )
 public interface {{intfName}} extends ConceptTerm, TypedTerm<{{intfName}}> {
 
-  String SCHEME_NAME = "{{conceptScheme.label}}";
-  String SCHEME_ID = "{{conceptSchemeTag}}";
-
-  ResourceIdentifier schemeSeriesIdentifier =
-    SemanticIdentifier.newNamedId(
-      URI.create("{{seriesNamespace}}"),
-      SCHEME_ID,
-      SCHEME_NAME);
-
 
   interface {{intfName}}Version extends {{intfName}}, VersionableTerm<{{intfName}}.{{intfName}}Version, {{intfName}}> {
     @Override

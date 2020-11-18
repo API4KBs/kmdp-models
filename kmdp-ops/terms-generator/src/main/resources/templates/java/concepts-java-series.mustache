@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
@@ -39,6 +40,15 @@ public enum {{seriesName}} implements {{intfPackageName}}.{{intfName}},
    {{#conceptSeries}}
     {{term}}( {{#versions}} {{.}}  {{^-last}}, {{/-last}} {{/versions}} ) {{^-last}}, {{/-last}}
    {{/conceptSeries}};
+
+  public static final String SCHEME_NAME = "{{conceptScheme.label}}";
+  public static final String SCHEME_ID = "{{conceptSchemeTag}}";
+
+  public static final ResourceIdentifier schemeSeriesIdentifier =
+    SemanticIdentifier.newNamedId(
+      URI.create("{{seriesNamespace}}"),
+      SCHEME_ID,
+      SCHEME_NAME);
 
   private static final Map<UUID, {{seriesName}}> index = indexByUUID({{seriesName}}.values());
 

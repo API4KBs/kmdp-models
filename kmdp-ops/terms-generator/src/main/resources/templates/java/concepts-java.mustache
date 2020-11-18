@@ -53,6 +53,14 @@ public enum {{typeName}} implements {{intfPackageName}}.{{intfName}}.{{intfName}
         new Term[] { {{#closure}} {{#overridePk}}{{termConceptPackage}}{{/overridePk}}.{{termConceptScheme}}.{{termConceptName}}, {{/closure}} } ) {{^-last}}, {{/-last}}
    {{/concepts}};
 
+  public static final String SCHEME_NAME = "{{conceptScheme.label}}";
+  public static final String SCHEME_ID = "{{conceptSchemeTag}}";
+
+  public static final ResourceIdentifier schemeSeriesIdentifier =
+    SemanticIdentifier.newNamedId(
+      URI.create("{{seriesNamespace}}"),
+      SCHEME_ID,
+      SCHEME_NAME);
 
   public static final ResourceIdentifier schemeVersionIdentifier =
       SemanticIdentifier.toVersionId(

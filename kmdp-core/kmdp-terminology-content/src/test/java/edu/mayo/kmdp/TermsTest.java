@@ -20,18 +20,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.omg.spec.api4kp._20200801.series.Series;
 import edu.mayo.kmdp.terms.TermsHelper;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
-import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationType;
 import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries;
 
-public class TermsTest {
+class TermsTest {
 
   @Test
-  public void testEquality() {
+  void testEquality() {
     ConceptIdentifier c1 = TermsHelper.sct("f1", "x");
     ConceptIdentifier c2 = TermsHelper.sct("f1", "x");
 
@@ -43,7 +41,7 @@ public class TermsTest {
   }
 
   @Test
-  public void testEqualityBySameness() {
+  void testEqualityBySameness() {
     ConceptIdentifier c1 = TermsHelper.sct("f1", "x");
     ConceptIdentifier c2 = TermsHelper.sct("f1", "x");
 
@@ -51,16 +49,11 @@ public class TermsTest {
   }
 
   @Test
-  public void testEqualityBySamenessInSeries() {
+  void testEqualityBySamenessInSeries() {
     DerivationType earlyRule = DerivationTypeSeries.Is_Derived_From.asSeries().getEarliest();
     DerivationType lateRule = DerivationTypeSeries.Is_Derived_From.asSeries().getLatest();
 
-//    assertTrue(earlyRule.isDifferentVersion(lateRule));
-//    assertFalse(earlyRule.isSameVersion(lateRule));
-//
-//    assertTrue(earlyRule.isSameEntity(lateRule));
-//
-//    assertFalse(earlyRule.sameAs(lateRule));
+    assertTrue(earlyRule.sameAs(lateRule));
     assertFalse(earlyRule.asConceptIdentifier().sameAs(lateRule.asConceptIdentifier()));
   }
 
