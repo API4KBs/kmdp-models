@@ -46,8 +46,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
-import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
-import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.Language;
@@ -222,22 +220,24 @@ class VocabularyTest {
 
   @Test
   void testGeneratedEnumsVersion() {
+    String base = "https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory";
+
     Optional<UUID> uid = ensureUUID(KnowledgeAssetCategorySeries.SCHEME_ID);
     assertTrue(uid.isPresent());
 
     ResourceIdentifier versionedScheme = KnowledgeAssetCategory.schemeVersionIdentifier;
-    URI schemeURI = versionedScheme.getVersionId();
-    ResourceIdentifier nspace = KnowledgeAssetCategory.values()[0].getNamespace();
+    URI schemeURI = versionedScheme.getResourceId();
+    URI schemeVersionURI = versionedScheme.getVersionId();
 
     assertNotNull(schemeURI);
-    VersionIdentifier vid = SemanticIdentifier.newVersionId(schemeURI);
-
-    String version = vid.getVersionTag();
-    assertEquals(version, versionedScheme.getVersionTag());
-    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy",
+    assertEquals(base + "#02762f0f-208e-3b57-94ab-fa288ecdfe39", schemeURI.toString());
+    assertEquals(base + "/versions/20190801#02762f0f-208e-3b57-94ab-fa288ecdfe39", schemeVersionURI.toString());
+    //assertEquals(version, versionedScheme.getVersionTag());
+    assertEquals(base,
         versionedScheme.getNamespaceUri().toString());
 
-    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory",
+    ResourceIdentifier nspace = KnowledgeAssetCategory.values()[0].getNamespace();
+    assertEquals(base,
         nspace.getResourceId().toString());
   }
 
@@ -267,5 +267,10 @@ class VocabularyTest {
   void testPolymorph() {
     KnowledgeAssetType kat = Case_Enrichment_Rule;
     KnowledgeAssetType katVer = Case_Enrichment_Rule.getLatest();
+
+    assertTrue(kat.sameAs(katVer));
+    assertTrue(kat.sameTermAs(katVer));
+    assertTrue(kat.isCoreferent(katVer));
+    assertTrue(kat.evokesSameAs(katVer));
   }
 }

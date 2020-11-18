@@ -4,7 +4,6 @@ import static edu.mayo.kmdp.id.helper.DatatypeHelper.getDefaultVersionId;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static java.util.Arrays.copyOfRange;
-import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS_FRAG_RX;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS_RX;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
@@ -718,6 +717,22 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         .toPointer();
   }
 
+  static Pointer newVersionIdAsPointer(URI namespace, URI resourceId, URI versionId,
+      UUID uuid, String tag, String versionTag, String name,
+      URI href, URI type, String mime) {
+    return new Pointer()
+        .withNamespaceUri(namespace)
+        .withResourceId(resourceId)
+        .withVersionId(versionId)
+        .withUuid(uuid)
+        .withTag(tag)
+        .withVersionTag(versionTag)
+        .withName(name)
+        .withHref(href)
+        .withType(type)
+        .withMimeType(mime);
+  }
+
   static ResourceIdentifier randomId() {
     return newId(BASE_UUID_URN_URI, UUID.randomUUID(), IdentifierConstants.VERSION_LATEST);
   }
@@ -809,6 +824,13 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
       logger.error(e.getMessage(), e);
     }
     return ptr;
+  }
+
+  static KeyIdentifier newKey(UUID seriesId, String versionTag) {
+    return new ResourceIdentifier()
+        .withUuid(seriesId)
+        .withVersionTag(versionTag)
+        .asKey();
   }
 
   default KeyIdentifier asKey() {
