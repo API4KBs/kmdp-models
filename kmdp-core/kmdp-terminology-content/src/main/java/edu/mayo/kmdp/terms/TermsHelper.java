@@ -114,7 +114,7 @@ public class TermsHelper {
         .withName(label)
         .withTag(code)
         .withUuid(UUID.nameUUIDFromBytes(code.getBytes()))
-        .withNamespaceUri(URI.create(""))
+        .withNamespaceUri(URI.create(RxNORM))
         .withResourceId(URI.create(RxNORM + "/" + code))
         .withReferentId(URI.create(RxNORM + "/" + code))
         .withEstablishedOn(DateTimeUtil.parseDate("2020-01-01"))
