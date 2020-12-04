@@ -57,6 +57,7 @@ public class FileUtil {
     try(FileInputStream fis = new FileInputStream(file)) {
       return read(fis);
     } catch (IOException e) {
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -65,6 +66,7 @@ public class FileUtil {
     try {
       return read(new FileInputStream(file));
     } catch (IOException e) {
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -73,6 +75,7 @@ public class FileUtil {
     try {
       return Optional.ofNullable(Files.readString(path));
     } catch (IOException e) {
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
