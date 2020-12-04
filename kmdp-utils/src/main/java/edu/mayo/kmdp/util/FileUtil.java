@@ -42,8 +42,8 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileUtil {
 
@@ -64,6 +64,14 @@ public class FileUtil {
   public static Optional<String> read(File file) {
     try {
       return read(new FileInputStream(file));
+    } catch (IOException e) {
+      return Optional.empty();
+    }
+  }
+
+  public static Optional<String> read(Path path) {
+    try {
+      return Optional.ofNullable(Files.readString(path));
     } catch (IOException e) {
       return Optional.empty();
     }
@@ -137,6 +145,15 @@ public class FileUtil {
     try {
       return readBytes(uri.toURL());
     } catch (MalformedURLException e) {
+      logger.error(e.getMessage(), e);
+      return Optional.empty();
+    }
+  }
+
+  public static Optional<byte[]> readBytes(Path path) {
+    try {
+      return Optional.ofNullable(Files.readAllBytes(path));
+    } catch (IOException e) {
       logger.error(e.getMessage(), e);
       return Optional.empty();
     }

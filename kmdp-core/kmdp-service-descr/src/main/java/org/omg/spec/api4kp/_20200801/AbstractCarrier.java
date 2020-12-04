@@ -493,6 +493,10 @@ public interface AbstractCarrier {
     }
   }
 
+  default List<KnowledgeCarrier> componentList() {
+    return components().collect(Collectors.toList());
+  }
+
 
   static SyntacticRepresentation rep(SyntacticRepresentation src) {
     SyntacticRepresentation rep = new org.omg.spec.api4kp._20200801.services.SyntacticRepresentation();
