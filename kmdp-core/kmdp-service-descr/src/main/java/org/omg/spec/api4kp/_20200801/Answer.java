@@ -478,6 +478,10 @@ public class Answer<T> extends Explainer {
     return codedOutcome.getTag().startsWith("4");
   }
 
+  public boolean isNotFound() {
+    return codedOutcome.getTag().equals("404");
+  }
+
   public boolean isServerFailure() {
     return codedOutcome.getTag().startsWith("5");
   }
@@ -603,6 +607,9 @@ public class Answer<T> extends Explainer {
     }
     if (t instanceof UnsupportedOperationException) {
       return ResponseCodeSeries.NotImplemented;
+    }
+    if (t instanceof NoSuchElementException) {
+      return ResponseCodeSeries.NotFound;
     }
     return ResponseCodeSeries.InternalServerError;
   }

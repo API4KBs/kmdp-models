@@ -16,6 +16,8 @@
 package edu.mayo.kmdp.util;
 
 import edu.mayo.kmdp.registry.Registry;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.w3c.dom.Element;
@@ -162,6 +164,18 @@ public class URIUtil {
       return detectLocalName(str.substring(0,str.length() -1));
     } else {
       return local;
+    }
+  }
+
+  public static boolean isDereferencingURL(String uri) {
+    try {
+      HttpURLConnection httpUrlConnection
+          = (HttpURLConnection) new URL(uri).openConnection();
+      httpUrlConnection.setRequestMethod("HEAD");
+
+      return HttpURLConnection.HTTP_OK == httpUrlConnection.getResponseCode();
+    } catch (IOException ioe) {
+      return false;
     }
   }
 }
