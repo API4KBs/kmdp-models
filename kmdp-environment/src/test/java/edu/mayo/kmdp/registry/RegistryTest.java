@@ -29,7 +29,7 @@ public class RegistryTest {
   @Test
   public void testKnownXMLNamespaces() {
     assertFalse(Registry.listPrefixes().stream().anyMatch(p -> p.length() == 0));
-    assertEquals(49,Registry.listPrefixes().size());
+    assertEquals(55, Registry.listPrefixes().size());
   }
 
   @Test
@@ -47,7 +47,7 @@ public class RegistryTest {
     assertEquals("http://www.omg.org/spec/DMN/20180521/MODEL/", getNS("dmn-v12"));
     assertEquals("http://www.omg.org/spec/DMN/20180521/MODEL/", getNS("dmn"));
     assertEquals("urn:hl7-org:knowledgeartifact:r1", getNS("knart-v13"));
-    assertEquals("urn:hl7-org:elm:r1", getNS("elm-v12"));
+    assertEquals("urn:hl7-org:elm:r1", getNS("elm-v1"));
     assertEquals("http://www.w3.org/2001/XMLSchema", getNS("xsd"));
     assertEquals("http://kmdp.mayo.edu/metadata/surrogate", getNS("surr-v1"));
     assertEquals("https://www.omg.org/spec/API4KP/20200801/surrogate", getNS("surr"));
@@ -63,7 +63,7 @@ public class RegistryTest {
     assertEquals("http://www.omg.org/spec/CMMN/20151109/MODEL",
         getSchema("https://www.omg.org/spec/CMMN/1.1/"));
     assertEquals("urn:hl7-org:knowledgeartifact:r1", getSchema("http://hl7.org/KNART/1.3"));
-    assertEquals("urn:hl7-org:elm:r1", getSchema("http://hl7.org/ELM/1.2"));
+    assertEquals("urn:hl7-org:elm:r1", getSchema("http://cql.hl7.org/ELM"));
 
   }
 

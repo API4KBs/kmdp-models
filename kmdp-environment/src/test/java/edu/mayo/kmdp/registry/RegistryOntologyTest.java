@@ -19,7 +19,6 @@ import static edu.mayo.kmdp.registry.RegistryUtil.askQuery;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -119,11 +118,12 @@ public class RegistryOntologyTest extends RegistryTestBase {
   @Test
   public void testLanguageSerializations() {
     String qry = PREAMBLE +
-        "SELECT ?L ?Ser ?LangId ?SerId " +
+        "SELECT ?L ?Lver ?Ser ?LangId ?SerId " +
         " " +
         "WHERE { " +
         "   ?L a api4kp:ConstructedLanguage;"
         + "   dct:identifier ?LangId; "
+        + "   owl:versionInfo ?Lver; "
         + "   dol:supportsSerialization ?Ser. "
         + " ?Ser dct:identifier ?SerId. "
         + "}";
@@ -132,7 +132,8 @@ public class RegistryOntologyTest extends RegistryTestBase {
 
     Map<String,String> ids = ans.stream().collect(Collectors.toMap(
         res -> res.get("SerId"),
-        res -> res.get("LangId")
+        res -> res.get("LangId"),
+        (l1,l2) -> l1 + "," + l2
     ));
 
     assertEquals("cmmn", ids.get("cmmn-v11+xml"));
@@ -176,7 +177,7 @@ public class RegistryOntologyTest extends RegistryTestBase {
     assertTrue(fhirLexica.contains("http://snomed.info/sct/900000000000207008/version/20180731"));
     assertTrue(fhirLexica.contains("https://www.nlm.nih.gov/research/umls/rxnorm/"));
 
-    assertEquals(8, uses.keySet().size());
+    assertEquals(9, uses.keySet().size());
 
     assertEquals(18,
         uses.getOrDefault("https://www.omg.org/spec/API4KP/1.0/surrogate", new HashSet<>()).size());
@@ -229,21 +230,31 @@ public class RegistryOntologyTest extends RegistryTestBase {
   @Test
   public void testGrammarSchemas() {
     String qry = PREAMBLE +
-        "SELECT ?LangId ?G " +
+        "SELECT ?LangId ?LangVer ?G " +
         " " +
         "WHERE { " +
         "   ?L a api4kp:ConstructedLanguage; "
         + "   dct:identifier ?LangId; "
+        + "   owl:versionInfo ?LangVer; "
         + "   dol:supportsSerialization ?G. "
         + "}";
 
     List<Map<String, String>> ans = askQuery(qry, registry);
     Map<String,String> grams = ans.stream().collect(Collectors.toMap(
         res -> res.get("G"),
-        res -> res.get("LangId")
+        res -> res.get("LangId") + "-" + res.get("LangVer"),
+        (l1,l2) -> l1 + "," + l2
     ));
-    assertEquals( "cmmn",
+    assertEquals( "cmmn-v11",
         grams.get("http://www.omg.org/spec/CMMN/20151109/MODEL"));
+
+    String elmLanguages = grams.get("urn:hl7-org:elm:r1");
+    boolean check = Arrays.stream(elmLanguages.split(","))
+        .allMatch(lang -> "cql-v150".equals(lang)
+            || "cql-v141".equals(lang)
+            || "elm-v1".equals(lang)
+            || "cql-v130".equals(lang));
+    assertTrue(check);
   }
 
 
