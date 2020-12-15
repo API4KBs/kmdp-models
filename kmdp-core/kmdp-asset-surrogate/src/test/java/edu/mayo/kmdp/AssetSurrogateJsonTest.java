@@ -13,6 +13,7 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.util.Util.uuid;
 import static edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries.Cites;
 import static edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries.Cites_As_Authority;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
@@ -185,7 +186,7 @@ public class AssetSurrogateJsonTest {
 
         .withLinks(new Derivative()
                 .withRel(Is_Revision_Of)
-                .withHref(SurrogateBuilder.artifactId("234", "0.0.0")),
+                .withHref(SurrogateBuilder.artifactId(uuid("234"), "0.0.0")),
             new Derivative()
                 .withRel(Is_Derived_From)
                 .withHref(newId("http://foo.bar/234")))

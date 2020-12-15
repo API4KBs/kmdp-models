@@ -13,6 +13,7 @@
  */
 package org.omg.spec.api4kp._20200801.surrogate;
 
+import static edu.mayo.kmdp.util.Util.ensureUUID;
 import static edu.mayo.kmdp.util.Util.uuid;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
@@ -358,12 +359,13 @@ public class SurrogateBuilder {
   }
 
   public static ResourceIdentifier assetId(String uuid, String versionTag) {
-    return SemanticIdentifier.newId(Registry.MAYO_ASSETS_BASE_URI_URI, uuid,
-        VersionIdentifier.toSemVer(versionTag));
+    return assetId(ensureUUID(uuid).orElseThrow(), versionTag);
   }
 
   public static ResourceIdentifier assetId(UUID uuid, String versionTag) {
-    return assetId(uuid.toString(),
+    return SemanticIdentifier.newId(
+        Registry.MAYO_ASSETS_BASE_URI_URI,
+        uuid,
         VersionIdentifier.toSemVer(versionTag));
   }
 
@@ -377,12 +379,13 @@ public class SurrogateBuilder {
 
 
   public static ResourceIdentifier artifactId(String uuid, String versionTag) {
-    return SemanticIdentifier.newId(Registry.MAYO_ARTIFACTS_BASE_URI_URI, uuid,
-        VersionIdentifier.toSemVer(versionTag));
+    return artifactId(ensureUUID(uuid).orElseThrow(), versionTag);
   }
 
   public static ResourceIdentifier artifactId(UUID uuid, String versionTag) {
-    return artifactId(uuid.toString(),
+    return SemanticIdentifier.newId(
+        Registry.MAYO_ARTIFACTS_BASE_URI_URI,
+        uuid,
         VersionIdentifier.toSemVer(versionTag));
   }
 
