@@ -168,9 +168,30 @@ public class URIUtil {
   }
 
   public static boolean isDereferencingURL(String uri) {
+    if (uri == null) {
+      return false;
+    }
+    return isDereferencingURL(URI.create(uri));
+  }
+
+  public static boolean isDereferencingURL(URI uri) {
+    if (uri == null) {
+      return false;
+    }
+    try {
+      return isDereferencingURL(uri.toURL());
+    } catch (MalformedURLException e) {
+      return false;
+    }
+  }
+
+  public static boolean isDereferencingURL(URL url) {
+    if (url == null) {
+      return false;
+    }
     try {
       HttpURLConnection httpUrlConnection
-          = (HttpURLConnection) new URL(uri).openConnection();
+          = (HttpURLConnection) url.openConnection();
       httpUrlConnection.setRequestMethod("HEAD");
 
       return HttpURLConnection.HTTP_OK == httpUrlConnection.getResponseCode();

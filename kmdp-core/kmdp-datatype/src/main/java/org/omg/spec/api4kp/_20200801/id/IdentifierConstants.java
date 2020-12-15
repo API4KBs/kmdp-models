@@ -11,7 +11,11 @@ public final class IdentifierConstants {
   public static final String SNAPSHOT_DATE_PATTERN = "yyyyMMdd-HHmmSS";
 
   public static final String VERSION_ZERO = "0.0.0";
+  public static final String VERSION_ZERO_SNAPSHOT = "0.0.0-SNAPSHOT";
   public static final String VERSION_LATEST = "LATEST";
+
+  public static final String CARRIERS = "/carriers/langs/";
+  public static final String SURROGATES = "/surrogates/langs/";
 
   public static final String VERSIONS = "/versions/";
   public static final Pattern VERSIONS_RX = Pattern.compile("^(.*/)?(.*)/versions/(.+)$");

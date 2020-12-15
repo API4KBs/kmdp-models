@@ -34,8 +34,6 @@ import org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTy
 import org.omg.spec.api4kp._20200801.taxonomy.summaryreltype.SummarizationType;
 import org.omg.spec.api4kp._20200801.taxonomy.variantreltype.VariantType;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
-import org.omg.spec.api4kp._20200801.terms.TypedTerm;
-import org.omg.spec.api4kp._20200801.terms.VersionableTerm;
 
 public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 

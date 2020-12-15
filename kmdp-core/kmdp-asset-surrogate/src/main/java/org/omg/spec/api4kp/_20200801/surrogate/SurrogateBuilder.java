@@ -29,7 +29,6 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Inquiry_Specification;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Service_Description;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Value_Set;
-import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.RDF_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
@@ -52,6 +51,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.UUID;
+import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
@@ -92,20 +92,11 @@ public class SurrogateBuilder {
         .withSurrogate(
             new KnowledgeArtifact()
                 .withArtifactId(artifactId(
-                    uuid(assetId.getResourceId().toString() + JSON.getTag()),
+                    defaultSurrogateUUID(assetId, Knowledge_Asset_Surrogate_2_0),
                     "1.0.0"
                 ))
                 .withLocalization(English)
-                .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, JSON)))
-        .withSurrogate(
-            new KnowledgeArtifact()
-                .withArtifactId(artifactId(
-                    uuid(assetId.getResourceId().toString() + XML_1_1.getTag()),
-                    "1.0.0"
-                ))
-                .withLocalization(English)
-                .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, XML_1_1))
-        );
+                .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0)));
     return this;
   }
 
@@ -333,6 +324,34 @@ public class SurrogateBuilder {
     return surrogate;
   }
 
+  /**
+   * Builds a predictable Surrogate UUID for a specific version of an asset.
+   * Uses a combination of the Asset version ID and the language used to express the Surrogate
+   * (consequence: any 'vertical' lifting/lowering of the Surrogate does not impact its identity)
+   * @param assetId
+   * @param lang
+   * @return
+   */
+  public static UUID defaultSurrogateUUID(ResourceIdentifier assetId, KnowledgeRepresentationLanguage lang) {
+    String key = assetId.getVersionId().toString();
+    key += IdentifierConstants.SURROGATES + lang.getUuid();
+    return UUID.nameUUIDFromBytes(key.getBytes());
+  }
+
+
+  /**
+   * Builds a predictable Carrier Artifact UUID for a specific version of an asset.
+   * Uses a combination of the Asset version ID and the language used to express the Carrier
+   * (consequence: any 'vertical' lifting/lowering of the Carrier does not impact its identity)
+   * @param assetId
+   * @param lang
+   * @return
+   */
+  public static UUID defaultCarrierUUID(ResourceIdentifier assetId, KnowledgeRepresentationLanguage lang) {
+    String key = assetId.getVersionId().toString();
+    key += IdentifierConstants.CARRIERS + lang.getUuid();
+    return UUID.nameUUIDFromBytes(key.getBytes());
+  }
 
   public static ResourceIdentifier assetId(UUID assetId) {
     return SemanticIdentifier.newId(Registry.MAYO_ASSETS_BASE_URI_URI, assetId);
