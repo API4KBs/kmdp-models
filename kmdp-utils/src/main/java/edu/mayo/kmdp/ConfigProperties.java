@@ -126,7 +126,9 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
 
   @SuppressWarnings("unchecked")
   public P from(Properties p) {
-    this.putAll(p);
+    if (p != null) {
+      this.putAll(p);
+    }
     return (P) this;
   }
 

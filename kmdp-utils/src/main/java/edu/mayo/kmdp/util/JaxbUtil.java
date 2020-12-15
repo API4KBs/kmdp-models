@@ -65,7 +65,7 @@ public class JaxbUtil {
     }
     p.consumeTyped((k, v) -> {
       try {
-        if (k.startsWith("com") || k.startsWith("sun")) {
+        if (k.startsWith("com") || k.startsWith("sun") || k.startsWith("jaxb")) {
           marshaller.setProperty(k, v);
         }
       } catch (PropertyException e) {
