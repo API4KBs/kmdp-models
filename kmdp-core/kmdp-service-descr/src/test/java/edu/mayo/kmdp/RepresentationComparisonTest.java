@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.OWL_Functional_Syntax;
@@ -29,6 +31,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder;
+import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries;
 
 class RepresentationComparisonTest {
 
@@ -61,6 +64,18 @@ class RepresentationComparisonTest {
     assertEquals(Comparison.EQUAL,theRepContrastor.contrast(r1,r2));
     assertEquals(Comparison.EQUIVALENT,theRepContrastor.contrast(r1,r3));
     assertEquals(Comparison.EQUIVALENT,theRepContrastor.contrast(r2,r3));
+  }
+
+  @Test
+  void languageLessTest() {
+    // mimic "application/json" and "application/xml"
+    SyntacticRepresentation r1 = rep(null, JSON);
+    SyntacticRepresentation r2 = rep(null, JSON);
+    SyntacticRepresentation r3 = rep(null, XML_1_1);
+
+    assertEquals(Comparison.EQUAL,theRepContrastor.contrast(r1,r2));
+    assertEquals(Comparison.INCOMPARABLE,theRepContrastor.contrast(r1,r3));
+    assertEquals(Comparison.INCOMPARABLE,theRepContrastor.contrast(r2,r3));
   }
 
   @Test

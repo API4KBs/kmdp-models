@@ -31,7 +31,9 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
 
   @Override
   public boolean comparable(SyntacticRepresentation sr1, SyntacticRepresentation sr2) {
-    if (! sr1.getLanguage().sameAs(sr2.getLanguage())) {
+    boolean sameLanguage = (sr1.getLanguage() == null && sr2.getLanguage() == null)
+        || (sr1.getLanguage() != null && sr1.getLanguage().sameAs(sr2.getLanguage()));
+    if (! sameLanguage) {
       return false;
     }
     Comparison profileComparison = ProfileContrastor.theProfileContrastor
