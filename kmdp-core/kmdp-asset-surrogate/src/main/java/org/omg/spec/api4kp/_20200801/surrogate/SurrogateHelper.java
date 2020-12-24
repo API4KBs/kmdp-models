@@ -263,7 +263,8 @@ public class SurrogateHelper {
    * using the 'first' referenced carrier Artifact if present.
    *
    * @param surrogate The source Knowledge Asset Surrogate
-   * @return A KnowledgeCarrier that preserves the relevant metadata
+   * @return A KnowledgeCarrier that wraps the Asset's (primary) Artifact manifestation,
+   * preserving the relevant metadata
    */
   public static KnowledgeCarrier toRuntimeSurrogate(KnowledgeAsset surrogate) {
     Optional<KnowledgeArtifact> canonicalArtifact
@@ -278,5 +279,29 @@ public class SurrogateHelper {
         .withLevel(inlined != null ? Concrete_Knowledge_Expression : Knowledge_Expression)
         .withRepresentation(canonicalArtifact.map(KnowledgeArtifact::getRepresentation).orElse(null))
         .withHref(canonicalArtifact.map(KnowledgeArtifact::getLocator).orElse(null));
+  }
+
+
+  /**
+   * Wraps a KnowledgeAsset Surrogate (KA) in a KnowledgeCarrier (KC)
+   * Surrogates are Artifacts themselves, expressed in a specific, API4KP defined schema
+   * As such, they can be processed using a variety of APIs once properly wrapped
+   *
+   * Note: This method wraps the Asset's surrogate itself. Conversely, toRuntimeSurrogate
+   * tries to wrap the Asset's (primary) Carrier, as stated by the Surrogate itself
+   *
+   * @param surrogate The source Knowledge Asset Surrogate
+   * @return A KnowledgeCarrier that wraps the Surrogate itself,
+   * allowing to process it as a Knowledge Artifact
+   */
+  public static KnowledgeCarrier carry(KnowledgeAsset surrogate) {
+    Optional<KnowledgeArtifact> canonicalSurrogate
+        = SurrogateHelper.getSurrogateMetadata(surrogate,Knowledge_Asset_Surrogate_2_0,null);
+
+    return AbstractCarrier.ofAst(surrogate)
+        .withAssetId(surrogate.getAssetId())
+        .withArtifactId(canonicalSurrogate.map(KnowledgeArtifact::getArtifactId).orElse(null))
+        .withLabel(surrogate.getName())
+        .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0));
   }
 }
