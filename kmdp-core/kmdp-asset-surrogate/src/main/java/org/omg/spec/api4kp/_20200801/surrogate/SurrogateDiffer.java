@@ -68,6 +68,12 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
     return c == Comparison.EQUAL || c == Comparison.EQUIVALENT || c == Comparison.IDENTICAL;
   }
 
+  protected KnowledgeAsset normalize(KnowledgeAsset ka) {
+    return ka instanceof org.omg.spec.api4kp._20200801.surrogate.resources.KnowledgeAsset
+        ? (KnowledgeAsset) ka.copyTo(new KnowledgeAsset())
+        : ka;
+  }
+
 
   public static void configureTerminology(JaversBuilder builder) {
     List<Class<? extends ConceptTerm>> valuesetKlasses =

@@ -30,7 +30,9 @@ public abstract class AbstractDiffer<T> extends Contrastor<T> {
   protected abstract Javers init();
 
   public Diff diff(T subject, T base) {
-    return differ.compare(base,subject);
+    return differ.compare(
+        normalize(base),
+        normalize(subject));
   }
 
   @Override
@@ -128,6 +130,10 @@ public abstract class AbstractDiffer<T> extends Contrastor<T> {
       return Comparison.EQUAL;
     }
     return Comparison.DISTINCT;
+  }
+
+  protected T normalize(T x) {
+    return x;
   }
 
 }

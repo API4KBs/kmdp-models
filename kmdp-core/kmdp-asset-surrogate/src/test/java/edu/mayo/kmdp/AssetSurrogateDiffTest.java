@@ -121,4 +121,22 @@ class AssetSurrogateDiffTest {
   }
 
 
+  @Test
+  void testDiffeWithRootClass() {
+    SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
+
+    ResourceIdentifier aid = randomAssetId();
+
+    KnowledgeAsset base1 = new KnowledgeAsset()
+        .withAssetId(aid);
+
+    KnowledgeAsset base2 = new org.omg.spec.api4kp._20200801.surrogate.resources.KnowledgeAsset()
+        .withAssetId((ResourceIdentifier) aid.clone());
+
+    Comparison delta = differ.contrast(base1,base2);
+    assertSame(Comparison.EQUIVALENT, delta);
+  }
+
+
+
 }
