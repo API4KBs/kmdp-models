@@ -19,6 +19,7 @@ import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATES
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.hashIdentifiers;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.randomId;
+import static org.omg.spec.api4kp._20200801.services.CompositeStructType.NONE;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
@@ -420,6 +421,7 @@ public interface AbstractCarrier {
     ckc.withAssetId(randomId());
     ckc.withRepresentation(rep);
     ckc.withLevel(level);
+    ckc.withStructType(NONE);
     // struct and type are left 'null' - may need to revisit this decision
     return ckc;
   }
@@ -439,6 +441,7 @@ public interface AbstractCarrier {
     // hash the (versioned) IDs of the components into an asset Id for the composite
     ckc.withAssetId(randomId());
     ckc.withArtifactId(randomId());
+    ckc.withStructType(NONE);
     return ckc;
   }
 
