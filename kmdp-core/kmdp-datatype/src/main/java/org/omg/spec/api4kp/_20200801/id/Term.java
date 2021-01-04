@@ -14,6 +14,7 @@
 package org.omg.spec.api4kp._20200801.id;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.getDefaultVersionId;
+import static java.util.Collections.emptySet;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_BASE_URI;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_DATE;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNOMED_URI;
@@ -28,7 +29,17 @@ import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 // TODO: need Serializable?
 
@@ -271,6 +282,51 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
         "0.0.0",
         label,
         DateTimeUtil.today());
+  }
+
+
+  static <V> Collector<V, Map<Term, List<V>>, Map<Term,List<V>>> groupByConcept(
+      Function<V,? extends Term> classifier) {
+    return new Collector<>() {
+      @Override
+      public Supplier<Map<Term, List<V>>> supplier() {
+        return HashMap::new;
+      }
+
+      @Override
+      public BiConsumer<Map<Term, List<V>>, V> accumulator() {
+        return (m1,v) -> {
+          Term t = classifier.apply(v);
+          findEntry(m1,t).add(v);
+        };
+      }
+
+      private List<V> findEntry(Map<Term, List<V>> m1, Term t) {
+        Term k = m1.keySet().stream()
+            .filter(x -> x.sameTermAs(t))
+            .findFirst()
+            .orElse(t);
+        return m1.computeIfAbsent(k, z -> new LinkedList<>());
+      }
+
+      @Override
+      public BinaryOperator<Map<Term, List<V>>> combiner() {
+        return (m1,m2) -> {
+          m2.forEach((k, v) -> findEntry(m1,k).addAll(v));
+          return m1;
+        };
+      }
+
+      @Override
+      public Function<Map<Term, List<V>>, Map<Term, List<V>>> finisher() {
+        return x -> x;
+      }
+
+      @Override
+      public Set<Characteristics> characteristics() {
+        return emptySet();
+      }
+    };
   }
 
 }
