@@ -123,7 +123,7 @@
               <topConceptName>ClinicalKnowledgeAssetType</topConceptName>
 
               <skosOutputFiles>
-                <skosOutputFile>ClinicalKnowledgeAssetTypes_SNAPSHOT.skos.rdf</skosOutputFile>
+                <skosOutputFile>ClinicalKnowledgeAssetTypes.skos.rdf</skosOutputFile>
               </skosOutputFiles>
             </configuration>
           </execution>
@@ -1004,9 +1004,9 @@
               <owlNamespace>http://ontology.mayo.edu/ontologies/clinicalinquiryontology/
               </owlNamespace>
               <targetURI>
-                http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c
+                http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a9aad667-c217-49a4-8f49-fd3460961131
               </targetURI>
-              <minDepth>1</minDepth>
+              <minDepth>2</minDepth>
 
               <skosNamespace>https://ontology.mayo.edu/taxonomies/ClinicalInterrogatives</skosNamespace>
               <schemeName>ClinicalInterrogatives</schemeName>

@@ -85,6 +85,14 @@ The condition of a thing. Note: &quot;state of&quot;  refers to the characterist
     
 
 
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a9aad667-c217-49a4-8f49-fd3460961131 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a9aad667-c217-49a4-8f49-fd3460961131">
+        <rdfs:label>Inquiry Particle</rdfs:label>
+    </owl:Class>
+    
+
+
     <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/ab3410c3-9881-44f8-a534-045f59bb559b -->
 
     <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/ab3410c3-9881-44f8-a534-045f59bb559b">
@@ -198,6 +206,16 @@ Answer Category - true, false, or unknown</rdfs:comment>
     
 
 
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/1aab14b9-5efc-45b0-981a-df344f9171f0 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/1aab14b9-5efc-45b0-981a-df344f9171f0">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/7910d86d-9bec-429a-b04e-7b5800eacc69"/>
+        <rdfs:label>First</rdfs:label>
+        <skos:notation>first</skos:notation>
+    </owl:Class>
+    
+
+
     <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/17a65ac7-d110-41e6-9f8a-13b801ee473d -->
 
     <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/17a65ac7-d110-41e6-9f8a-13b801ee473d">
@@ -237,6 +255,7 @@ The place of the clinical situation - may refer to the care environment (e.g. am
     <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c -->
 
     <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a9aad667-c217-49a4-8f49-fd3460961131"/>
         <rdfs:label>Interrogative</rdfs:label>
     </owl:Class>
     
@@ -264,6 +283,16 @@ The place of the clinical situation - may refer to the care environment (e.g. am
     
 
 
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/51cfc43e-ec5d-4f9c-9dda-2f3f31ad7943 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/51cfc43e-ec5d-4f9c-9dda-2f3f31ad7943">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/7910d86d-9bec-429a-b04e-7b5800eacc69"/>
+        <rdfs:label>Last</rdfs:label>
+        <skos:notation>last</skos:notation>
+    </owl:Class>
+    
+
+
     <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/5215d172-2932-46c9-9344-3ee113cd741c -->
 
     <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/5215d172-2932-46c9-9344-3ee113cd741c">
@@ -277,6 +306,7 @@ The place of the clinical situation - may refer to the care environment (e.g. am
     <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/7910d86d-9bec-429a-b04e-7b5800eacc69 -->
 
     <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/7910d86d-9bec-429a-b04e-7b5800eacc69">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a9aad667-c217-49a4-8f49-fd3460961131"/>
         <rdfs:label>Aggregate</rdfs:label>
     </owl:Class>
     
