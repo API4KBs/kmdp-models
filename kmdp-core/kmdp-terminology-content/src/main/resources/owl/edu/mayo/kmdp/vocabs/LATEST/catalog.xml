@@ -85,6 +85,13 @@
     uri="decisionmodels.owl.rdf"
     name="http://ontology.mayo.edu/ontologies/decisionmodels/"/>
 
+  <uri id="CIO-snapshot"
+    uri="Interrogatives.owl.rdf"
+    name="http://ontology.mayo.edu/ontologies/SNAPSHOT/clinicalinquiryontology/"/>
+  <uri id="CIO"
+    uri="Interrogatives.owl.rdf"
+    name="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/"/>
+
   <uri id="CCG"
     uri="ccg.owl.rdf"
     name="http://ontology.mayo.edu/ontologies/SNAPSHOT/CCG/"/>

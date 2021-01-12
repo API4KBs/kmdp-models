@@ -983,6 +983,42 @@
             </configuration>
           </execution>
 
+
+
+          <execution>
+            <id>cio-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+                <catalogURL>file:///${ontologyDir}${s}_20201101${s}catalog.xml</catalogURL>
+              </catalogURLs>
+              <owlSourceURLs>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/SNAPSHOT/clinicalinquiryontology/</owlSourceURL>
+                <owlSourceURL>http://ontology.mayo.edu/ontologies/20201101/clinicalinquiryontology/</owlSourceURL>
+              </owlSourceURLs>
+
+              <owlNamespace>http://ontology.mayo.edu/ontologies/clinicalinquiryontology/
+              </owlNamespace>
+              <targetURI>
+                http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c
+              </targetURI>
+              <minDepth>1</minDepth>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/ClinicalInterrogatives</skosNamespace>
+              <schemeName>ClinicalInterrogatives</schemeName>
+              <topConceptName>ClinicalInterrogative</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>ClinicalInterrogative.skos.rdf</skosOutputFile>
+                <skosOutputFile>ClinicalInterrogative_20201101.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+
         </executions>
         <dependencies>
           <dependency>

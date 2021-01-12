@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/"
+     xml:base="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+    <owl:Ontology rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/">
+        <owl:versionIRI rdf:resource="http://ontology.mayo.edu/ontologies/20201101/clinicalinquiryontology/"/>
+        <rdfs:comment>The domain of interest of this ontology is clinical information processing. The members serve to narrow the focus of information that reflects clinial situations. 
+
+This ontology is informed by the Aristotelian framework of categories of inquiry
+
+Substance
+Quantity
+Quality
+Relation
+Place
+Time
+Position
+State
+Action
+Affection</rdfs:comment>
+        <rdfs:seeAlso>Interrogative words: an exercise in lexical typology
+Michael Cysouw
+http://cysouw.de/home/manuscripts_files/cysouwQUESTION_handout.pdf</rdfs:seeAlso>
+        <rdfs:seeAlso>Stanford Encyclopedia of Philosophy: Aristotle&apos;s Categories
+
+https://plato.stanford.edu/entries/aristotle-categories/</rdfs:seeAlso>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#notation -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#notation"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a7116e67-9a4f-4b12-ad6b-52d5fd41ff85 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a7116e67-9a4f-4b12-ad6b-52d5fd41ff85">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c"/>
+        <rdfs:comment>Answer Category - State
+
+The condition of a thing. Note: &quot;state of&quot;  refers to the characteristics that can change over time, as opposed to  &quot;kind&quot; which refers to characteristics that are immutable, such as person&apos;s race or birthsex.</rdfs:comment>
+        <rdfs:label>State of</rdfs:label>
+        <skos:notation>state</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a776d3ee-b97d-45d3-b416-bd9ca40e68d9 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a776d3ee-b97d-45d3-b416-bd9ca40e68d9">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/17a65ac7-d110-41e6-9f8a-13b801ee473d"/>
+        <rdfs:comment>The quantity a therapeutic agent</rdfs:comment>
+        <rdfs:label>Dose of</rdfs:label>
+        <skos:notation>dose</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/add005e9-a3da-4ed0-bc1d-a8fdcae507ef -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/add005e9-a3da-4ed0-bc1d-a8fdcae507ef">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c"/>
+        <rdfs:comment>Answer Category: Quality
+The nature of a thing.
+Note: &quot;kind&quot; refers to characteristics that are immutable, such as person&apos;s race or birthsex, as opposed to &quot;state of&quot; which refers to the characteristics that can change over time.</rdfs:comment>
+        <rdfs:label>Kind Of</rdfs:label>
+        <skos:notation>kind</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/b37137d5-84fb-4a6c-b74d-42315e87da34 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/b37137d5-84fb-4a6c-b74d-42315e87da34">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c"/>
+        <rdfs:comment>Answer Category - Subject of the Situation (in Aristotilian categories - the &quot;substance&quot;)
+
+The person or thing that is being considered in a situation</rdfs:comment>
+        <rdfs:label>Subject of</rdfs:label>
+        <skos:notation>subject</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/bdf1a57e-680b-4ab0-bb53-9bccadfdaecf -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/bdf1a57e-680b-4ab0-bb53-9bccadfdaecf">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a7116e67-9a4f-4b12-ad6b-52d5fd41ff85"/>
+        <rdfs:comment>statistical measure that indicates the percent of observations which fall above or below a value.</rdfs:comment>
+        <rdfs:label>Percentile</rdfs:label>
+        <skos:notation>percentile</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/c1f20847-2c3f-41f8-9b09-21926cf57833 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/c1f20847-2c3f-41f8-9b09-21926cf57833">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a7116e67-9a4f-4b12-ad6b-52d5fd41ff85"/>
+        <rdfs:comment>Position in an order or sequence</rdfs:comment>
+        <rdfs:label>Stage of</rdfs:label>
+        <skos:notation>stage</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/ce7fbe26-2214-408f-8172-72a4936ea212 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/ce7fbe26-2214-408f-8172-72a4936ea212">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c"/>
+        <rdfs:comment>The existance or truth of a situation
+Answer Category - true, false, or unknown</rdfs:comment>
+        <rdfs:label>Is</rdfs:label>
+        <skos:notation>is</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/f5888bdc-5ad0-464d-94dc-a7b3f61b4196 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/f5888bdc-5ad0-464d-94dc-a7b3f61b4196">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a776d3ee-b97d-45d3-b416-bd9ca40e68d9"/>
+        <rdfs:comment>The total dose of a therapeutic agent over 24 hours</rdfs:comment>
+        <rdfs:label>Total Daily Dose of</rdfs:label>
+        <skos:notation>tdd</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/08b96723-7070-4de4-8d2d-c4572a56fc2e -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/08b96723-7070-4de4-8d2d-c4572a56fc2e">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a7116e67-9a4f-4b12-ad6b-52d5fd41ff85"/>
+        <rdfs:comment>The degree to which a thing is severe</rdfs:comment>
+        <rdfs:label>Severity of</rdfs:label>
+        <skos:notation>severity</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/17a65ac7-d110-41e6-9f8a-13b801ee473d -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/17a65ac7-d110-41e6-9f8a-13b801ee473d">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c"/>
+        <rdfs:comment>Answer category: Quantity
+A property which can be measured and which reflects the count or magnitude of a thing.</rdfs:comment>
+        <rdfs:label>Quantity Of</rdfs:label>
+        <skos:notation>quantity</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/174be198-2e19-4b5c-bd95-d60285d1730d -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/174be198-2e19-4b5c-bd95-d60285d1730d">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c"/>
+        <rdfs:comment>Answer Category - Place
+
+The place of the clinical situation - may refer to the care environment (e.g. ambulance, intensive care unit,) or body site (e.g. lower limb)</rdfs:comment>
+        <rdfs:label>Location Of</rdfs:label>
+        <skos:notation>location</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/2a5d7e88-9a20-447d-89f2-17b2f99fcf85 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/2a5d7e88-9a20-447d-89f2-17b2f99fcf85">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/174be198-2e19-4b5c-bd95-d60285d1730d"/>
+        <rdfs:comment>The body site that is the focus of a procedure or disease process, for example lower limb in peripheral arterial disease, or coronary artery for arterial bypass graft.</rdfs:comment>
+        <rdfs:label>Body Site Of</rdfs:label>
+        <skos:notation>bodySite</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c">
+        <rdfs:label>Interrogative</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/3fc6952d-67bb-47af-9dd1-0155b8e27718 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/3fc6952d-67bb-47af-9dd1-0155b8e27718">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a7116e67-9a4f-4b12-ad6b-52d5fd41ff85"/>
+        <rdfs:comment>A property that expresses a degree or rank, as in the extent of a fracture or the degree of abnormality of cancer cells</rdfs:comment>
+        <rdfs:label>Grade of</rdfs:label>
+        <skos:notation>grade</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/34b122c8-126c-4929-bea4-9a81eff8e8b6 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/34b122c8-126c-4929-bea4-9a81eff8e8b6">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/174be198-2e19-4b5c-bd95-d60285d1730d"/>
+        <rdfs:comment>The care environment in which a clinical situation takes place. This may be a care environment, such as ICU or Emergency</rdfs:comment>
+        <rdfs:label>Site of care</rdfs:label>
+        <skos:notation>careSite</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/9fc8033d-2132-4db0-a073-214fb5fab9e1 -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/9fc8033d-2132-4db0-a073-214fb5fab9e1">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/a7116e67-9a4f-4b12-ad6b-52d5fd41ff85"/>
+        <rdfs:comment>Property that expresses membership in some category</rdfs:comment>
+        <rdfs:label>Classification of</rdfs:label>
+        <skos:notation>class</skos:notation>
+    </owl:Class>
+    
+
+
+    <!-- http://ontology.mayo.edu/ontologies/clinicalinquiryontology/9610ede8-7321-43d4-9b49-db787f1bd16f -->
+
+    <owl:Class rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/9610ede8-7321-43d4-9b49-db787f1bd16f">
+        <rdfs:subClassOf rdf:resource="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/20464eca-1bf8-4989-84c6-92e9dc61c68c"/>
+        <rdfs:comment>Answer Category - Time
+The point in time at which a situation occured</rdfs:comment>
+        <rdfs:label>Time Of</rdfs:label>
+        <skos:notation>time</skos:notation>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+

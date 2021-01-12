@@ -28,6 +28,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresen
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
 import edu.mayo.kmdp.registry.Registry;
+import edu.mayo.ontology.taxonomies.clinicalinterrogatives.ClinicalInterrogativeSeries;
 import edu.mayo.ontology.taxonomies.kao.ccgentries.ConceptDefinitionTypeSeries;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries;
@@ -104,6 +105,7 @@ class VocabularyTest {
     assertNotNull(SemanticAnnotationRelTypeSeries.Defines);
     assertNotNull(DecisionTypeSeries.Aggregation_Decision);
     assertNotNull(ConceptDefinitionTypeSeries.Interactive_Concept_Definition);
+    assertNotNull(ClinicalInterrogativeSeries.Is);
   }
 
   @Test

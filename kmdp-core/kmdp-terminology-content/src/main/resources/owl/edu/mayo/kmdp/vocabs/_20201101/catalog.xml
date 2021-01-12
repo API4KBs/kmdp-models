@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <uri id="CIO"
+    uri="Interrogatives.owl.rdf"
+    name="http://ontology.mayo.edu/ontologies/20201101/clinicalinquiryontology/"/>
+
+  <nextCatalog catalog="../../catalog.xml"/>
+
+</catalog>
