@@ -15,6 +15,8 @@
  */
 package org.omg.spec.api4kp._20200801.surrogate;
 
+import static edu.mayo.kmdp.util.Util.toMap;
+import static java.util.Collections.emptyList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
@@ -23,9 +25,11 @@ import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.Pars
 
 import com.google.common.base.Functions;
 import edu.mayo.kmdp.util.StreamUtil;
+import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -188,10 +192,62 @@ public class SurrogateHelper {
         .orElse(null);
   }
 
+  /**
+   * Constructs a Composite Surrogate for a Composite Asset, instantiating a CompositeKnowledgeCarrier
+   * whose components are generic Asset Surrogates.
+   * All the Surrogates MUST have the same representation
+   *
+   * @param rootAssetId The root component (if the Struct is TREE-based, null otherwise)
+   * @param components The components, which must be Surrogates wrapped in KnowledgeCarriers
+   * @param structType The type of structure (supports SET and TREE)
+   * @return a CompositeKnowledgeCarrier with wrapped KnowledgeAsset components
+   */
+  public static CompositeKnowledgeCarrier toCompositeSurrogate(
+      ResourceIdentifier rootAssetId,
+      Collection<KnowledgeCarrier> components,
+      CompositeStructType structType,
+      KnowledgeCarrier struct) {
+    SyntacticRepresentation commonRepresentation =
+        components.iterator().next().getRepresentation();
+    switch (structType) {
+      case SET:
+        return AbstractCarrier.ofIdentifiableSet(
+            commonRepresentation,
+            KnowledgeCarrier::getAssetId,
+            KnowledgeCarrier::getArtifactId,
+            KnowledgeCarrier::getLabel,
+            components
+        );
+      case TREE:
+        return AbstractCarrier.ofIdentifiableTree(
+            commonRepresentation,
+            KnowledgeCarrier::getAssetId,
+            KnowledgeCarrier::getArtifactId,
+            KnowledgeCarrier::getLabel,
+            struct,
+            rootAssetId,
+            toMap(components, KnowledgeCarrier::getAssetId)
+        ).withRootId(rootAssetId);
+      case GRAPH:
+        return AbstractCarrier.ofIdentifiableGraph(
+            commonRepresentation,
+            KnowledgeCarrier::getAssetId,
+            KnowledgeCarrier::getArtifactId,
+            KnowledgeCarrier::getLabel,
+            struct,
+            rootAssetId,
+            toMap(components, KnowledgeCarrier::getAssetId)
+        ).withRootId(rootAssetId);
+      default:
+        throw new UnsupportedOperationException();
+    }
+  }
+
+
 
   /**
    * Constructs a Composite Surrogate for a Composite Asset, instantiating a CompositeKnowledgeCarrier
-   * whose components are Asset Surrogates
+   * whose components are canonical Asset Surrogates
    *
    * @param rootAssetId The root component (if the Struct is TREE-based, null otherwise)
    * @param components The components, which must be KnowledgeAsset surrogates

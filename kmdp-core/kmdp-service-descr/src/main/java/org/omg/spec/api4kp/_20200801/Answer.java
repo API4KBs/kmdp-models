@@ -370,13 +370,6 @@ public class Answer<T> extends Explainer {
     }
   }
 
-  public static <T> Stream<T> trimStream(Answer<T> ans) {
-    if (ans == null) {
-      return Stream.empty();
-    }
-    return StreamUtil.trimStream(ans.getOptionalValue());
-  }
-
   public static <T> Answer<T> merge(Answer<T> a1, Answer<T> a2) {
     return merge(a1,a2,(x,y) -> y);
   }
@@ -456,6 +449,10 @@ public class Answer<T> extends Explainer {
     return delegate
         .map(fun)
         .orElse(Answer.unsupported());
+  }
+
+  public static <T> Stream<T> trimStream(Answer<T> ans) {
+    return ans.map(Stream::of).orElseGet(Stream::empty);
   }
 
   public ResponseCode getOutcomeType() {

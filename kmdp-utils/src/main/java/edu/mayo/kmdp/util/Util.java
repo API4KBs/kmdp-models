@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.util;
 
+import com.google.common.base.Functions;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +26,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -78,6 +80,13 @@ public class Util {
     return str.toLowerCase().trim().replace(" ", "_");
   }
 
+  public static <K,V> Map<K, V> toMap(Collection<V> values, Function<V,K> identifier) {
+    return values.stream()
+        .collect(Collectors.toMap(
+            identifier,
+            x -> x
+        ));
+  }
 
   @SafeVarargs
   public static <K> Map<K, K> toLinkedMap(K[]... values) {

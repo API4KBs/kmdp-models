@@ -31,7 +31,7 @@ public class StreamUtil {
 
 
   public static <T> Stream<T> trimStream(Optional<T> opt) {
-    return opt.map(Stream::of).orElseGet(Stream::empty);
+    return opt.stream();
   }
 
   public static <T> Function<Object,Stream<T>> filterAs(Class<T> type) {

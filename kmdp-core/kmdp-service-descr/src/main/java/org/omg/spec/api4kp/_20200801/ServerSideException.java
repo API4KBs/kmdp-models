@@ -16,6 +16,7 @@
 package org.omg.spec.api4kp._20200801;
 
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.omg.spec.api4kp._20200801.services.Error;
@@ -30,6 +31,18 @@ public class ServerSideException extends RuntimeException {
     this.code = code;
     this.headers = headers;
     this.error = new Error().withMessage(error != null ? new String(error) : "Undefined error");
+  }
+
+  public ServerSideException(ResponseCode code,  byte[] error) {
+    this(code, Collections.emptyMap(), error);
+  }
+
+  public ServerSideException(ResponseCode code,  String errorMsg) {
+    this(code, errorMsg.getBytes());
+  }
+
+  public ServerSideException(ResponseCode code) {
+    this(code, code.getLabel());
   }
 
   public ResponseCode getCode() {

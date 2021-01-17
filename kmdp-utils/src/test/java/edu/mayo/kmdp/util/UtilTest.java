@@ -21,7 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
@@ -79,4 +81,16 @@ public class UtilTest {
     assertNotEquals(s5,s1);
     assertNotEquals(s5,s3);
   }
+
+  @Test
+  void testToMap() {
+    List<String> values = Arrays.asList("aaaa", "bbb", "c", "ddddd");
+    Map<String,String> map = Util.toMap(values, s -> s.substring(0,1));
+    assertEquals(
+        new HashSet<>(Arrays.asList("a", "b", "c", "d")),
+        map.keySet()
+    );
+    assertEquals("bbb", map.get("b"));
+  }
+
 }
