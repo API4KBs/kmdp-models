@@ -45,6 +45,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries.OWL2_DL;
 import static org.omg.spec.api4kp._20200801.taxonomy.languagerole.KnowledgeRepresentationLanguageRoleSeries.Schema_Language;
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.SKOS;
+import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structuring_Component;
 
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
@@ -65,6 +66,7 @@ import org.omg.spec.api4kp._20200801.taxonomy.knowledgeprocessingtechnique.Knowl
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.lexicon.Lexicon;
+import org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries;
 
 public class SurrogateBuilder {
 
@@ -336,6 +338,29 @@ public class SurrogateBuilder {
   public static UUID defaultSurrogateUUID(ResourceIdentifier assetId, KnowledgeRepresentationLanguage lang) {
     String key = assetId.getVersionId().toString();
     key += IdentifierConstants.SURROGATES + lang.getUuid();
+    return UUID.nameUUIDFromBytes(key.getBytes());
+  }
+
+  /**
+   * Builds a predictable Structure UUID for a specific version of a (Composite) asset.
+   * Uses a combination of the Asset version ID and the language used to express the Surrogate
+   * @param assetId
+   * @return
+   */
+  public static UUID defaultStructureAssetUUID(ResourceIdentifier assetId) {
+    // TODO define an asset type for 'Structs'
+    return defaultComponentAssetUUID(assetId, Has_Structuring_Component);
+  }
+
+  /**
+   * Builds a predictable Structure UUID for a specific Component of a Composite Asset
+   * Uses a combination of the Asset version ID and the Type of the Component
+   * @param assetId
+   * @return
+   */
+  public static UUID defaultComponentAssetUUID(ResourceIdentifier assetId, Term type) {
+    String key = assetId.getVersionId().toString();
+    key += type.getUuid();
     return UUID.nameUUIDFromBytes(key.getBytes());
   }
 

@@ -16,20 +16,21 @@
 package org.omg.spec.api4kp._20200801.surrogate;
 
 import static edu.mayo.kmdp.util.Util.toMap;
-import static java.util.Collections.emptyList;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Concrete_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Knowledge_Expression;
+import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structural_Component;
 
 import com.google.common.base.Functions;
 import edu.mayo.kmdp.util.StreamUtil;
-import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -37,6 +38,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.validation.Schema;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.vocabulary.RDF;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.Link;
@@ -359,5 +366,77 @@ public class SurrogateHelper {
         .withArtifactId(canonicalSurrogate.map(KnowledgeArtifact::getArtifactId).orElse(null))
         .withLabel(surrogate.getName())
         .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0));
+  }
+
+  /**
+   * Extracts the Components that are directly asserted as 'links' in a Knowledge Asset Surrogate,
+   * which is implicitly assumed to be the surrogate of a Composite Knowledge Asset
+   * Accepts an optional term, which will be matched against the Component.role
+   *
+   * @param surrogate
+   * @param role
+   * @return
+   */
+  public static Stream<ResourceIdentifier> getComponents(KnowledgeAsset surrogate, Term role) {
+    return surrogate.getLinks().stream()
+        .flatMap(StreamUtil.filterAs(Component.class))
+        .filter(comp -> comp.getRel().sameTermAs(Has_Structural_Component))
+        .filter(comp -> role == null || comp.getRol().sameTermAs(role))
+        .map(Component::getHref);
+  }
+
+  /**
+   * Extracts the Components from a Composite Knowledge Asset, manifested via a
+   * CompositeKnowledgeCarrier that wraps a Struct, as well as the Surrogates of the Components
+   * Accepts an optional term, which will be matched against the Component.role
+   *
+   * @param surrogate
+   * @param role
+   * @return
+   */
+  public static Stream<ResourceIdentifier> getComponents(
+      KnowledgeAsset surrogate, Model struct, Term role) {
+    if (struct == null) {
+      return getComponents(surrogate, role);
+    }
+    Resource composite = createResource(surrogate.getAssetId().getVersionId().toString());
+    return struct.listStatements(
+        composite,
+        createProperty(Has_Structural_Component.getReferentId().toString()),
+        (String) null)
+        .toList().stream()
+        .map(Statement::getObject)
+        .filter(RDFNode::isURIResource)
+        .map(RDFNode::asResource)
+        .map(Resource::getURI)
+        .filter(comp -> role == null ||
+            struct.contains(
+                createResource(comp),
+                RDF.type,
+                createResource(role.getReferentId().toString())))
+        .map(URI::create)
+        .map(SemanticIdentifier::newVersionId);
+  }
+
+  /**
+   * Extracts the Component of a given type, as asserted directly in a Knowledge Assset Surrogate
+   *
+   * @param surrogate
+   * @param role
+   * @return
+   */
+  public static Optional<ResourceIdentifier> getComponent(KnowledgeAsset surrogate, Term role) {
+    return getComponents(surrogate, role).findFirst();
+  }
+
+  /**
+   * Extracts the Component of a given type, as asserted directly in a Knowledge Assset Surrogate
+   *
+   * @param surrogate
+   * @param role
+   * @return
+   */
+  public static Optional<ResourceIdentifier> getComponent(KnowledgeAsset surrogate, Model struct, Term role) {
+    return getComponents(surrogate, struct, role).findFirst();
   }
 }
