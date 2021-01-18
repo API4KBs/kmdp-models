@@ -20,6 +20,7 @@ import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATES
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.hashIdentifiers;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.randomId;
+import static org.omg.spec.api4kp._20200801.services.CompositeStructType.GRAPH;
 import static org.omg.spec.api4kp._20200801.services.CompositeStructType.NONE;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
@@ -328,6 +329,31 @@ public interface AbstractCarrier {
     ckc.setRootId(rootId);
 
     return ckc;
+  }
+
+
+  /**
+   * Creates a named Composite Knowledge Carrier from a set of "homogeneous" Knowledge Artifacts
+   * that share the same representation, with a graph structure.
+   *
+   * @param artifacts The artifacts to be aggregated into the composite
+   * @param assetId The Asset ID of the composite
+   * @param rootId The Asset ID of the root element in the graph (usually coincides with Asset ID)
+   * @param struct The graph structure
+   * @param label A human readable name assigned to the label
+   * @return A set-oriented Composite Knowledge Carrier
+   */
+  static CompositeKnowledgeCarrier ofIdentifiableGraphCarriers(
+      ResourceIdentifier assetId,
+      ResourceIdentifier rootId,
+      String label,
+      KnowledgeCarrier struct,
+      Collection<KnowledgeCarrier> artifacts) {
+    return ofHomogeneousAnonymousComposite(artifacts, GRAPH)
+        .withAssetId(assetId)
+        .withRootId(rootId)
+        .withLabel(label)
+        .withStruct(struct);
   }
 
   /**
