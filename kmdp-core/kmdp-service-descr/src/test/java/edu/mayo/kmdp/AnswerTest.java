@@ -18,26 +18,23 @@ package edu.mayo.kmdp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Serialized_Knowledge_Expression;
 
-import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
-import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries;
 
 class AnswerTest {
 
@@ -47,15 +44,23 @@ class AnswerTest {
 
     assertEquals("foo", ans.getOptionalValue().orElse("Missing"));
 
-    KnowledgeCarrier expl = ans.getExplanation();
-    assertNotNull(expl);
-    assertNotNull(expl.getExpression());
-    assertTrue(Serialized_Knowledge_Expression.sameAs(expl.getLevel()));
-
+    assertNull(ans.getExplanation());
     assertTrue(ans.isSuccess());
     assertFalse(ans.isFailure());
 
-    assertFalse(Util.isEmpty(ans.printExplanation()));
+    assertEquals("n/a", ans.printExplanation());
+  }
+
+  @Test
+  void testErrorExplanation() {
+    Answer<String> ans = Answer.failed(new IllegalStateException("Something bad happened"));
+
+    assertNotNull(ans.getExplanation());
+    assertTrue(Serialized_Knowledge_Expression.sameAs(ans.getExplanation().getLevel()));
+
+    assertFalse(ans.isSuccess());
+
+    assertTrue(ans.printExplanation().contains("bad"));
   }
 
   @Test

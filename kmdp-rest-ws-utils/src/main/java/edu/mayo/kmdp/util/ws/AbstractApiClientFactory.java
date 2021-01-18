@@ -15,6 +15,8 @@
  */
 package edu.mayo.kmdp.util.ws;
 
+import static edu.mayo.ontology.taxonomies.ws.responsecodes._2011.ResponseCode.InternalServerError;
+
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.io.IOException;
 import java.util.Collections;
@@ -68,7 +70,7 @@ public abstract class AbstractApiClientFactory {
           throws IOException {
         throw new ServerSideException(
             ResponseCodeSeries.resolve(Integer.toString(response.getRawStatusCode()))
-                .orElse(ResponseCodeSeries.InternalServerError),
+                .orElse(InternalServerError),
             response.getHeaders(),
             getResponseBody(response));
       }

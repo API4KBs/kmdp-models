@@ -22,13 +22,14 @@ import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSe
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
-import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries;
 
 /**
  * Specialization of the Writer monad that handles 'explanations'
@@ -50,6 +51,14 @@ public abstract class Explainer {
       Map<String, List<String>> meta) {
     return Optional.ofNullable(meta.get(EXPL_HEADER))
         .flatMap(links -> resolveExplanation(links,meta));
+  }
+
+  public static void packExplanation(String msg, Map<String, List<String>> meta) {
+    String id = UUID.randomUUID().toString();
+    String key = String.format("<urn:uuid:%s>", id);
+    meta.put(Explainer.EXPL_HEADER,
+        Collections.singletonList(String.format("%s;rel=\"%s\";", key, Explainer.PROV_KEY)));
+    meta.put(id, Collections.singletonList(msg));
   }
 
   protected static Optional<KnowledgeCarrier> resolveExplanation(List<String> links, Map<String, List<String>> meta) {
@@ -106,7 +115,8 @@ public abstract class Explainer {
   }
 
   public String printExplanation() {
-    return explanation.asString()
+    return Optional.ofNullable(explanation)
+        .flatMap(KnowledgeCarrier::asString)
         .orElse("n/a");
   }
 

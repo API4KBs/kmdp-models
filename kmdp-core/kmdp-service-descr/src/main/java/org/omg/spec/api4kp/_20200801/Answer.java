@@ -126,8 +126,7 @@ public class Answer<T> extends Explainer {
     return new Answer<X>()
         .withCodedOutcome(ResponseCodeSeries.OK)
         .withMeta(new HashMap<>())
-        .withValue(value)
-        .withExplanation("(#TODO): " );
+        .withValue(value);
   }
 
   public static <X> Answer<X> ofNullable(X value) {
@@ -141,7 +140,7 @@ public class Answer<T> extends Explainer {
             .withCodedOutcome(ResponseCodeSeries.NotFound)
             .withMeta(new HashMap<>())
             .withValue(null)
-            .withExplanation("Optional empty"));
+            .withExplanation("Empty Optional"));
   }
 
   public static <X> Answer<X> of(String responseCode, X value) {
@@ -525,12 +524,6 @@ public class Answer<T> extends Explainer {
   @Override
   public Answer<T> withExplanation(String msg) {
     super.addExplanation(msg);
-
-    String key = "urn:uuid:" + UUID.randomUUID().toString();
-    this.getMeta().put(Explainer.EXPL_HEADER,
-        Collections.singletonList("<" + key + ">;rel=\"" + Explainer.PROV_KEY + "\";"));
-    this.getMeta().put(key, Collections.singletonList(msg));
-
     return this;
   }
 

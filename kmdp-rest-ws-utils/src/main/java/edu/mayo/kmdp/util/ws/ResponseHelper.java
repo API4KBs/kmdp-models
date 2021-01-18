@@ -15,6 +15,8 @@
  */
 package edu.mayo.kmdp.util.ws;
 
+import static org.omg.spec.api4kp._20200801.Explainer.packExplanation;
+
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
 import java.net.URI;
@@ -27,6 +29,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -183,6 +186,9 @@ public class ResponseHelper {
   private static MultiValueMap<String, String> mapHeaders(Answer<?> ans) {
     HttpHeaders headers = new HttpHeaders();
     ans.listMeta().forEach(h -> headers.addAll(h, ans.getMetas(h)));
+    Optional.ofNullable(ans.getExplanation())
+        .flatMap(AbstractCarrier::asString)
+        .ifPresent(expl -> packExplanation(expl, headers));
     return headers;
   }
 
