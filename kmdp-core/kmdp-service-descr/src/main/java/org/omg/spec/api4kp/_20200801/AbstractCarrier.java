@@ -15,6 +15,7 @@
  */
 package org.omg.spec.api4kp._20200801;
 
+import static org.omg.spec.api4kp._20200801.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.hashIdentifiers;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
@@ -490,6 +491,39 @@ public interface AbstractCarrier {
     ckc.withLevel(level);
     ckc.withStructType(NONE);
     // struct and type are left 'null' - may need to revisit this decision
+    return ckc;
+  }
+
+  /**
+   * Creates an Anonymous Composite Knowledge Carrier from a set of "homogeneous"
+   * Knowledge Artifacts, i.e. Artifacts that share the same representation
+   *
+   * @param artifacts The artifacts to be aggregated into the composite
+   * @return An Anonymous Composite Knowledge Carrier
+   */
+  static CompositeKnowledgeCarrier ofHomogeneousAnonymousComposite(
+      Collection<KnowledgeCarrier> artifacts, CompositeStructType structType) {
+    CompositeKnowledgeCarrier ckc = new CompositeKnowledgeCarrier()
+        .withComponent(artifacts);
+
+    if (! artifacts.isEmpty()) {
+      KnowledgeCarrier kc = artifacts.iterator().next();
+      SyntacticRepresentation rep = kc.getRepresentation();
+      ParsingLevel level = ParsingLevelContrastor.detectLevel(rep);
+
+      boolean consistent = artifacts.stream().map(KnowledgeCarrier::getRepresentation)
+          .allMatch(x -> theRepContrastor.isEqual(x,rep));
+      if (! consistent) {
+        throw new IllegalArgumentException();
+      }
+
+      ckc.withLevel(level);
+      ckc.withRepresentation(rep);
+    }
+
+    ckc.withAssetId(randomId());
+    ckc.withArtifactId(randomId());
+    ckc.withStructType(structType);
     return ckc;
   }
 

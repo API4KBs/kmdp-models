@@ -87,4 +87,7 @@ public abstract class Contrastor<T> implements Comparator<T> {
   public static boolean isNarrowerOrEqual(Comparison c) {
     return c == Comparison.NARROWER || c == Comparison.EQUAL || c == Comparison.EQUIVALENT || c == Comparison.IDENTICAL;
   }
+  public static boolean isEqual(Comparison c) {
+    return c == Comparison.EQUAL || c == Comparison.EQUIVALENT || c == Comparison.IDENTICAL;
+  }
 }

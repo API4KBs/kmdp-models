@@ -70,5 +70,8 @@ public class SyntacticRepresentationContrastor extends Contrastor<SyntacticRepre
   public boolean isNarrowerOrEqual(SyntacticRepresentation r1, SyntacticRepresentation r2) {
     return Contrastor.isNarrowerOrEqual(theRepContrastor.contrast(r1,r2));
   }
+  public boolean isEqual(SyntacticRepresentation r1, SyntacticRepresentation r2) {
+    return Contrastor.isEqual(theRepContrastor.contrast(r1,r2));
+  }
 
 }
