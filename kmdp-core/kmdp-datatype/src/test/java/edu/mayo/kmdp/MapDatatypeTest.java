@@ -15,8 +15,10 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.id.adapter.CopyableHashMap.toBinds;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,22 +31,21 @@ import java.io.InputStream;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.datatypes.Bindings;
 import org.omg.spec.api4kp._20200801.datatypes.Map;
 
-public class MapDatatypeTest {
+class MapDatatypeTest {
 
   private static final Map custoMap = new Map();
 
   @BeforeAll
-  @SuppressWarnings("unchecked")
-  public static void buildMap() {
+  static void buildMap() {
     custoMap.put("x", 1);
     custoMap.put("y", "2a");
-
   }
 
   @Test
-  public void testMapSerializationJson() {
+  void testMapSerializationJson() {
     Optional<String> str = JSonUtil.printJson(custoMap);
     assertTrue(str.isPresent());
 
@@ -56,7 +57,7 @@ public class MapDatatypeTest {
 
 
   @Test
-  public void testYamlGeneration() {
+  void testYamlGeneration() {
     InputStream in = MapDatatypeTest.class
         .getResourceAsStream("/yaml/API4KP/api4kp/datatypes/datatypes.yaml");
     assertNotNull(in);
@@ -70,6 +71,18 @@ public class MapDatatypeTest {
 
     assertTrue(mapModel instanceof ModelImpl);
     assertNotNull(((ModelImpl) mapModel).getAdditionalProperties());
+  }
+  
+  @Test
+  void testBindingConstructor() {
+    Bindings<String,String> b = toBinds("x", "1", "y", "2");
+    assertEquals(2, b.size());
+    assertEquals("1", b.get("x"));
+    assertEquals("2", b.get("y"));
+
+    assertThrows(IllegalArgumentException.class, () -> toBinds("x"));
+
+    assertTrue(toBinds().isEmpty());
   }
 
 }

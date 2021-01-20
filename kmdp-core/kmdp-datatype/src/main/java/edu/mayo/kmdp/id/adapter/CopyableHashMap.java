@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jvnet.jaxb2_commons.lang.CopyStrategy2;
 import org.jvnet.jaxb2_commons.locator.ObjectLocator;
+import org.omg.spec.api4kp._20200801.datatypes.Bindings;
 
 // May not be necessary if copyTo is not enabled
 public class CopyableHashMap<K, V, M extends CopyableHashMap<K,V,M>> extends HashMap<K, V> {
@@ -47,4 +48,16 @@ public class CopyableHashMap<K, V, M extends CopyableHashMap<K,V,M>> extends Has
     return target;
   }
 
+  public static Bindings<String, String> toBinds(Object... vars) {
+    if ((vars.length & 1) == 0) {
+      Bindings<String, String> binds = new Bindings<>();
+      for (int j = 0; j < vars.length; j = j + 2) {
+        binds.put(vars[j].toString(), vars[j + 1].toString());
+      }
+      return binds;
+    } else {
+      throw new IllegalArgumentException(
+          "Bindings must consist in an even number of key/value pairs");
+    }
+  }
 }

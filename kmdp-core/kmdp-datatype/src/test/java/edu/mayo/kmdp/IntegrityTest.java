@@ -27,10 +27,10 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
 
-public class IntegrityTest {
+class IntegrityTest {
 
   @Test
-  public void noServiceFoundTest() {
+  void noServiceFoundTest() {
     assertThrows(ClassNotFoundException.class,
         () -> {
           Class.forName("org.omg.spec.api4kp._20200801.service.KnowledgePlatformComponent");
@@ -39,7 +39,7 @@ public class IntegrityTest {
   }
 
   @Test
-  public void testCommonPackage() {
+  void testCommonPackage() {
     Pointer ptr = new Pointer();
     assertTrue(org.omg.spec.api4kp._20200801.id.Pointer.class.isInstance(ptr));
 
