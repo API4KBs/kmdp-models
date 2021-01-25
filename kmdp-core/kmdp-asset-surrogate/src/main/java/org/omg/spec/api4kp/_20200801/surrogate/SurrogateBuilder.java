@@ -66,7 +66,6 @@ import org.omg.spec.api4kp._20200801.taxonomy.knowledgeprocessingtechnique.Knowl
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.lexicon.Lexicon;
-import org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries;
 
 public class SurrogateBuilder {
 
@@ -402,6 +401,15 @@ public class SurrogateBuilder {
     return SemanticIdentifier.newId(baseNamespace,UUID.randomUUID(),VERSION_ZERO);
   }
 
+  public static ResourceIdentifier defaultArtifactId(
+      ResourceIdentifier assetId, KnowledgeRepresentationLanguage lang) {
+    return artifactId(defaultCarrierUUID(assetId, lang), VERSION_ZERO);
+  }
+
+  public static ResourceIdentifier defaultArtifactId(
+      ResourceIdentifier assetId, KnowledgeRepresentationLanguage lang, String versionTag) {
+    return artifactId(defaultCarrierUUID(assetId, lang), versionTag);
+  }
 
   public static ResourceIdentifier artifactId(String uuid, String versionTag) {
     return artifactId(ensureUUID(uuid).orElseThrow(), versionTag);
