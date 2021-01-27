@@ -33,6 +33,10 @@ public interface Composite<T,S,K extends Composite<T,S,K>> {
 
   Composite<T,S,K> withRootId(ResourceIdentifier rootId);
 
+  ResourceIdentifier getAssetId();
+
+  Composite<T,S,K> withAssetId(ResourceIdentifier assetId);
+
   SyntacticRepresentation getRepresentation();
 
   Composite<T,S,K> withRepresentation(SyntacticRepresentation rep);
@@ -58,6 +62,7 @@ public interface Composite<T,S,K extends Composite<T,S,K>> {
         comps -> constructor.get()
             .withStruct(mappedStruct)
             .withStructType(this.getStructType())
+            .withAssetId(getAssetId())
             .withRootId(this.getRootId())
             .withRepresentation(outputRep)
             .withLevel(ParsingLevelContrastor.detectLevel(outputRep))

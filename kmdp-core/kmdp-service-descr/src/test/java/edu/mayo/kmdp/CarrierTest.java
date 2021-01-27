@@ -3,20 +3,18 @@ package edu.mayo.kmdp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformAggregate;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.randomId;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
@@ -73,15 +71,16 @@ public class CarrierTest {
 
 
   @Test
-  void testSetOrientedCompositeCarrrier() {
+  void testSetOrientedAggregateCarrrier() {
     SyntacticRepresentation rep = rep(HTML,TXT, Charset.defaultCharset());
-    KnowledgeCarrier kc = AbstractCarrier.ofSet(
+    CompositeKnowledgeCarrier ckc = ofUniformAggregate(
+        Arrays.asList("a", "b", "c"),
         rep,
-        Arrays.asList("a", "b", "c"));
+        s -> randomId(),
+        s -> randomId(),
+        s -> s);
 
-    assertTrue(kc instanceof CompositeKnowledgeCarrier);
-    CompositeKnowledgeCarrier ckc = (CompositeKnowledgeCarrier) kc;
-
+    assertNotNull(ckc);
     assertNotNull(ckc.getAssetId());
 
     assertEquals(3, ckc.getComponent().size());
@@ -95,11 +94,7 @@ public class CarrierTest {
         }
     ));
 
-    assertTrue(ckc.getStruct().getRepresentation().getLanguage().sameAs(OWL_2));
-    Model m = ModelFactory.createDefaultModel()
-        .read(new ByteArrayInputStream(ckc.getStruct().asString().orElse("").getBytes()),
-            null,"TTL");
-    assertEquals(3,JenaUtil.sizeOf(m));
+    assertNull(ckc.getStruct());
   }
 
 

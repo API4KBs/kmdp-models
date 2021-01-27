@@ -20,7 +20,7 @@
       <inheritance:implements>org.omg.spec.api4kp._20200801.AbstractCarrier</inheritance:implements>
     </jxb:bindings>
     <jxb:bindings node="//xsd:complexType[@name='CompositeKnowledgeCarrier']">
-      <inheritance:implements>org.omg.spec.api4kp._20200801.ClosedComposite&lt;org.omg.spec.api4kp._20200801.services.KnowledgeCarrier, org.omg.spec.api4kp._20200801.services.KnowledgeCarrier, org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier&gt;</inheritance:implements>
+      <inheritance:implements>org.omg.spec.api4kp._20200801.AbstractCompositeCarrier</inheritance:implements>
     </jxb:bindings>
   </jxb:bindings>
 

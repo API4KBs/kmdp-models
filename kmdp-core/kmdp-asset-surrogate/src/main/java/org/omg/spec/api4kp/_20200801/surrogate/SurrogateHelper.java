@@ -15,17 +15,21 @@
  */
 package org.omg.spec.api4kp._20200801.surrogate;
 
-import static edu.mayo.kmdp.util.Util.toMap;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
-import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
+import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.inferStruct;
+import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformAggregate;
+import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformAnonymousComposite;
+import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformNamedComposite;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.randomId;
+import static org.omg.spec.api4kp._20200801.services.CompositeStructType.GRAPH;
+import static org.omg.spec.api4kp._20200801.services.CompositeStructType.SET;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Concrete_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structural_Component;
 
-import com.google.common.base.Functions;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.net.URI;
@@ -41,7 +45,6 @@ import javax.xml.validation.Schema;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.RDF;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
@@ -51,7 +54,6 @@ import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
-import org.omg.spec.api4kp._20200801.services.CompositeStructType;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
@@ -119,11 +121,11 @@ public class SurrogateHelper {
    * @param carrierId The ID of the Computable Artifact to retrieve
    * @param carrierVersionTag The version Tag of the Computable Artifact to retrieve
    * @param surr  The Surrogate of the Asset for which a Computable Manifestation is requested
-   * @return  The Computable Variant of the asset with the given ID and version, if present
+   * @return The Computable Variant of the asset with the given ID and version, if present
    */
   public static Optional<KnowledgeArtifact> getComputableCarrierMetadata(
       UUID carrierId, String carrierVersionTag, KnowledgeAsset surr) {
-    return getInnerArtifact(carrierId,carrierVersionTag,surr,KnowledgeAsset::getCarriers);
+    return getInnerArtifact(carrierId, carrierVersionTag, surr, KnowledgeAsset::getCarriers);
   }
 
   /**
@@ -132,17 +134,17 @@ public class SurrogateHelper {
    * @param surrogateId The ID of the Surrogate Metadata to retrieve
    * @param surrogateVersionTag The version Tag of the Surrogate Metadata to retrieve
    * @param surr  The Surrogate of the Asset for which a Computable Surrogate Metadata record is requested
-   * @return  The Surrogate Metadata with the given ID and version, if present
+   * @return The Surrogate Metadata with the given ID and version, if present
    */
   public static Optional<KnowledgeArtifact> getComputableSurrogateMetadata(
       UUID surrogateId, String surrogateVersionTag, KnowledgeAsset surr) {
-    return getInnerArtifact(surrogateId,surrogateVersionTag,surr,KnowledgeAsset::getSurrogate);
+    return getInnerArtifact(surrogateId, surrogateVersionTag, surr, KnowledgeAsset::getSurrogate);
   }
 
   private static Optional<KnowledgeArtifact> getInnerArtifact(
       UUID artifactId, String artifactVersionTag, KnowledgeAsset surr,
       Function<KnowledgeAsset, List<KnowledgeArtifact>> mapper) {
-    ResourceIdentifier aId = SurrogateBuilder.artifactId(artifactId,artifactVersionTag);
+    ResourceIdentifier aId = SurrogateBuilder.artifactId(artifactId, artifactVersionTag);
     return mapper.apply(surr).stream()
         .filter(a -> aId.sameAs(a.getArtifactId()))
         .findAny();
@@ -161,7 +163,8 @@ public class SurrogateHelper {
       KnowledgeRepresentationLanguage surrogateModel, SerializationFormat surrogateFormat) {
     return assetSurrogate.getSurrogate().stream()
         .filter(cka -> surrogateModel.sameAs(cka.getRepresentation().getLanguage())
-            && (surrogateFormat == null || surrogateFormat.sameAs(cka.getRepresentation().getFormat())))
+            && (surrogateFormat == null || surrogateFormat
+            .sameAs(cka.getRepresentation().getFormat())))
         .findFirst();
   }
 
@@ -179,6 +182,18 @@ public class SurrogateHelper {
   }
 
   /**
+   * Extracts the ID of the canonical surrogate, from the list of Surrogates registered in a
+   * canonical surrogate itself
+   *
+   * @param assetSurrogate The Surrogate to extract the Id from
+   * @return The id of the Surrogate it'self'
+   */
+  public static Optional<ResourceIdentifier> getCanonicalSurrogateId(
+      KnowledgeAsset assetSurrogate) {
+    return getSurrogateId(assetSurrogate, Knowledge_Asset_Surrogate_2_0, null);
+  }
+
+  /**
    * Updates the ID of a surrogate, from the list of Surrogates registered
    * in a canonical surrogate itself.
    *
@@ -192,110 +207,100 @@ public class SurrogateHelper {
       ResourceIdentifier newSurrogateId) {
     return assetSurrogate.getSurrogate().stream()
         .filter(cka -> surrogateModel.sameAs(cka.getRepresentation().getLanguage())
-            && (surrogateFormat == null || surrogateFormat.sameAs(cka.getRepresentation().getFormat())))
+            && (surrogateFormat == null || surrogateFormat
+            .sameAs(cka.getRepresentation().getFormat())))
         .findFirst()
         .map(cka -> cka.withArtifactId(newSurrogateId))
         .map(KnowledgeArtifact::getArtifactId)
         .orElse(null);
   }
 
-  /**
-   * Constructs a Composite Surrogate for a Composite Asset, instantiating a CompositeKnowledgeCarrier
-   * whose components are generic Asset Surrogates.
-   * All the Surrogates MUST have the same representation
-   *
-   * @param rootAssetId The root component (if the Struct is TREE-based, null otherwise)
-   * @param components The components, which must be Surrogates wrapped in KnowledgeCarriers
-   * @param structType The type of structure (supports SET and TREE)
-   * @return a CompositeKnowledgeCarrier with wrapped KnowledgeAsset components
-   */
-  public static CompositeKnowledgeCarrier toCompositeSurrogate(
-      ResourceIdentifier rootAssetId,
-      Collection<KnowledgeCarrier> components,
-      CompositeStructType structType,
-      KnowledgeCarrier struct) {
-    SyntacticRepresentation commonRepresentation =
-        components.iterator().next().getRepresentation();
-    switch (structType) {
-      case SET:
-        return AbstractCarrier.ofIdentifiableSet(
-            commonRepresentation,
-            KnowledgeCarrier::getAssetId,
-            KnowledgeCarrier::getArtifactId,
-            KnowledgeCarrier::getLabel,
-            components
-        );
-      case TREE:
-        return AbstractCarrier.ofIdentifiableTree(
-            commonRepresentation,
-            KnowledgeCarrier::getAssetId,
-            KnowledgeCarrier::getArtifactId,
-            KnowledgeCarrier::getLabel,
-            struct,
-            rootAssetId,
-            toMap(components, KnowledgeCarrier::getAssetId)
-        ).withRootId(rootAssetId);
-      case GRAPH:
-        return AbstractCarrier.ofIdentifiableGraph(
-            commonRepresentation,
-            KnowledgeCarrier::getAssetId,
-            KnowledgeCarrier::getArtifactId,
-            KnowledgeCarrier::getLabel,
-            struct,
-            rootAssetId,
-            toMap(components, KnowledgeCarrier::getAssetId)
-        ).withRootId(rootAssetId);
-      default:
-        throw new UnsupportedOperationException();
-    }
+  //Set
+  public static CompositeKnowledgeCarrier toAnonymousCompositeAsset(
+      Collection<KnowledgeAsset> components) {
+    return toAnonymousCompositeAsset(null, components);
   }
 
-
-
   /**
-   * Constructs a Composite Surrogate for a Composite Asset, instantiating a CompositeKnowledgeCarrier
-   * whose components are canonical Asset Surrogates
+   * Constructs a Composite Surrogate for an 'anonymous' Composite Asset,
+   * instantiating a CompositeKnowledgeCarrier whose components are canonical Asset Surrogates
+   *
+   * Anonymous assets have a random asset id
    *
    * @param rootAssetId The root component (if the Struct is TREE-based, null otherwise)
    * @param components The components, which must be KnowledgeAsset surrogates
-   * @param structType The type of structure (supports SET and TREE)
    * @return a CompositeKnowledgeCarrier with wrapped KnowledgeAsset components
    */
-  public static CompositeKnowledgeCarrier toCompositeAsset(
+  public static CompositeKnowledgeCarrier toAnonymousCompositeAsset(
       ResourceIdentifier rootAssetId,
-      Collection<KnowledgeAsset> components,
-      CompositeStructType structType) {
-
-    switch (structType) {
-      case SET:
-        return AbstractCarrier.ofIdentifiableSet(
-            rep(Knowledge_Asset_Surrogate_2_0),
-            KnowledgeAsset::getAssetId,
-            ka -> SurrogateHelper.getSurrogateId(ka, Knowledge_Asset_Surrogate_2_0, JSON)
-                .orElseGet(SurrogateBuilder::randomArtifactId),
-            KnowledgeAsset::getName,
-            components
-        );
-      case TREE:
-        return AbstractCarrier.ofIdentifiableTree(
-            rep(Knowledge_Asset_Surrogate_2_0),
-            KnowledgeAsset::getAssetId,
-            ka -> SurrogateHelper.getSurrogateId(ka, Knowledge_Asset_Surrogate_2_0, JSON)
-                .orElseGet(SurrogateBuilder::randomArtifactId),
-            KnowledgeAsset::getName,
-            KnowledgeAsset::getLinks,
+      Collection<KnowledgeAsset> components) {
+    return ofUniformAnonymousComposite(
+        rootAssetId,
+        components,
+        rep(Knowledge_Asset_Surrogate_2_0),
+        inferStruct(
+            randomId(),
             rootAssetId,
-            components.stream().collect(
-                Collectors.toMap(
-                    KnowledgeAsset::getAssetId,
-                    Functions.identity()
-                )
-            )
-        ).withRootId(rootAssetId);
-      case GRAPH:
-      default:
-        throw new UnsupportedOperationException();
-    }
+            randomId(),
+            KnowledgeAsset::getLinks,
+            KnowledgeAsset::getAssetId,
+            components),
+        GRAPH,
+        KnowledgeAsset::getAssetId,
+        ka -> getCanonicalSurrogateId(ka).orElse(null),
+        KnowledgeAsset::getName
+    );
+  }
+
+  /**
+   * Constructs a Composite Surrogate for an 'named' Composite Asset,
+   * instantiating a CompositeKnowledgeCarrier whose components are canonical Asset Surrogates
+   *
+   * Named assets have a known, managed asset id and version
+   *
+   * @param compositeAssetId The Asset Id
+   * @param components The components, which must be KnowledgeAsset surrogates
+   * @return a CompositeKnowledgeCarrier with wrapped KnowledgeAsset components
+   */
+  public static CompositeKnowledgeCarrier toNamedCompositeAsset(
+      ResourceIdentifier compositeAssetId,
+      Collection<KnowledgeAsset> components) {
+    return ofUniformNamedComposite(
+        compositeAssetId,
+        null,
+        compositeAssetId,
+        "",
+        GRAPH,
+        inferStruct(
+            compositeAssetId,
+            null,
+            randomId(),
+            KnowledgeAsset::getLinks,
+            KnowledgeAsset::getAssetId,
+            components),
+        components,
+        rep(Knowledge_Asset_Surrogate_2_0),
+        KnowledgeAsset::getAssetId,
+        ka -> getCanonicalSurrogateId(ka).orElse(null),
+        KnowledgeAsset::getName
+    );
+  }
+
+  /**
+   * Constructs an Aggregate of otherwise possibly unrelated Surrogates
+   *
+   * @param components The components, which must be KnowledgeAsset surrogates
+   * @return a CompositeKnowledgeCarrier with wrapped KnowledgeAsset components
+   */
+  public static CompositeKnowledgeCarrier toAggregateAsset(
+      Collection<KnowledgeAsset> components) {
+    return ofUniformAggregate(
+        components,
+        rep(Knowledge_Asset_Surrogate_2_0),
+        KnowledgeAsset::getAssetId,
+        ka -> getCanonicalSurrogateId(ka).orElse(null),
+        KnowledgeAsset::getName
+    );
   }
 
   /** Filter utility method that, given a KnowledgeAsset Surrogate,
@@ -307,12 +312,13 @@ public class SurrogateHelper {
    * @return a Stream of the (IDs of the) related Assets
    */
   public static Stream<SemanticIdentifier> links(
-      KnowledgeAsset surr, Class<? extends Link> relClass, ConceptTerm relType ) {
+      KnowledgeAsset surr, Class<? extends Link> relClass, ConceptTerm relType) {
     return surr.getLinks().stream()
         .flatMap(StreamUtil.filterAs(relClass))
         .filter(rel -> relType == null
             || relType.sameTermAs(rel.getRel())
-            || (rel.getRel() instanceof ConceptTerm && ((ConceptTerm) rel.getRel()).hasAncestor(relType))
+            || (rel.getRel() instanceof ConceptTerm && ((ConceptTerm) rel.getRel())
+            .hasAncestor(relType))
         )
         .map(Link::getHref);
   }
@@ -340,7 +346,8 @@ public class SurrogateHelper {
         .withExpression(inlined)
         .withLabel(surrogate.getName())
         .withLevel(inlined != null ? Concrete_Knowledge_Expression : Knowledge_Expression)
-        .withRepresentation(canonicalArtifact.map(KnowledgeArtifact::getRepresentation).orElse(null))
+        .withRepresentation(
+            canonicalArtifact.map(KnowledgeArtifact::getRepresentation).orElse(null))
         .withHref(canonicalArtifact.map(KnowledgeArtifact::getLocator).orElse(null));
   }
 
@@ -359,7 +366,7 @@ public class SurrogateHelper {
    */
   public static KnowledgeCarrier carry(KnowledgeAsset surrogate) {
     Optional<KnowledgeArtifact> canonicalSurrogate
-        = SurrogateHelper.getSurrogateMetadata(surrogate,Knowledge_Asset_Surrogate_2_0,null);
+        = SurrogateHelper.getSurrogateMetadata(surrogate, Knowledge_Asset_Surrogate_2_0, null);
 
     return AbstractCarrier.ofAst(surrogate)
         .withAssetId(surrogate.getAssetId())
@@ -436,7 +443,9 @@ public class SurrogateHelper {
    * @param role
    * @return
    */
-  public static Optional<ResourceIdentifier> getComponent(KnowledgeAsset surrogate, Model struct, Term role) {
+  public static Optional<ResourceIdentifier> getComponent(KnowledgeAsset surrogate, Model struct,
+      Term role) {
     return getComponents(surrogate, struct, role).findFirst();
   }
+
 }

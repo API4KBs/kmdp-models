@@ -48,6 +48,8 @@ public class Registry {
   public static final String BASE_UUID_URN = "urn:uuid:";
   public static final URI BASE_UUID_URN_URI = URI.create(BASE_UUID_URN);
 
+  public static final String KNOWLEDGE_ASSET_URI = "https://www.omg.org/spec/API4KP/api4kp/KnowledgeAsset";
+
   private static CatalogResolver xcat;
 
   private static Logger logger = LoggerFactory.getLogger(Registry.class);

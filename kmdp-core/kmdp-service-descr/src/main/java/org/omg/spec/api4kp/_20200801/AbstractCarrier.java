@@ -15,52 +15,30 @@
  */
 package org.omg.spec.api4kp._20200801;
 
-import static org.omg.spec.api4kp._20200801.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
-import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
-import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.hashIdentifiers;
-import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.randomId;
-import static org.omg.spec.api4kp._20200801.services.CompositeStructType.GRAPH;
-import static org.omg.spec.api4kp._20200801.services.CompositeStructType.NONE;
-import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
-import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Abstract_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Concrete_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Serialized_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.asEnum;
-import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structural_Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JSonUtil;
-import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.kmdp.util.StreamUtil;
-import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.jena.rdf.model.Statement;
-import org.omg.spec.api4kp._20200801.contrastors.ParsingLevelContrastor;
 import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
-import org.omg.spec.api4kp._20200801.id.Link;
-import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
-import org.omg.spec.api4kp._20200801.services.CompositeStructType;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder;
@@ -198,382 +176,7 @@ public interface AbstractCarrier {
     }
   }
 
-  /**
-   * Creates a Composite Knowledge Carrier from a set of "homogeneous" Knowledge Artifacts
-   * that share the same representation, with a set-oriented structure - i.e. a structure.
-   * where each one of the artifacts is a member with no explicit order or function.
-   *
-   * Assigns random asset and artifact IDs in the process
-   *
-   * @param rep The common representation
-   * @param artifacts The artifacts to be aggregated into the composite
-   * @param <T> The common type of the artifacts
-   * @return A set-oriented Composite Knowledge Carrier
-   */
-  static <T> CompositeKnowledgeCarrier ofSet(SyntacticRepresentation rep, Collection<T> artifacts) {
-    return ofIdentifiableSet(rep,
-        x -> randomId(),
-        x -> randomId(),
-        x -> null,
-        artifacts);
-  }
-
-  static CompositeKnowledgeCarrier ofIdentifiableSet(
-      Collection<KnowledgeCarrier> components) {
-
-    List<Object> expressions = new ArrayList<>();
-    Map<Object,ResourceIdentifier> assetIds = new IdentityHashMap<>();
-    Map<Object,ResourceIdentifier> artifactIds = new IdentityHashMap<>();
-    Map<Object,String> labels = new IdentityHashMap<>();
-    SyntacticRepresentation rep = components.isEmpty() ? null : components.iterator().next().getRepresentation();
-
-    components.forEach(comp -> {
-      Object expr = comp.getExpression();
-      expressions.add(expr);
-      assetIds.put(expr,comp.getAssetId());
-      artifactIds.put(expr,comp.getArtifactId());
-      labels.put(expr,comp.getLabel());
-    });
-
-    return ofIdentifiableSet(rep, assetIds::get, artifactIds::get, labels::get, expressions);
-  }
-
-  /**
-   * Creates a Composite Knowledge Carrier from a set of "homogeneous" Knowledge Artifacts
-   * that share the same representation, with a set-oriented structure - i.e. a structure.
-   * where each one of the artifacts is a member with no explicit order or function.
-   *
-   * @param rep The common representation
-   * @param artifacts The artifacts to be aggregated into the composite
-   * @param assetIdentificator A function that allows to extract an (asset) ID from each of the artifacts
-   * @param artifactIdentificator A function that allows to extract an (artifact) ID from each of the artifacts
-   * @param <T> The common type of the artifacts
-   * @return A set-oriented Composite Knowledge Carrier
-   */
-  static <T> CompositeKnowledgeCarrier ofIdentifiableSet(
-      SyntacticRepresentation rep,
-      Function<T, ResourceIdentifier> assetIdentificator,
-      Function<T, ResourceIdentifier> artifactIdentificator,
-      Function<T, String> assetLabeler,
-      Collection<T> artifacts) {
-    CompositeKnowledgeCarrier ckc =
-        new CompositeKnowledgeCarrier().withStructType(CompositeStructType.SET);
-    ParsingLevel level = ParsingLevelContrastor.detectLevel(rep);
-    ckc.withRepresentation(rep);
-    ckc.withLevel(level);
-
-    // wrap the components into KnowledgeCarriers
-    wrapComponents(rep, artifacts, level, assetIdentificator, artifactIdentificator, assetLabeler)
-        .forEach(ckc.getComponent()::add);
-
-    // hash the (versioned) IDs of the components into an asset Id for the composite
-    ckc.withAssetId(
-        hashComponentIds(artifacts, assetIdentificator));
-
-    // create a Struct in RDF
-    List<Statement> structs =
-        artifacts.stream()
-            .map(assetIdentificator)
-            .map(
-                id ->
-                    JenaUtil.objA(
-                        ckc.getAssetId().getVersionId().toString(),
-                        Has_Structural_Component.getReferentId().toString(),
-                        id.getVersionId().toString()))
-            .collect(Collectors.toList());
-    ckc.withStruct(
-        of(JenaUtil.fromStatementsToString(structs))
-            .withAssetId(ckc.getAssetId())
-            .withArtifactId(randomId())
-            .withRepresentation(rep(OWL_2, Turtle, TXT)));
-
-    return ckc;
-  }
-
-  /**
-   * Creates a Composite Knowledge Carrier from a set of "homogeneous" Knowledge Artifacts
-   * that share the same representation, with a graph structure.
-   *
-   * @param rep The common representation
-   * @param artifacts The artifacts to be aggregated into the composite
-   * @param assetIdentificator A function that allows to extract an (asset) ID from each of the artifacts
-   * @param artifactidentificator A function that allows to extract an (artifact) ID from each of the artifacts
-   * @param struct The graph structure
-   * @param <T> The common type of the artifacts
-   * @return A set-oriented Composite Knowledge Carrier
-   */
-  static <T> CompositeKnowledgeCarrier ofIdentifiableGraph(
-      SyntacticRepresentation rep,
-      Function<T, ResourceIdentifier> assetIdentificator,
-      Function<T, ResourceIdentifier> artifactidentificator,
-      Function<T, String> assetLabeler,
-      KnowledgeCarrier struct,
-      ResourceIdentifier rootId,
-      Map<SemanticIdentifier, T> artifacts) {
-    CompositeKnowledgeCarrier ckc =
-        new CompositeKnowledgeCarrier().withStructType(CompositeStructType.TREE);
-    ParsingLevel level = ParsingLevelContrastor.detectLevel(rep);
-    ckc.withRepresentation(rep);
-    ckc.withLevel(level);
-
-    // wrap the components into KnowledgeCarriers
-    wrapComponents(rep, artifacts.values(), level, assetIdentificator, artifactidentificator, assetLabeler)
-        .forEach(ckc.getComponent()::add);
-
-    // hash the (versioned) IDs of the components into an asset Id for the composite
-    ckc.withAssetId(
-        hashComponentIds(artifacts.values(), assetIdentificator));
-
-    ckc.withStruct(struct);
-    // Set root ID
-    ckc.setRootId(rootId);
-
-    return ckc;
-  }
-
-
-  /**
-   * Creates a named Composite Knowledge Carrier from a set of "homogeneous" Knowledge Artifacts
-   * that share the same representation, with a graph structure.
-   *
-   * @param artifacts The artifacts to be aggregated into the composite
-   * @param assetId The Asset ID of the composite
-   * @param rootId The Asset ID of the root element in the graph (usually coincides with Asset ID)
-   * @param struct The graph structure
-   * @param label A human readable name assigned to the label
-   * @return A set-oriented Composite Knowledge Carrier
-   */
-  static CompositeKnowledgeCarrier ofIdentifiableGraphCarriers(
-      ResourceIdentifier assetId,
-      ResourceIdentifier rootId,
-      String label,
-      KnowledgeCarrier struct,
-      Collection<KnowledgeCarrier> artifacts) {
-    return ofHomogeneousAnonymousComposite(artifacts, GRAPH)
-        .withAssetId(assetId)
-        .withRootId(rootId)
-        .withLabel(label)
-        .withStruct(struct);
-  }
-
-  /**
-   * Creates a Composite Knowledge Carrier from a set of "homogeneous" Knowledge Artifacts
-   * that share the same representation, with a tree structure.
-   *
-   * @param rep The common representation
-   * @param artifacts The artifacts to be aggregated into the composite
-   * @param assetIdentificator A function that allows to extract an (asset) ID from each of the artifacts
-   * @param artifactidentificator A function that allows to extract an (artifact) ID from each of the artifacts
-   * @param <T> The common type of the artifacts
-   * @return A set-oriented Composite Knowledge Carrier
-   */
-  static <T> CompositeKnowledgeCarrier ofIdentifiableTree(
-      SyntacticRepresentation rep,
-      Function<T, ResourceIdentifier> assetIdentificator,
-      Function<T, ResourceIdentifier> artifactidentificator,
-      Function<T, String> assetLabeler,
-      KnowledgeCarrier struct,
-      ResourceIdentifier rootId,
-      Map<SemanticIdentifier, T> artifacts) {
-    CompositeKnowledgeCarrier ckc =
-        new CompositeKnowledgeCarrier().withStructType(CompositeStructType.TREE);
-    ParsingLevel level = ParsingLevelContrastor.detectLevel(rep);
-    ckc.withRepresentation(rep);
-    ckc.withLevel(level);
-
-    // wrap the components into KnowledgeCarriers
-    wrapComponents(rep, artifacts.values(), level, assetIdentificator, artifactidentificator, assetLabeler)
-        .forEach(ckc.getComponent()::add);
-
-    // hash the (versioned) IDs of the components into an asset Id for the composite
-    ckc.withAssetId(
-        hashComponentIds(artifacts.values(), assetIdentificator));
-
-    ckc.withStruct(struct);
-    // Set root ID
-    ckc.setRootId(rootId);
-
-    return ckc;
-  }
-
-  /**
-   * Creates a Composite Knowledge Carrier from a set of "homogeneous" Knowledge Artifacts
-   * that share the same representation, with a tree structure.
-   *
-   * @param rep The common representation
-   * @param artifacts The artifacts to be aggregated into the composite
-   * @param assetIdentificator A function that allows to extract an (asset) ID from each of the artifacts
-   * @param artifactidentificator A function that allows to extract an (artifact) ID from each of the artifacts
-   * @param <T> The common type of the artifacts
-   * @return A set-oriented Composite Knowledge Carrier
-   */
-  static <T> CompositeKnowledgeCarrier ofIdentifiableTree(
-      SyntacticRepresentation rep,
-      Function<T, ResourceIdentifier> assetIdentificator,
-      Function<T, ResourceIdentifier> artifactidentificator,
-      Function<T, String> assetLabeler,
-      Function<T, Collection<? extends Link>> visitor,
-      ResourceIdentifier rootId,
-      Map<SemanticIdentifier, T> artifacts) {
-
-    ResourceIdentifier assetId = hashComponentIds(artifacts.values(), assetIdentificator);
-
-    // create a Struct for Structural Components
-    List<Statement> structs =
-        artifacts.keySet().stream()
-            .map(
-                component ->
-                    JenaUtil.objA(
-                        assetId.getVersionId().toString(),
-                        Has_Structural_Component.getReferentId().toString(),
-                        component.getVersionId().toString()))
-            .collect(Collectors.toList());
-
-    // Add Struct for relationships between Components
-    visitor.apply(artifacts.get(rootId))
-        .forEach(
-            childLink -> {
-              URI rel = childLink.getRel().getReferentId();
-              URI versionId = childLink.getHrefVersionURI();
-              structs.add(
-                  JenaUtil.objA(
-                      rootId.getVersionId().toString(), rel.toString(), versionId.toString()));
-            });
-    // Create String and set Struct
-    String structString = JenaUtil.fromStatementsToString(structs);
-    KnowledgeCarrier struct =
-        of(structString)
-            .withAssetId(assetId)
-            .withArtifactId(randomId())
-            .withRepresentation(rep(OWL_2, Turtle, TXT));
-
-    return ofIdentifiableTree(rep, assetIdentificator, artifactidentificator,
-        assetLabeler, struct, rootId, artifacts);
-  }
-
-  static <T> Stream<KnowledgeCarrier> wrapComponents(
-      SyntacticRepresentation rep,
-      Collection<T> artifacts,
-      ParsingLevel level,
-      Function<T, ResourceIdentifier> assetIdentificator,
-      Function<T, ResourceIdentifier> artifactIdentificator,
-      Function<T, String> assetLabeler) {
-
-    return artifacts.stream()
-        .map(x -> x instanceof KnowledgeCarrier
-            ? (KnowledgeCarrier) x
-            : of(x, level)
-                .withRepresentation(rep)
-                .withAssetId(assetIdentificator.apply(x))
-                .withArtifactId(artifactIdentificator.apply(x))
-                .withLabel(assetLabeler.apply(x)));
-  }
-
-
-  static <T> ResourceIdentifier hashComponentIds(
-      Collection<T> artifacts,
-      Function<T, ResourceIdentifier> assetIdentificator) {
-    return
-        artifacts.stream()
-            .map(assetIdentificator)
-            .reduce(SemanticIdentifier::hashIdentifiers)
-            .map(
-                compsId ->
-                    hashIdentifiers(
-                        compsId, newId(Util.uuid(CompositeStructType.TREE), VERSION_LATEST)))
-            .orElseThrow(IllegalArgumentException::new);
-  }
-
-
-  /**
-   * Creates an Anonymous Composite Knowledge Carrier from a set of "homogeneous" Knowledge Artifacts
-   * that share the same representation
-   *
-   * @param rep The common representation
-   * @param artifacts The artifacts to be aggregated into the composite
-   * @param assetIdentificator A function that allows to extract an (asset) ID from each of the artifacts
-   * @param assetIdentificator A function that allows to extract an (artifact) ID from each of the artifacts
-   * @param <T> The common type of the artifacts
-   * @return An Anonymous Composite Knowledge Carrier
-   */
-  static <T> CompositeKnowledgeCarrier ofAnonymousComposite(
-      SyntacticRepresentation rep,
-      Function<T, ResourceIdentifier> assetIdentificator,
-      Function<T, ResourceIdentifier> artifactidentificator,
-      Collection<T> artifacts) {
-    CompositeKnowledgeCarrier ckc = new CompositeKnowledgeCarrier();
-    ParsingLevel level = ParsingLevelContrastor.detectLevel(rep);
-
-    // wrap the components into KnowledgeCarriers
-    artifacts.stream()
-        .map(x -> of(x,level)
-            .withRepresentation(rep)
-            .withAssetId(assetIdentificator.apply(x))
-            .withArtifactId(artifactidentificator.apply(x)))
-        .forEach(ckc.getComponent()::add);
-
-    ckc.withAssetId(randomId());
-    ckc.withRepresentation(rep);
-    ckc.withLevel(level);
-    ckc.withStructType(NONE);
-    // struct and type are left 'null' - may need to revisit this decision
-    return ckc;
-  }
-
-  /**
-   * Creates an Anonymous Composite Knowledge Carrier from a set of "homogeneous"
-   * Knowledge Artifacts, i.e. Artifacts that share the same representation
-   *
-   * @param artifacts The artifacts to be aggregated into the composite
-   * @return An Anonymous Composite Knowledge Carrier
-   */
-  static CompositeKnowledgeCarrier ofHomogeneousAnonymousComposite(
-      Collection<KnowledgeCarrier> artifacts, CompositeStructType structType) {
-    CompositeKnowledgeCarrier ckc = new CompositeKnowledgeCarrier()
-        .withComponent(artifacts);
-
-    if (! artifacts.isEmpty()) {
-      KnowledgeCarrier kc = artifacts.iterator().next();
-      SyntacticRepresentation rep = kc.getRepresentation();
-      ParsingLevel level = ParsingLevelContrastor.detectLevel(rep);
-
-      boolean consistent = artifacts.stream().map(KnowledgeCarrier::getRepresentation)
-          .allMatch(x -> theRepContrastor.isEqual(x,rep));
-      if (! consistent) {
-        throw new IllegalArgumentException();
-      }
-
-      ckc.withLevel(level);
-      ckc.withRepresentation(rep);
-    }
-
-    ckc.withAssetId(randomId());
-    ckc.withArtifactId(randomId());
-    ckc.withStructType(structType);
-    return ckc;
-  }
-
-  /**
-   * Creates an Anonymous Composite Knowledge Carrier from a set of "heterogeneous"
-   * Knowledge Artifacts
-   *
-   * @param artifacts The artifacts to be aggregated into the composite
-   * @return An Anonymous Composite Knowledge Carrier
-   */
-  static CompositeKnowledgeCarrier ofHeterogeneousComposite(
-      Collection<KnowledgeCarrier> artifacts) {
-    CompositeKnowledgeCarrier ckc = new CompositeKnowledgeCarrier()
-        .withComponent(artifacts);
-
-    // hash the (versioned) IDs of the components into an asset Id for the composite
-    ckc.withAssetId(randomId());
-    ckc.withArtifactId(randomId());
-    ckc.withStructType(NONE);
-    return ckc;
-  }
-
-
-  default KnowledgeCarrier mainComponent() {
+  default Optional<KnowledgeCarrier> tryMainComponent() {
     if (this instanceof CompositeKnowledgeCarrier) {
       CompositeKnowledgeCarrier ckc = (CompositeKnowledgeCarrier) this;
       if (ckc.getRootId() != null) {
@@ -581,17 +184,28 @@ public interface AbstractCarrier {
         return ckc.getComponent().stream()
             .filter(kc -> kc.getAssetId() != null)
             .filter(kc -> kc.getAssetId().asKey().equals(key))
-            .findFirst()
-            .orElseThrow(IllegalStateException::new);
+            .findFirst();
+      } else {
+        return Optional.empty();
       }
     }
-    return (KnowledgeCarrier) this;
+    return Optional.of((KnowledgeCarrier) this);
+  }
+
+  default KnowledgeCarrier mainComponent() {
+    return tryMainComponent()
+        .orElseThrow(IllegalStateException::new);
   }
 
   default <T> T mainComponentAs(Class<T> klass) {
     return mainComponent()
         .as(klass)
         .orElseThrow(IllegalStateException::new);
+  }
+
+  default <T> Optional<T> tryMainComponentAs(Class<T> klass) {
+    return tryMainComponent()
+        .flatMap(kc -> kc.as(klass));
   }
 
   default <T> Stream<T> componentsAs(Class<T> klass) {
