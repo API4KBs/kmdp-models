@@ -25,6 +25,7 @@ import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformNa
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.randomId;
 import static org.omg.spec.api4kp._20200801.services.CompositeStructType.GRAPH;
 import static org.omg.spec.api4kp._20200801.services.CompositeStructType.SET;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.artifactId;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Concrete_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Knowledge_Expression;
@@ -144,7 +145,7 @@ public class SurrogateHelper {
   private static Optional<KnowledgeArtifact> getInnerArtifact(
       UUID artifactId, String artifactVersionTag, KnowledgeAsset surr,
       Function<KnowledgeAsset, List<KnowledgeArtifact>> mapper) {
-    ResourceIdentifier aId = SurrogateBuilder.artifactId(artifactId, artifactVersionTag);
+    ResourceIdentifier aId = artifactId(surr.getAssetId().getNamespaceUri(),artifactId, artifactVersionTag);
     return mapper.apply(surr).stream()
         .filter(a -> aId.sameAs(a.getArtifactId()))
         .findAny();

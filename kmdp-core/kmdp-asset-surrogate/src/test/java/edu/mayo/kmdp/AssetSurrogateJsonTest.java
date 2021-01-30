@@ -16,12 +16,12 @@ package edu.mayo.kmdp;
 import static edu.mayo.kmdp.util.Util.uuid;
 import static edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries.Cites;
 import static edu.mayo.ontology.taxonomies.kmdo.citationreltype.BibliographicCitationTypeSeries.Cites_As_Authority;
-import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.artifactId;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
 import static org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries.Is_Adaptation_Of;
 import static org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries.Is_Derived_From;
@@ -38,6 +38,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresen
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_1_XML_Syntax;
 import static org.omg.spec.api4kp._20200801.taxonomy.languagerole.KnowledgeRepresentationLanguageRoleSeries.Schema_Language;
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.SNOMED_CT;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
 import static org.omg.spec.api4kp._20200801.taxonomy.relatedversiontype.RelatedVersionTypeSeries.Has_Previous_Version;
 import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structural_Component;
 import static org.omg.spec.api4kp._20200801.taxonomy.summaryreltype.SummarizationTypeSeries.Summarizes;
@@ -49,8 +50,11 @@ import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnot
 import java.net.URI;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.surrogate.Annotation;
+import org.omg.spec.api4kp._20200801.surrogate.Applicability;
 import org.omg.spec.api4kp._20200801.surrogate.Citation;
 import org.omg.spec.api4kp._20200801.surrogate.Component;
 import org.omg.spec.api4kp._20200801.surrogate.Dependency;
@@ -59,11 +63,8 @@ import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
 import org.omg.spec.api4kp._20200801.surrogate.Summary;
-import org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder;
 import org.omg.spec.api4kp._20200801.surrogate.Variant;
 import org.omg.spec.api4kp._20200801.surrogate.Version;
-import org.omg.spec.api4kp._20200801.surrogate.Annotation;
-import org.omg.spec.api4kp._20200801.surrogate.Applicability;
 import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 
 
@@ -172,9 +173,10 @@ public class AssetSurrogateJsonTest {
 
   @Test
   void testSerialization() {
+    ResourceIdentifier assetId = newId(URI.create("http://foo.bar"), "234");
     KnowledgeAsset ks = new KnowledgeAsset()
 
-        .withAssetId(newId("http://foo.bar", "234"))
+        .withAssetId(assetId)
 
         .withFormalCategory(Rules_Policies_And_Guidelines.getLatest())
 
@@ -186,7 +188,7 @@ public class AssetSurrogateJsonTest {
 
         .withLinks(new Derivative()
                 .withRel(Is_Revision_Of)
-                .withHref(SurrogateBuilder.artifactId(uuid("234"), "0.0.0")),
+                .withHref(artifactId(assetId.getNamespaceUri(),uuid("234"), "0.0.0")),
             new Derivative()
                 .withRel(Is_Derived_From)
                 .withHref(newId("http://foo.bar/234")))

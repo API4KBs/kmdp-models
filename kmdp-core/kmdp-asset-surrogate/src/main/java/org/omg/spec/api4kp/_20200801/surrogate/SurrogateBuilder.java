@@ -13,6 +13,8 @@
  */
 package org.omg.spec.api4kp._20200801.surrogate;
 
+import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
+import static edu.mayo.kmdp.registry.Registry.mapAssetToArtifactNamespace;
 import static edu.mayo.kmdp.util.Util.ensureUUID;
 import static edu.mayo.kmdp.util.Util.uuid;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
@@ -47,7 +49,6 @@ import static org.omg.spec.api4kp._20200801.taxonomy.languagerole.KnowledgeRepre
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.SKOS;
 import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structuring_Component;
 
-import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -71,8 +72,14 @@ public class SurrogateBuilder {
 
   private KnowledgeAsset surrogate;
 
+  private URI assetNamespace;
+
+  private URI artifactNamespace;
+
   protected SurrogateBuilder(ResourceIdentifier assetId, boolean root) {
-    surrogate = newInstance(root)
+    this.assetNamespace = assetId.getNamespaceUri();
+    this.artifactNamespace = mapAssetToArtifactNamespace(assetNamespace);
+    this.surrogate = newInstance(root)
         .withAssetId(assetId);
   }
 
@@ -80,8 +87,17 @@ public class SurrogateBuilder {
     return root ? new org.omg.spec.api4kp._20200801.surrogate.resources.KnowledgeAsset() : new KnowledgeAsset();
   }
 
+  public static SurrogateBuilder newRandomSurrogate() {
+    return newSurrogate(randomAssetId(), true);
+  }
+
+  public static SurrogateBuilder newSurrogate(UUID id) {
+    return newSurrogate(
+        assetId(BASE_UUID_URN_URI, id, VERSION_ZERO));
+  }
+
   public static SurrogateBuilder newSurrogate(ResourceIdentifier assetId) {
-    return newSurrogate(assetId, true);
+    return newSurrogate(assetId,true);
   }
 
   public static SurrogateBuilder newSurrogate(ResourceIdentifier assetId, boolean root) {
@@ -94,6 +110,7 @@ public class SurrogateBuilder {
         .withSurrogate(
             new KnowledgeArtifact()
                 .withArtifactId(artifactId(
+                    artifactNamespace,
                     defaultSurrogateUUID(assetId, Knowledge_Asset_Surrogate_2_0),
                     "1.0.0"
                 ))
@@ -269,7 +286,10 @@ public class SurrogateBuilder {
     if (get().getCarriers().isEmpty()) {
       get().withCarriers(new KnowledgeArtifact()
           .withArtifactId(
-              artifactId(expr != null ? uuid(expr) : UUID.randomUUID(),VERSION_LATEST))
+              artifactId(
+                  artifactNamespace,
+                  expr != null ? uuid(expr) : UUID.randomUUID(),
+                  VERSION_LATEST))
           .withRepresentation(
               rep(FHIRPath_STU1,TXT,Charset.defaultCharset())
               .withSubLanguage(rep(schemaLanguage).withRole(Schema_Language)))
@@ -378,52 +398,110 @@ public class SurrogateBuilder {
     return UUID.nameUUIDFromBytes(key.getBytes());
   }
 
-  public static ResourceIdentifier assetId(UUID assetId) {
-    return SemanticIdentifier.newId(Registry.MAYO_ASSETS_BASE_URI_URI, assetId);
+  public static ResourceIdentifier assetId(URI baseNamespace, UUID assetId) {
+    return SemanticIdentifier.newId(baseNamespace, assetId);
   }
 
-  public static ResourceIdentifier assetId(String uuid, String versionTag) {
-    return assetId(ensureUUID(uuid).orElseThrow(), versionTag);
+  public static ResourceIdentifier assetId(URI baseNamespace, String uuid, String versionTag) {
+    return assetId(baseNamespace, ensureUUID(uuid).orElseThrow(), versionTag);
   }
 
-  public static ResourceIdentifier assetId(UUID uuid, String versionTag) {
+  public static ResourceIdentifier assetId(URI baseNamespace, UUID uuid, String versionTag) {
     return SemanticIdentifier.newId(
-        Registry.MAYO_ASSETS_BASE_URI_URI,
+        baseNamespace,
         uuid,
         VersionIdentifier.toSemVer(versionTag));
   }
 
   public static ResourceIdentifier randomAssetId() {
-    return assetId(UUID.randomUUID(),VERSION_ZERO);
+    return assetId(BASE_UUID_URN_URI, UUID.randomUUID(), VERSION_ZERO);
   }
 
   public static ResourceIdentifier randomAssetId(URI baseNamespace) {
-    return SemanticIdentifier.newId(baseNamespace,UUID.randomUUID(),VERSION_ZERO);
+    return SemanticIdentifier.newId(baseNamespace, UUID.randomUUID(), VERSION_ZERO);
   }
 
   public static ResourceIdentifier defaultArtifactId(
-      ResourceIdentifier assetId, KnowledgeRepresentationLanguage lang) {
-    return artifactId(defaultCarrierUUID(assetId, lang), VERSION_ZERO);
+      ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang) {
+    return defaultArtifactId(
+        mapAssetToArtifactNamespace(assetId.getNamespaceUri()),
+        assetId,
+        lang);
+  }
+  public static ResourceIdentifier defaultArtifactId(
+      URI baseArtifactNamespace,
+      ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang) {
+    return artifactId(baseArtifactNamespace, defaultCarrierUUID(assetId, lang), VERSION_ZERO);
   }
 
   public static ResourceIdentifier defaultArtifactId(
-      ResourceIdentifier assetId, KnowledgeRepresentationLanguage lang, String versionTag) {
-    return artifactId(defaultCarrierUUID(assetId, lang), versionTag);
+      ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang,
+      String versionTag) {
+    return defaultArtifactId(
+        mapAssetToArtifactNamespace(assetId.getNamespaceUri()),
+        assetId,
+        lang);
   }
 
-  public static ResourceIdentifier artifactId(String uuid, String versionTag) {
-    return artifactId(ensureUUID(uuid).orElseThrow(), versionTag);
+  public static ResourceIdentifier defaultArtifactId(
+      URI baseArtifactNamespace,
+      ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang,
+      String versionTag) {
+    return artifactId(baseArtifactNamespace, defaultCarrierUUID(assetId, lang), versionTag);
   }
 
-  public static ResourceIdentifier artifactId(UUID uuid, String versionTag) {
+  public static ResourceIdentifier defaultSurrogateId(
+      URI baseArtifactNamespace,
+      ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang) {
+    return artifactId(baseArtifactNamespace, defaultCarrierUUID(assetId, lang), VERSION_ZERO);
+  }
+
+  public static ResourceIdentifier defaultSurrogateId(
+      ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang) {
+    return defaultSurrogateId(
+        mapAssetToArtifactNamespace(assetId.getNamespaceUri()),
+        assetId,
+        lang);
+  }
+
+  public static ResourceIdentifier defaultSurrogateId(
+      ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang,
+      String versionTag) {
+    return defaultSurrogateId(
+        mapAssetToArtifactNamespace(assetId.getNamespaceUri()),
+        assetId,
+        lang,
+        versionTag);
+  }
+
+  public static ResourceIdentifier defaultSurrogateId(
+      URI baseArtifactNamespace,
+      ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang,
+      String versionTag) {
+    return artifactId(baseArtifactNamespace, defaultCarrierUUID(assetId, lang), versionTag);
+  }
+
+  public static ResourceIdentifier artifactId(URI baseNamespace, String uuid, String versionTag) {
+    return artifactId(baseNamespace, ensureUUID(uuid).orElseThrow(), versionTag);
+  }
+
+  public static ResourceIdentifier artifactId(URI baseNamespace, UUID uuid, String versionTag) {
     return SemanticIdentifier.newId(
-        Registry.MAYO_ARTIFACTS_BASE_URI_URI,
+        baseNamespace,
         uuid,
         VersionIdentifier.toSemVer(versionTag));
   }
 
   public static ResourceIdentifier randomArtifactId() {
-    return artifactId(UUID.randomUUID(),VERSION_ZERO);
+    return artifactId(BASE_UUID_URN_URI,UUID.randomUUID(),VERSION_ZERO);
   }
 
   public static ResourceIdentifier randomArtifactId(URI baseNamespace) {
