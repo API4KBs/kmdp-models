@@ -221,8 +221,10 @@ public class URIUtil {
         = (HttpURLConnection) url.openConnection();
     httpUrlConnection.setRequestMethod(method);
     int code = httpUrlConnection.getResponseCode();
-    if (code / 100 == 2) {
+    try {
       httpUrlConnection.getInputStream().close();
+    } catch (IOException ioe) {
+      // ignore
     }
     return code;
   }
