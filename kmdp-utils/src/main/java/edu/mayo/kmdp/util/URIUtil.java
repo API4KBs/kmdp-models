@@ -15,9 +15,13 @@
  */
 package edu.mayo.kmdp.util;
 
+import static java.net.HttpURLConnection.HTTP_BAD_METHOD;
+import static java.net.HttpURLConnection.HTTP_OK;
+
 import edu.mayo.kmdp.registry.Registry;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.w3c.dom.Element;
@@ -185,18 +189,41 @@ public class URIUtil {
     }
   }
 
+  /**
+   * https://stackoverflow.com/questions/3584210/preferred-java-way-to-ping-an-http-url-for-availability
+   *
+   * @param url
+   * @return
+   */
   public static boolean isDereferencingURL(URL url) {
     if (url == null) {
       return false;
     }
     try {
-      HttpURLConnection httpUrlConnection
-          = (HttpURLConnection) url.openConnection();
-      httpUrlConnection.setRequestMethod("HEAD");
-
-      return HttpURLConnection.HTTP_OK == httpUrlConnection.getResponseCode();
+      boolean hostReachable = InetAddress.getByName(url.getHost()).isReachable(500);
+      if (hostReachable) {
+        int code = testConnection(url, "HEAD");
+        if (code == HTTP_OK) {
+          return true;
+        } else if (code == HTTP_BAD_METHOD) {
+          code = testConnection(url, "GET");
+          return code == HTTP_OK;
+        }
+      }
     } catch (IOException ioe) {
-      return false;
+      // ignore
     }
+    return false;
+  }
+
+  private static int testConnection(URL url, String method) throws IOException {
+    HttpURLConnection httpUrlConnection
+        = (HttpURLConnection) url.openConnection();
+    httpUrlConnection.setRequestMethod(method);
+    int code = httpUrlConnection.getResponseCode();
+    if (code / 100 == 2) {
+      httpUrlConnection.getInputStream().close();
+    }
+    return code;
   }
 }
