@@ -43,7 +43,6 @@ import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.LOINC
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.RxNORM;
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.SNOMED_CT;
 
-import edu.mayo.kmdp.comparator.AbstractDiffer.Mode;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -164,8 +163,8 @@ public class MimeCoderTest {
     WeightedRepresentation rep = ModelMIMECoder.decodeWeighted(c1);
     assertEquals(0.3f, rep.getWeight());
     assertEquals(c1, rep.getCode());
-    assertTrue(rep.getRep().isPresent());
-    assertSame(BPMN_2_0, rep.getRep().map(SyntacticRepresentation::getLanguage).orElse(null));
+    assertTrue(rep.tryGetRep().isPresent());
+    assertSame(BPMN_2_0, rep.tryGetRep().map(SyntacticRepresentation::getLanguage).orElse(null));
   }
 
   @Test
@@ -174,8 +173,8 @@ public class MimeCoderTest {
     WeightedRepresentation rep = ModelMIMECoder.decodeWeighted(c1);
     assertEquals(0.3f, rep.getWeight());
     assertEquals(c1, rep.getCode());
-    assertTrue(rep.getRep().isPresent());
-    assertSame(HTML, rep.getRep().map(SyntacticRepresentation::getLanguage).orElse(null));
+    assertTrue(rep.tryGetRep().isPresent());
+    assertSame(HTML, rep.tryGetRep().map(SyntacticRepresentation::getLanguage).orElse(null));
   }
 
   @Test
@@ -184,16 +183,16 @@ public class MimeCoderTest {
     WeightedRepresentation rep = ModelMIMECoder.decodeWeighted(c1);
     assertEquals(1.0f, rep.getWeight());
     assertEquals(c1, rep.getCode());
-    assertTrue(rep.getRep().isPresent());
-    assertSame(JSON, rep.getRep().map(SyntacticRepresentation::getFormat).orElseGet(Assertions::fail));
-    assertNull(rep.getRep().get().getLanguage());
+    assertTrue(rep.tryGetRep().isPresent());
+    assertSame(JSON, rep.tryGetRep().map(SyntacticRepresentation::getFormat).orElseGet(Assertions::fail));
+    assertNull(rep.tryGetRep().get().getLanguage());
   }
 
   @Test
   void testDecomposeFormalWithVersionAndWeight() {
     String mime = "model/bpmn-v2+xml;q=1";
     WeightedRepresentation rep = ModelMIMECoder.decodeWeighted(mime);
-    assertNotNull(rep.getRep());
+    assertNotNull(rep.tryGetRep());
   }
 
   @Test
@@ -206,11 +205,11 @@ public class MimeCoderTest {
     List<WeightedRepresentation> rep2 = ModelMIMECoder.decodeAll(out);
 
     assertEquals(2,rep2.size());
-    assertTrue(rep2.stream().allMatch(r -> r.getRep().isPresent()));
+    assertTrue(rep2.stream().allMatch(r -> r.tryGetRep().isPresent()));
     assertTrue(rep2.stream()
-        .anyMatch(r -> r.getRep().map(x -> BPMN_2_0.sameAs(x.getLanguage())).orElse(false)));
+        .anyMatch(r -> r.tryGetRep().map(x -> BPMN_2_0.sameAs(x.getLanguage())).orElse(false)));
     assertTrue(rep2.stream()
-        .anyMatch(r -> r.getRep().map(x -> DMN_1_2.sameAs(x.getLanguage())).orElse(false)));
+        .anyMatch(r -> r.tryGetRep().map(x -> DMN_1_2.sameAs(x.getLanguage())).orElse(false)));
   }
 
   @Test
@@ -234,7 +233,7 @@ public class MimeCoderTest {
         ModelMIMECoder.decodeAll(mime, rep(DMN_1_2));
     assertFalse(reps.isEmpty());
 
-    SyntacticRepresentation rep = reps.get(0).getRep()
+    SyntacticRepresentation rep = reps.get(0).tryGetRep()
         .orElseGet(Assertions::fail);
 
     assertTrue(DMN_1_2.sameAs(rep.getLanguage()));

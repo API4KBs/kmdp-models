@@ -63,17 +63,31 @@ public class ModelMIMECoder {
 
   private static final Pattern WX_PATTERN = Pattern.compile(WEIGHT_REGEXP);
 
+  public static final Float WEIGHT_UNSPECIFIED = 0.01f;
+  public static final Float WEIGHT_DEFAULT = 1.0f;
+
   public static List<WeightedRepresentation> decodeAll(String xAccept) {
-    return decodeAll(xAccept, null);
+    return decodeAll(xAccept, null, WEIGHT_DEFAULT);
   }
 
-  public static List<WeightedRepresentation> decodeAll(String xAccept, SyntacticRepresentation fallbackRepresentation) {
+  public static List<WeightedRepresentation> decodeAll(String xAccept, Float defaultWeight) {
+    return decodeAll(xAccept, null, defaultWeight);
+  }
+
+  public static List<WeightedRepresentation> decodeAll(
+      String xAccept, SyntacticRepresentation fallbackRepresentation) {
+    return decodeAll(xAccept, fallbackRepresentation, WEIGHT_DEFAULT);
+  }
+
+  public static List<WeightedRepresentation> decodeAll(
+      String xAccept, SyntacticRepresentation fallbackRepresentation, Float defaultWeight) {
     if (Util.isEmpty(xAccept)) {
       return Collections.emptyList();
     }
     return Arrays.stream(xAccept.split(","))
         .map(String::trim)
-        .map(code -> ModelMIMECoder.decodeWeighted(code, fallbackRepresentation))
+        .map(code -> ModelMIMECoder.decodeWeighted(code, fallbackRepresentation, defaultWeight))
+        .filter(code -> code.tryGetRep().isPresent())
         .filter(wr -> wr.rep != null)
         .sorted()
         .collect(Collectors.toList());
@@ -98,8 +112,8 @@ public class ModelMIMECoder {
     return decode(mime).map(ModelMIMECoder::encode).orElse(null);
   }
 
-  public static String recodeAll(String mime) {
-    return encodeAll(decodeAll(mime));
+  public static String recodeAll(String mime, Float defaultWeight) {
+    return encodeAll(decodeAll(mime, defaultWeight));
   }
 
   public static String encode(SyntacticRepresentation rep, boolean withVersions) {
@@ -329,10 +343,10 @@ public class ModelMIMECoder {
 
 
   public static WeightedRepresentation decodeWeighted(String code) {
-    return decodeWeighted(code, null);
+    return decodeWeighted(code, null, WEIGHT_DEFAULT);
   }
 
-  public static WeightedRepresentation decodeWeighted(String code, SyntacticRepresentation rep) {
+  public static WeightedRepresentation decodeWeighted(String code, SyntacticRepresentation rep, Float defaultWeight) {
     if (code.startsWith(TYPE)) {
       Optional<LangTags> tags = decompose(code);
       return tags
@@ -356,7 +370,7 @@ public class ModelMIMECoder {
                   .flatMap(ModelMIMECoder::mapKnownMimes)
                   .flatMap(mime -> ModelMIMECoder.decode( mime, rep != null ? rep.getLanguage() : null))
                   .orElse(null),
-              detectWeight(code).orElse(1.0f)
+              detectWeight(code).orElse(defaultWeight)
           );
     }
   }
@@ -375,6 +389,12 @@ public class ModelMIMECoder {
     SyntacticRepresentation rep;
     float weight;
 
+    public WeightedRepresentation(SyntacticRepresentation rep) {
+      this.code = ModelMIMECoder.encode(rep);
+      this.rep = rep;
+      this.weight = WEIGHT_UNSPECIFIED;
+    }
+
     public WeightedRepresentation(String code, SyntacticRepresentation rep, Float w) {
       this.code = code;
       this.rep = rep;
@@ -389,9 +409,10 @@ public class ModelMIMECoder {
     public String getCode() {
       return code;
     }
-    public Optional<SyntacticRepresentation> getRep() {
+    public Optional<SyntacticRepresentation> tryGetRep() {
       return Optional.ofNullable(rep);
     }
+    public SyntacticRepresentation getRep() { return rep; }
     public float getWeight() {
       return weight;
     }
