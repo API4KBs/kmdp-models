@@ -55,6 +55,7 @@ import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.CompositeStructType;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
@@ -266,12 +267,30 @@ public class SurrogateHelper {
   public static CompositeKnowledgeCarrier toNamedCompositeAsset(
       ResourceIdentifier compositeAssetId,
       Collection<KnowledgeAsset> components) {
+    return toNamedCompositeAsset(compositeAssetId, components, GRAPH);
+  }
+
+  /**
+   * Constructs a Composite Surrogate for an 'named' Composite Asset,
+   * instantiating a CompositeKnowledgeCarrier whose components are canonical Asset Surrogates
+   *
+   * Named assets have a known, managed asset id and version
+   *
+   * @param compositeAssetId The Asset Id
+   * @param components The components, which must be KnowledgeAsset surrogates
+   * @param structType An explicit structure pattern
+   * @return a CompositeKnowledgeCarrier with wrapped KnowledgeAsset components
+   */
+  public static CompositeKnowledgeCarrier toNamedCompositeAsset(
+      ResourceIdentifier compositeAssetId,
+      Collection<KnowledgeAsset> components,
+      CompositeStructType structType) {
     return ofUniformNamedComposite(
         compositeAssetId,
         null,
         compositeAssetId,
         "",
-        GRAPH,
+        structType,
         inferStruct(
             compositeAssetId,
             null,
