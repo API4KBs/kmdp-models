@@ -20,6 +20,9 @@ import static edu.mayo.kmdp.util.Util.uuid;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper.getCanonicalSurrogateId;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper.getComputableSurrogateMetadata;
 import static org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.LanguageSeries.English;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
@@ -508,4 +511,26 @@ public class SurrogateBuilder {
     return SemanticIdentifier.newId(baseNamespace,UUID.randomUUID(),VERSION_ZERO);
   }
 
+  /**
+   * Updates the version of 'self' as a Surrogate, incrementing the MINOR version number
+   *
+   * Retrieves the KnowledgeAsset.surrogates['self'], and increments the artifactId version number
+   *
+   * Used in conjunction with incremental changes to the Surrogate object itself.
+   * @param surr The surrogate to update
+   */
+  public static ResourceIdentifier updateSurrogateVersion(KnowledgeAsset surr) {
+    KnowledgeArtifact self = getCanonicalSurrogateId(surr)
+        .flatMap(sid -> getComputableSurrogateMetadata(sid.getUuid(), sid.getVersionTag(), surr))
+        .orElseThrow();
+
+    ResourceIdentifier oldSurrogateId = self.getArtifactId();
+    ResourceIdentifier newSurrogateId = newId(
+        oldSurrogateId.getNamespaceUri(),
+        oldSurrogateId.getUuid(),
+        oldSurrogateId.getSemanticVersionTag().incrementMinorVersion().toString());
+    self.setArtifactId(newSurrogateId);
+
+    return newSurrogateId;
+  }
 }

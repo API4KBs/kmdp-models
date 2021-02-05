@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
@@ -179,17 +179,20 @@ public interface AbstractCarrier {
   default Optional<KnowledgeCarrier> tryMainComponent() {
     if (this instanceof CompositeKnowledgeCarrier) {
       CompositeKnowledgeCarrier ckc = (CompositeKnowledgeCarrier) this;
-      if (ckc.getRootId() != null) {
-        KeyIdentifier key = ckc.getRootId().asKey();
-        return ckc.getComponent().stream()
-            .filter(kc -> kc.getAssetId() != null)
-            .filter(kc -> kc.getAssetId().asKey().equals(key))
-            .findFirst();
-      } else {
-        return Optional.empty();
-      }
+      return componentById(ckc.getRootId(), ckc)
+          .or(() -> componentById(ckc.getAssetId(), ckc));
     }
     return Optional.of((KnowledgeCarrier) this);
+  }
+
+  default Optional<KnowledgeCarrier> componentById(
+      ResourceIdentifier id, CompositeKnowledgeCarrier ckc) {
+    return Optional.ofNullable(id)
+        .map(SemanticIdentifier::asKey)
+        .flatMap(key -> ckc.getComponent().stream()
+            .filter(kc -> kc.getAssetId() != null)
+            .filter(kc -> kc.getAssetId().asKey().equals(key))
+            .findFirst());
   }
 
   default KnowledgeCarrier mainComponent() {

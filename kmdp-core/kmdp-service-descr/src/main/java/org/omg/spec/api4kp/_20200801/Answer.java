@@ -122,6 +122,14 @@ public class Answer<T> extends Explainer {
         .withExplanation(t.getMessage());
   }
 
+  public static <X> Answer<X> failed(Answer<?> nested) {
+    return new Answer<X>()
+        .withCodedOutcome(nested.getCodedOutcome())
+        .withMeta(new HashMap<>())
+        .withValue(null)
+        .withExplanation(nested.getExplanation());
+  }
+
   public static <X> Answer<X> of(X value) {
     return new Answer<X>()
         .withCodedOutcome(ResponseCodeSeries.OK)
@@ -260,6 +268,10 @@ public class Answer<T> extends Explainer {
     return getHandler().flatMap(this, mapper);
   }
 
+  public <U> Answer<U> flatWhole(Function<? super T, Answer<U>> mapper) {
+    return getHandler().flatWhole(this, mapper);
+  }
+
   public <U> Answer<U> flatOpt(Function<? super T, Optional<U>> mapper) {
     return getHandler().flatOpt(this, mapper);
   }
@@ -366,6 +378,16 @@ public class Answer<T> extends Explainer {
       return value;
     } else {
       throw exceptionSupplier.get();
+    }
+  }
+
+  public <X extends Throwable> T orElseThrow() throws X {
+    if (value != null) {
+      return value;
+    } else {
+      throw new ServerSideException(
+          this.getCodedOutcome(),
+          this.getExplanation().asString().orElse("Internal Error"));
     }
   }
 
@@ -623,6 +645,8 @@ public class Answer<T> extends Explainer {
 
     <U> Answer<U> flatOpt(Answer<T> tAnswer, Function<? super T, Optional<U>> mapper);
 
+    <U> Answer<U> flatWhole(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper);
+
     <U> Answer<U> reduce(Answer<T> srcAnswer, Function<Composite<? super T,?,?>, Answer<U>> reducer);
 
     <U> Answer<U> reduce(Answer<Stream<U>> srcAnswer, BinaryOperator<U> reducer);
@@ -680,6 +704,26 @@ public class Answer<T> extends Explainer {
             .withAddedExplanation(srcAnswer.explanation);
       }
     }
+
+    @Override
+    public <U> Answer<U> flatWhole(Answer<T> srcAnswer, Function<? super T, Answer<U>> mapper) {
+      try {
+        if (srcAnswer.value instanceof ClosedComposite) {
+          return mapper.apply(srcAnswer.value)
+              .withAddedMeta(srcAnswer.meta)
+              .withAddedExplanation(srcAnswer.explanation);
+        } else {
+          return Answer.failed(new IllegalArgumentException("Function only applies to Composites"));
+        }
+
+      } catch (Exception e) {
+        logger.error(e.getMessage(), e);
+        return Answer.<U>failed(e)
+            .withAddedMeta(srcAnswer.meta)
+            .withAddedExplanation(srcAnswer.explanation);
+      }
+    }
+
 
     @Override
     public <U> Answer<U> flatOpt(Answer<T> srcAnswer, Function<? super T, Optional<U>> mapper) {
@@ -761,6 +805,14 @@ public class Answer<T> extends Explainer {
 
     @Override
     public <U> Answer<U> flatMap(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper) {
+      return new Answer<U>()
+          .withCodedOutcome(tAnswer.getCodedOutcome())
+          .withExplanation(tAnswer.explanation)
+          .withMeta(tAnswer.meta);
+    }
+
+    @Override
+    public <U> Answer<U> flatWhole(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper) {
       return new Answer<U>()
           .withCodedOutcome(tAnswer.getCodedOutcome())
           .withExplanation(tAnswer.explanation)
