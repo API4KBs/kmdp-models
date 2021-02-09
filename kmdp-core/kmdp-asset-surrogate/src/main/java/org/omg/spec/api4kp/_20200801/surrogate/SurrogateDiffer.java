@@ -13,6 +13,7 @@ import org.javers.core.JaversBuilder;
 import org.javers.core.MappingStyle;
 import org.javers.core.metamodel.clazz.EntityDefinition;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyType;
 import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationType;
@@ -56,7 +57,12 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
         .registerEntity(
             new EntityDefinition(KnowledgeArtifact.class,
                 "artifactId",
-                singletonList("lifecycle")));
+                singletonList("lifecycle")))
+        .registerValue(
+            ResourceIdentifier.class,
+            (a,b) -> a.asKey().equals(b.asKey()),
+            a -> a.asKey().toString())
+        ;
 
     configureTerminology(builder);
 

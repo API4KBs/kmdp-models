@@ -139,4 +139,27 @@ class AssetSurrogateDiffTest {
 
 
 
+  @Test
+  void testDifferWithSecondaryId() {
+    SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
+
+    ResourceIdentifier aid = randomAssetId();
+    ResourceIdentifier sid1 = randomAssetId();
+    ResourceIdentifier sid2 = (ResourceIdentifier) sid1.clone();
+    sid2.setEstablishedOn(new Date(100));
+
+    KnowledgeAsset base1 = new KnowledgeAsset()
+        .withAssetId(aid)
+        .withSecondaryId(sid1);
+
+    KnowledgeAsset base2 = new KnowledgeAsset()
+        .withAssetId(aid)
+        .withSecondaryId(sid2);
+
+    Comparison delta = differ.contrast(base1,base2);
+    assertSame(Comparison.EQUIVALENT, delta);
+  }
+
+
+
 }
