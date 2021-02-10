@@ -63,10 +63,23 @@ public class XPathUtil {
     defaultXPath.setNamespaceContext(ctx);
   }
 
-  private static Object evaluateXPath(XPath xpath, Document dox, String xpathExpression,
-      QName type) {
+  private static Object evaluateXPath(
+      XPath xpath, Document dox, String xpathExpression, QName type) {
     try {
       Object result = xpath.evaluate(xpathExpression, dox.getDocumentElement(), type);
+      xpath.reset();
+
+      return result;
+    } catch (Exception e) {
+      logger.error(e.getMessage(),e);
+    }
+    return null;
+  }
+
+  private static Object evaluateXPath(
+      XPath xpath, Node current, String xpathExpression, QName type) {
+    try {
+      Object result = xpath.evaluate(xpathExpression, current, type);
       xpath.reset();
 
       return result;
@@ -84,6 +97,10 @@ public class XPathUtil {
     return (Node) evaluateXPath(defaultXPath, dox, xpathExpression, XPathConstants.NODE);
   }
 
+  public Node xNode(Node currentNode, String xpathExpression) {
+    return (Node) evaluateXPath(defaultXPath, currentNode, xpathExpression, XPathConstants.NODE);
+  }
+
   public NodeList xList(XPath xpath, Document dox, String xpathExpression) {
     return (NodeList) evaluateXPath(xpath, dox, xpathExpression, XPathConstants.NODESET);
   }
@@ -98,6 +115,10 @@ public class XPathUtil {
 
   public String xString(Document dox, String xpathExpression) {
     return (String) evaluateXPath(defaultXPath, dox, xpathExpression, XPathConstants.STRING);
+  }
+
+  public String xString(Node currentNode, String xpathExpression) {
+    return (String) evaluateXPath(defaultXPath, currentNode, xpathExpression, XPathConstants.STRING);
   }
 
   public Double xNumber(XPath xpath, Document dox, String xpathExpression) {
