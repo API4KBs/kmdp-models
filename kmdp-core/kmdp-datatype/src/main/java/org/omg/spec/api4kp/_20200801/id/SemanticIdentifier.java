@@ -987,8 +987,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
 
   static ResourceIdentifier hashIdentifiers(ResourceIdentifier id1, ResourceIdentifier id2) {
     UUID uuid = Util.hashUUID(id1.getUuid(), id2.getUuid());
-    String vTag = IdentifierConstants.VERSION_ZERO + "+" + Util
-        .hashString(id1.getVersionTag(), id2.getVersionTag());
+    String vTag = IdentifierConstants.VERSION_ZERO;
     if (id1.getNamespaceUri().equals(id2.namespaceUri)) {
       return newId(id1.getNamespaceUri(), uuid, vTag);
     } else {
