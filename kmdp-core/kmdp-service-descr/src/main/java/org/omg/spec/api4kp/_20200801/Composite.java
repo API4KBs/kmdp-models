@@ -37,6 +37,10 @@ public interface Composite<T,S,K extends Composite<T,S,K>> {
 
   Composite<T,S,K> withAssetId(ResourceIdentifier assetId);
 
+  String getLabel();
+
+  Composite<T,S,K> withLabel(String label);
+
   SyntacticRepresentation getRepresentation();
 
   Composite<T,S,K> withRepresentation(SyntacticRepresentation rep);
@@ -66,7 +70,8 @@ public interface Composite<T,S,K extends Composite<T,S,K>> {
             .withRootId(this.getRootId())
             .withRepresentation(outputRep)
             .withLevel(ParsingLevelContrastor.detectLevel(outputRep))
-            .withComponent(comps));
+            .withComponent(comps)
+            .withLabel(getLabel()));
   }
 
 }

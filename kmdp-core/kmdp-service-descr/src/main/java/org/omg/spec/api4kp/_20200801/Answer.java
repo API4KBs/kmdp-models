@@ -108,6 +108,12 @@ public class Answer<T> extends Explainer {
         new byte[0]));
   }
 
+  public static Answer<Void> nil() {
+    return failed(new ServerSideException(ResponseCodeSeries.InternalServerError,
+        Collections.emptyMap(),
+        new byte[0]));
+  }
+
   public static <X> Answer<X> failed(ResponseCode errorCode) {
     return failed(new ServerSideException(errorCode,
         Collections.emptyMap(),
