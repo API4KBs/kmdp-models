@@ -281,7 +281,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
       vTag = vTag.substring(1);
     }
     if (vTag.endsWith("/")) {
-      vTag = vTag.substring(0, vTag.length() - 2);
+      vTag = vTag.substring(0, vTag.length() - 1);
     }
     ResourceIdentifier rid = new ResourceIdentifier()
         // generate required tag from uuid
