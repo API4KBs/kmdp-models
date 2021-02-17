@@ -15,6 +15,9 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.util.PropertiesUtil.parseProperties;
+
+import edu.mayo.kmdp.util.PropertiesUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
@@ -44,6 +47,13 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     super(defaults);
   }
 
+  protected ConfigProperties(String cfg) {
+    this(parseProperties(cfg));
+  }
+
+  public String encode() {
+    return PropertiesUtil.serializeProps(this);
+  }
 
   public Optional<String> get(O param) {
     return Optional.ofNullable(getProperty(asKey(param), param.getDefaultValue()));

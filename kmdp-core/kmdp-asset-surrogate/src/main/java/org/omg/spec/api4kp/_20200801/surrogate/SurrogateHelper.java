@@ -61,6 +61,7 @@ import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.languagerole.KnowledgeRepresentationLanguageRole;
+import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevel;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
 
 public class SurrogateHelper {
@@ -366,6 +367,21 @@ public class SurrogateHelper {
         .withExpression(inlined)
         .withLabel(surrogate.getName())
         .withLevel(inlined != null ? Concrete_Knowledge_Expression : Knowledge_Expression)
+        .withRepresentation(
+            canonicalArtifact.map(KnowledgeArtifact::getRepresentation).orElse(null))
+        .withHref(canonicalArtifact.map(KnowledgeArtifact::getLocator).orElse(null));
+  }
+
+  public static KnowledgeCarrier toRuntimeSurrogate(KnowledgeAsset surrogate, ParsingLevel level, Object expr) {
+    Optional<KnowledgeArtifact> canonicalArtifact
+        = surrogate.getCarriers().stream().findFirst();
+
+    return new KnowledgeCarrier()
+        .withAssetId(surrogate.getAssetId())
+        .withArtifactId(canonicalArtifact.map(KnowledgeArtifact::getArtifactId).orElse(null))
+        .withExpression(expr)
+        .withLabel(surrogate.getName())
+        .withLevel(level)
         .withRepresentation(
             canonicalArtifact.map(KnowledgeArtifact::getRepresentation).orElse(null))
         .withHref(canonicalArtifact.map(KnowledgeArtifact::getLocator).orElse(null));

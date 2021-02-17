@@ -276,12 +276,12 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
       throw new IllegalArgumentException("Unable to split the URI into a namespace and a tag, "
           + "consider using newNamespaceId instead? " + nsUri);
     }
-    String vTag = NameUtils.strip(uriStr,versionUri.toString());
+    String vTag = NameUtils.strip(uriStr, versionUri.toString());
     if (vTag.startsWith("/")) {
       vTag = vTag.substring(1);
     }
     if (vTag.endsWith("/")) {
-      vTag = vTag.substring(0,vTag.length()-1);
+      vTag = vTag.substring(0, vTag.length() - 2);
     }
     ResourceIdentifier rid = new ResourceIdentifier()
         // generate required tag from uuid
