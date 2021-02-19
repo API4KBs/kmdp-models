@@ -27,5 +27,6 @@ import javax.inject.Qualifier;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KPComponent {
 
+  String implementation() default "";
 
 }
