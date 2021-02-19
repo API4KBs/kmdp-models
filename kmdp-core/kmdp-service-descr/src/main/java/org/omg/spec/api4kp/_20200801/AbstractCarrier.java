@@ -31,6 +31,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +49,7 @@ import org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationL
 import org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerialization;
 import org.omg.spec.api4kp._20200801.taxonomy.lexicon.Lexicon;
 import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevel;
+import org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries;
 import org.w3c.dom.Document;
 
 public interface AbstractCarrier {
@@ -527,8 +529,25 @@ public interface AbstractCarrier {
   }
 
   default Optional<byte[]> asBinary() {
-    return asString().map(String::getBytes);
+    if (this.getExpression() == null) {
+      return Optional.empty();
+    }
+    if (this.getExpression() instanceof byte[]) {
+      return Optional.of((byte[]) this.getExpression());
+    }
+    if (this.getExpression() instanceof String) {
+      switch (ParsingLevelSeries.asEnum(getLevel())) {
+        case Encoded_Knowledge_Expression:
+          return Optional.ofNullable(Base64.getDecoder().decode((String) getExpression()));
+        case Serialized_Knowledge_Expression:
+          return Optional.of(((String) getExpression()).getBytes());
+        default:
+      }
+    }
+    throw new IllegalStateException("Unexpected String Expression at level " + getLevel().getLabel());
   }
 
   Object getExpression();
+
+  ParsingLevel getLevel();
 }

@@ -387,6 +387,28 @@ public class SurrogateHelper {
         .withHref(canonicalArtifact.map(KnowledgeArtifact::getLocator).orElse(null));
   }
 
+  /**
+   * Ensures runtime metadata consistency between two carriers,
+   * where the latter is supposed to be a variant, possibly derivative
+   * of the former
+   *
+   * Enforces that the two carrier share the same AssetId
+   *
+   * This operation should not be necessary if the variant has been
+   * explicitly generated using chained API4KP compliant 'trans*ors'
+   *
+   * @param sourceCarrier
+   * @param variantCarrier
+   * @return
+   */
+  public static KnowledgeCarrier toVariantRuntimeSurrogate(
+      KnowledgeCarrier sourceCarrier,
+      KnowledgeCarrier variantCarrier) {
+    return ((KnowledgeCarrier) variantCarrier.clone())
+        .withAssetId(sourceCarrier.getAssetId());
+  }
+
+
 
   /**
    * Wraps a KnowledgeAsset Surrogate (KA) in a KnowledgeCarrier (KC)
