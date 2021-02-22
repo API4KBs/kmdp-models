@@ -37,7 +37,7 @@ public class SwaggerToDocXTranslator extends AbstractSwaggerTranslator {
   public byte[] translate(List<InputStream> inputs) {
     return doTranslate(
         inputs.stream()
-            .map(FileUtil::read)
+            .map(FileUtil::readBytes)
             .flatMap(StreamUtil::trimStream)
             .map(this::parse)
             .flatMap(StreamUtil::trimStream)

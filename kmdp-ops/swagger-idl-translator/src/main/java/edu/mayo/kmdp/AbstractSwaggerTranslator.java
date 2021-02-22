@@ -202,9 +202,9 @@ public abstract class AbstractSwaggerTranslator {
     return m;
   }
 
-  protected Optional<Swagger> parse(String s) {
+  protected Optional<Swagger> parse(byte[] s) {
     try {
-      return Optional.ofNullable(parser.parse(s));
+      return Optional.ofNullable(parser.parse(new String(s)));
     } catch (IOException e) {
       logError(e.getMessage(), e);
       return Optional.empty();

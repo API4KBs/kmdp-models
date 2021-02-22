@@ -28,9 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.util.CodeGenTestBase;
+import edu.mayo.kmdp.util.FileUtil;
+import edu.mayo.kmdp.util.StreamUtil;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -97,8 +98,10 @@ public class SwaggerToIDLTranslatorTest {
     root = Paths.get(root.toString(), title);
     assertTrue(deleteDirectory(root));
 
-    List<InputStream> sources = Stream.of(sourceFiles)
+    List<byte[]> sources = Stream.of(sourceFiles)
         .map(SwaggerToIDLTranslator.class::getResourceAsStream)
+        .map(FileUtil::readBytes)
+        .flatMap(StreamUtil::trimStream)
         .collect(Collectors.toList());
 
     File gen = new File(root.toFile(),"gen");

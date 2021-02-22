@@ -31,11 +31,9 @@ public class SwaggerToIDLTranslator extends AbstractSwaggerTranslator {
 
   private static final Logger logger = LoggerFactory.getLogger(SwaggerToIDLTranslator.class);
 
-  public List<String> translate(List<InputStream> inputs) {
+  public List<String> translate(List<byte[]> inputs) {
     return doTranslate(
         inputs.stream()
-            .map(FileUtil::read)
-            .flatMap(StreamUtil::trimStream)
             .map(this::parse)
             .flatMap(StreamUtil::trimStream)
             .collect(Collectors.toList()));
