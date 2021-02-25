@@ -91,6 +91,12 @@ public class EnumGenerationConfig extends
         "Uses UUID-based identifiers for indexing. "
             + "Must be true when using UUIDBasedDeserializer as JSON Adapter.",
         Boolean.class,
+        false)),
+    API4KP_RELEASE(Opt.of(
+        "api4kp-release",
+        "20200801",
+        "Version of the supporting framework",
+        String.class,
         false));
 
     private Opt<EnumGenerationParams> opt;

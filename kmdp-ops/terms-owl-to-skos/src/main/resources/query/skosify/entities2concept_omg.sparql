@@ -1,0 +1,133 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX olex: <http://www.w3.org/ns/lemon/ontolex#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX lcc-lr: <https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/>
+PREFIX afn: <http://jena.apache.org/ARQ/function#>
+PREFIX f: <http://kmdp.mayo.edu/sparql/function#>
+
+
+CONSTRUCT {
+
+  ?Cid
+    a owl:NamedIndividual;
+    a skos:Concept;
+    rdfs:label ?Label;
+    skos:prefLabel ?Label;
+    rdfs:isDefinedBy ?Definer;
+
+    skos:notation ?Notation;
+    owl:versionInfo ?VersionTag;
+    dct:identifier ?Id;
+
+    skos:inScheme ?Scheme;
+
+    skos:broader ?Parent;
+    skos:broaderTransitive ?Top.
+
+  ?Parent a skos:Concept.
+
+  ?Scheme
+    a skos:ConceptScheme;
+    a owl:NamedIndividual;
+    rdfs:label ?SchemeLabel;
+    skos:prefLabel ?SchemeLabel;
+    skos:hasTopConcept ?Top.
+
+  ?Top
+    a skos:Concept;
+    a owl:NamedIndividual;
+    skos:inScheme ?Scheme;
+    rdfs:label ?TopLabel;
+    skos:prefLabel ?TopLabel.
+
+}
+WHERE {
+    VALUES ?entity { owl:Class owl:ObjectProperty owl:DatatypeProperty owl:NamedIndividual }
+
+    #For each proper ontology entity
+    OPTIONAL {
+
+        ?X a ?entity.
+            FILTER isUri( ?X ).
+            OPTIONAL { ?X owl:sameAs ?Z. }
+
+            BIND( f:localName( ?X ) as ?localName )
+            OPTIONAL { ?X rdfs:label ?lab. }
+            OPTIONAL { ?X skos:prefLabel ?pLab. }
+            BIND ( COALESCE( ?pLab, ?lab, ?localName ) as ?Label ).
+
+            # Create a URI for the related concept
+            OPTIONAL { ?X dc:identifier ?dcId. }
+            OPTIONAL { ?X dct:identifier ?dctId. }
+            OPTIONAL { ?Code lcc-lr:identifies ?X. ?Code lcc-lr:hasTag ?Tag. }
+            OPTIONAL { ?X owl:versionInfo ?VersionTag. }
+              BIND( COALESCE( ?VersionTag, "" ) as ?VTag ).
+            BIND ( URI( CONCAT( STR( tgt: ),
+                            COALESCE( ?Tag, f:localName(?X) ), ?VTag ) ) as ?Cid ).
+
+        BIND( f:uuidFrom( COALESCE( ?dcId, ?dctId, f:localName(?X) ), ?VTag ) as ?Notation ).
+
+        BIND ( tgt: as ?Namespace ).
+        BIND ( STRLEN( STR( ?Namespace ) ) as ?Len ).
+        BIND ( COALESCE( ?schemeName,
+                          afn:localname( URI( SUBSTR( STR( ?Namespace ), 1, ?Len - 1 ) ) ) ) as ?SchemeLabel )
+        BIND ( URI( CONCAT( STR( tgt: ),
+                            ?SchemeLabel ) )
+               as ?Scheme ).
+
+        OPTIONAL {
+                    ?X rdfs:subClassOf ?Y;
+                    OPTIONAL { ?Y dc:identifier ?dcId2. }
+                    OPTIONAL { ?Y dct:identifier ?dctId2. }
+                    OPTIONAL { ?Code2 lcc-lr:identifies ?Y. ?Code2 lcc-lr:hasTag ?Tag2. }
+                    OPTIONAL { ?Y owl:versionInfo ?VersionTag2. }
+                      BIND( COALESCE( ?VersionTag2, "" ) as ?VTag2 ).
+                    BIND ( URI( CONCAT( STR( tgt: ),
+                                  COALESCE( ?Tag2, f:localName(?Y) ), ?VTag2 ) ) as ?ClassParent ).
+                    FILTER( afn:namespace(?Y) != "http://www.w3.org/2002/07/owl#" ).
+                }
+        OPTIONAL {
+                    ?X rdf:type ?Y;
+                    OPTIONAL { ?Y dc:identifier ?dcId3. }
+                    OPTIONAL { ?Y dct:identifier ?dctId3. }
+                    OPTIONAL { ?Code3 lcc-lr:identifies ?Y. ?Code3 lcc-lr:hasTag ?Tag3. }
+                    OPTIONAL { ?Y owl:versionInfo ?VersionTag3. }
+                      BIND( COALESCE( ?VersionTag3, "" ) as ?VTag3 ).
+                    BIND ( URI( CONCAT( STR( tgt: ),
+                                  COALESCE( ?Tag3, f:localName(?Y) ), ?VTag3 ) ) as ?InstanceParent ).
+                    FILTER( afn:namespace(?Y) != "http://www.w3.org/2002/07/owl#" ).
+                }
+        OPTIONAL {
+                    ?X rdfs:subPropertyOf ?Y;
+                    OPTIONAL { ?Y dc:identifier ?dcId4. }
+                    OPTIONAL { ?Y dct:identifier ?dctId4. }
+                    OPTIONAL { ?Code4 lcc-lr:identifies ?Y. ?Code4 lcc-lr:hasTag ?Tag4. }
+                    OPTIONAL { ?Y owl:versionInfo ?VersionTag4. }
+                      BIND( COALESCE( ?VersionTag4, "" ) as ?VTag4 ).
+                    BIND ( URI( CONCAT( STR( tgt: ),
+                                  COALESCE( ?Tag4, f:localName(?Y) ), ?VTag4 ) ) as ?PropertyParent ).
+                    FILTER( afn:namespace(?Y) != "http://www.w3.org/2002/07/owl#" ).
+                }
+
+
+        BIND ( COALESCE( ?topName,
+                          CONCAT( ?SchemeLabel, "_Top" ) ) as ?TopLabel )
+        BIND ( URI( CONCAT( STR( tgt: ), ?TopLabel ) )
+            as ?Top ).
+
+
+        BIND ( COALESCE( ?ClassParent,
+                         ?InstanceParent,
+                         ?PropertyParent,
+                         ?Top ) as ?Parent ).
+
+        BIND ( STR( COALESCE( ?Z, ?X ) ) as ?Definer )
+
+    }
+
+}

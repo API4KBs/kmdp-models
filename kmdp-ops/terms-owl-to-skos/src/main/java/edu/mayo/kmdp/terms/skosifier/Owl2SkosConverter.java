@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.terms.skosifier;
 
+import static edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams.VERSION_POS;
 import static edu.mayo.kmdp.terms.util.JenaUtil.applyVersionToURI;
 import static edu.mayo.kmdp.terms.util.JenaUtil.detectVersionFragment;
 import static edu.mayo.kmdp.util.Util.removeLastChar;
@@ -39,8 +40,8 @@ import org.apache.jena.reasoner.ValidityReport;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.SKOS;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class Owl2SkosConverter extends ConverterInitBase implements
@@ -120,16 +121,18 @@ public class Owl2SkosConverter extends ConverterInitBase implements
     Ontology ont = createOntology(
         ontModel,
         versionFragment,
-        cfg.getTyped(OWLtoSKOSTxParams.TGT_NAMESPACE));
+        cfg.getTyped(OWLtoSKOSTxParams.TGT_NAMESPACE),
+        cfg);
     loadImports(ont, ontModel, modes, cfg);
     return ontModel;
   }
 
-  private Ontology createOntology(OntModel ontModel, String versionFragment, String baseUri) {
+  private Ontology createOntology(OntModel ontModel, String versionFragment, String baseUri,
+      Owl2SkosConfig cfg) {
     Ontology ont = ontModel.createOntology(baseUri);
     if (versionFragment != null && !versionFragment.isEmpty()) {
       ont.addProperty(OWL2.versionIRI,
-          ResourceFactory.createResource(applyVersionToURI(baseUri, versionFragment)));
+          ResourceFactory.createResource(applyVersionToURI(baseUri, versionFragment, cfg.getTyped(VERSION_POS))));
     }
     return ont;
   }

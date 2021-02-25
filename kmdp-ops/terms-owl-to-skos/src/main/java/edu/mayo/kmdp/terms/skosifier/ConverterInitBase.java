@@ -93,7 +93,9 @@ public abstract class ConverterInitBase {
 
     @Override
     public NodeValue exec(NodeValue nodeValue) {
-      return NodeValue.makeString(NameUtils.getTrailingPart(nodeValue.asString()));
+      return NodeValue.makeString(
+          NameUtils.getTrailingPart(nodeValue.asString())
+              .replace("#",""));
     }
   }
 }

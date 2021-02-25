@@ -28,11 +28,14 @@ public enum Modes {
   SKOS_RDF(true, false, true, Paths.SKOS, Paths.ANNO),
   LEX_CON(true,true, false, Paths.OLEX, Paths.SKOS),
 
-  FULL(true, true, true, Paths.ANNO, Paths.SKOS, Paths.OLEX);
+  FULL(true, true, true, Paths.ANNO, Paths.SKOS, Paths.OLEX),
+
+  OMG(true, false, false, Paths.OMG);
 
   private static class Paths {
     private static final String OLEX = "/query/skosify/entities2ontolex.sparql";
     private static final String SKOS = "/query/skosify/entities2concept.sparql";
+    private static final String OMG  = "/query/skosify/entities2concept_omg.sparql";
     private static final String ANNO = "/query/skosify/entities2skosMeta.sparql";
   }
 

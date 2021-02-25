@@ -95,6 +95,14 @@ public class Owl2SkosConfig extends ConfigProperties<Owl2SkosConfig, OWLtoSKOSTx
         Boolean.class,
         false
     )),
+    VERSION_POS( Opt.of(
+        "versionPosition",
+        Integer.toString(Integer.MAX_VALUE - 1),
+        "Determines the position of the version tag in the version IRI, "
+            + "starting from the end of the IRI, in reverse order ",
+        Integer.class,
+        false
+    ))
     ;
 
     private Opt<OWLtoSKOSTxParams> opt;

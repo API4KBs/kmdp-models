@@ -15,6 +15,7 @@ package edu.mayo.kmdp.terms.generator;
 
 import static edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters.ENFORCE_VERSION;
 import static edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters.VERSION_PATTERN;
+import static edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters.VERSION_POS;
 import static edu.mayo.kmdp.util.Util.isUUID;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNAPSHOT;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNAPSHOT_DATE_PATTERN;
@@ -32,6 +33,7 @@ import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.graph.HierarchySorter;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -295,11 +297,11 @@ public class SkosTerminologyAbstractor {
       version = uri;
     } else if (SNAPSHOT.equals(versionTag)) {
       // keep SNAPSHOT in the URI, but resolve it to a date for the version tag
-      version = applyVersion(ind, versionTag);
+      version = applyVersion(ind, versionTag, cfg.getTyped(VERSION_POS));
       versionTag = DateTimeUtil.serializeDate(pubDate, SNAPSHOT_DATE_PATTERN);
     } else {
       // use the detected versionTag
-      version = applyVersion(ind, versionTag);
+      version = applyVersion(ind, versionTag, cfg.getTyped(VERSION_POS));
     }
 
     MutableConceptScheme mcs = new MutableConceptScheme(
@@ -327,14 +329,20 @@ public class SkosTerminologyAbstractor {
     return versionFragment;
   }
 
-  private URI applyVersion(OWLNamedIndividual ind, String versionFragment) {
+  private URI applyVersion(OWLNamedIndividual ind, String versionFragment, int index) {
     String indURI = ind.getIRI().toString();
     String localId = NameUtils.getTrailingPart(ind.getIRI().toString());
 
-    final String detectedVersion = versionFragment;
-    return IRI.create(indURI.substring(0, indURI.lastIndexOf(localId) - 1)
-        + (detectedVersion.startsWith("/") ? detectedVersion : "/" + detectedVersion)
-        + "#" + localId)
+    final String detectedVersion = versionFragment.startsWith("/") ? versionFragment.substring(1) : versionFragment;
+    List<String> segments = Arrays.asList(indURI.substring(0, indURI.lastIndexOf(localId) - 1).split("/"));
+    segments = new LinkedList<>(segments);
+    if (index == Integer.MAX_VALUE - 1) {
+      segments.add(detectedVersion);
+    } else {
+      segments.add(segments.size() + index, detectedVersion);
+    }
+    return IRI.create(
+        String.join("/", segments) + "#" + localId)
         .toURI();
   }
 

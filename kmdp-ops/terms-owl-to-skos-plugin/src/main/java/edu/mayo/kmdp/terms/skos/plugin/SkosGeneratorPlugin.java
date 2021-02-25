@@ -22,7 +22,6 @@ import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
-import edu.mayo.kmdp.util.StreamUtil;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -35,7 +34,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.jena.base.Sys;
 import org.apache.jena.rdf.model.Model;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -343,10 +341,13 @@ public class SkosGeneratorPlugin extends AbstractMojo {
 
       Owl2SkosConfig cfg = new Owl2SkosConfig()
           .with(OWLtoSKOSTxParams.TGT_NAMESPACE, skosNamespace)
-          .with(OWLtoSKOSTxParams.ADD_IMPORTS, true)
+          .with(OWLtoSKOSTxParams.ADD_IMPORTS, profile != Modes.OMG)
           .with(OWLtoSKOSTxParams.SCHEME_NAME, schemeName)
           .with(OWLtoSKOSTxParams.TOP_CONCEPT_NAME, topConceptName)
           .with(OWLtoSKOSTxParams.MODE, profile);
+      if (profile == Modes.OMG) {
+        cfg.with(OWLtoSKOSTxParams.VERSION_POS, 2);
+      }
 
       Optional<Model> mireotedModel = new MireotExtractor()
           .fetch(

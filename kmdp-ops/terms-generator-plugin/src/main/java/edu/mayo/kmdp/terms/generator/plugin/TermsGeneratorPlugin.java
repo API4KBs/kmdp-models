@@ -167,6 +167,32 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   }
 
   /**
+   * @parameter default-value="true"
+   */
+  private boolean java = true;
+
+  public boolean isJava() {
+    return java;
+  }
+
+  public void setJava(boolean java) {
+    this.java = java;
+  }
+
+  /**
+   * @parameter default-value="true"
+   */
+  private boolean xsd = true;
+
+  public boolean isXSD() {
+    return xsd;
+  }
+
+  public void setXSD(boolean xsd) {
+    this.xsd = xsd;
+  }
+
+  /**
    * @parameter
    */
   private List<String> owlFiles;
@@ -336,6 +362,19 @@ public class TermsGeneratorPlugin extends AbstractMojo {
     this.jsonAdapter = jsonAdapter;
   }
 
+  /**
+   * @parameter default-value=20200801
+   */
+  private String api4kpRelease;
+
+  public String getApi4kpRelease() {
+    return api4kpRelease;
+  }
+
+  public void setApi4kpRelease(String api4kpRelease) {
+    this.api4kpRelease = api4kpRelease;
+  }
+
 
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   private MavenProject project;
@@ -410,7 +449,8 @@ public class TermsGeneratorPlugin extends AbstractMojo {
         .with(EnumGenerationParams.WITH_JSON, Boolean.toString(isJson()))
         .with(EnumGenerationParams.WITH_JAXB, Boolean.toString(isJaxb()))
         .with(EnumGenerationParams.XML_ADAPTER, xmlAdapter)
-        .with(EnumGenerationParams.JSON_ADAPTER, jsonAdapter);
+        .with(EnumGenerationParams.JSON_ADAPTER, jsonAdapter)
+        .with(EnumGenerationParams.API4KP_RELEASE, api4kpRelease);
     if (packageName != null) {
       opts.with(EnumGenerationParams.PACKAGE_NAME, packageName);
     }
@@ -422,8 +462,11 @@ public class TermsGeneratorPlugin extends AbstractMojo {
 
     JavaEnumTermsGenerator bjg =
         new JavaEnumTermsGenerator();
-    bjg.generate(graph, opts, outputDirectory);
-    if (isJaxb()) {
+
+    if (isJava()) {
+      bjg.generate(graph, opts, outputDirectory);
+    }
+    if (isJaxb() || isXSD()) {
       new XSDEnumTermsGenerator(bjg).generate(graph, opts, xsdOutputDirectory);
     }
 
@@ -441,9 +484,25 @@ public class TermsGeneratorPlugin extends AbstractMojo {
         .with(SkosAbstractionParameters.CLOSURE_MODE, closureMode)
         .with(SkosAbstractionParameters.ENFORCE_VERSION, enforceVersion)
         .with(SkosAbstractionParameters.VERSION_PATTERN, versionPattern)
-        .with(SkosAbstractionParameters.TAG_TYPE, tagFormat);
+        .with(SkosAbstractionParameters.TAG_TYPE, tagFormat)
+        .with(SkosAbstractionParameters.VERSION_POS, detectPosition(versionPattern));
     return new SkosTerminologyAbstractor()
         .traverse(ontology, cfg);
+  }
+
+  // E.g. .*/(.*)/.*/.* -> -2
+  private int detectPosition(String versionPattern) {
+    if (versionPattern == null) {
+      return Integer.MAX_VALUE - 1;
+    }
+    String s = versionPattern.substring(versionPattern.lastIndexOf(')'));
+    int n = 0;
+    for (int j = 0; j < s.length(); j++) {
+      if (s.charAt(j) == '/') {
+        n--;
+      }
+    }
+    return n < 0 ? n : Integer.MAX_VALUE - 1;
   }
 
   private OWLOntology readSource(String source, String sourceCatalogPath)

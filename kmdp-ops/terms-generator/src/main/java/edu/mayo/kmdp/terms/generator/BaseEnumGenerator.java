@@ -115,6 +115,7 @@ public abstract class BaseEnumGenerator {
     Properties overrides = PropertiesUtil
         .parseProperties(options.getTyped(EnumGenerationParams.PACKAGE_OVERRIDES));
 
+    String api4kpRelease = options.getTyped(EnumGenerationParams.API4KP_RELEASE);
     String className = conceptScheme.getPublicName();
     String seriesName = conceptScheme.getPublicName() + "Series";
     String interfaceName = conceptScheme.getPublicName();
@@ -129,6 +130,7 @@ public abstract class BaseEnumGenerator {
     List<SeriesHolder> holder = toSeries(graph.getConceptSeries(conceptScheme.getId()), defaultPackage, overrides);
 
     Map<String, Object> context = new HashMap<>();
+    context.put("api4kpRelease", api4kpRelease);
     context.put("conceptScheme", conceptScheme);
     context.put("conceptSchemeTag", NameUtils.getTrailingPart(conceptScheme.getId().toString()));
     context.put("concepts", graph.getConceptList(conceptScheme));
