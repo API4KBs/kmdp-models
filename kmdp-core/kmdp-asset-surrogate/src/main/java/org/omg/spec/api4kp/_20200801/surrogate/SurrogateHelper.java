@@ -24,11 +24,10 @@ import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformAn
 import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformNamedComposite;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.randomId;
 import static org.omg.spec.api4kp._20200801.services.CompositeStructType.GRAPH;
-import static org.omg.spec.api4kp._20200801.services.CompositeStructType.SET;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.artifactId;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
-import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Concrete_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Knowledge_Expression;
+import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Serialized_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structural_Component;
 
 import edu.mayo.kmdp.util.StreamUtil;
@@ -366,7 +365,7 @@ public class SurrogateHelper {
         .withArtifactId(canonicalArtifact.map(KnowledgeArtifact::getArtifactId).orElse(null))
         .withExpression(inlined)
         .withLabel(surrogate.getName())
-        .withLevel(inlined != null ? Concrete_Knowledge_Expression : Knowledge_Expression)
+        .withLevel(inlined != null ? Serialized_Knowledge_Expression : Knowledge_Expression)
         .withRepresentation(
             canonicalArtifact.map(KnowledgeArtifact::getRepresentation).orElse(null))
         .withHref(canonicalArtifact.map(KnowledgeArtifact::getLocator).orElse(null));

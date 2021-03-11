@@ -522,10 +522,14 @@ public interface AbstractCarrier {
     if (this.getExpression() instanceof JsonNode) {
       return JSonUtil.writeJsonAsString(this.getExpression());
     }
-    if (this.getExpression() != null) {
-      return Optional.ofNullable(this.getExpression().toString());
+    if (this.getExpression() instanceof String) {
+      String s = (String) this.getExpression();
+      if (Encoded_Knowledge_Expression.sameAs(this.getLevel())) {
+        s = new String(Base64.getDecoder().decode(s));
+      }
+      return Optional.ofNullable(s);
     }
-    return Optional.empty();
+    return Optional.of(this.getExpression().toString());
   }
 
   default Optional<byte[]> asBinary() {
