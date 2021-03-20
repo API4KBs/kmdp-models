@@ -26,9 +26,13 @@ public interface VersionIdentifier extends Identifier {
     if (versionTag.matches("(\\d+)\\.(\\d+)")) {
       int idx = versionTag.indexOf('.');
       return Version.forIntegers(
-          Integer.parseInt(versionTag.substring(0,idx)),
-              Integer.parseInt(versionTag.substring(idx+1)))
+          Integer.parseInt(versionTag.substring(0, idx)),
+          Integer.parseInt(versionTag.substring(idx + 1)))
           .toString();
+    }
+    int dashIdx = versionTag.indexOf('-');
+    if (dashIdx >= 0) {
+      return toSemVer(versionTag.substring(0, dashIdx)) + "-" + versionTag.substring(dashIdx + 1);
     }
     return IdentifierConstants.VERSION_ZERO + "-" + versionTag;
   }

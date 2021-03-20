@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 
+import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayOutputStream;
@@ -40,6 +41,7 @@ import org.omg.spec.api4kp._20200801.id.ObjectFactory;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
 public class DatatypeTest {
 
@@ -54,7 +56,7 @@ public class DatatypeTest {
     SemanticIdentifier id = SemanticIdentifier.newId("thisId");
 
     assertEquals("thisId", id.getTag());
-    assertSame(IdentifierTagType.STRING_VALUE,id.getTagFormat());
+    assertSame(IdentifierTagType.STRING_VALUE, id.getTagFormat());
   }
 
   @Test
@@ -128,5 +130,17 @@ public class DatatypeTest {
     uid = SemanticIdentifier.newId(URI.create(unversionedId));
     assertEquals("http://foo.bar/baz", uid.getResourceId().toString());
     assertNull(uid.getVersionId());
+  }
+
+  @Test
+  void testToSemverWithPre() {
+    String svid = VersionIdentifier.toSemVer("1.0-110");
+    assertEquals("1.0.0-110", svid);
+
+    String svid2 = VersionIdentifier.toSemVer(svid);
+    assertEquals(svid, svid2);
+
+    Version v = Version.valueOf(svid);
+    assertEquals("110", v.getPreReleaseVersion());
   }
 }
