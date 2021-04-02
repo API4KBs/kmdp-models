@@ -1,6 +1,7 @@
 package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomArtifactId;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
@@ -12,6 +13,7 @@ import edu.mayo.kmdp.comparator.AbstractDiffer.Mode;
 import edu.mayo.kmdp.comparator.Contrastor.Comparison;
 import java.net.URI;
 import java.util.Date;
+import org.javers.core.diff.Diff;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
@@ -21,7 +23,10 @@ import org.omg.spec.api4kp._20200801.surrogate.Dependency;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateDiffer;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper.VersionIncrement;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.snapshot.DependencyType;
 
 class AssetSurrogateDiffTest {
@@ -161,5 +166,26 @@ class AssetSurrogateDiffTest {
   }
 
 
+  @Test
+  void testControlledIncrementDiff() {
+    ResourceIdentifier aid = randomAssetId();
+    ResourceIdentifier sid1 = randomAssetId();
+    SurrogateDiffer differ = new SurrogateDiffer(Mode.SYMMETRIC);
+
+    KnowledgeAsset base1 = SurrogateBuilder
+        .newSurrogate(aid)
+        .get()
+        .withSecondaryId(sid1);
+    KnowledgeAsset base2 = SurrogateBuilder
+        .newSurrogate(aid)
+        .get()
+        .withSecondaryId(sid1);
+
+    base2.setDescription("Foo");
+    SurrogateHelper.incrementVersion(base2, VersionIncrement.MINOR);
+
+    Diff delta = differ.diff(base1, base2);
+    assertTrue(delta.hasChanges());
+  }
 
 }

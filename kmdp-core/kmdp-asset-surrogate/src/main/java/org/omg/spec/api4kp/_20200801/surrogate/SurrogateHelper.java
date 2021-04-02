@@ -30,6 +30,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.Pars
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Serialized_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structural_Component;
 
+import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.net.URI;
@@ -505,4 +506,27 @@ public class SurrogateHelper {
     return getComponents(surrogate, struct, role).findFirst();
   }
 
+  public enum VersionIncrement { MAJOR, MINOR, PATCH }
+
+  public static void incrementVersion(KnowledgeAsset changingSurrogate, VersionIncrement incr) {
+    getSurrogateMetadata(changingSurrogate, Knowledge_Asset_Surrogate_2_0, null)
+        .ifPresent(meta -> {
+          Version surrogateVersion = Version.valueOf(meta.getArtifactId().getVersionTag());
+          switch (incr) {
+            case MAJOR:
+              surrogateVersion = surrogateVersion.incrementMajorVersion();
+              break;
+            case MINOR:
+              surrogateVersion = surrogateVersion.incrementMinorVersion();
+              break;
+            case PATCH:
+              surrogateVersion = surrogateVersion.incrementPatchVersion();
+              break;
+          }
+          meta.withArtifactId(SemanticIdentifier.newId(
+              meta.getArtifactId().getNamespaceUri(),
+              meta.getArtifactId().getUuid(),
+              surrogateVersion));
+        });
+  }
 }
