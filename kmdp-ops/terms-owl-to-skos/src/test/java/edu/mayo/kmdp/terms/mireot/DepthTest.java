@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.terms.mireot;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -144,6 +145,29 @@ public class DepthTest extends BaseMireotTest {
     assertFalse(c.contains(h(base, "propD")));
     assertFalse(c.contains(h(base, "propG")));
 
+  }
+
+
+  @Test
+  public void testMixedHierarchy() {
+
+    String base = "http://org.test/labelsTest";
+
+    MireotConfig cfg = new MireotConfig()
+        .with(MireotParameters.BASE_URI, base)
+        .with(MireotParameters.ENTITY_TYPE, EntityTypes.CLASS)
+        .with(MireotParameters.MIN_DEPTH, 1)
+        .with(MireotParameters.MAX_DEPTH, 2)
+        .with(MireotParameters.NAMESPACE_SCOPED, true);
+
+    Set<Resource> c = new MireotExtractor().fetch(stream("/ontology/mixedHier.owl"),
+        URI.create(base + "#Parent"),
+        cfg)
+        .map((m) -> getResources(base, m))
+        .orElse(new HashSet<>());
+
+    assertTrue(c.contains(h(base, "Child")));
+    assertEquals(1, c.size());
   }
 
 }

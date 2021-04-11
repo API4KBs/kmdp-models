@@ -17,8 +17,8 @@ package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
@@ -47,7 +47,7 @@ public class XSDCompilationTest {
     assertEquals(6, KnowledgeAssetCategorySeries.values().length);
 
     KnowledgeAssetType kat = Clinical_Rule;
-    assertEquals("http://ontology.mayo.edu/ontologies/clinicalknowledgeassets/ClinicalRule", kat.getReferentId().toString());
+    assertEquals("https://www.omg.org/spec/API4KP/api4kp-ckao/ClinicalRule", kat.getReferentId().toString());
 
     KnowledgeRepresentationLanguage dmn = DMN_1_1;
     KnowledgeRepresentationLanguage dmn2 = DMN_1_2;

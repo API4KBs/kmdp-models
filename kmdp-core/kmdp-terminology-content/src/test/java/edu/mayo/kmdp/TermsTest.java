@@ -54,7 +54,8 @@ class TermsTest {
     DerivationType lateRule = DerivationTypeSeries.Is_Derived_From.asSeries().getLatest();
 
     assertTrue(earlyRule.sameAs(lateRule));
-    assertFalse(earlyRule.asConceptIdentifier().sameAs(lateRule.asConceptIdentifier()));
+    // true if only one version in the series, false otherwise
+    assertTrue(earlyRule.asConceptIdentifier().sameAs(lateRule.asConceptIdentifier()));
   }
 
 }

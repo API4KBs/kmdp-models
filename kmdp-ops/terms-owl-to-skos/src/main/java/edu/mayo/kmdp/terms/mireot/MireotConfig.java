@@ -85,6 +85,13 @@ public class MireotConfig extends ConfigProperties<MireotConfig, MireotParameter
         "The maximum level of depth (-1 = no limit)",
         Integer.class,
         false
+    )),
+    NAMESPACE_SCOPED( Opt.of(
+        "namespaceScoped",
+        Boolean.FALSE.toString(),
+        "If true, will only include entities in the same namespace as the root entity",
+        Boolean.class,
+        false
     ))
     ;
 

@@ -282,6 +282,19 @@ public class SkosGeneratorPlugin extends AbstractMojo {
     this.catalogURLs = catalog;
   }
 
+  /**
+   * @parameter
+   */
+  private boolean namespaceScoped = false;
+
+  public boolean isNamespaceScoped() {
+    return namespaceScoped;
+  }
+
+  public void setNamespaceScoped(boolean namespaceScoped) {
+    this.namespaceScoped = namespaceScoped;
+  }
+
   public void execute() throws MojoExecutionException {
 
     if (targetURI == null) {
@@ -337,7 +350,8 @@ public class SkosGeneratorPlugin extends AbstractMojo {
           .with(MireotParameters.ENTITY_TYPE, entityType)
           .with(MireotParameters.ENTITY_ONLY, entityOnly)
           .with(MireotParameters.MIN_DEPTH, minDepth)
-          .with(MireotParameters.MAX_DEPTH, maxDepth);
+          .with(MireotParameters.MAX_DEPTH, maxDepth)
+          .with(MireotParameters.NAMESPACE_SCOPED, namespaceScoped);
 
       Owl2SkosConfig cfg = new Owl2SkosConfig()
           .with(OWLtoSKOSTxParams.TGT_NAMESPACE, skosNamespace)

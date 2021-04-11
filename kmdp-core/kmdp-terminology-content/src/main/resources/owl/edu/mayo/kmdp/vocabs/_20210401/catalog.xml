@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <uri id="API4KP-20210401"
+    uri="/ontologies/API4KP/v20210401/api4kp.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp/"/>
+  <uri id="API4KP"
+    uri="/ontologies/API4KP/v20210401/api4kp.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp/"/>
+
+  <uri id="API4KP-Ops-20210401"
+    uri="/ontologies/API4KP/v20210401/api4kp-ops.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp-ops/"/>
+  <uri id="API4KP-Ops"
+    uri="/ontologies/API4KP/v20210401/api4kp-ops.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-ops/"/>
+
+  <uri id="API4KP-KAO-20210401"
+    uri="/ontologies/API4KP/v20210401/api4kp-kao.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp-kao/"/>
+  <uri id="API4KP-KAO"
+    uri="/ontologies/API4KP/v20210401/api4kp-kao.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-kao/"/>
+
+  <uri id="API4KP-Lang-20210401"
+    uri="/ontologies/API4KP/v20210401/api4kp-lang.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp-lang/"/>
+  <uri id="API4KP-Lang"
+    uri="/ontologies/API4KP/v20210401/api4kp-lang.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-lang/"/>
+
+  <uri id="API4KP-Rel-20210401"
+    uri="/ontologies/API4KP/v20210401/api4kp-rel.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp-rel/"/>
+  <uri id="API4KP-Rel"
+    uri="/ontologies/API4KP/v20210401/api4kp-rel.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-rel/"/>
+
+  <uri id="API4KP-Series-20210401"
+    uri="/ontologies/API4KP/v20210401/api4kp-series.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp-series/"/>
+  <uri id="API4KP-Series"
+    uri="/ontologies/API4KP/v20210401/api4kp-series.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-series/"/>
+
+  <uri id="API4KP-KP-20210401"
+    uri="/ontologies/API4KP/v20210401/api4kp-kp.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp-kp/"/>
+  <uri id="API4KP-KP"
+    uri="/ontologies/API4KP/v20210401/api4kp-kp.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-kp/"/>
+
+  <uri id="API4KP-KRR-20210401"
+    uri="/ontologies/API4KP/v20210401/api4kp-krr.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp-krr/"/>
+  <uri id="API4KP-KRR"
+    uri="/ontologies/API4KP/v20210401/api4kp-krr.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-krr/"/>
+
+  <uri id="CKAO-20210401"
+    uri="/ontologies/API4KP/v20210401/informative/api4kp-ckao.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp-ckao/"/>
+  <uri id="CKAO"
+    uri="/ontologies/API4KP/v20210401/informative/api4kp-ckao.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-ckao/"/>
+
+  <uri id="API4KP-KMDO-20210401"
+    uri="/ontologies/API4KP/v20210401/informative/api4kp-kmdo.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp-kmdo/"/>
+  <uri id="API4KP-KMDO"
+    uri="/ontologies/API4KP/v20210401/informative/api4kp-kmdo.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-kmdo/"/>
+
+  <uri id="API4KP-Registry-20210401"
+    uri="/ontologies/API4KP/v20210401/informative/api4kp-registry.rdf"
+    name="https://www.omg.org/spec/API4KP/20210401/api4kp-registry/"/>
+  <uri id="API4KP-Registry"
+    uri="/ontologies/API4KP/v20210401/informative/api4kp-registry.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-registry/"/>
+
+  <uri id="DMN-20210401"
+    uri="decisionmodels.owl.rdf"
+    name="http://ontology.mayo.edu/ontologies/20210401/decisionmodels/"/>
+  <uri id="DMN"
+    uri="decisionmodels.owl.rdf"
+    name="http://ontology.mayo.edu/ontologies/decisionmodels/"/>
+
+  <uri id="CIO-20210401"
+    uri="Interrogatives.owl.rdf"
+    name="http://ontology.mayo.edu/ontologies/20210401/clinicalinquiryontology/"/>
+  <uri id="CIO"
+    uri="Interrogatives.owl.rdf"
+    name="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/"/>
+
+  <uri id="CCG"
+    uri="ccg.owl.rdf"
+    name="http://ontology.mayo.edu/ontologies/20210401/CCG/"/>
+
+  <nextCatalog catalog="../catalog.xml" />
+
+</catalog>

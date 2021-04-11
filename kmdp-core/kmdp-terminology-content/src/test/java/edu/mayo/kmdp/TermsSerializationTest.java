@@ -129,7 +129,7 @@ public class TermsSerializationTest {
         .orElse(null);
     assertNotNull(b2);
 
-    assertSame(org.omg.spec.api4kp._20200801.taxonomy.krformat.snapshot.SerializationFormat.XML_1_1,
+    assertSame(org.omg.spec.api4kp._20200801.taxonomy.krformat._20210401.SerializationFormat.XML_1_1,
         b2.getFormat());
   }
 

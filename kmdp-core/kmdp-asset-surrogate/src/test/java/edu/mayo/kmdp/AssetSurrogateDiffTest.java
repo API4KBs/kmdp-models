@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomArtifactId;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
 
@@ -27,7 +27,6 @@ import org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateDiffer;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper.VersionIncrement;
-import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.snapshot.DependencyType;
 
 class AssetSurrogateDiffTest {
 
@@ -74,7 +73,7 @@ class AssetSurrogateDiffTest {
         .withRel(Depends_On)
         .withHref(tgtRef));
     mod.withLinks(new Dependency()
-        .withRel(DependencyType.Depends_On)
+        .withRel(Depends_On)
         .withHref(tgtRef));
 
     Comparison delta = differ.contrast(mod, base);

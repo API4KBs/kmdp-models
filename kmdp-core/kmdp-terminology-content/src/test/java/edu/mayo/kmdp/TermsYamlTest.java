@@ -26,7 +26,7 @@ public class TermsYamlTest {
   @Test
   public void testKAOTerms() {
     Swagger model = parseValidateGroup(
-        "/yaml/org/omg/spec/api4kp/_20200801/taxonomy/knowledgeoperation/_20200801/KnowledgeProcessingOperation.yaml");
+        "/yaml/org/omg/spec/api4kp/_20200801/taxonomy/knowledgeoperation/_20210401/KnowledgeProcessingOperation.yaml");
     assertEquals(2, model.getDefinitions().size());
   }
 

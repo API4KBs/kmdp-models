@@ -70,46 +70,46 @@ class KnownVersionsTest {
 
   @Test
   void testKRLanguageVersions() {
-    // build only 'SNAPSHOT' until the list and the URIs can be standardized
+    // build only '_20210401' until the list and the URIs can be standardized
     assertEquals(1, KnowledgeRepresentationLanguageSeries.schemeVersions.size());
     KnowledgeRepresentationLanguage lang
-        = org.omg.spec.api4kp._20200801.taxonomy.krlanguage.snapshot.KnowledgeRepresentationLanguage.BPMN_2_0;
+        = org.omg.spec.api4kp._20200801.taxonomy.krlanguage._20210401.KnowledgeRepresentationLanguage.BPMN_2_0;
     assertNotNull(lang);
   }
 
   @Test
   void testKRProfileVersions() {
-    // build only 'SNAPSHOT' until the list and the URIs can be standardized
+    // build only '_20210401' until the list and the URIs can be standardized
     assertEquals(1, KnowledgeRepresentationLanguageProfileSeries.schemeVersions.size());
     KnowledgeRepresentationLanguageProfile prof
-        = org.omg.spec.api4kp._20200801.taxonomy.krprofile.snapshot.KnowledgeRepresentationLanguageProfile.OWL2_EL;
+        = org.omg.spec.api4kp._20200801.taxonomy.krprofile._20210401.KnowledgeRepresentationLanguageProfile.OWL2_EL;
     assertNotNull(prof);
   }
 
   @Test
   void testKRMetaFormats() {
-    // build only 'SNAPSHOT' until the list and the URIs can be standardized
+    // build only '_20210401' until the list and the URIs can be standardized
     assertEquals(1, SerializationFormatSeries.schemeVersions.size());
     SerializationFormat fmt
-        = org.omg.spec.api4kp._20200801.taxonomy.krformat.snapshot.SerializationFormat.XML_1_1;
+        = org.omg.spec.api4kp._20200801.taxonomy.krformat._20210401.SerializationFormat.XML_1_1;
     assertNotNull(fmt);
   }
 
   @Test
   void testKRSerializations() {
-    // build only 'SNAPSHOT' until the list and the URIs can be standardized
+    // build only '_20210401' until the list and the URIs can be standardized
     assertEquals(1, KnowledgeRepresentationLanguageSerializationSeries.schemeVersions.size());
     KnowledgeRepresentationLanguageSerialization serial
-        = org.omg.spec.api4kp._20200801.taxonomy.krserialization.snapshot.KnowledgeRepresentationLanguageSerialization.DMN_1_1_XML_Syntax;
+        = org.omg.spec.api4kp._20200801.taxonomy.krserialization._20210401.KnowledgeRepresentationLanguageSerialization.DMN_1_1_XML_Syntax;
     assertNotNull(serial);
   }
 
   @Test
   void testLexica() {
-    // build only 'SNAPSHOT' until the list and the URIs can be standardized
+    // build only '_20210401' until the list and the URIs can be standardized
     assertEquals(1, LexiconSeries.schemeVersions.size());
     Lexicon lex
-        = org.omg.spec.api4kp._20200801.taxonomy.lexicon.snapshot.Lexicon.RxNORM;
+        = org.omg.spec.api4kp._20200801.taxonomy.lexicon._20210401.Lexicon.RxNORM;
     assertNotNull(lex);
   }
 
@@ -134,73 +134,55 @@ class KnownVersionsTest {
 
   @Test
   void testDerivTypes() {
-    // version 20200801, snapshot
-    assertEquals(2, DerivationTypeSeries.schemeVersions.size());
-    DerivationType d1
-        = org.omg.spec.api4kp._20200801.taxonomy.derivationreltype._20200801.DerivationType.Is_Derived_From;
-    assertNotNull(d1);
+    // version _20210401
+    assertEquals(1, DerivationTypeSeries.schemeVersions.size());
     DerivationType d2
-        = org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.snapshot.DerivationType.Is_Derived_From;
+        = org.omg.spec.api4kp._20200801.taxonomy.derivationreltype._20210401.DerivationType.Is_Derived_From;
     assertNotNull(d2);
   }
 
   @Test
   void testVariantType() {
-    // version 20200801, snapshot
-    assertEquals(2, VariantTypeSeries.schemeVersions.size());
-    VariantType v1
-        = org.omg.spec.api4kp._20200801.taxonomy.variantreltype._20200801.VariantType.Is_Translation_Of;
-    assertNotNull(v1);
-    VariantType v2
-        = org.omg.spec.api4kp._20200801.taxonomy.variantreltype.snapshot.VariantType.Is_Translation_Of;
+    // version _20210401
+    assertEquals(1, VariantTypeSeries.schemeVersions.size());
+     VariantType v2
+        = org.omg.spec.api4kp._20200801.taxonomy.variantreltype._20210401.VariantType.Is_Translation_Of;
     assertNotNull(v2);
   }
 
   @Test
   void testSummaryType() {
-    // version 20200801, snapshot
-    assertEquals(2, SummarizationTypeSeries.schemeVersions.size());
-    SummarizationType s1
-        = org.omg.spec.api4kp._20200801.taxonomy.summaryreltype._20200801.SummarizationType.Abbreviates;
-    assertNotNull(s1);
+    // version _20210401
+    assertEquals(1, SummarizationTypeSeries.schemeVersions.size());
     SummarizationType s2
-        = org.omg.spec.api4kp._20200801.taxonomy.summaryreltype.snapshot.SummarizationType.Abbreviates;
+        = org.omg.spec.api4kp._20200801.taxonomy.summaryreltype._20210401.SummarizationType.Abbreviates;
     assertNotNull(s2);
   }
 
   @Test
   void testDependencyType() {
-    // version 20200801, snapshot
-    assertEquals(2, DependencyTypeSeries.schemeVersions.size());
-    DependencyType d1
-        = org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype._20200801.DependencyType.Depends_On;
-    assertNotNull(d1);
+    // version _20210401
+    assertEquals(1, DependencyTypeSeries.schemeVersions.size());
     DependencyType d2
-        = org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.snapshot.DependencyType.Depends_On;
+        = org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype._20210401.DependencyType.Depends_On;
     assertNotNull(d2);
   }
 
   @Test
   void testSeriesType() {
-    // version 20200801, snapshot
-    assertEquals(2, RelatedVersionTypeSeries.schemeVersions.size());
-    RelatedVersionType v1
-        = org.omg.spec.api4kp._20200801.taxonomy.relatedversiontype._20200801.RelatedVersionType.Has_Next_Version;
-    assertNotNull(v1);
+    // version _20210401
+    assertEquals(1, RelatedVersionTypeSeries.schemeVersions.size());
     RelatedVersionType v2
-        = org.omg.spec.api4kp._20200801.taxonomy.relatedversiontype.snapshot.RelatedVersionType.Has_Next_Version;
+        = org.omg.spec.api4kp._20200801.taxonomy.relatedversiontype._20210401.RelatedVersionType.Has_Next_Version;
     assertNotNull(v2);
   }
 
   @Test
   void testStructType() {
-    // version 20200801, snapshot
-    assertEquals(2, StructuralPartTypeSeries.schemeVersions.size());
-    StructuralPartType p1
-        = org.omg.spec.api4kp._20200801.taxonomy.structuralreltype._20200801.StructuralPartType.Has_Proper_Part;
-    assertNotNull(p1);
+    // version _20210401
+    assertEquals(1, StructuralPartTypeSeries.schemeVersions.size());
     StructuralPartType p2
-        = org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.snapshot.StructuralPartType.Has_Proper_Part;
+        = org.omg.spec.api4kp._20200801.taxonomy.structuralreltype._20210401.StructuralPartType.Has_Proper_Part;
     assertNotNull(p2);
   }
 
@@ -233,19 +215,19 @@ class KnownVersionsTest {
 
   @Test
   void testPublishEvent() {
-    // version SNAPSHOT only until standardized
+    // version _20210401 only until standardized
     assertEquals(1, PublicationEventTypeSeries.schemeVersions.size());
     PublicationEventType evn
-        = edu.mayo.ontology.taxonomies.kmdo.publicationeventtype.snapshot.PublicationEventType.Creation;
+        = edu.mayo.ontology.taxonomies.kmdo.publicationeventtype._20210401.PublicationEventType.Creation;
     assertNotNull(evn);
   }
 
   @Test
   void testSemAnnotation() {
-    // version SNAPSHOT only until standardized
+    // version _20210401 only until standardized
     assertEquals(1, SemanticAnnotationRelTypeSeries.schemeVersions.size());
     SemanticAnnotationRelType anno
-        = edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.snapshot.SemanticAnnotationRelType.Is_About;
+        = edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype._20210401.SemanticAnnotationRelType.Is_About;
     assertNotNull(anno);
   }
 
@@ -263,7 +245,7 @@ class KnownVersionsTest {
     // legacy 2019
     assertEquals(1, KnowledgeAssetCategorySeries.schemeVersions.size());
     KnowledgeAssetCategory kac
-        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Rules_Policies_And_Guidelines;
+        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory._20210401.KnowledgeAssetCategory.Rules_Policies_And_Guidelines;
     assertNotNull(kac);
   }
 
@@ -272,7 +254,7 @@ class KnownVersionsTest {
     // legacy 2019
     assertEquals(1, KnowledgeAssetRoleSeries.schemeVersions.size());
     KnowledgeAssetRole rol
-        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetrole._20190801.KnowledgeAssetRole.Operational_Concept_Definition;
+        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetrole._20210401.KnowledgeAssetRole.Operational_Concept_Definition;
     assertNotNull(rol);
   }
 
@@ -281,7 +263,7 @@ class KnownVersionsTest {
     // legacy 2019
     assertEquals(1, KnowledgeAssetTypeSeries.schemeVersions.size());
     KnowledgeAssetType type
-        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype._20190801.KnowledgeAssetType.Care_Process_Model;
+        = org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype._20210401.ClinicalKnowledgeAssetType.Care_Process_Model;
     assertNotNull(type);
   }
 
@@ -296,13 +278,10 @@ class KnownVersionsTest {
 
   @Test
   void testProcessingTechnique() {
-    // version 20200801, snapshot
-    assertEquals(2, KnowledgeProcessingTechniqueSeries.schemeVersions.size());
-    KnowledgeProcessingTechnique t1
-        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeprocessingtechnique._20200801.KnowledgeProcessingTechnique.Qualitative_Technique;
-    assertNotNull(t1);
+    // version _20210401
+    assertEquals(1, KnowledgeProcessingTechniqueSeries.schemeVersions.size());
     KnowledgeProcessingTechnique t2
-        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeprocessingtechnique.snapshot.KnowledgeProcessingTechnique.Qualitative_Technique;
+        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeprocessingtechnique._20210401.KnowledgeProcessingTechnique.Qualitative_Technique;
     assertNotNull(t2);
   }
 
@@ -317,37 +296,28 @@ class KnownVersionsTest {
 
   @Test
   void testLanguageRole() {
-    // version 20200801, snapshot
-    assertEquals(2, KnowledgeRepresentationLanguageRoleSeries.schemeVersions.size());
-    KnowledgeRepresentationLanguageRole r1
-        = org.omg.spec.api4kp._20200801.taxonomy.languagerole._20200801.KnowledgeRepresentationLanguageRole.Annotation_Language;
-    assertNotNull(r1);
+    // version _20210401
+    assertEquals(1, KnowledgeRepresentationLanguageRoleSeries.schemeVersions.size());
     KnowledgeRepresentationLanguageRole r2
-        = org.omg.spec.api4kp._20200801.taxonomy.languagerole.snapshot.KnowledgeRepresentationLanguageRole.Annotation_Language;
+        = org.omg.spec.api4kp._20200801.taxonomy.languagerole._20210401.KnowledgeRepresentationLanguageRole.Annotation_Language;
     assertNotNull(r2);
   }
 
   @Test
   void testOperations() {
-    // version 20200801, snapshot
-    assertEquals(2, KnowledgeProcessingOperationSeries.schemeVersions.size());
-    KnowledgeProcessingOperation op1
-        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeoperation._20200801.KnowledgeProcessingOperation.Cherry_Picking_Task;
-    assertNotNull(op1);
+    // version _20210401
+    assertEquals(1, KnowledgeProcessingOperationSeries.schemeVersions.size());
     KnowledgeProcessingOperation op2
-        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeoperation.snapshot.KnowledgeProcessingOperation.Cherry_Picking_Task;
+        = org.omg.spec.api4kp._20200801.taxonomy.knowledgeoperation._20210401.KnowledgeProcessingOperation.Cherry_Picking_Task;
     assertNotNull(op2);
   }
 
   @Test
   void testParsingLevel() {
-    // version 20200801, snapshot
-    assertEquals(2, ParsingLevelSeries.schemeVersions.size());
-    ParsingLevel pl1
-        = org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20200801.ParsingLevel.Concrete_Knowledge_Expression;
-    assertNotNull(pl1);
+    // version _20210401
+    assertEquals(1, ParsingLevelSeries.schemeVersions.size());
     ParsingLevel pl2
-        = org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.snapshot.ParsingLevel.Concrete_Knowledge_Expression;
+        = org.omg.spec.api4kp._20200801.taxonomy.parsinglevel._20210401.ParsingLevel.Concrete_Knowledge_Expression;
     assertNotNull(pl2);
   }
 
@@ -362,19 +332,19 @@ class KnownVersionsTest {
 
   @Test
   void testCCG() {
-    // snapshot until published
+    // _20210401 until published
     assertEquals(1, ConceptDefinitionTypeSeries.schemeVersions.size());
     ConceptDefinitionType ct
-        = edu.mayo.ontology.taxonomies.kao.ccgentries.snapshot.ConceptDefinitionType.Human_Resolution_Concept_Definition;
+        = edu.mayo.ontology.taxonomies.kao.ccgentries._20210401.ConceptDefinitionType.Human_Resolution_Concept_Definition;
     assertNotNull(ct);
   }
 
   @Test
   void testDMN() {
-    // snapshot until published
+    // _20210401 until published
     assertEquals(1, DecisionTypeSeries.schemeVersions.size());
     DecisionType dt
-        = edu.mayo.ontology.taxonomies.kao.decisiontype.snapshot.DecisionType.Assessment_Decision;
+        = edu.mayo.ontology.taxonomies.kao.decisiontype._20210401.DecisionType.Assessment_Decision;
     assertNotNull(dt);
   }
 

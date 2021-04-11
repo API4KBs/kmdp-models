@@ -21,13 +21,16 @@ import static edu.mayo.kmdp.terms.util.JenaUtil.detectVersionIRI;
 
 import edu.mayo.kmdp.terms.mireot.MireotConfig.MireotParameters;
 import edu.mayo.kmdp.util.JenaUtil;
+import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.StreamUtil;
+import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -122,7 +125,14 @@ public class MireotExtractor {
     pss.setLiteral("?n", min + 1);
     pss.setLiteral("?m", max < 0 ? Integer.MAX_VALUE : max + 1);
 
-    return JenaUtil.askQuery(source, pss.asQuery());
+    Set<Resource> resources = JenaUtil.askQuery(source, pss.asQuery());
+    if (cfg.getTyped(MireotParameters.NAMESPACE_SCOPED)) {
+      URI rootUri = URIUtil.detectNamespace(rootEntityUri);
+      resources = resources.stream()
+          .filter(res -> URIUtil.detectNamespace(URI.create(res.getURI())).equals(rootUri))
+          .collect(Collectors.toSet());
+    }
+    return resources;
   }
 
 

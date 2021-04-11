@@ -37,6 +37,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.series.Versionable;
+import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.iso639_1_languagecode.LanguageSeries;
@@ -137,8 +138,8 @@ public class VersionAgnosticVocabularyTest {
   @Test
   public void testKnownIdentifiers() {
 
-    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#6047674c-0d9b-3c81-89a3-6943f3a7169b",
-        KnowledgeAssetTypeSeries.Nursing_Protocol.getConceptId().toString());
+    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/ClinicalKnowledgeAssetType#6047674c-0d9b-3c81-89a3-6943f3a7169b",
+        ClinicalKnowledgeAssetTypeSeries.Nursing_Protocol.getConceptId().toString());
 
     assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916",
         KnowledgeAssetTypeSeries.Semantic_Decision_Model.getConceptId().toString());
@@ -176,11 +177,11 @@ public class VersionAgnosticVocabularyTest {
   @Test
   public void testHistory() {
     Date effectiveDate = KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines
-        .asOf(DateTimeUtil.parseDate("2019-09-15"))
+        .asOf(DateTimeUtil.parseDate("2021-09-15"))
         .map(Versionable::getVersionEstablishedOn)
         .orElse(null);
     assertNotNull(effectiveDate);
-    assertEquals("2019-08-01",DateTimeUtil.serializeAsDate(effectiveDate));
+    assertEquals("2021-04-01",DateTimeUtil.serializeAsDate(effectiveDate));
   }
 
 

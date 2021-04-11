@@ -47,12 +47,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.DerivationTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.Language;
 import org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode.LanguageSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
-import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory._20210401.KnowledgeAssetCategory;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetrole.KnowledgeAssetRoleSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
@@ -185,8 +186,8 @@ class VocabularyTest {
   @Test
   void testKnownIdentifiers() {
 
-    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#6047674c-0d9b-3c81-89a3-6943f3a7169b",
-        KnowledgeAssetTypeSeries.Nursing_Protocol.getConceptId().toString());
+    assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/ClinicalKnowledgeAssetType#6047674c-0d9b-3c81-89a3-6943f3a7169b",
+        ClinicalKnowledgeAssetTypeSeries.Nursing_Protocol.getConceptId().toString());
 
     assertEquals("https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916",
         KnowledgeAssetTypeSeries.Semantic_Decision_Model.getConceptId().toString());
@@ -227,13 +228,13 @@ class VocabularyTest {
     Optional<UUID> uid = ensureUUID(KnowledgeAssetCategorySeries.SCHEME_ID);
     assertTrue(uid.isPresent());
 
-    ResourceIdentifier versionedScheme = KnowledgeAssetCategory.schemeVersionIdentifier;
+    ResourceIdentifier versionedScheme = org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory._20210401.KnowledgeAssetCategory.schemeVersionIdentifier;
     URI schemeURI = versionedScheme.getResourceId();
     URI schemeVersionURI = versionedScheme.getVersionId();
 
     assertNotNull(schemeURI);
     assertEquals(base + "#02762f0f-208e-3b57-94ab-fa288ecdfe39", schemeURI.toString());
-    assertEquals(base + "/versions/20190801#02762f0f-208e-3b57-94ab-fa288ecdfe39", schemeVersionURI.toString());
+    assertEquals(base + "/versions/20210401#02762f0f-208e-3b57-94ab-fa288ecdfe39", schemeVersionURI.toString());
     //assertEquals(version, versionedScheme.getVersionTag());
     assertEquals(base,
         versionedScheme.getNamespaceUri().toString());

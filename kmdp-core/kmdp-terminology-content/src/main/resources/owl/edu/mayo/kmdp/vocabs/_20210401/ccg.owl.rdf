@@ -11,8 +11,8 @@
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:dc="http://purl.org/dc/elements/1.1/">
     <owl:Ontology rdf:about="http://ontology.mayo.edu/ontologies/CCG/">
-        <owl:versionIRI rdf:resource="http://ontology.mayo.edu/ontologies/CCG/"/>
-        <owl:imports rdf:resource="https://www.omg.org/spec/API4KP/20200801/api4kp-ckao/"/>
+        <owl:versionIRI rdf:resource="http://ontology.mayo.edu/ontologies/20210401/CCG/"/>
+        <owl:imports rdf:resource="https://www.omg.org/spec/API4KP/20210401/api4kp-ckao/"/>
         <rdfs:comment>Clinical Concept Glossary Ontology</rdfs:comment>
     </owl:Ontology>
     
