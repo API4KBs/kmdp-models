@@ -32,13 +32,16 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.ODM_BAL_8_10_X;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.WSDL_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries.OWL2_QL;
 import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries.OWL2_RL;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_1_XML_Syntax;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.OWL_Manchester_Syntax;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.RDF_XML_Syntax;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.WSDL_2_XML_Syntax;
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.LOINC;
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.RxNORM;
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.SNOMED_CT;
@@ -249,5 +252,21 @@ public class MimeCoderTest {
         .orElseGet(Assertions::fail);
     assertNull(rep.getLanguage());
     assertNull(rep.getFormat());
+  }
+
+  @Test
+  void testDecodeODM() {
+    String c1 = "model/odm_bal-v8_10_x";
+    WeightedRepresentation rep = ModelMIMECoder.decodeWeighted(c1);
+    assertTrue(ODM_BAL_8_10_X.sameAs(rep.getRep().getLanguage()));
+  }
+
+  @Test
+  void testDecodeWSDL() {
+    String c1 = "model/WSDL-v2+wsdl/xml";
+    WeightedRepresentation rep = ModelMIMECoder.decodeWeighted(c1);
+    assertTrue(WSDL_2_0.sameAs(rep.getRep().getLanguage()));
+    assertTrue(WSDL_2_XML_Syntax.sameAs(rep.getRep().getSerialization()));
+    assertTrue(XML_1_1.sameAs(rep.getRep().getFormat()));
   }
 }

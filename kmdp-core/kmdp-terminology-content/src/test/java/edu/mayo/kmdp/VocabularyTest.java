@@ -146,7 +146,7 @@ class VocabularyTest {
         KnowledgeRepresentationLanguageSerializationSeries.OWL_Functional_Syntax.getTag());
     assertEquals("brl",
         KnowledgeRepresentationLanguageSerializationSeries.ODM_BRL_Syntax.getTag());
-    assertEquals("odm-bom-v8.10.x",
+    assertEquals("odm_bom-v8_10_x",
         KnowledgeRepresentationLanguageSeries.ODM_BOM_8_10_X.getTag());
 
     assertEquals("dmn-v12",
