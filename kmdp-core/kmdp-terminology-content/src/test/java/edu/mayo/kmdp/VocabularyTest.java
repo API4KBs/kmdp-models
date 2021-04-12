@@ -22,6 +22,21 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Case_Enrichment_Rule;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Contextualization_Rule;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Support_Interaction;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Guidance_Rule;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Contextualizable_Knowledge;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Formal_Ontology;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Grounded_Knowledge;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Interactive_Documentation_Template;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Lexicon;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Naturalistic_Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Questionnaire;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Service_Profile;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Service_Specification;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Cognitive_Care_Process_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.SPARQL_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krprofile.KnowledgeRepresentationLanguageProfileSeries.CQL_Essentials;
@@ -275,5 +290,25 @@ class VocabularyTest {
     assertTrue(kat.sameTermAs(katVer));
     assertTrue(kat.isCoreferent(katVer));
     assertTrue(kat.evokesSameAs(katVer));
+  }
+
+  @Test
+  void testMEAAssetTypes() {
+    assertNotNull(Service_Specification);
+    assertNotNull(Service_Profile);
+    assertNotNull(Naturalistic_Decision_Model);
+    assertNotNull(Grounded_Knowledge);
+    assertNotNull(Contextualizable_Knowledge);
+    assertNotNull(Interactive_Documentation_Template);
+    assertNotNull(Questionnaire);
+    assertNotNull(Formal_Ontology);
+    assertNotNull(Lexicon);
+    assertNotNull(Clinical_Case_Management_Model);
+    assertNotNull(Clinical_Decision_Model);
+    assertNotNull(Cognitive_Care_Process_Model);
+    assertNotNull(Clinical_Decision_Support_Interaction);
+    assertNotNull(Case_Enrichment_Rule);
+    assertNotNull(Clinical_Guidance_Rule);
+    assertNotNull(Clinical_Contextualization_Rule);
   }
 }
