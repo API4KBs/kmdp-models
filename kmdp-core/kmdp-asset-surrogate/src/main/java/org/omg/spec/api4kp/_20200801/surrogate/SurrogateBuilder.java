@@ -70,6 +70,7 @@ import org.omg.spec.api4kp._20200801.taxonomy.knowledgeprocessingtechnique.Knowl
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.lexicon.Lexicon;
+import org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatus;
 
 public class SurrogateBuilder {
 
@@ -341,6 +342,13 @@ public class SurrogateBuilder {
         new Dependency()
             .withRel(rel)
             .withHref(relatedAsset));
+    return this;
+  }
+
+  public SurrogateBuilder withPublicationStatus(PublicationStatus status) {
+    get().withLifecycle(
+        new Publication()
+            .withPublicationStatus(status));
     return this;
   }
 
