@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <version>9.0.13-SNAPSHOT</version>
+    <version>9.0.12</version>
     <artifactId>kmdp-impl</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
   </parent>
