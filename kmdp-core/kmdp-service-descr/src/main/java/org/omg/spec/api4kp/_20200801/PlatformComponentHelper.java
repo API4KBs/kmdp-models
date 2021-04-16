@@ -44,16 +44,17 @@ public class PlatformComponentHelper {
 
   public static Optional<KnowledgeArtifactRepository> repositoryDescr(String baseNamespace, String identifier,
       String name, URL baseUrl) {
-    if (isEmpty(identifier) || isEmpty(baseNamespace) || baseUrl == null) {
+    if (isEmpty(identifier) || isEmpty(baseNamespace)) {
       return Optional.empty();
     }
+    String base = baseUrl != null ? baseUrl.toString() : "http:/";
     return Optional.of(new org.omg.spec.api4kp._20200801.services.repository.resources.KnowledgeArtifactRepository()
         .withInstanceId(
             SemanticIdentifier.newId(BASE_UUID_URN_URI, UUID.randomUUID(), VERSION_ZERO))
         .withId(SemanticIdentifier.newId(URI.create(baseNamespace + "/repos/" + identifier)))
         .withAlias(SemanticIdentifier.newId(BASE_UUID_URN_URI, identifier, VERSION_ZERO))
         .withName(name)
-        .withHref(URI.create(baseUrl + "/repos/" + identifier)));
+        .withHref(URI.create(base + "/repos/" + identifier)));
   }
 
   public static <O extends Option<O>> ParameterDefinitions asParamDefinitions(
