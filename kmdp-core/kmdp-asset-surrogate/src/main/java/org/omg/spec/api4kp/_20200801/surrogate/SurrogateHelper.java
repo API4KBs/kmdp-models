@@ -77,12 +77,20 @@ public class SurrogateHelper {
   }
 
 
-  public static Optional<ConceptIdentifier> getSimpleAnnotationValue(KnowledgeAsset asset,
-      Term rel) {
+  public static Optional<ConceptIdentifier> getSimpleAnnotationValue(
+      KnowledgeAsset asset, Term rel) {
     return asset.getAnnotation().stream()
-        .filter(ann -> rel == null || rel.getUuid().equals(ann.getRel().getUuid()))
+        .filter(ann -> rel == null || rel.sameTermAs(ann.getRel()))
         .map(Annotation::getRef)
         .findAny();
+  }
+
+  public static Collection<ConceptIdentifier> getAnnotationValues(
+      KnowledgeAsset asset, Term rel) {
+    return asset.getAnnotation().stream()
+        .filter(ann -> rel == null || rel.sameTermAs(ann.getRel()))
+        .map(Annotation::getRef)
+        .collect(Collectors.toSet());
   }
 
 
@@ -147,7 +155,8 @@ public class SurrogateHelper {
   private static Optional<KnowledgeArtifact> getInnerArtifact(
       UUID artifactId, String artifactVersionTag, KnowledgeAsset surr,
       Function<KnowledgeAsset, List<KnowledgeArtifact>> mapper) {
-    ResourceIdentifier aId = artifactId(surr.getAssetId().getNamespaceUri(),artifactId, artifactVersionTag);
+    ResourceIdentifier aId =
+        artifactId(surr.getAssetId().getNamespaceUri(), artifactId, artifactVersionTag);
     return mapper.apply(surr).stream()
         .filter(a -> aId.sameAs(a.getArtifactId()))
         .findAny();
@@ -372,7 +381,8 @@ public class SurrogateHelper {
         .withHref(canonicalArtifact.map(KnowledgeArtifact::getLocator).orElse(null));
   }
 
-  public static KnowledgeCarrier toRuntimeSurrogate(KnowledgeAsset surrogate, ParsingLevel level, Object expr) {
+  public static KnowledgeCarrier toRuntimeSurrogate(
+      KnowledgeAsset surrogate, ParsingLevel level, Object expr) {
     Optional<KnowledgeArtifact> canonicalArtifact
         = surrogate.getCarriers().stream().findFirst();
 
@@ -407,7 +417,6 @@ public class SurrogateHelper {
     return ((KnowledgeCarrier) variantCarrier.clone())
         .withAssetId(sourceCarrier.getAssetId());
   }
-
 
 
   /**
@@ -506,7 +515,7 @@ public class SurrogateHelper {
     return getComponents(surrogate, struct, role).findFirst();
   }
 
-  public enum VersionIncrement { MAJOR, MINOR, PATCH }
+  public enum VersionIncrement {MAJOR, MINOR, PATCH}
 
   public static void incrementVersion(KnowledgeAsset changingSurrogate, VersionIncrement incr) {
     getSurrogateMetadata(changingSurrogate, Knowledge_Asset_Surrogate_2_0, null)

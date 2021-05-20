@@ -28,6 +28,8 @@ import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -46,9 +48,9 @@ import java.util.stream.Collector;
 /**
  * Terms are specialized identifiers that, in addition to denoting entities, evoke concepts.
  * Provides factory methods for generating ConceptIdentifier
- *
  */
-public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifier, VersionIdentifier {
+public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifier,
+    VersionIdentifier {
 
   URI getReferentId();
 
@@ -68,8 +70,8 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
   }
 
   /**
-   * Compares two Terms based on their ID
-   * (Used to compare implementations of the same term)
+   * Compares two Terms based on their ID (Used to compare implementations of the same term)
+   *
    * @param other
    * @return true if the two Terms object represent the same Term
    */
@@ -79,8 +81,9 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
   }
 
   /**
-   * Compares two Terms based on the ID of the concept they evoke
-   * (Used to compare alternative expressions)
+   * Compares two Terms based on the ID of the concept they evoke (Used to compare alternative
+   * expressions)
+   *
    * @param other
    * @return true if the two Terms evoke the same concept
    */
@@ -90,8 +93,9 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
   }
 
   /**
-   * Compares two Terms based on the (ID of) the entity they denote
-   * (Used to compare alternative conceptualizations)
+   * Compares two Terms based on the (ID of) the entity they denote (Used to compare alternative
+   * conceptualizations)
+   *
    * @param other
    * @return true if the two Terms denote the same entity
    */
@@ -102,6 +106,7 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
 
   /**
    * Alias 'name' as 'label' for terms
+   *
    * @return
    */
   @JsonIgnore
@@ -111,6 +116,7 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
 
   /**
    * Alias 'resourceId' as 'conceptId' for terms
+   *
    * @return
    */
   @JsonIgnore
@@ -134,8 +140,8 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
   }
 
   /**
-   * Create ConceptIdentifier for the UUID provided.
-   * Will generate tag and resourceId as required values.
+   * Create ConceptIdentifier for the UUID provided. Will generate tag and resourceId as required
+   * values.
    *
    * @param uuid
    * @return ResourceIdentifier
@@ -155,19 +161,19 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
   /**
    * Constructs a generic Term
    *
-   * @param conceptId The URI assigned to the Concept
-   *                  The conceptId is version invariant
-   * @param tag An identifier, scoped by the concept scheme to which this concept belongs.
-   *            The tag evokes the concept, and denotes the referent
-   * @param uuid A universal identifier associated to the concept
-   *             The uuid is version invariant
-   * @param namespace The URI of the namespace / concept scheme that defines the concept
-   * @param referentId The URI of the referent of the concept
-   * @param versionTag The version of this concept
-   *                   The version tag can be combined with the concept Id to create a concept version URI
-   * @param name The primary label for the concept
-   * @param establishedDate The date the concept was established (usually inherited from the date
-   *                        of the release of the version of the concept scheme that first incluedd this concept)
+   * @param conceptId       The URI assigned to the Concept The conceptId is version invariant
+   * @param tag             An identifier, scoped by the concept scheme to which this concept
+   *                        belongs. The tag evokes the concept, and denotes the referent
+   * @param uuid            A universal identifier associated to the concept The uuid is version
+   *                        invariant
+   * @param namespace       The URI of the namespace / concept scheme that defines the concept
+   * @param referentId      The URI of the referent of the concept
+   * @param versionTag      The version of this concept The version tag can be combined with the
+   *                        concept Id to create a concept version URI
+   * @param name            The primary label for the concept
+   * @param establishedDate The date the concept was established (usually inherited from the date of
+   *                        the release of the version of the concept scheme that first incluedd
+   *                        this concept)
    * @return a Term
    */
   static Term newTerm(URI conceptId, String tag, UUID uuid, URI namespace, URI referentId,
@@ -182,7 +188,7 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
         .withResourceId(uri)
         .withName(name)
         .withEstablishedOn(establishedDate)
-        .withVersionId(getDefaultVersionId(uri,versionTag));
+        .withVersionId(getDefaultVersionId(uri, versionTag));
   }
 
   static Term newTerm(String tag) {
@@ -242,11 +248,12 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
         // generate required UUID from resourceId
         .withUuid(UniversalIdentifier.toUUID(tag, resourceId))
         .withVersionTag(versionTag)
-        .withVersionId(getDefaultVersionId(resourceId,versionTag));
+        .withVersionId(getDefaultVersionId(resourceId, versionTag));
   }
 
   /**
    * Instantiates a SNOMED-CT term
+   *
    * @param label
    * @param code
    * @return a Term from SNOMED
@@ -255,7 +262,7 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
     String termUri = SNOMED_BASE_URI + code;
     return newTerm(
         URI.create(termUri)
-        ,code,
+        , code,
         Util.uuid(termUri),
         SNOMED_URI,
         URI.create(termUri),
@@ -266,6 +273,7 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
 
   /**
    * Instantiates a mock test local term
+   *
    * @param label
    * @param code
    * @return a Test Term from a fictitious concept scheme for testing purposes
@@ -285,8 +293,13 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
   }
 
 
-  static <V> Collector<V, Map<Term, List<V>>, Map<Term,List<V>>> groupByConcept(
-      Function<V,? extends Term> classifier) {
+  static <V> Collector<V, Map<Term, List<V>>, Map<Term, List<V>>> groupByConcept(
+      Function<V, ? extends Term> classifier) {
+    return multiGroupByConcept(classifier.andThen(Collections::singleton));
+  }
+
+  static <V> Collector<V, Map<Term, List<V>>, Map<Term, List<V>>> multiGroupByConcept(
+      Function<V, Collection<? extends Term>> classifier) {
     return new Collector<>() {
       @Override
       public Supplier<Map<Term, List<V>>> supplier() {
@@ -295,9 +308,9 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
 
       @Override
       public BiConsumer<Map<Term, List<V>>, V> accumulator() {
-        return (m1,v) -> {
-          Term t = classifier.apply(v);
-          findEntry(m1,t).add(v);
+        return (m1, v) -> {
+          Collection<? extends Term> terms = classifier.apply(v);
+          terms.forEach(t -> findEntry(m1, t).add(v));
         };
       }
 
@@ -311,8 +324,8 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
 
       @Override
       public BinaryOperator<Map<Term, List<V>>> combiner() {
-        return (m1,m2) -> {
-          m2.forEach((k, v) -> findEntry(m1,k).addAll(v));
+        return (m1, m2) -> {
+          m2.forEach((k, v) -> findEntry(m1, k).addAll(v));
           return m1;
         };
       }
