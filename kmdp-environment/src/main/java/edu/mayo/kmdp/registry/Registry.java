@@ -63,14 +63,16 @@ public class Registry {
   }
 
   public static URI mapAssetToArtifactNamespace(URI assetNS) {
-    if (assetNS == MAYO_ASSETS_BASE_URI_URI || MAYO_ASSETS_BASE_URI.equals(assetNS.toString())) {
+    if (assetNS == null
+        || assetNS == MAYO_ASSETS_BASE_URI_URI
+        || MAYO_ASSETS_BASE_URI.equals(assetNS.toString())) {
       return MAYO_ARTIFACTS_BASE_URI_URI;
     }
     return BASE_UUID_URN_URI;
   }
 
   public static String mapAssetToArtifactNamespace(String assetNS) {
-    if (assetNS.equals(MAYO_ASSETS_BASE_URI)) {
+    if (assetNS != null && assetNS.equals(MAYO_ASSETS_BASE_URI)) {
       return MAYO_ARTIFACTS_BASE_URI;
     }
     return BASE_UUID_URN;
