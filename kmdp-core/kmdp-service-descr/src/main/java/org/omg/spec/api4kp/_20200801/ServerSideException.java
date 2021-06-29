@@ -73,4 +73,9 @@ public class ServerSideException extends RuntimeException {
       return mainError + "\n" + explanation;
     }
   }
+
+  @Override
+  public String getMessage() {
+    return error == null ? super.getMessage() : error.getMessage();
+  }
 }
