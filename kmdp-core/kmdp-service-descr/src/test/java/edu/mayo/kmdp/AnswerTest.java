@@ -44,7 +44,8 @@ class AnswerTest {
 
     assertEquals("foo", ans.getOptionalValue().orElse("Missing"));
 
-    assertNull(ans.getExplanation());
+    assertNotNull(ans.getExplanation());
+    assertTrue(ans.getExplanation().asString().isEmpty());
     assertTrue(ans.isSuccess());
     assertFalse(ans.isFailure());
 

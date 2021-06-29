@@ -248,7 +248,7 @@ public interface AbstractCarrier {
 
 
   static SyntacticRepresentation rep(SyntacticRepresentation src) {
-    SyntacticRepresentation rep = new org.omg.spec.api4kp._20200801.services.SyntacticRepresentation();
+    var rep = new org.omg.spec.api4kp._20200801.services.SyntacticRepresentation();
     src.copyTo(rep);
     return rep;
   }
@@ -389,7 +389,7 @@ public interface AbstractCarrier {
 
 
   static String codedRep(SyntacticRepresentation src) {
-    SyntacticRepresentation rep = new org.omg.spec.api4kp._20200801.services.SyntacticRepresentation();
+    var rep = new org.omg.spec.api4kp._20200801.services.SyntacticRepresentation();
     src.copyTo(rep);
     return ModelMIMECoder.encode(rep);
   }
@@ -515,9 +515,9 @@ public interface AbstractCarrier {
       return Optional.of(new String((byte[]) this.getExpression()));
     }
     if (this.getExpression() instanceof Document) {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      var baos = new ByteArrayOutputStream();
       XMLUtil.streamXMLNode((Document) this.getExpression(), baos);
-      return Optional.of(new String(baos.toByteArray()));
+      return Optional.of(baos.toString());
     }
     if (this.getExpression() instanceof JsonNode) {
       return JSonUtil.writeJsonAsString(this.getExpression());
