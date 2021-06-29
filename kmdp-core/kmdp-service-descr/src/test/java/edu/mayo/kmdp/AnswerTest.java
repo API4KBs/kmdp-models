@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp._20200801.Answer.merge;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Serialized_Knowledge_Expression;
 
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
@@ -34,6 +35,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
+import org.omg.spec.api4kp._20200801.Explainer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 
 class AnswerTest {
@@ -197,5 +199,28 @@ class AnswerTest {
     assertEquals(Arrays.asList(1,2), ans.orElse(Collections.emptyList()));
   }
 
+  @Test
+  void testMergeWithExplanation() {
+    String xpl = "X";
+
+    Answer<Void> ans1 = Answer.of();
+    Answer<Void> ans2 = Answer.of();
+    Answer<Void> ans3 = Answer.of();
+
+    Answer<Void> ans = merge(merge(ans1, ans2), ans3);
+
+    assertTrue(ans.getExplanation().asString().isEmpty());
+
+    Answer<Void> ans5 = Answer.of().withExplanation(xpl);
+
+    ans = Answer.merge(ans, ans5);
+
+    assertEquals(xpl, ans.getExplanation().asString().orElse(""));
+    assertEquals(xpl, ans5.getExplanation().asString().orElse(""));
+
+    assertTrue(ans1.getExplanation().asString().isEmpty());
+
+    assertTrue(Explainer.DEFAULT_NO_EXPL.asString().isEmpty());
+  }
 
 }

@@ -16,7 +16,6 @@
 package org.omg.spec.api4kp._20200801;
 
 
-import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
@@ -32,7 +31,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;

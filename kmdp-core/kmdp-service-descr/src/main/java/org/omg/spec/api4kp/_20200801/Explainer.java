@@ -45,7 +45,7 @@ public abstract class Explainer {
   public static final String EXPL_HEADER = "Link";
   public static final String PROV_KEY = "http://www.w3.org/ns/prov#has_provenance";
 
-  private static final KnowledgeCarrier DEFAULT_NO_EXPL = new KnowledgeCarrier();
+  public static final KnowledgeCarrier DEFAULT_NO_EXPL = new KnowledgeCarrier();
 
   protected KnowledgeCarrier explanation;
 
@@ -89,11 +89,13 @@ public abstract class Explainer {
   protected void mergeExplanation(KnowledgeCarrier other) {
     //TODO This should be a "combiner" for KnowledgeCarriers, depending on the adopted representation language
     if (other != null) {
-      if (this.explanation == null) {
+      if (this.explanation == null || this.explanation == DEFAULT_NO_EXPL) {
         this.explanation = other;
       } else {
         KnowledgeCarrier s = explanation;
-        s.setExpression(s.asString().orElse("") + "\n" + other.asString().orElse(""));
+        String s1 = s.asString().orElse("");
+        String s2 = other.asString().orElse("");
+        s.setExpression(String.join("\n", s1, s2));
       }
     }
   }
