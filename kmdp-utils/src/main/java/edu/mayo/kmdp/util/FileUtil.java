@@ -1,29 +1,24 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.util;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -48,14 +43,14 @@ import org.slf4j.LoggerFactory;
 
 public class FileUtil {
 
-  private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
+  private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
   protected FileUtil() {
 
   }
 
   public static Optional<String> read(String file) {
-    try(FileInputStream fis = new FileInputStream(file)) {
+    try (var fis = new FileInputStream(file)) {
       return read(fis);
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
@@ -83,15 +78,8 @@ public class FileUtil {
 
   public static Optional<String> read(InputStream is) {
     try {
-      int available = is.available();
-      byte[] data = new byte[available];
-      int actual = is.read(data);
-
-      if (available != actual) {
-        throw new IOException("Unable to read all data");
-      }
-
-      return Optional.of(new String(data));
+      return Optional.of(
+          IOUtils.toString(is, Charset.defaultCharset()));
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
       return Optional.empty();
@@ -101,7 +89,7 @@ public class FileUtil {
 
   public static Optional<String> read(URL url) {
     try {
-      File f = new File(url.toURI());
+      var f = new File(url.toURI());
       if (!f.exists()) {
         throw new FileNotFoundException("Unable to find file for url " + url);
       }
@@ -159,8 +147,13 @@ public class FileUtil {
   }
 
   public static String readStatic(String path, Class<?> ctx) {
+    InputStream is = ctx.getResourceAsStream(path);
+    if (is == null) {
+      return null;
+    }
+    // TODO Test for platform-specific behavior
     return new Scanner(
-        ctx.getResourceAsStream(path),
+        is,
         Charset.defaultCharset().name())
         .useDelimiter("\\A")
         .next();
@@ -168,7 +161,7 @@ public class FileUtil {
 
   public static List<URL> findFiles(URL rootURL, String regxpFilter) {
     try {
-      File root = new File(rootURL.toURI());
+      var root = new File(rootURL.toURI());
       if (root.isDirectory()) {
         List<URL> files = new LinkedList<>();
         findFiles(root, regxpFilter, files);
@@ -214,23 +207,12 @@ public class FileUtil {
       if (targetFile.isDirectory()) {
         return false;
       }
-
-      BufferedReader reader = new BufferedReader(new InputStreamReader(sourceStream));
-      StringBuilder out = new StringBuilder();
-      String line;
-      while ((line = reader.readLine()) != null) {
-        out.append(line);
-      }
-      reader.close();
-
       if (!targetFile.getParentFile().exists() && !targetFile.getParentFile().mkdirs()) {
         return false;
       }
-
-      try (FileOutputStream fos = new FileOutputStream(targetFile)) {
-        fos.write(out.toString().getBytes());
+      try (var fos = new FileOutputStream(targetFile)) {
+        IOUtils.copy(sourceStream, fos);
       }
-
       return true;
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
@@ -239,13 +221,18 @@ public class FileUtil {
   }
 
   public static void delete(File root) {
-    Path pathToBeDeleted = root.toPath();
+    var pathToBeDeleted = root.toPath();
 
     try (Stream<Path> pathStream = Files.walk(pathToBeDeleted)) {
-      pathStream
+      boolean success = pathStream
           .sorted(Comparator.reverseOrder())
           .map(Path::toFile)
-          .forEach(File::delete);
+          .map(File::delete)
+          .reduce(Boolean::logicalAnd)
+          .orElse(Boolean.FALSE);
+      if (!success) {
+        logger.error("Unable to delete {} recursively", root.getAbsolutePath());
+      }
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
     }
@@ -263,7 +250,7 @@ public class FileUtil {
   }
 
   public static void write(byte[] content, File file) {
-    try (FileOutputStream fos = new FileOutputStream(file);) {
+    try (var fos = new FileOutputStream(file)) {
       fos.write(content);
       fos.flush();
     } catch (IOException e) {
@@ -272,7 +259,7 @@ public class FileUtil {
   }
 
   public static void write(String content, File file) {
-    try (PrintWriter wr = new PrintWriter(file)) {
+    try (var wr = new PrintWriter(file)) {
       wr.write(content);
       wr.flush();
     } catch (FileNotFoundException e) {
