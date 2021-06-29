@@ -45,6 +45,9 @@ public abstract class Explainer {
   public static final String EXPL_HEADER = "Link";
   public static final String PROV_KEY = "http://www.w3.org/ns/prov#has_provenance";
 
+  private static final KnowledgeCarrier DEFAULT_NO_EXPL =
+      AbstractCarrier.of("No explanation available");
+
   protected KnowledgeCarrier explanation;
 
   public static Optional<KnowledgeCarrier> extractExplanation(
@@ -111,7 +114,7 @@ public abstract class Explainer {
   }
 
   public KnowledgeCarrier getExplanation() {
-    return explanation;
+    return explanation != null ? explanation : DEFAULT_NO_EXPL;
   }
 
   public String printExplanation() {
