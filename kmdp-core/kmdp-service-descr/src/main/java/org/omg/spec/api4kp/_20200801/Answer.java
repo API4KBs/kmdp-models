@@ -302,8 +302,17 @@ public class Answer<T> extends Explainer {
   }
 
   public void ifPresent(Consumer<? super T> consumer) {
-    if (value != null)
+    if (value != null) {
       consumer.accept(value);
+    }
+  }
+
+  public void ifSuccess(Consumer<? super T> onSuccess, Consumer<Answer<? super T>> onFail) {
+    if (isSuccess()) {
+      onSuccess.accept(value);
+    } else {
+      onFail.accept(this);
+    }
   }
 
   public <X> Answer<Void> forEach(Class<X> memberClass, Consumer<? super X> mapper) {
