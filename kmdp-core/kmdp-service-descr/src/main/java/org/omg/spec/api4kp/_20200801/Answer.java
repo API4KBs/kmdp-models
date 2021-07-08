@@ -315,6 +315,16 @@ public class Answer<T> extends Explainer {
     }
   }
 
+  public void ifSuccess(Consumer<? super T> onSuccess) {
+    ifSuccess(onSuccess, a -> {});
+  }
+
+  public void ifFailed(Consumer<Answer<? super T>> onFail) {
+    if (isFailure()) {
+      onFail.accept(this);
+    }
+  }
+
   public <X> Answer<Void> forEach(Class<X> memberClass, Consumer<? super X> mapper) {
     return getHandler().forEach((Answer<List<X>>) this, mapper);
   }
