@@ -21,7 +21,6 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;

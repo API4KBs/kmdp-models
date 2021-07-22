@@ -143,4 +143,15 @@ public class DatatypeTest {
     Version v = Version.valueOf(svid);
     assertEquals("110", v.getPreReleaseVersion());
   }
+
+  @Test
+  void testResourceIdentifierToString() {
+    String versionedId = "http://foo.bar/baz/versions/1.2.0";
+    String unversionedId = "http://foo.bar/baz";
+    ResourceIdentifier uid1 = newVersionId(URI.create(unversionedId));
+    ResourceIdentifier uid2 = newVersionId(URI.create(versionedId));
+
+    assertEquals("http://foo.bar/baz", uid1.toString());
+    assertEquals("http://foo.bar/baz/versions/1.2.0", uid2.toString());
+  }
 }

@@ -2,6 +2,7 @@
   xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
   xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+  xmlns:ci="http://jaxb.dev.java.net/plugin/code-injector"
   xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
@@ -24,6 +25,13 @@
 
     <jxb:bindings node="//xsd:complexType[@name='ResourceIdentifier']">
       <inheritance:implements>org.omg.spec.api4kp._20200801.id.SemanticIdentifier</inheritance:implements>
+      <ci:code>
+        public String toString() {
+          return this.getVersionId() != null
+            ? this.getVersionId().toString()
+            : this.getResourceId().toString();
+        }
+      </ci:code>
     </jxb:bindings>
 
     <jxb:bindings node="//xsd:complexType[@name='ConceptIdentifier']">

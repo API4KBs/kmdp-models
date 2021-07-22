@@ -137,7 +137,8 @@ public class JaxbUtil {
       marshaller.marshal(root, baos);
       return Optional.of(baos);
     } catch (JAXBException e) {
-      if (p.getTyped(JaxbOptions.LOG_EXCEPTIONS)) {
+      boolean logX = p.getTyped(JaxbOptions.LOG_EXCEPTIONS);
+      if (logX) {
         logger.error(e.getMessage(), e);
       }
       return Optional.empty();

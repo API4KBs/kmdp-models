@@ -106,7 +106,12 @@ public abstract class Explainer {
   }
 
   protected void addExplanation(String s) {
-    setExplanation(ofNaturalLanguageRep(s));
+    KnowledgeCarrier x = ofNaturalLanguageRep(s);
+    if (getExplanation() != null) {
+      mergeExplanation(x);
+    } else {
+      setExplanation(x);
+    }
   }
 
   protected void addExplanation(Map<String, List<String>> meta) {
