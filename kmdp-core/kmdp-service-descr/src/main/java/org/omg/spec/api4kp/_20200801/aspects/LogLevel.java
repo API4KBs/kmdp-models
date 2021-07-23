@@ -15,6 +15,7 @@ import org.slf4j.Logger;
  * </ul>
  */
 public enum LogLevel {
+  NONE(l -> false, (l, s) -> { }, (l, t) -> { }),
   TRACE(Logger::isTraceEnabled, Logger::trace, (l, t) -> l.trace(t.getMessage(), t)),
   DEBUG(Logger::isDebugEnabled, Logger::debug, (l, t) -> l.debug(t.getMessage(), t)),
   INFO(Logger::isInfoEnabled, Logger::info, (l, t) -> l.info(t.getMessage(), t)),

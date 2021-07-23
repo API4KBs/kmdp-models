@@ -38,6 +38,8 @@ import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
 
 public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 
+  private static Javers singleton;
+
   public SurrogateDiffer() {
   }
 
@@ -47,6 +49,13 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
 
   @Override
   protected Javers init() {
+    if (singleton == null) {
+      singleton = newDiffer();
+    }
+    return singleton;
+  }
+
+  private Javers newDiffer() {
     JaversBuilder builder = JaversBuilder.javers()
         .withMappingStyle(MappingStyle.BEAN)
 
@@ -60,9 +69,8 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
                 singletonList("lifecycle")))
         .registerValue(
             ResourceIdentifier.class,
-            (a,b) -> a.asKey().equals(b.asKey()),
-            a -> a.asKey().toString())
-        ;
+            (a, b) -> a.asKey().equals(b.asKey()),
+            a -> a.asKey().toString());
 
     configureTerminology(builder);
 

@@ -88,7 +88,6 @@ public class LatchedScheduleExecutor<T> {
    * Schedules the execution of the client provided callable, at the programmed delay
    */
   public synchronized void scheduleExecution() {
-    logger.debug("[{}] scheduling task in {} seconds", name, delay);
     if (taskPending.getAndSet(true)) {
       cancelExecution(false);
     }
@@ -103,7 +102,7 @@ public class LatchedScheduleExecutor<T> {
    * @return A scheduled future, if delay is non-negative
    */
   private Optional<ScheduledFuture<T>> scheduleExecution(int delay) {
-    logger.debug("[{}] Scheduling in {} seconds", name, delay);
+    logger.trace("[{}] Scheduling in {} seconds", name, delay);
     if (delay < 0) {
       return Optional.empty();
     }
