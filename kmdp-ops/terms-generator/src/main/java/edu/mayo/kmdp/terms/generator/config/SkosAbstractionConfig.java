@@ -21,6 +21,7 @@ import edu.mayo.kmdp.Option;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import java.net.URI;
 import java.util.Properties;
+import org.apache.jena.vocabulary.SKOS;
 
 public class SkosAbstractionConfig extends
     ConfigProperties<SkosAbstractionConfig, SkosAbstractionParameters> {
@@ -90,6 +91,12 @@ public class SkosAbstractionConfig extends
         "Determines the position of the version tag in the version IRI, "
             + "starting from the end of the IRI, in reverse order ",
         Integer.class,
+        false)),
+    LABEL_PROPERTY( Opt.of(
+        "labelProperty",
+        SKOS.prefLabel.getLocalName(),
+        "Determines which label annotation will be used preferentially",
+        String.class,
         false
     ));
 

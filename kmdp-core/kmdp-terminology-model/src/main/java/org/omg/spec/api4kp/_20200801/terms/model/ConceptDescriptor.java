@@ -1,5 +1,8 @@
 package org.omg.spec.api4kp._20200801.terms.model;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.jena.vocabulary.SKOS;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
@@ -8,6 +11,8 @@ public class ConceptDescriptor extends ConceptIdentifier {
 
   private Term[] ancestors;
   private Term[] closure;
+
+  private final Map<String,String> labels = new HashMap<>();
 
   public ConceptDescriptor() {
     // Empty constructor
@@ -47,6 +52,26 @@ public class ConceptDescriptor extends ConceptIdentifier {
    */
   public void setClosure(Term[] closure) {
     this.closure = closure;
+  }
+
+  public Map<String, String> getLabels() {
+    return labels;
+  }
+
+  public ConceptDescriptor withLabels(Map<String,String> labelsByType) {
+    labels.putAll(labelsByType);
+    return this;
+  }
+
+  public void addLabel(String label, String type) {
+    labels.put(type, label);
+  }
+
+  @Override
+  public String getPrefLabel() {
+    return labels.containsKey(SKOS.prefLabel.getLocalName())
+        ? labels.get(SKOS.prefLabel.getLocalName())
+        : super.getPrefLabel();
   }
 
   /**
@@ -103,4 +128,13 @@ public class ConceptDescriptor extends ConceptIdentifier {
         .withVersionTag(getVersionTag());
   }
 
+  @Override
+  public boolean equals(Object object) {
+    return super.equals(object);
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
 }

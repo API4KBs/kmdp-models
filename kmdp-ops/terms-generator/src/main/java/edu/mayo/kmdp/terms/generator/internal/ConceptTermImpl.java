@@ -4,35 +4,65 @@ import static edu.mayo.kmdp.util.NameUtils.namespaceURIStringToPackage;
 import static edu.mayo.kmdp.util.NameUtils.removeTrailingPart;
 import static edu.mayo.kmdp.util.Util.ensureUTF8;
 
-import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import org.apache.jena.vocabulary.SKOS;
 import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.terms.ConceptScheme;
 
 public class ConceptTermImpl extends InternalTerm {
 
   private UUID internalConceptUUID;
   private List<String> notations;
 
-  public ConceptTermImpl(URI conceptURI, String code, String label, String comment, URI refUri,
-      ConceptScheme<Term> scheme, UUID conceptUUID, List<String> notations, Date establishedOn) {
+  private Map<String,String> labels;
+  private String primaryLabelType;
 
-    super(conceptURI, code, label, ensureUTF8(comment), refUri, scheme, establishedOn);
+  public ConceptTermImpl(URI conceptURI, String code, Map<String,String> labels, String comment, URI refUri,
+      ConceptScheme<Term> scheme, UUID conceptUUID, List<String> notations, Date establishedOn,
+      String primaryLabelType) {
+
+    super(conceptURI, code, labels.get(detectActualPrimaryLabelType(primaryLabelType, labels)),
+        ensureUTF8(comment), refUri, scheme, establishedOn);
     this.internalConceptUUID = conceptUUID;
     this.notations = new ArrayList<>(notations);
+    this.labels = labels;
+    this.primaryLabelType = detectActualPrimaryLabelType(primaryLabelType, labels);
   }
 
   public ConceptTermImpl(ConceptTermImpl other) {
-    this(other.getConceptId(), other.getTag(), other.getLabel(), other.getComment(),
-        other.getReferentId(), other.getScheme(), other.getUuid(), other.getNotations(), other.getEstablishedOn());
+    this(other.getConceptId(), other.getTag(), other.getLabels(), other.getComment(),
+        other.getReferentId(), other.getScheme(), other.getUuid(), other.getNotations(), other.getEstablishedOn(),
+        other.getPrimaryLabelType());
+  }
+
+  private static String detectActualPrimaryLabelType(String primaryLabelType, Map<String, String> labels) {
+    if (primaryLabelType != null && labels.containsKey(primaryLabelType)) {
+      return primaryLabelType;
+    } else if (! labels.containsKey(SKOS.prefLabel.getLocalName())) {
+      throw new IllegalStateException("Unable to detect primary label type " + labels +
+          " when expecting " + primaryLabelType);
+    } else {
+      return SKOS.prefLabel.getLocalName();
+    }
+  }
+
+  private String getPrimaryLabelType() {
+    return primaryLabelType;
+  }
+
+  private Map<String, String> getLabels() {
+    return labels;
   }
 
   public String getTermConceptName() {
-    return edu.mayo.kmdp.util.NameUtils.getTermConceptName(tag, getLabel());
+    String name = labels.getOrDefault(SKOS.hiddenLabel.getLocalName(), getPrefLabel());
+    return edu.mayo.kmdp.util.NameUtils.getTermConceptName(tag, name);
   }
 
   public String getTermConceptPackage() {
@@ -56,8 +86,8 @@ public class ConceptTermImpl extends InternalTerm {
   }
 
   public ConceptTermImpl cloneInto(ConceptScheme<Term> cs) {
-    return new ConceptTermImpl(getConceptId(), getTag(), getLabel(), getComment(), getReferentId(),
-        cs, getUuid(), new ArrayList<>(getNotations()), getEstablishedOn());
+    return new ConceptTermImpl(getConceptId(), getTag(), getLabels(), getComment(), getReferentId(),
+        cs, getUuid(), new ArrayList<>(getNotations()), getEstablishedOn(), getPrimaryLabelType());
   }
 
   @Override

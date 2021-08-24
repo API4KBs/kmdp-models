@@ -376,6 +376,20 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   }
 
 
+  /**
+   * @parameter default-value=prefLabel
+   */
+  private String labelProperty;
+
+  public String getLabelProperty() {
+    return labelProperty;
+  }
+
+  public void setLabelProperty(String labelProperty) {
+    this.labelProperty = labelProperty;
+  }
+
+
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   private MavenProject project;
 
@@ -485,7 +499,8 @@ public class TermsGeneratorPlugin extends AbstractMojo {
         .with(SkosAbstractionParameters.ENFORCE_VERSION, enforceVersion)
         .with(SkosAbstractionParameters.VERSION_PATTERN, versionPattern)
         .with(SkosAbstractionParameters.TAG_TYPE, tagFormat)
-        .with(SkosAbstractionParameters.VERSION_POS, detectPosition(versionPattern));
+        .with(SkosAbstractionParameters.VERSION_POS, detectPosition(versionPattern))
+        .with(SkosAbstractionParameters.LABEL_PROPERTY, labelProperty);
     return new SkosTerminologyAbstractor()
         .traverse(ontology, cfg);
   }

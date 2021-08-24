@@ -88,7 +88,9 @@ public class SkosTerminologyAbstractor {
 
   private static final IRI CONCEPT_SCHEME = iri(SKOS.ConceptScheme);
   private static final IRI CONCEPT = iri(SKOS.Concept);
-  private static final IRI LABEL = iri(SKOS.prefLabel);
+  private static final IRI PREF_LABEL = iri(SKOS.prefLabel);
+  private static final IRI ALT_LABEL = iri(SKOS.altLabel);
+  private static final IRI HID_LABEL = iri(SKOS.hiddenLabel);
   private static final IRI IS_DEFINED_BY = iri(RDFS.isDefinedBy);
   private static final IRI COMMENT = iri(RDFS.comment);
   private static final IRI NOTATION = iri(SKOS.notation);
@@ -282,7 +284,7 @@ public class SkosTerminologyAbstractor {
     URI uri = getURI(ind);
     URI version;
     String code = getCodedIdentifiers(ind, model).get(0);
-    String label = getAnnotationValues(ind, model, LABEL).findFirst().orElse(uri.getFragment());
+    String label = getAnnotationValues(ind, model, PREF_LABEL).findFirst().orElse(uri.getFragment());
 
     String versionTag = detectOwlVersionTag(model, cfg.getTyped(ENFORCE_VERSION))
         .orElse(null);
@@ -416,8 +418,8 @@ public class SkosTerminologyAbstractor {
     List<String> codes = getCodedIdentifiers(ind, model);
     URI referentUri = getReferent(ind, model);
     String comment = getAnnotationValues(ind, model, COMMENT).findFirst().orElse(null);
-    String label = getAnnotationValues(ind, model, LABEL).findFirst()
-        .orElse(referentUri.getFragment());
+
+    Map<String,String> labels = extractLabels(ind, model, referentUri);
 
     URI conceptId = ind.getIRI().toURI();
     String tag = codes.get(0);
@@ -425,13 +427,14 @@ public class SkosTerminologyAbstractor {
     Term cd = new ConceptTermImpl(
         conceptId,
         tag,
-        label,
+        labels,
         comment,
         referentUri,
         scheme,
         uuid,
         codes,
-        scheme != null ? scheme.getEstablishedOn() : new Date());
+        scheme != null ? scheme.getEstablishedOn() : new Date(),
+        cfg.getTyped(SkosAbstractionParameters.LABEL_PROPERTY));
     if (scheme != null) {
       ((ConceptTermImpl) cd).setEstablishedOn(scheme.getEstablishedOn());
       if (asTop) {
@@ -441,6 +444,19 @@ public class SkosTerminologyAbstractor {
       }
     }
     return cd;
+  }
+
+  private Map<String, String> extractLabels(OWLNamedIndividual ind, OWLOntology model, URI referentUri) {
+    String label = getAnnotationValues(ind, model, PREF_LABEL).findFirst()
+        .orElse(referentUri.getFragment());
+    Optional<String> altLabel = getAnnotationValues(ind, model, ALT_LABEL).findFirst();
+    Optional<String> hidLabel = getAnnotationValues(ind, model, HID_LABEL).findFirst();
+
+    Map<String, String> labels = new HashMap<>();
+    labels.put(SKOS.prefLabel.getLocalName(), label);
+    altLabel.ifPresent(l -> labels.put(SKOS.altLabel.getLocalName(), l));
+    hidLabel.ifPresent(l -> labels.put(SKOS.hiddenLabel.getLocalName(), l));
+    return labels;
   }
 
   private UUID makeUUID(URI conceptId) {
