@@ -360,12 +360,15 @@ public class XMLUtil {
     var sFactory = getSchemaFactory();
     sFactory.setResourceResolver(new CatalogResourceResolver(catalogResolver));
 
-    try {
-      return Optional.ofNullable(sFactory.newSchema(mainSchemaURL));
-    } catch (SAXException e) {
-      logger.error(e.getMessage(), e);
-    }
-    return Optional.empty();
+    return Optional.ofNullable(mainSchemaURL)
+        .map(s -> {
+          try {
+            return sFactory.newSchema(s);
+          } catch (SAXException e) {
+            logger.warn(e.getMessage(), e);
+            return null;
+          }
+        });
   }
 
   private static SchemaFactory getSchemaFactory() {
