@@ -35,6 +35,7 @@ import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -79,6 +80,9 @@ public class SurrogateHelper {
 
   public static Optional<ConceptIdentifier> getSimpleAnnotationValue(
       KnowledgeAsset asset, Term rel) {
+    if (asset == null) {
+      return Optional.empty();
+    }
     return asset.getAnnotation().stream()
         .filter(ann -> rel == null || rel.sameTermAs(ann.getRel()))
         .map(Annotation::getRef)
@@ -87,6 +91,9 @@ public class SurrogateHelper {
 
   public static Collection<ConceptIdentifier> getAnnotationValues(
       KnowledgeAsset asset, Term rel) {
+    if (asset == null) {
+      return Collections.emptySet();
+    }
     return asset.getAnnotation().stream()
         .filter(ann -> rel == null || rel.sameTermAs(ann.getRel()))
         .map(Annotation::getRef)
@@ -95,7 +102,7 @@ public class SurrogateHelper {
 
 
   public static SyntacticRepresentation canonicalRepresentationOf(KnowledgeAsset asset) {
-    if (asset.getCarriers().isEmpty()) {
+    if (asset == null || asset.getCarriers().isEmpty()) {
       return null;
     }
     KnowledgeArtifact artifact = asset.getCarriers().get(0);
