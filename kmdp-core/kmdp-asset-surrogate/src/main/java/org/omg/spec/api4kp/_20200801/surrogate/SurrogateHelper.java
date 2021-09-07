@@ -22,6 +22,7 @@ import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.inferStruct
 import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformAggregate;
 import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformAnonymousComposite;
 import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformNamedComposite;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.randomId;
 import static org.omg.spec.api4kp._20200801.services.CompositeStructType.GRAPH;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.artifactId;
@@ -482,9 +483,9 @@ public class SurrogateHelper {
     }
     Resource composite = createResource(surrogate.getAssetId().getVersionId().toString());
     return struct.listStatements(
-        composite,
-        createProperty(Has_Structural_Component.getReferentId().toString()),
-        (String) null)
+            composite,
+            createProperty(Has_Structural_Component.getReferentId().toString()),
+            (String) null)
         .toList().stream()
         .map(Statement::getObject)
         .filter(RDFNode::isURIResource)
@@ -526,7 +527,22 @@ public class SurrogateHelper {
 
   public static void incrementVersion(KnowledgeAsset changingSurrogate, VersionIncrement incr) {
     getSurrogateMetadata(changingSurrogate, Knowledge_Asset_Surrogate_2_0, null)
-        .ifPresent(meta -> {
+        .ifPresent(meta ->
+            meta.withArtifactId(nextVersion(changingSurrogate, incr)));
+  }
+
+
+  /**
+   * Increments the version ID of a Knowledge Asset Surrogate
+   * returns the incremented ID (without updating the Surrogate itself)
+   * @param changingSurrogate
+   * @param incr
+   * @return
+   */
+  public static ResourceIdentifier nextVersion(KnowledgeAsset changingSurrogate,
+      VersionIncrement incr) {
+    return getSurrogateMetadata(changingSurrogate, Knowledge_Asset_Surrogate_2_0, null)
+        .map(meta -> {
           Version surrogateVersion = Version.valueOf(meta.getArtifactId().getVersionTag());
           switch (incr) {
             case MAJOR:
@@ -539,10 +555,13 @@ public class SurrogateHelper {
               surrogateVersion = surrogateVersion.incrementPatchVersion();
               break;
           }
-          meta.withArtifactId(SemanticIdentifier.newId(
+          return newId(
               meta.getArtifactId().getNamespaceUri(),
               meta.getArtifactId().getUuid(),
-              surrogateVersion));
-        });
+              surrogateVersion);
+        })
+        .or(() -> SurrogateHelper.getCanonicalSurrogateId(changingSurrogate))
+        .orElseThrow(() -> new IllegalStateException("Unable to detect current and/or next version"
+            + "for canonical surrogate of asset " + changingSurrogate.getAssetId()));
   }
 }
