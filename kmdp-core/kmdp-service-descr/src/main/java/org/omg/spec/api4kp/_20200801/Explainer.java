@@ -52,7 +52,7 @@ public abstract class Explainer {
   public static Optional<KnowledgeCarrier> extractExplanation(
       Map<String, List<String>> meta) {
     return Optional.ofNullable(meta.get(EXPL_HEADER))
-        .flatMap(links -> resolveExplanation(links,meta));
+        .flatMap(links -> resolveExplanation(links, meta));
   }
 
   public static void packExplanation(String msg, Map<String, List<String>> meta) {
@@ -63,12 +63,13 @@ public abstract class Explainer {
     meta.put(id, Collections.singletonList(msg));
   }
 
-  protected static Optional<KnowledgeCarrier> resolveExplanation(List<String> links, Map<String, List<String>> meta) {
+  protected static Optional<KnowledgeCarrier> resolveExplanation(
+      List<String> links, Map<String, List<String>> meta) {
     if (links == null || links.size() != 1) {
       return Optional.empty();
     }
     Matcher matcher = REGEXP_PATTERN.matcher(links.get(0));
-    if (!matcher.matches() || ! PROV_KEY.equals(matcher.group(2))) {
+    if (!matcher.matches() || !PROV_KEY.equals(matcher.group(2))) {
       return Optional.empty();
     }
     String explKey = matcher.group(1);
@@ -83,7 +84,7 @@ public abstract class Explainer {
         .withLevel(Serialized_Knowledge_Expression)
         .withRepresentation(
             // TODO ADD "Natural Language" to the list of languages
-            rep(HTML,TXT));
+            rep(HTML, TXT));
   }
 
   protected void mergeExplanation(KnowledgeCarrier other) {
@@ -95,7 +96,7 @@ public abstract class Explainer {
         KnowledgeCarrier s = explanation;
         String s1 = s.asString().orElse("");
         String s2 = other.asString().orElse("");
-        s.setExpression(String.join("\n", s1, s2));
+        s.setExpression(String.join("\n", s1, s2).trim());
       }
     }
   }

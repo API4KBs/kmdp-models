@@ -16,10 +16,8 @@
 package org.omg.spec.api4kp._20200801;
 
 import static edu.mayo.kmdp.util.Util.isEmpty;
-import static edu.mayo.kmdp.util.Util.isNotEmpty;
 import static org.omg.spec.api4kp._20200801.Explainer.extractExplanation;
 
-import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
 import java.util.Collections;
 import java.util.List;
@@ -70,7 +68,7 @@ public class ServerSideException extends RuntimeException {
     if (isEmpty(mainError) && isEmpty(explanation)) {
       return "Generic Error";
     } else {
-      return mainError + "\n" + explanation;
+      return String.join("\n",mainError, explanation).trim();
     }
   }
 
