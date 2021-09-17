@@ -5,10 +5,18 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 
 public class ExternalBundleMessageProvider {
 
+  private static final Object[] noArgs = new Object[0];
+
   ResourceBundleMessageSource msgSource;
 
   public ExternalBundleMessageProvider(String srcBundle) {
     this.msgSource = loadMessageSourceBundle(srcBundle);
+  }
+
+  public String getDefaultMessage(String msgCode) {
+    return msgSource != null
+        ? msgSource.getMessage(msgCode, noArgs, msgCode, Locale.getDefault())
+        : null;
   }
 
   public String getMessage(
