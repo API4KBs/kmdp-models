@@ -88,7 +88,9 @@ public class SurrogateBuilder {
   }
 
   protected KnowledgeAsset newInstance(boolean root) {
-    return root ? new org.omg.spec.api4kp._20200801.surrogate.resources.KnowledgeAsset() : new KnowledgeAsset();
+    return root
+        ? new org.omg.spec.api4kp._20200801.surrogate.resources.KnowledgeAsset()
+        : new KnowledgeAsset();
   }
 
   public static SurrogateBuilder newRandomSurrogate() {
@@ -101,7 +103,7 @@ public class SurrogateBuilder {
   }
 
   public static SurrogateBuilder newSurrogate(ResourceIdentifier assetId) {
-    return newSurrogate(assetId,true);
+    return newSurrogate(assetId, true);
   }
 
   public static SurrogateBuilder newSurrogate(ResourceIdentifier assetId, boolean root) {
@@ -144,7 +146,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withCohortDefinitionType() {
     get().withFormalCategory(
-        Assessment_Predictive_And_Inferential_Models)
+            Assessment_Predictive_And_Inferential_Models)
         .withFormalType(Patient_Cohort_Definition);
     return this;
   }
@@ -163,7 +165,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withExpressionType() {
     get().withFormalCategory(
-        Assessment_Predictive_And_Inferential_Models)
+            Assessment_Predictive_And_Inferential_Models)
         .withFormalType(Functional_Expression);
     return this;
   }
@@ -176,7 +178,7 @@ public class SurrogateBuilder {
 
   public SurrogateBuilder withDecisionAidType() {
     get().withFormalCategory(
-        Assessment_Predictive_And_Inferential_Models)
+            Assessment_Predictive_And_Inferential_Models)
         .withFormalType(Computable_Decision_Model);
     return this;
   }
@@ -295,8 +297,8 @@ public class SurrogateBuilder {
                   expr != null ? uuid(expr) : UUID.randomUUID(),
                   VERSION_LATEST))
           .withRepresentation(
-              rep(FHIRPath_STU1,TXT,Charset.defaultCharset())
-              .withSubLanguage(rep(schemaLanguage).withRole(Schema_Language)))
+              rep(FHIRPath_STU1, TXT, Charset.defaultCharset())
+                  .withSubLanguage(rep(schemaLanguage).withRole(Schema_Language)))
           .withInlinedExpression(expr));
     }
     return this;
@@ -365,7 +367,8 @@ public class SurrogateBuilder {
    * @param lang
    * @return
    */
-  public static UUID defaultSurrogateUUID(ResourceIdentifier assetId, KnowledgeRepresentationLanguage lang) {
+  public static UUID defaultSurrogateUUID(ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang) {
     String key = assetId.getVersionId().toString();
     key += IdentifierConstants.SURROGATES + lang.getUuid();
     return UUID.nameUUIDFromBytes(key.getBytes());
@@ -403,7 +406,8 @@ public class SurrogateBuilder {
    * @param lang
    * @return
    */
-  public static UUID defaultCarrierUUID(ResourceIdentifier assetId, KnowledgeRepresentationLanguage lang) {
+  public static UUID defaultCarrierUUID(ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang) {
     String key = assetId.getVersionId().toString();
     key += IdentifierConstants.CARRIERS + lang.getUuid();
     return UUID.nameUUIDFromBytes(key.getBytes());
@@ -440,11 +444,12 @@ public class SurrogateBuilder {
         assetId,
         lang);
   }
+
   public static ResourceIdentifier defaultArtifactId(
       URI baseArtifactNamespace,
       ResourceIdentifier assetId,
       KnowledgeRepresentationLanguage lang) {
-    return artifactId(baseArtifactNamespace, defaultCarrierUUID(assetId, lang), VERSION_ZERO);
+    return defaultArtifactId(baseArtifactNamespace, assetId, lang, VERSION_ZERO);
   }
 
   public static ResourceIdentifier defaultArtifactId(
@@ -454,7 +459,8 @@ public class SurrogateBuilder {
     return defaultArtifactId(
         mapAssetToArtifactNamespace(assetId.getNamespaceUri()),
         assetId,
-        lang);
+        lang,
+        versionTag);
   }
 
   public static ResourceIdentifier defaultArtifactId(
@@ -512,11 +518,11 @@ public class SurrogateBuilder {
   }
 
   public static ResourceIdentifier randomArtifactId() {
-    return artifactId(BASE_UUID_URN_URI,UUID.randomUUID(),VERSION_ZERO);
+    return artifactId(BASE_UUID_URN_URI, UUID.randomUUID(), VERSION_ZERO);
   }
 
   public static ResourceIdentifier randomArtifactId(URI baseNamespace) {
-    return SemanticIdentifier.newId(baseNamespace,UUID.randomUUID(),VERSION_ZERO);
+    return SemanticIdentifier.newId(baseNamespace, UUID.randomUUID(), VERSION_ZERO);
   }
 
   /**

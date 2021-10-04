@@ -7,6 +7,8 @@ import static java.util.Arrays.copyOfRange;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS_FRAG_RX;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS_RX;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO_SNAPSHOT;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.versionSeparator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -985,14 +987,19 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     return UUID.nameUUIDFromBytes(x);
   }
 
-  static ResourceIdentifier hashIdentifiers(ResourceIdentifier id1, ResourceIdentifier id2) {
+  static ResourceIdentifier hashIdentifiers(
+      ResourceIdentifier id1, ResourceIdentifier id2, boolean asSnapshot) {
     UUID uuid = Util.hashUUID(id1.getUuid(), id2.getUuid());
-    String vTag = IdentifierConstants.VERSION_ZERO;
+    String vTag = asSnapshot ? VERSION_ZERO_SNAPSHOT : VERSION_ZERO;
     if (id1.getNamespaceUri().equals(id2.namespaceUri)) {
       return newId(id1.getNamespaceUri(), uuid, vTag);
     } else {
       return newId(uuid, vTag);
     }
+  }
+
+  static ResourceIdentifier hashIdentifiers(ResourceIdentifier id1, ResourceIdentifier id2) {
+    return SemanticIdentifier.hashIdentifiers(id1, id2, false);
   }
 
 }
