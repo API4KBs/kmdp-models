@@ -21,6 +21,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.Structura
 import edu.mayo.kmdp.util.JenaUtil;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -249,6 +250,17 @@ public interface AbstractCompositeCarrier extends ClosedComposite<KnowledgeCarri
   static CompositeKnowledgeCarrier ofMixedAnonymousComposite(
       Collection<KnowledgeCarrier> artifacts) {
     return ofMixedAnonymousComposite(null, artifacts);
+  }
+
+  /**
+   * Creates an Anonymous Composite Knowledge Carrier from a set of Knowledge Artifacts
+   * Creates an ephemeral Asset ID, and establishes a SET-oriented Struct with the given components
+   *
+   * @param artifacts The artifacts to be aggregated into the composite
+   * @return An Anonymous Composite Knowledge Carrier
+   */
+  static CompositeKnowledgeCarrier ofMixedAnonymousComposite(KnowledgeCarrier... artifacts) {
+    return ofMixedAnonymousComposite(null, Arrays.asList(artifacts));
   }
 
 

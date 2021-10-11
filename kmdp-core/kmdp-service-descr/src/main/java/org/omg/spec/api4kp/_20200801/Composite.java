@@ -55,7 +55,7 @@ public interface Composite<T,S,K extends Composite<T,S,K>> {
       Supplier<X> constructor) {
 
     final Answer<List<U>> mapped = this.getComponent().stream()
-        .map(fun)
+        .map(c -> applyRecursive(c, fun, mapStruct, mapRepresentation, constructor))
         .collect(Answer.toList());
 
     final S mappedStruct = mapStruct.apply(getStruct());
@@ -72,6 +72,20 @@ public interface Composite<T,S,K extends Composite<T,S,K>> {
             .withLevel(ParsingLevelContrastor.detectLevel(outputRep))
             .withComponent(comps)
             .withLabel(getLabel()));
+  }
+
+  default <U,X> Answer<U> applyRecursive(
+      T c,
+      Function<? super T, Answer<U>> fun,
+      UnaryOperator<S> mapStruct,
+      UnaryOperator<SyntacticRepresentation> mapRepresentation,
+      Supplier<X> constructor) {
+    if (c instanceof Composite) {
+      Composite cc = (Composite) c;
+      return cc.visit(fun, mapStruct, mapRepresentation, constructor);
+    } else {
+      return fun.apply(c);
+    }
   }
 
 }
