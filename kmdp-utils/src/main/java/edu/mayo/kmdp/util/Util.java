@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp.util;
 
-import com.google.common.base.Functions;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -334,7 +334,7 @@ public class Util {
     } else if (baos.size() == 0) {
       return Optional.of("");
     } else {
-      return Optional.of(new String(baos.toByteArray()));
+      return Optional.of(baos.toString());
     }
   }
 
@@ -400,4 +400,37 @@ public class Util {
     int lim = limit != null && limit > 0 ? limit : (Integer.MAX_VALUE - off - 1);
     return list.subList(off, Math.min(off + lim, num));
   }
+
+  public static <T> List<T> mergeLists(List<T> l1, List<T> l2) {
+    if (l1 == null && l2 == null) {
+      return Collections.emptyList();
+    }
+    if (l1 == null) {
+      return new ArrayList<>(l2);
+    }
+    if (l2 == null) {
+      return new ArrayList<>(l1);
+    }
+
+    List<T> combined = new ArrayList<>(l1);
+    combined.addAll(l2);
+    return combined;
+  }
+
+  public static <T> Set<T> mergeSets(Set<T> l1, Set<T> l2) {
+    if (l1 == null && l2 == null) {
+      return Collections.emptySet();
+    }
+    if (l1 == null) {
+      return new HashSet<>(l2);
+    }
+    if (l2 == null) {
+      return new HashSet<>(l1);
+    }
+
+    Set<T> combined = new HashSet<>(l1);
+    combined.addAll(l2);
+    return combined;
+  }
+
 }
