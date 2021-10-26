@@ -191,7 +191,7 @@ public class DatatypeHelper {
   public static <T extends Term, X> Optional<T> resolveTerm(final X val, T[] values,
       Function<Term, X> getter) {
     return Arrays.stream(values)
-        .filter(x -> val.equals(getter.apply(x)))
+        .filter(x -> getter.apply(x).equals(val))
         .findAny();
   }
 

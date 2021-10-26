@@ -1,20 +1,20 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.omg.spec.api4kp._20200801;
 
+
+import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.NotFound;
 
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
@@ -40,17 +40,18 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.http.HttpHeaders;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zalando.problem.Problem;
 
 /**
  * Monadic class supporting KMDP API functional-style chaining
- *
+ * <p>
  * Inherits behavior from classic monads such as:
- *
- * * Try - exception handling,
- * * Writer - explanations
+ * <p>
+ * * Try - exception handling, * Writer - explanations
  *
  * @param <T>
  */
@@ -62,7 +63,7 @@ public class Answer<T> extends Explainer {
 
   protected Map<String, List<String>> meta;
 
-  private static Logger logger = LoggerFactory.getLogger(Answer.class);
+  private static final Logger logger = LoggerFactory.getLogger(Answer.class);
 
   /* Constructors (lifters) */
 
@@ -77,45 +78,32 @@ public class Answer<T> extends Explainer {
   public static <X> Answer<X> failedOnServer(ServerSideException t) {
     return new Answer<X>()
         .withCodedOutcome(t.getCode())
-        .withMeta(t.getHeaders())
         .withValue(null)
-        .withExplanation(t.getError().getMessage());
+        .withExplanationInterrupt(t);
   }
 
   public static <X> Answer<X> notFound() {
-    return failed(new ServerSideException(ResponseCodeSeries.NotFound,
-        Collections.emptyMap(),
-        new byte[0]));
+    return failed(new ServerSideException(NotFound));
   }
 
   public static <X> Answer<X> conflict() {
-    return failed(new ServerSideException(ResponseCodeSeries.Conflict,
-        Collections.emptyMap(),
-        new byte[0]));
+    return failed(new ServerSideException(ResponseCodeSeries.Conflict));
   }
 
   public static <X> Answer<X> unacceptable() {
-    return failed(new ServerSideException(ResponseCodeSeries.NotAcceptable,
-        Collections.emptyMap(),
-        new byte[0]));
+    return failed(new ServerSideException(ResponseCodeSeries.NotAcceptable));
   }
 
   public static <X> Answer<X> failed() {
-    return failed(new ServerSideException(ResponseCodeSeries.InternalServerError,
-        Collections.emptyMap(),
-        new byte[0]));
+    return failed(new ServerSideException(ResponseCodeSeries.InternalServerError));
   }
 
   public static Answer<Void> nil() {
-    return failed(new ServerSideException(ResponseCodeSeries.InternalServerError,
-        Collections.emptyMap(),
-        new byte[0]));
+    return failed(new ServerSideException(ResponseCodeSeries.InternalServerError));
   }
 
   public static <X> Answer<X> failed(ResponseCode errorCode) {
-    return failed(new ServerSideException(errorCode,
-        Collections.emptyMap(),
-        new byte[0]));
+    return failed(new ServerSideException(errorCode));
   }
 
   public static <X> Answer<X> failed(Throwable t) {
@@ -123,7 +111,7 @@ public class Answer<T> extends Explainer {
         .withCodedOutcome(mapCode(t))
         .withMeta(new HashMap<>())
         .withValue(null)
-        .withExplanation(t.getMessage());
+        .withExplanationInterrupt(t);
   }
 
   public static <X> Answer<X> failed(Answer<?> nested) {
@@ -131,7 +119,7 @@ public class Answer<T> extends Explainer {
         .withCodedOutcome(nested.getCodedOutcome())
         .withMeta(new HashMap<>())
         .withValue(null)
-        .withExplanation(nested.getExplanation());
+        .withFormalExplanation(nested.getExplanation());
   }
 
   public static <X> Answer<X> of(X value) {
@@ -145,22 +133,25 @@ public class Answer<T> extends Explainer {
     return Answer.of(Optional.ofNullable(value));
   }
 
+  public static <X> Answer<X> ofTry(Optional<X> value, ResourceIdentifier context, String msg) {
+    return value
+        .map(Answer::of)
+        .orElseGet(() -> Answer.failed(new ServerSideException(NotFound, context, msg)));
+  }
+
+  @Deprecated
   public static <X> Answer<X> of(Optional<X> value) {
     return value
         .map(Answer::of)
-        .orElse(new Answer<X>()
-            .withCodedOutcome(ResponseCodeSeries.NotFound)
-            .withMeta(new HashMap<>())
-            .withValue(null)
-            .withExplanation("Empty Optional"));
+        .orElseGet(() -> Answer.failed(new ServerSideException(NotFound)));
   }
 
   public static <X> Answer<X> of(String responseCode, X value) {
-    return of(resolveCode(responseCode),value,new HashMap<>());
+    return of(resolveCode(responseCode), value, new HashMap<>());
   }
 
   public static <X> Answer<X> of(Integer responseCode, X value) {
-    return of(responseCode.toString(),value,new HashMap<>());
+    return of(responseCode.toString(), value, new HashMap<>());
   }
 
   public static Answer<Void> of() {
@@ -168,31 +159,32 @@ public class Answer<T> extends Explainer {
   }
 
   public static Answer<Void> of(ResponseCode responseCode) {
-    return of(responseCode.getTag(),null, new HashMap<>());
+    return of(responseCode.getTag(), null, new HashMap<>());
   }
 
   public static <X> Answer<X> of(ResponseCode responseCode, X value) {
-    return of(responseCode,value,new HashMap<>());
+    return of(responseCode, value, new HashMap<>());
   }
 
   public static <X> Answer<X> of(String responseCode, X value, Map<String, List<String>> meta) {
-    return of(resolveCode(responseCode),value,meta);
+    return of(resolveCode(responseCode), value, meta);
   }
 
   public static <X> Answer<X> of(Integer responseCode, X value, Map<String, List<String>> meta) {
-    return of(responseCode.toString(),value,meta);
+    return of(responseCode.toString(), value, meta);
   }
 
-  public static <X> Answer<X> of(ResponseCode responseCode, X value, Map<String, List<String>> meta) {
+  public static <X> Answer<X> of(ResponseCode responseCode, X value,
+      Map<String, List<String>> meta) {
     return new Answer<X>()
         .withCodedOutcome(responseCode)
         .withMeta(meta)
         .withValue(value)
-        .withExplanation(meta);
+        .withFormalExplanation(extractExplanationFromHeaders(meta).orElse(null));
   }
 
   public static <X> Answer<X> referTo(URI location, boolean brandNew) {
-    Map<String,List<String>> headers = new HashMap<>();
+    Map<String, List<String>> headers = new HashMap<>();
     headers.put(HttpHeaders.LOCATION, Collections.singletonList(location.toString()));
     return of(
         brandNew ? ResponseCodeSeries.Created : ResponseCodeSeries.SeeOther,
@@ -203,9 +195,11 @@ public class Answer<T> extends Explainer {
   public static <T> Collector<Answer<T>, List<Answer<T>>, Answer<List<T>>> toList() {
     return toList(ans -> true);
   }
+
   public static <T> Collector<Answer<T>, Set<Answer<T>>, Answer<Set<T>>> toSet() {
     return toSet(ans -> true);
   }
+
   public static <T> Collector<Answer<T>, Stream<Answer<T>>, Answer<Stream<T>>> toStream() {
     return toStream(ans -> true);
   }
@@ -279,12 +273,13 @@ public class Answer<T> extends Explainer {
   public <U> Answer<U> flatOpt(Function<? super T, Optional<U>> mapper) {
     return getHandler().flatOpt(this, mapper);
   }
-  
-  public <U,X> Answer<List<U>> flatList(Class<X> memberClass, Function<? super X, Answer<U>> mapper) {
+
+  public <U, X> Answer<List<U>> flatList(Class<X> memberClass,
+      Function<? super X, Answer<U>> mapper) {
     return getHandler().flatList((Answer<List<X>>) this, mapper);
   }
 
-  public <U> Answer<U> reduce(Function<Composite<? super T,?,?>, Answer<U>> mapper) {
+  public <U> Answer<U> reduce(Function<Composite<? super T, ?, ?>, Answer<U>> mapper) {
     return getHandler().reduce(this, mapper);
   }
 
@@ -295,8 +290,8 @@ public class Answer<T> extends Explainer {
   public <U> Answer<U> map(Function<? super T, ? extends U> mapper) {
     return getHandler().map(this, mapper);
   }
-  
-  public <U,X> Answer<List<U>> mapList(Class<X> memberClass,
+
+  public <U, X> Answer<List<U>> mapList(Class<X> memberClass,
       Function<? super X, ? extends U> mapper) {
     return getHandler().mapList((Answer<List<X>>) this, mapper);
   }
@@ -316,7 +311,8 @@ public class Answer<T> extends Explainer {
   }
 
   public void ifSuccess(Consumer<? super T> onSuccess) {
-    ifSuccess(onSuccess, a -> {});
+    ifSuccess(onSuccess, a -> {
+    });
   }
 
   public void ifFailed(Consumer<Answer<? super T>> onFail) {
@@ -334,10 +330,9 @@ public class Answer<T> extends Explainer {
     if (this.isSuccess()) {
       return this;
     } else {
-      return  (Answer<T>) supplier.get();
+      return (Answer<T>) supplier.get();
     }
   }
-
 
 
   public static <U> Answer<U> first(List<U> coll) {
@@ -376,7 +371,6 @@ public class Answer<T> extends Explainer {
   }
 
 
-
   public Optional<T> getOptionalValue() {
     return Optional.ofNullable(getValue());
   }
@@ -392,6 +386,7 @@ public class Answer<T> extends Explainer {
   public T orElse(T alt) {
     return getOptionalValue().orElse(alt);
   }
+
   public T orElseGet(Supplier<T> alt) {
     return getOptionalValue().orElseGet(alt);
   }
@@ -415,18 +410,18 @@ public class Answer<T> extends Explainer {
   }
 
   public static <T> Answer<T> merge(Answer<T> a1, Answer<T> a2) {
-    return merge(a1,a2,(x,y) -> y);
+    return merge(a1, a2, (x, y) -> y);
   }
 
   public static <T> Answer<T> merge(Answer<T> a1, Answer<T> a2, BinaryOperator<T> valueMerger) {
-    return Answer.of(valueMerger.apply(a1.value,a2.value))
+    return Answer.of(valueMerger.apply(a1.value, a2.value))
         .withCodedOutcome(ResponseCodeSeries.resolveTag("" +
-            Math.max(Integer.parseInt(a1.getCodedOutcome().getTag()),
-                Integer.parseInt(a2.getCodedOutcome().getTag())))
+                Math.max(Integer.parseInt(a1.getCodedOutcome().getTag()),
+                    Integer.parseInt(a2.getCodedOutcome().getTag())))
             .orElse(ResponseCodeSeries.InternalServerError))
         .withMeta(a1.getMeta())
         .withAddedMeta(a2.getMeta())
-        .withExplanation(a1.getExplanation())
+        .withFormalExplanation(a1.getExplanation())
         .withAddedExplanation(a2.getExplanation());
   }
 
@@ -466,14 +461,14 @@ public class Answer<T> extends Explainer {
         .orElseGet(fallback);
   }
 
-  public static <X,Y> Answer<Y> firstDo(Collection<X> delegates, Function<X,Answer<Y>> mapper) {
+  public static <X, Y> Answer<Y> firstDo(Collection<X> delegates, Function<X, Answer<Y>> mapper) {
     return firstDo(
         delegates,
         mapper,
         () -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
   }
 
-  public static <X,Y> Answer<Y> firstDo(Collection<X> delegates, Function<X,Answer<Y>> mapper,
+  public static <X, Y> Answer<Y> firstDo(Collection<X> delegates, Function<X, Answer<Y>> mapper,
       Supplier<Answer<Y>> fallback) {
     return delegates.stream()
         .map(x -> {
@@ -556,46 +551,74 @@ public class Answer<T> extends Explainer {
 
   /* Setters and Getters */
 
-  protected Answer<T> withAddedExplanation(KnowledgeCarrier addExplanation) {
-    mergeExplanation(addExplanation);
+  public Answer<T> withAddedExplanation(KnowledgeCarrier expl) {
+    addFormalExplanation(expl);
     return this;
   }
 
-  protected Answer<T> withExplanation(KnowledgeCarrier expl) {
-    setExplanation(expl);
+  public Answer<T> withAddedExplanationMessage(String msg) {
+    addExplanationMessage(msg);
+    return this;
+  }
+
+  public Answer<T> withAddedExplanationDetail(Problem issue) {
+    addExplanationDetail(issue);
     return this;
   }
 
   @Override
+  public Answer<T> withFormalExplanation(KnowledgeCarrier expl) {
+    super.withFormalExplanation(expl);
+    return this;
+  }
+
+  @Override
+  public Answer<T> withExplanationMessage(String msg) {
+    super.withExplanationMessage(msg);
+    return this;
+  }
+
   public Answer<T> withExplanation(String msg) {
-    super.addExplanation(msg);
+    return withExplanationMessage(msg);
+  }
+
+  @Override
+  public Answer<T> withExplanationDetail(Problem issue) {
+    super.withExplanationDetail(issue);
     return this;
   }
 
-  protected Answer<T> withExplanation(Map<String, List<String>> meta) {
-    super.addExplanation(meta);
+  @Override
+  public Answer<T> withExplanationInterrupt(Throwable cause) {
+    super.withExplanationInterrupt(cause);
     return this;
   }
 
+  protected Answer<T> withExplanationMessage(Map<String, List<String>> meta) {
+    extractExplanationFromHeaders(meta).ifPresent(super::addFormalExplanation);
+    return this;
+  }
 
   protected Answer<T> withAddedMeta(Map<String, List<String>> additionalMeta) {
     if (this.meta == null) {
       this.meta = new HashMap<>(additionalMeta);
     }
-    additionalMeta.forEach((k, v) -> {
-      if (!this.meta.containsKey(k)) {
-        this.meta.put(k, new ArrayList<>(v));
-      } else {
-        if (! EXPL_HEADER.equals(k)) {
-          this.meta.get(k).addAll(additionalMeta.get(k));
+    if (additionalMeta != null) {
+      additionalMeta.forEach((k, v) -> {
+        if (!this.meta.containsKey(k)) {
+          this.meta.put(k, new ArrayList<>(v));
+        } else {
+          if (!EXPL_LINK_HEADER.equals(k)) {
+            this.meta.get(k).addAll(additionalMeta.get(k));
+          }
         }
-      }
-    });
+      });
+    }
     return this;
   }
 
   protected Answer<T> withMeta(Map<String, List<String>> meta) {
-    setMeta(new HashMap<>(meta));
+    setMeta(meta);
     return this;
   }
 
@@ -631,20 +654,20 @@ public class Answer<T> extends Explainer {
   }
 
   protected void setMeta(Map<String, List<String>> meta) {
-    this.meta = new HashMap<>(meta);
+    this.meta = meta != null ? new HashMap<>(meta) : Collections.emptyMap();
   }
 
 
   /* Maps exceptions to status codes */
   protected static ResponseCode mapCode(Throwable t) {
     if (t instanceof ServerSideException) {
-      return ((ServerSideException)t).getCode();
+      return ((ServerSideException) t).getCode();
     }
     if (t instanceof UnsupportedOperationException) {
       return ResponseCodeSeries.NotImplemented;
     }
     if (t instanceof NoSuchElementException) {
-      return ResponseCodeSeries.NotFound;
+      return NotFound;
     }
     return ResponseCodeSeries.InternalServerError;
   }
@@ -670,13 +693,16 @@ public class Answer<T> extends Explainer {
 
     <U> Answer<U> flatWhole(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper);
 
-    <U> Answer<U> reduce(Answer<T> srcAnswer, Function<Composite<? super T,?,?>, Answer<U>> reducer);
+    <U> Answer<U> reduce(Answer<T> srcAnswer,
+        Function<Composite<? super T, ?, ?>, Answer<U>> reducer);
 
     <U> Answer<U> reduce(Answer<Stream<U>> srcAnswer, BinaryOperator<U> reducer);
 
-    <U, X> Answer<List<U>> mapList(Answer<List<X>> listAnswer, Function<? super X,? extends U> mapper);
+    <U, X> Answer<List<U>> mapList(Answer<List<X>> listAnswer,
+        Function<? super X, ? extends U> mapper);
 
-    <U, X> Answer<List<U>> flatList(Answer<List<X>> listAnswer, Function<? super X, Answer<U>> mapper);
+    <U, X> Answer<List<U>> flatList(Answer<List<X>> listAnswer,
+        Function<? super X, Answer<U>> mapper);
 
     <X> Answer<Void> forEach(Answer<List<X>> listAnswer, Consumer<? super X> mapper);
   }
@@ -696,7 +722,7 @@ public class Answer<T> extends Explainer {
         return new Answer<U>()
             .withValue(mapper.apply(srcAnswer.value))
             .withCodedOutcome(srcAnswer.getCodedOutcome())
-            .withExplanation(srcAnswer.explanation)
+            .withFormalExplanation(srcAnswer.explanation)
             .withMeta(srcAnswer.meta);
       } catch (Exception e) {
         return Answer.<U>failed(e)
@@ -709,7 +735,7 @@ public class Answer<T> extends Explainer {
     public <U> Answer<U> flatMap(Answer<T> srcAnswer, Function<? super T, Answer<U>> mapper) {
       try {
         if (srcAnswer.value instanceof ClosedComposite) {
-          ClosedComposite<T,?,?> ckc = (ClosedComposite<T,?,?>) srcAnswer.value;
+          ClosedComposite<T, ?, ?> ckc = (ClosedComposite<T, ?, ?>) srcAnswer.value;
           Function closedMapper = mapper;
           return (Answer<U>) ckc.visit(closedMapper)
               .withAddedMeta(srcAnswer.meta)
@@ -755,7 +781,7 @@ public class Answer<T> extends Explainer {
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
       } catch (Exception e) {
-        logger.error(e.getMessage(),e);
+        logger.error(e.getMessage(), e);
         return Answer.<U>failed(e)
             .withAddedMeta(srcAnswer.meta)
             .withAddedExplanation(srcAnswer.explanation);
@@ -822,7 +848,7 @@ public class Answer<T> extends Explainer {
     public <U> Answer<U> map(Answer<T> tAnswer, Function<? super T, ? extends U> mapper) {
       return new Answer<U>()
           .withCodedOutcome(tAnswer.getCodedOutcome())
-          .withExplanation(tAnswer.explanation)
+          .withFormalExplanation(tAnswer.explanation)
           .withMeta(tAnswer.meta);
     }
 
@@ -830,7 +856,7 @@ public class Answer<T> extends Explainer {
     public <U> Answer<U> flatMap(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper) {
       return new Answer<U>()
           .withCodedOutcome(tAnswer.getCodedOutcome())
-          .withExplanation(tAnswer.explanation)
+          .withFormalExplanation(tAnswer.explanation)
           .withMeta(tAnswer.meta);
     }
 
@@ -838,7 +864,7 @@ public class Answer<T> extends Explainer {
     public <U> Answer<U> flatWhole(Answer<T> tAnswer, Function<? super T, Answer<U>> mapper) {
       return new Answer<U>()
           .withCodedOutcome(tAnswer.getCodedOutcome())
-          .withExplanation(tAnswer.explanation)
+          .withFormalExplanation(tAnswer.explanation)
           .withMeta(tAnswer.meta);
     }
 
@@ -846,7 +872,7 @@ public class Answer<T> extends Explainer {
     public <U> Answer<U> flatOpt(Answer<T> tAnswer, Function<? super T, Optional<U>> mapper) {
       return new Answer<U>()
           .withCodedOutcome(tAnswer.getCodedOutcome())
-          .withExplanation(tAnswer.explanation)
+          .withFormalExplanation(tAnswer.explanation)
           .withMeta(tAnswer.meta);
     }
 
@@ -855,7 +881,7 @@ public class Answer<T> extends Explainer {
         Function<Composite<? super T, ?, ?>, Answer<U>> mapper) {
       return new Answer<U>()
           .withCodedOutcome(srcAnswer.getCodedOutcome())
-          .withExplanation(srcAnswer.explanation)
+          .withFormalExplanation(srcAnswer.explanation)
           .withMeta(srcAnswer.meta);
     }
 
@@ -863,7 +889,7 @@ public class Answer<T> extends Explainer {
     public <U> Answer<U> reduce(Answer<Stream<U>> srcAnswer, BinaryOperator<U> reducer) {
       return new Answer<U>()
           .withCodedOutcome(srcAnswer.getCodedOutcome())
-          .withExplanation(srcAnswer.explanation)
+          .withFormalExplanation(srcAnswer.explanation)
           .withMeta(srcAnswer.meta);
     }
 
@@ -872,7 +898,7 @@ public class Answer<T> extends Explainer {
         Function<? super X, ? extends U> mapper) {
       return new Answer<List<U>>()
           .withCodedOutcome(listAnswer.getCodedOutcome())
-          .withExplanation(listAnswer.explanation)
+          .withFormalExplanation(listAnswer.explanation)
           .withMeta(listAnswer.meta);
     }
 
@@ -881,7 +907,7 @@ public class Answer<T> extends Explainer {
         Function<? super X, Answer<U>> mapper) {
       return new Answer<List<U>>()
           .withCodedOutcome(listAnswer.getCodedOutcome())
-          .withExplanation(listAnswer.explanation)
+          .withFormalExplanation(listAnswer.explanation)
           .withMeta(listAnswer.meta);
     }
 
@@ -889,7 +915,7 @@ public class Answer<T> extends Explainer {
     public <X> Answer<Void> forEach(Answer<List<X>> listAnswer, Consumer<? super X> mapper) {
       return new Answer<Void>()
           .withCodedOutcome(listAnswer.getCodedOutcome())
-          .withExplanation(listAnswer.explanation)
+          .withFormalExplanation(listAnswer.explanation)
           .withMeta(listAnswer.meta);
     }
   }

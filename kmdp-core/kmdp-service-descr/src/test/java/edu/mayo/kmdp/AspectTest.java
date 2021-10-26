@@ -2,26 +2,26 @@ package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import org.omg.spec.api4kp._20200801.aspects.Failsafe;
-import org.omg.spec.api4kp._20200801.aspects.Explainable;
-import org.omg.spec.api4kp._20200801.aspects.LogLevel;
-import org.omg.spec.api4kp._20200801.aspects.Loggable;
-import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.ServerSideException;
+import org.omg.spec.api4kp._20200801.aspects.Explainable;
+import org.omg.spec.api4kp._20200801.aspects.Failsafe;
+import org.omg.spec.api4kp._20200801.aspects.LogLevel;
+import org.omg.spec.api4kp._20200801.aspects.Loggable;
 import org.omg.spec.api4kp._20200801.aspects.LoggingAdvisingInterceptor;
 import org.slf4j.LoggerFactory;
 
@@ -87,9 +87,29 @@ class AspectTest {
     Answer<Double> ans = Answer.of(-1.0)
         .flatMap(w::doMultBy2)
         .flatMap(w::doSquareRoot)
-        .flatMap(w::doMultBy2);
+        .flatMap(w::doMultBy3);
 
-    System.out.println(ans.printExplanation());
+    System.out.println("<<" + ans.printExplanation() + ">>");
+    String[] explLines = ans.printExplanation().split("\n");
+    assertEquals(3, explLines.length);
+
+    assertEquals(2, appender.getLog().size());
+    detach(logger, appender);
+  }
+
+
+  @Test
+  void testExplanationWithErrorStructured() {
+    Weavable w = new Weavable();
+
+    TestAppender<ILoggingEvent> appender = append(logger);
+
+    Answer<Double> ans = Answer.of(-1.0)
+        .flatMap(w::doMultBy2)
+        .flatMap(w::doSquareRoot)
+        .flatMap(w::doMultBy3);
+
+    System.out.println("<<" + ans.printExplanation(JSON) + ">>");
     String[] explLines = ans.printExplanation().split("\n");
     assertEquals(3, explLines.length);
 
@@ -122,6 +142,11 @@ class AspectTest {
     @Loggable(level = LogLevel.WARN)
     public Answer<Double> doMultBy2(double x) {
       return Answer.of(2.0 * x);
+    }
+    @Explainable
+    @Loggable(level = LogLevel.WARN)
+    public Answer<Double> doMultBy3(double x) {
+      return Answer.of(3.0 * x);
     }
   }
 

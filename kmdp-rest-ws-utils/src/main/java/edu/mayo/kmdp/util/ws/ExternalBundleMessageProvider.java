@@ -3,6 +3,7 @@ package edu.mayo.kmdp.util.ws;
 import java.util.Locale;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
+// TODO MOVE ME to the components/messages package
 public class ExternalBundleMessageProvider {
 
   private static final Object[] noArgs = new Object[0];

@@ -33,7 +33,6 @@ import java.util.Properties;
 import java.util.UUID;
 import javax.xml.namespace.QName;
 import org.omg.spec.api4kp._20200801.datatypes.Bindings;
-import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.ParameterDefinition;
 import org.omg.spec.api4kp._20200801.services.ParameterDefinitions;
 import org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository;

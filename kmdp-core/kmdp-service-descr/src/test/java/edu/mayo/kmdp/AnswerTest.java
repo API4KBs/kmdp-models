@@ -18,10 +18,9 @@ package edu.mayo.kmdp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.Answer.merge;
-import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Serialized_Knowledge_Expression;
+import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Abstract_Knowledge_Expression;
 
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
-import org.omg.spec.api4kp._20200801.Explainer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 
 class AnswerTest {
@@ -51,7 +49,7 @@ class AnswerTest {
     assertTrue(ans.isSuccess());
     assertFalse(ans.isFailure());
 
-    assertEquals("n/a", ans.printExplanation());
+    assertEquals("", ans.printExplanation());
   }
 
   @Test
@@ -59,7 +57,7 @@ class AnswerTest {
     Answer<String> ans = Answer.failed(new IllegalStateException("Something bad happened"));
 
     assertNotNull(ans.getExplanation());
-    assertTrue(Serialized_Knowledge_Expression.sameAs(ans.getExplanation().getLevel()));
+    assertTrue(Abstract_Knowledge_Expression.sameAs(ans.getExplanation().getLevel()));
 
     assertFalse(ans.isSuccess());
 
@@ -113,7 +111,7 @@ class AnswerTest {
   @Test
   void testExplanationConstruction() {
     String msg = "This is the history";
-    Answer<String> ans = Answer.of(ResponseCodeSeries.OK, "foo").withExplanation(msg);
+    Answer<String> ans = Answer.of(ResponseCodeSeries.OK, "foo").withExplanationMessage(msg);
     assertEquals(msg, ans.printExplanation());
   }
 
@@ -211,7 +209,8 @@ class AnswerTest {
 
     assertTrue(ans.getExplanation().asString().isEmpty());
 
-    Answer<Void> ans5 = Answer.of().withExplanation(xpl);
+    Answer<Void> ans5 = Answer.of()
+        .withExplanationMessage(xpl);
 
     ans = Answer.merge(ans, ans5);
 
@@ -220,7 +219,6 @@ class AnswerTest {
 
     assertTrue(ans1.getExplanation().asString().isEmpty());
 
-    assertTrue(Explainer.DEFAULT_NO_EXPL.asString().isEmpty());
   }
 
 }

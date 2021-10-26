@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.util;
 
@@ -49,10 +47,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JSonUtil {
-  
-  private static Logger logger = LoggerFactory.getLogger(JSonUtil.class);
-  
-  private JSonUtil() {}
+
+  private static final Logger logger = LoggerFactory.getLogger(JSonUtil.class);
+
+  private JSonUtil() {
+    // static functions only
+  }
 
   private static final String PRETTYPRINT = DefaultPrettyPrinter.class.getName();
   private static final String INCLUDES = JsonInclude.class.getName();
@@ -70,7 +70,7 @@ public class JSonUtil {
     try {
       return Optional.ofNullable(objectMapper.readTree(data));
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -92,7 +92,7 @@ public class JSonUtil {
     try {
       return Optional.ofNullable(objectMapper.readValue(data, klass));
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -103,18 +103,33 @@ public class JSonUtil {
   }
 
   public static Optional<String> writeJsonAsString(Object root) {
-    return writeJson(root, null, defaultProperties())
+    return writeJsonAsString(root, null);
+  }
+
+  public static Optional<String> writeJsonAsString(Object root, Module module) {
+    return writeJson(root, module, defaultProperties())
         .flatMap(Util::asString);
   }
 
+  public static Optional<String> writeXMLAsString(Object root, Module module) {
+    return writeXML(root, module)
+        .flatMap(Util::asString);
+  }
 
   public static Optional<ByteArrayOutputStream> writeJson(Object root) {
     return writeJson(root, null, defaultProperties());
   }
 
+  public static Optional<ByteArrayOutputStream> writeXML(Object root, Module module) {
+    JacksonXmlModule xmlModule = new JacksonXmlModule();
+    return writeJson(root,
+        new XmlMapper(xmlModule),
+        module != null ? module : xmlModule,
+        defaultProperties());
+  }
+
   public static Optional<ByteArrayOutputStream> writeXML(Object root) {
-    JacksonXmlModule module = new JacksonXmlModule();
-    return writeJson(root, new XmlMapper(module), module, defaultProperties());
+    return writeXML(root, null);
   }
 
   public static Optional<String> printJson(Object root) {
@@ -126,6 +141,7 @@ public class JSonUtil {
     return writeJson(root, null, p)
         .flatMap(Util::asString);
   }
+
   public static Optional<String> printJson(Object root, Module m, Properties p) {
     return writeJson(root, m, p)
         .flatMap(Util::asString);
@@ -160,14 +176,15 @@ public class JSonUtil {
     try {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-      if (Boolean.TRUE.equals(Boolean.valueOf(p.getProperty(PRETTYPRINT, Boolean.TRUE.toString())))) {
+      if (Boolean.TRUE.equals(
+          Boolean.valueOf(p.getProperty(PRETTYPRINT, Boolean.TRUE.toString())))) {
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(baos, root);
       } else {
         objectMapper.writeValue(baos, root);
       }
       return Optional.of(baos);
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -179,7 +196,7 @@ public class JSonUtil {
           .writeValueAsString(mapper.readValue(jsonNode.toString(),
               Object.class));
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return "";
     }
   }
@@ -240,7 +257,7 @@ public class JSonUtil {
       try {
         return Optional.of(new ObjectMapper().readValue(jsonTxt.get(), type));
       } catch (IOException e) {
-        logger.error(e.getMessage(),e);
+        logger.error(e.getMessage(), e);
         return Optional.empty();
       }
     }
@@ -253,7 +270,7 @@ public class JSonUtil {
       return Optional
           .of(new ObjectMapper().readValue(JSonUtil.printJson(jsonNode).orElse(""), type));
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -273,7 +290,7 @@ public class JSonUtil {
     try {
       return Optional.of(new ObjectMapper().readValue(json, type));
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -292,7 +309,7 @@ public class JSonUtil {
     try {
       return Optional.of(new ObjectMapper().readValue(json, Object.class));
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -304,22 +321,24 @@ public class JSonUtil {
       Object x = mapper.readValue(json, klass);
       return klass.isInstance(x) ? Optional.of(klass.cast(x)) : Optional.empty();
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
 
 
-  public static <T> Optional<List<T>> parseJsonList(InputStream data, Class<? extends T> memberKlass) {
+  public static <T> Optional<List<T>> parseJsonList(InputStream data,
+      Class<? extends T> memberKlass) {
     return parseJsonList(data, null, memberKlass);
   }
 
-  public static <T> Optional<List<T>> parseJsonList(InputStream data, Module m, Class<? extends T> memberKlass) {
+  public static <T> Optional<List<T>> parseJsonList(InputStream data, Module m,
+      Class<? extends T> memberKlass) {
     ObjectMapper objectMapper = configure(new ObjectMapper(), m, defaultProperties());
     try {
       return Optional.of(Arrays.asList(objectMapper.readValue(data, asArrayOf(memberKlass))));
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -335,7 +354,7 @@ public class JSonUtil {
         return Optional.of(mapper.readValue(json, type));
       }
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -349,8 +368,12 @@ public class JSonUtil {
     return toJsonNode(root, null, defaultProperties());
   }
 
+  public static Optional<JsonNode> toJsonNode(Object root, Module module) {
+    return toJsonNode(root, module, defaultProperties());
+  }
+
   public static Optional<JsonNode> toJsonNode(Object root, Module module, Properties p) {
-   return writeJson(root, module, p)
+    return writeJson(root, module, p)
         .map(ByteArrayOutputStream::toByteArray)
         .flatMap(JSonUtil::readJson);
   }

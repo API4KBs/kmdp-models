@@ -1,21 +1,19 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.util.ws;
 
-import static org.omg.spec.api4kp._20200801.Explainer.packExplanation;
+import static org.omg.spec.api4kp._20200801.Explainer.packExplanationIntoHeaders;
 
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
@@ -29,7 +27,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,9 +183,7 @@ public class ResponseHelper {
   private static MultiValueMap<String, String> mapHeaders(Answer<?> ans) {
     HttpHeaders headers = new HttpHeaders();
     ans.listMeta().forEach(h -> headers.addAll(h, ans.getMetas(h)));
-    Optional.ofNullable(ans.getExplanation())
-        .flatMap(AbstractCarrier::asString)
-        .ifPresent(expl -> packExplanation(expl, headers));
+    packExplanationIntoHeaders(ans, headers);
     return headers;
   }
 
@@ -200,7 +195,7 @@ public class ResponseHelper {
       int statusCode = Integer.parseInt(outcomeType.getTag());
       return HttpStatus.resolve(statusCode);
     } catch (NumberFormatException nfe) {
-      logger.error(nfe.getMessage(),nfe);
+      logger.error(nfe.getMessage(), nfe);
       return HttpStatus.INTERNAL_SERVER_ERROR;
     }
   }
@@ -208,6 +203,6 @@ public class ResponseHelper {
   public static <T> ResponseEntity<T> redirectTo(URI locator) {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setLocation(locator);
-    return new ResponseEntity<>(null,httpHeaders,HttpStatus.SEE_OTHER);
+    return new ResponseEntity<>(null, httpHeaders, HttpStatus.SEE_OTHER);
   }
 }

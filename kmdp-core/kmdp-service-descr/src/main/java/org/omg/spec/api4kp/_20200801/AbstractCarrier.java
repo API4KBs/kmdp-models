@@ -54,6 +54,8 @@ import org.w3c.dom.Document;
 
 public interface AbstractCarrier {
 
+  KnowledgeCarrier EMPTY_CARRIER = new KnowledgeCarrier();
+
   enum Encodings {
     DEFAULT;
   }
@@ -78,6 +80,8 @@ public interface AbstractCarrier {
         .withExpression(serialized)
         .withLevel(Serialized_Knowledge_Expression);
   }
+
+  static KnowledgeCarrier emptyCarrier() { return AbstractCarrier.EMPTY_CARRIER; }
 
   static KnowledgeCarrier of(Document dox) {
     return ofTree(dox);
