@@ -448,17 +448,19 @@ public class Answer<T> extends Explainer {
 
   public static <X, Y> Answer<Y> anyDo(Collection<X> delegates, Function<X, Answer<Y>> mapper,
       Supplier<Answer<Y>> fallback) {
+    List<ServerSideException> fails = new ArrayList<>();
     return delegates.stream()
         .map(x -> {
           try {
             return mapper.apply(x);
           } catch (Exception e) {
+            fails.add(new ServerSideException(e));
             return Answer.<Y>failed(e);
           }
         })
         .filter(Answer::isSuccess)
         .findAny()
-        .orElseGet(fallback);
+        .orElseGet(() -> fallback.get().withExplanationDetail(new ComplexProblem(fails)));
   }
 
   public static <X, Y> Answer<Y> firstDo(Collection<X> delegates, Function<X, Answer<Y>> mapper) {
@@ -750,6 +752,7 @@ public class Answer<T> extends Explainer {
         logger.error(e.getMessage(), e);
         return Answer.<U>failed(e)
             .withAddedMeta(srcAnswer.meta)
+            .withExplanationInterrupt(new ServerSideException(e))
             .withAddedExplanation(srcAnswer.explanation);
       }
     }

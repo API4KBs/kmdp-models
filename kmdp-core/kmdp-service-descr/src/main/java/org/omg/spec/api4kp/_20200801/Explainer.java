@@ -29,8 +29,10 @@ import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSe
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
@@ -45,8 +48,8 @@ import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Problem;
 import org.zalando.problem.ProblemBuilder;
+import org.zalando.problem.ProblemModule;
 import org.zalando.problem.Status;
-import org.zalando.problem.jackson.ProblemModule;
 
 /**
  * Specialization of the Writer monad that handles 'explanations' in the context of
@@ -172,17 +175,16 @@ public abstract class Explainer {
     if (explanation == null) {
       this.explanation = other;
     } else if (other != null) {
-      this.explanation = merge(this.explanation, other);
+      this.explanation = mergeInto(this.explanation, other);
     }
   }
 
-  private KnowledgeCarrier merge(KnowledgeCarrier explanation, KnowledgeCarrier other) {
-    if (explanation instanceof CompositeKnowledgeCarrier) {
-      return ((CompositeKnowledgeCarrier) explanation).withComponent(other);
-    } else {
-      return new CompositeKnowledgeCarrier()
-          .withComponent(explanation, other);
-    }
+  private KnowledgeCarrier mergeInto(KnowledgeCarrier intoExplanation, KnowledgeCarrier other) {
+    // both intoExplanation and other are not-null
+    Stream<KnowledgeCarrier> intoExpl = intoExplanation.components();
+    Stream<KnowledgeCarrier> moreExpl = other.components();
+    return new ExplanationCarrier()
+        .withComponent(Stream.concat(intoExpl, moreExpl).collect(Collectors.toList()));
   }
 
 
@@ -255,9 +257,12 @@ public abstract class Explainer {
     addFormalExplanation(ofThrowable(cause));
   }
 
-
   public String printExplanation() {
     return printExplanation(TXT);
+  }
+
+  public String printExplanationAsJson() {
+    return printExplanation(JSON);
   }
 
   public String printExplanation(SerializationFormat fmt) {
@@ -291,17 +296,26 @@ public abstract class Explainer {
     if (kc instanceof CompositeKnowledgeCarrier) {
       if (!TXT.sameAs(fmt)
           && kc.components().anyMatch(c -> c.getExpression() instanceof Problem)) {
-        ComplexProblem complex = new ComplexProblem();
-        kc.components()
-            .map(comp -> comp.as(Problem.class)
-                .orElseGet(() -> new InfoProblem(comp.asString().orElseThrow())))
-            .forEach(complex::add);
+        Problem complex = flattenAsProblem(kc);
         return ofProblem(complex);
       } else {
         return ofNaturalLanguageRep(flattenAsString(kc));
       }
     } else {
       return kc;
+    }
+  }
+
+  protected Problem flattenAsProblem(KnowledgeCarrier kc) {
+    if (kc instanceof CompositeKnowledgeCarrier) {
+      ComplexProblem complex = new ComplexProblem();
+      kc.components()
+          .map(this::flattenAsProblem)
+          .forEach(complex::add);
+      return complex;
+    } else {
+      return kc.as(Problem.class)
+          .orElseGet(() -> new InfoProblem(kc.asString().orElseThrow()));
     }
   }
 
@@ -317,10 +331,19 @@ public abstract class Explainer {
 
     private static final String KEY = "components";
 
-    public ComplexProblem() {
-      super(GENERIC_INFO_TYPE, null, null, null, null, null,
+    public ComplexProblem(String title, String detail, URI instance) {
+      super(GENERIC_INFO_TYPE, title, Status.OK, detail, instance, null,
           Map.of(KEY, new ArrayList<>()));
       this.setStackTrace(Explainer.EMPTY_STACK_TRACE);
+    }
+
+    public ComplexProblem() {
+      this(null, null, null);
+    }
+
+    public ComplexProblem(Collection<? extends Problem> problems) {
+      this(null, null, null);
+      problems.forEach(this::add);
     }
 
     public void add(Problem component) {
@@ -333,8 +356,29 @@ public abstract class Explainer {
   public static class InfoProblem extends AbstractThrowableProblem {
 
     public InfoProblem(String msg) {
-      super(GENERIC_INFO_TYPE, "Success", Status.OK, msg);
+      this(null, msg, null);
+    }
+
+    public InfoProblem(String title, String detail, URI instance) {
+      super(GENERIC_INFO_TYPE, title, Status.OK, detail, instance);
       this.setStackTrace(Explainer.EMPTY_STACK_TRACE);
     }
+  }
+
+  @SuppressWarnings("java:S110")
+  public static class IssueProblem extends AbstractThrowableProblem {
+
+    public IssueProblem(String title, ResponseCode status, String detail, URI instance) {
+      super(GENERIC_ERROR_TYPE,
+          title,
+          Status.valueOf(Integer.parseInt(status.getTag())),
+          detail,
+          instance);
+      this.setStackTrace(Explainer.EMPTY_STACK_TRACE);
+    }
+  }
+
+  protected static class ExplanationCarrier extends CompositeKnowledgeCarrier {
+    // marker class
   }
 }

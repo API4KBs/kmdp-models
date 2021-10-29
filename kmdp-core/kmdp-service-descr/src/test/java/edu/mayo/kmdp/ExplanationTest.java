@@ -10,10 +10,14 @@ import static org.omg.spec.api4kp._20200801.Explainer.newProblem;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
 import java.util.Date;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
@@ -110,6 +114,53 @@ class ExplanationTest {
 
   @Test
   void testMultipleExplanations() {
+    Answer<Void> ans = Answer.merge(ans1, ans2);
+    ans = Answer.merge(ans3, ans);
+
+    JsonNode jn = JSonUtil.readJson(ans.printExplanation(JSON)).orElseGet(Assertions::fail);
+    JsonNode n1 = jn.get("components");
+    assertTrue(n1.isArray());
+
+    ArrayNode an = (ArrayNode) n1;
+    assertEquals(3, an.size());
+    an.forEach(s -> assertTrue(s.isObject()));
+  }
+
+  @Test
+  void testMultipleExplanationsWithReduce() {
+    Answer<Void> all = Stream.of(ans1, ans2, ans3)
+        .reduce(Answer::merge)
+        .orElseGet(Assertions::fail);
+
+    KnowledgeCarrier kc = all.getExplanation();
+    assertEquals(3, kc.componentList().size());
+  }
+
+  @Test
+  void testMultipleExplanationsWithNestedReduce() {
+    Answer<Void> all1 = Stream.of(ans1, ans2)
+        .reduce(Answer::merge)
+        .orElseGet(Assertions::fail);
+    Answer<Void> all2 = Stream.of(ans3, ans4)
+        .reduce(Answer::merge)
+        .orElseGet(Assertions::fail);
+    Answer<Void> all3 = Stream.of(ans1, ans5)
+        .reduce(Answer::merge)
+        .orElseGet(Assertions::fail);
+
+    Answer<Void> all = Stream.of(all1, all2, all3)
+        .reduce(Answer::merge)
+        .orElseGet(Assertions::fail);
+
+    assertEquals(2, all1.getExplanation().componentList().size());
+    assertEquals(2, all2.getExplanation().componentList().size());
+    assertEquals(2, all3.getExplanation().componentList().size());
+    assertEquals(6, all.getExplanation().componentList().size());
+  }
+
+
+  @Test
+  void testNestedExplanation() {
     Answer<Void> ans = Answer.<Void>failed()
         .withExplanationDetail(
             newProblem()

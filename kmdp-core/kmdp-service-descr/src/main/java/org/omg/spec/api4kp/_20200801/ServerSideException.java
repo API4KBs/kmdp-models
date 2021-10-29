@@ -58,6 +58,14 @@ public class ServerSideException extends AbstractThrowableProblem {
     this.headers = headers != null ? new LinkedHashMap<>(headers) : Collections.emptyMap();
   }
 
+  public ServerSideException(
+      final URI type,
+      final String title,
+      final ResponseCode status,
+      final String detail,
+      final URI instance) {
+    this(type, title, status, detail, instance, null, null);
+  }
 
   public ServerSideException(Throwable t) {
     this(GENERIC_ERROR_TYPE,
