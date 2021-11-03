@@ -54,6 +54,20 @@ import org.zalando.problem.Status;
 /**
  * Specialization of the Writer monad that handles 'explanations' in the context of
  * knowledge-oriented APIs
+ * <p>
+ * Explanations provide 'meta' information about how an Answer has been provided, and can range from
+ * pedigree/provenance, to traces of the computation process, to problems encountered during the
+ * reasoning.
+ * <p>
+ * Explanations are wrapped in KnowledgeCarriers, to support formal representations.
+ * <p>
+ * To the extent that Answers can be chained, Explanations can be composed and flattened. By
+ * default, composition is generic, based on Composite Artifacts, while flattening should be
+ * representation-aware (TODO: more work is needed on this).
+ * <p>
+ * Explanations can be flattened, serialized and inlined in an Answer (Response) to the client, as a
+ * header. Alternatively, the server can send a callback reference (URL) for the client to access
+ * the explanation on demand. (11/21 TODO: this second modality is not supported, not yet needed)
  */
 public abstract class Explainer {
 
@@ -84,6 +98,13 @@ public abstract class Explainer {
   protected KnowledgeCarrier explanation;
 
 
+  /**
+   * Client-side method that extracts an explanation from the server's response headers
+   *
+   * @param meta the server response's headers
+   * @return an Optional KnowledgeCarrier with the explanation, if any was sent
+   * @see #packExplanationIntoHeaders(Answer, Map)
+   */
   public static Optional<KnowledgeCarrier> extractExplanationFromHeaders(
       Map<String, List<String>> meta) {
     List<String> links = Optional.ofNullable(meta.get(EXPL_LINK_HEADER))
@@ -140,7 +161,12 @@ public abstract class Explainer {
     }
   }
 
-
+  /**
+   * Builder that creates an Explanation from a plain, user-oriented message
+   *
+   * @param str
+   * @return
+   */
   public static KnowledgeCarrier ofNaturalLanguageRep(String str) {
     // don't use AbstractCarrier.of(), which will add an unnecessary asset ID
     return new KnowledgeCarrier()
@@ -149,6 +175,14 @@ public abstract class Explainer {
         .withRepresentation(NL_MIME);
   }
 
+  /**
+   * Builder that creates an Explanation from a Problem, which combines API technical info (e.g.
+   * status code), context (e.g. id of entity involved) with business info (e.g. user-oriented
+   * messages)
+   *
+   * @param issue
+   * @return
+   */
   public static KnowledgeCarrier ofProblem(Problem issue) {
     // don't use AbstractCarrier.of(), which will add an unnecessary asset ID
     return new KnowledgeCarrier()
@@ -157,12 +191,27 @@ public abstract class Explainer {
         .withRepresentation(PROBLEM_MIME);
   }
 
+  /**
+   * Utility factory method that creates a partially built ProblemBuilder
+   *
+   * @return
+   */
   public static ProblemBuilder newProblem() {
     return Problem.builder()
         .withType(GENERIC_ERROR_TYPE)
         .withStatus(Status.INTERNAL_SERVER_ERROR);
   }
 
+  /**
+   * Builder that creates an Explanation from a Throwable
+   * <p>
+   * Note: since most {@link Problem} implementations inherit Throwable, this method redirects to
+   * {@link #ofProblem(Problem)} Unstructured Exceptions, instead, are wrapped in {@link
+   * ServerSideException}, then handled as Problem.
+   *
+   * @param cause
+   * @return
+   */
   public static KnowledgeCarrier ofThrowable(Throwable cause) {
     if (cause instanceof Problem) {
       return ofProblem((Problem) cause);
@@ -171,6 +220,11 @@ public abstract class Explainer {
     }
   }
 
+  /**
+   * Merges the other Explanation into this
+   * If 'this' does not have an Explanation, simply uses the other
+   * @param other
+   */
   protected void mergeExplanation(KnowledgeCarrier other) {
     if (explanation == null) {
       this.explanation = other;
@@ -179,92 +233,170 @@ public abstract class Explainer {
     }
   }
 
+  /**
+   * Merges two Explanations into a CompositeKnowledgeCarrier
+   * @param other
+   */
   private KnowledgeCarrier mergeInto(KnowledgeCarrier intoExplanation, KnowledgeCarrier other) {
     // both intoExplanation and other are not-null
     Stream<KnowledgeCarrier> intoExpl = intoExplanation.components();
     Stream<KnowledgeCarrier> moreExpl = other.components();
-    return new ExplanationCarrier()
+    return new CompositeKnowledgeCarrier()
         .withComponent(Stream.concat(intoExpl, moreExpl).collect(Collectors.toList()));
   }
 
 
+  /**
+   * @return this Explanation, or an empty one
+   */
   public KnowledgeCarrier getExplanation() {
     return explanation != null ? explanation : emptyCarrier();
   }
 
+  /**
+   * Assigns the given Explanation, replacing any existing one
+   * @param explanation
+   */
   public void setExplanation(KnowledgeCarrier explanation) {
     if (isNotEmpty(explanation)) {
       this.explanation = explanation;
     }
   }
 
+  /**
+   * Assigns the given Explanation, replacing any existing one
+   * @param explanation
+   */
   public void setFormalExplanation(KnowledgeCarrier explanation) {
     setExplanation(explanation);
   }
 
+  /**
+   * Determines if the given Explanation is vacuous (empty)
+   * @param expl
+   */
   protected boolean isNotEmpty(KnowledgeCarrier expl) {
     return expl != null
         && expl.getExpression() != null
         || expl instanceof CompositeKnowledgeCarrier;
   }
 
+  /**
+   * Assigns the given Explanation, replacing any existing one
+   * @param msg
+   */
   public void setExplanationMessage(String msg) {
     setExplanation(ofNaturalLanguageRep(msg));
   }
 
+  /**
+   * Assigns the given Explanation, replacing any existing one
+   * @param issue
+   */
   public void setExplanationDetail(Problem issue) {
     setExplanation(ofProblem(issue));
   }
 
+  /**
+   * Assigns the given Explanation, replacing any existing one
+   * @param cause
+   */
   public void setExplanationInterrupt(Throwable cause) {
     setExplanation(ofThrowable(cause));
   }
 
+  /**
+   * Assigns the given Explanation, replacing any existing one
+   * @param expl
+   * @return
+   */
   public Explainer withFormalExplanation(KnowledgeCarrier expl) {
     setFormalExplanation(expl);
     return this;
   }
 
+  /**
+   * Assigns the given Explanation, replacing any existing one
+   * @param msg
+   * @return
+   */
   public Explainer withExplanationMessage(String msg) {
     setExplanationMessage(msg);
     return this;
   }
 
+  /**
+   * Assigns the given Explanation, replacing any existing one
+   * @param issue
+   * @return
+   */
   public Explainer withExplanationDetail(Problem issue) {
     setExplanationDetail(issue);
     return this;
   }
 
+  /**
+   * Assigns the given Explanation, replacing any existing one
+   * @param cause
+   * @return
+   */
   public Explainer withExplanationInterrupt(Throwable cause) {
     setExplanationInterrupt(cause);
     return this;
   }
 
-
+  /**
+   * Adds the given Explanation to an existing one
+   * @param expl
+   */
   protected void addFormalExplanation(KnowledgeCarrier expl) {
     mergeExplanation(expl);
   }
 
+  /**
+   * Adds the given Explanation to an existing one
+   * @param msg
+   */
   protected void addExplanationMessage(String msg) {
     addFormalExplanation(ofNaturalLanguageRep(msg));
   }
 
+  /**
+   * Adds the given Explanation to an existing one
+   * @param issue
+   */
   protected void addExplanationDetail(Problem issue) {
     addFormalExplanation(ofProblem(issue));
   }
 
+  /**
+   * Adds the given Explanation to an existing one
+   * @param cause
+   */
   protected void addExplanationDetail(Throwable cause) {
     addFormalExplanation(ofThrowable(cause));
   }
 
+  /**
+   * Converts the existing explanation to a String message
+   * @return
+   */
   public String printExplanation() {
     return printExplanation(TXT);
   }
 
+  /**
+   * Serializes the existing explanation into JSON
+   * @return
+   */
   public String printExplanationAsJson() {
     return printExplanation(JSON);
   }
 
+  /**
+   * Serializes the existing explanation using a known format (TXT, JSON, future XML)
+   * @return
+   */
   public String printExplanation(SerializationFormat fmt) {
     boolean isXML = XML_1_1.sameAs(fmt);
     boolean isJson = JSON.sameAs(fmt);
@@ -292,6 +424,12 @@ public abstract class Explainer {
     }
   }
 
+  /**
+   * Flattens a Composite Explanation into a single one
+   * @param kc
+   * @param fmt
+   * @return
+   */
   protected KnowledgeCarrier flatten(KnowledgeCarrier kc, SerializationFormat fmt) {
     if (kc instanceof CompositeKnowledgeCarrier) {
       if (!TXT.sameAs(fmt)
@@ -306,6 +444,11 @@ public abstract class Explainer {
     }
   }
 
+  /**
+   * Flattens a Composite Explanation into a Problem with children, nested Problems
+   * @param kc
+   * @return
+   */
   protected Problem flattenAsProblem(KnowledgeCarrier kc) {
     if (kc instanceof CompositeKnowledgeCarrier) {
       ComplexProblem complex = new ComplexProblem();
@@ -319,6 +462,11 @@ public abstract class Explainer {
     }
   }
 
+  /**
+   * Flattens a Composite Explanation into a newline-concatenated String
+   * @param kc
+   * @return
+   */
   protected String flattenAsString(KnowledgeCarrier kc) {
     return kc.components()
         .flatMap(c -> c.asString().stream())
@@ -378,7 +526,4 @@ public abstract class Explainer {
     }
   }
 
-  protected static class ExplanationCarrier extends CompositeKnowledgeCarrier {
-    // marker class
-  }
 }
