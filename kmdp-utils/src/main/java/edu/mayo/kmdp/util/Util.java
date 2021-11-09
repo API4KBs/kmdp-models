@@ -18,11 +18,14 @@ package edu.mayo.kmdp.util;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,14 +54,15 @@ import org.slf4j.LoggerFactory;
 public class Util {
 
   private static final Logger logger = LoggerFactory.getLogger(Util.class);
-  
+
   private static final Pattern uuidPattern = Pattern.compile(
       "^([A-Fa-f0-9]{8})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{12})$");
 
   private static final Pattern oidPattern = Pattern.compile(
       "^([0-2])((\\.0)|(\\.[1-9][0-9]*))*$");
 
-  private Util() {}
+  private Util() {
+  }
 
   public static URL resolveResource(String path) {
     return Util.class.getResource(path);
@@ -69,7 +73,7 @@ public class Util {
   }
 
   public static boolean isNotEmpty(String str) {
-    return ! isEmpty(str);
+    return !isEmpty(str);
   }
 
   public static String concat(List<String> str) {
@@ -80,7 +84,7 @@ public class Util {
     return str.toLowerCase().trim().replace(" ", "_");
   }
 
-  public static <K,V> Map<K, V> toMap(Collection<V> values, Function<V,K> identifier) {
+  public static <K, V> Map<K, V> toMap(Collection<V> values, Function<V, K> identifier) {
     return values.stream()
         .collect(Collectors.toMap(
             identifier,
@@ -99,14 +103,14 @@ public class Util {
 
   @SuppressWarnings("unchecked")
   public static <T> T[] ensureArray(T[] array, Class<T> type) {
-    return array == null ? (T[]) Array.newInstance(type,0) : array;
+    return array == null ? (T[]) Array.newInstance(type, 0) : array;
   }
 
   public static Optional<ByteArrayOutputStream> printOut(ByteArrayOutputStream os) {
     try {
       return Optional.of(os);
     } catch (Exception e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -115,7 +119,7 @@ public class Util {
     try {
       return Optional.of(s);
     } catch (Exception e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -124,7 +128,7 @@ public class Util {
     try {
       return Optional.of(url.openStream());
     } catch (IOException e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -142,7 +146,7 @@ public class Util {
         return Optional.ofNullable(Util.class.getResourceAsStream(local));
       }
     } catch (Exception e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
     }
 
     return Optional.empty();
@@ -269,7 +273,7 @@ public class Util {
         : Optional.empty();
   }
 
-  public static <T> Function<Object,Optional<T>> as(Class<T> type) {
+  public static <T> Function<Object, Optional<T>> as(Class<T> type) {
     return x -> type.isInstance(x)
         ? Optional.of(type.cast(x))
         : Optional.empty();
@@ -291,7 +295,7 @@ public class Util {
     if (h1 == h2) {
       h2 += 37;
     }
-    return Integer.toString(h1 ^ h2 );
+    return Integer.toString(h1 ^ h2);
   }
 
 
@@ -381,7 +385,8 @@ public class Util {
   }
 
 
-  public static <T> List<T> paginate(List<T> list, Integer offset, Integer limit, Comparator<? super T> comparator) {
+  public static <T> List<T> paginate(List<T> list, Integer offset, Integer limit,
+      Comparator<? super T> comparator) {
     if (list == null || list.isEmpty()) {
       return Collections.emptyList();
     }
@@ -433,4 +438,48 @@ public class Util {
     return combined;
   }
 
+  /**
+   * Copied from org.apache.xmlBeans.IOUtil to avoid dependency
+   *
+   * @param input
+   * @param output
+   * @throws IOException
+   */
+  public static void copyCompletely(InputStream input, OutputStream output)
+      throws IOException {
+    //if both are file streams, use channel IO
+    if ((output instanceof FileOutputStream) && (input instanceof FileInputStream)) {
+      try {
+        FileChannel target = ((FileOutputStream) output).getChannel();
+        FileChannel source = ((FileInputStream) input).getChannel();
+
+        source.transferTo(0, Integer.MAX_VALUE, target);
+
+        source.close();
+        target.close();
+
+        return;
+      } catch (Exception e) { /* failover to byte stream version */ }
+    }
+
+    byte[] buf = new byte[8192];
+    while (true) {
+      int length = input.read(buf);
+      if (length < 0) {
+        break;
+      }
+      output.write(buf, 0, length);
+    }
+
+    try {
+      input.close();
+    } catch (IOException ignore) {
+      // do nothing
+    }
+    try {
+      output.close();
+    } catch (IOException ignore) {
+      // do nothing
+    }
+  }
 }

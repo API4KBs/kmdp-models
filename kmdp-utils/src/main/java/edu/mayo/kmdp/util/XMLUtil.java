@@ -60,7 +60,6 @@ import net.sf.saxon.lib.FeatureKeys;
 import net.sf.saxon.lib.StandardErrorListener;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
-import org.apache.xmlbeans.impl.common.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -116,7 +115,7 @@ public class XMLUtil {
           "application/xml, application/octet-stream;q=.9; */*;q=.2");
       try (var is = urlConnection.getInputStream();
           var baos = new ByteArrayOutputStream()) {
-        IOUtil.copyCompletely(is, baos);
+        Util.copyCompletely(is, baos);
         byte[] data = baos.toByteArray();
         return new ByteArrayInputStream(data);
       }
