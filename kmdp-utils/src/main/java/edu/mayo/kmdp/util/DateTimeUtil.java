@@ -1,11 +1,11 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -30,8 +30,6 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -111,6 +109,10 @@ public class DateTimeUtil {
     return dateTimeFormatter.format(dt);
   }
 
+  public static String serializeAsDateTime(Instant inst) {
+    return serializeAsDateTime(inst.atZone(ZoneId.systemDefault()));
+  }
+
   public static String serializeAsLocalDateTime(Date dt) {
     if (dt == null) {
       return null;
@@ -122,7 +124,7 @@ public class DateTimeUtil {
     if (dt == null) {
       return null;
     }
-    return serializeAsLocalDateTime(toZonedDateTime(dt));
+    return localDateTimeFormatter.format(dt.truncatedTo(ChronoUnit.SECONDS));
   }
 
   public static String serializeAsLocalDateTime(ZonedDateTime dt) {
@@ -131,6 +133,11 @@ public class DateTimeUtil {
     }
     return localDateTimeFormatter.format(dt.truncatedTo(ChronoUnit.SECONDS));
   }
+
+  public static String serializeAsLocalDateTime(Instant inst) {
+    return serializeAsLocalDateTime(toLocalDateTime(inst));
+  }
+
 
   public static String serializeAsDate(Date dt) {
     if (dt == null) {
@@ -146,11 +153,22 @@ public class DateTimeUtil {
     return dateFormatter.format(dt);
   }
 
+  public static String serializeAsDate(LocalDate dt) {
+    if (dt == null) {
+      return null;
+    }
+    return dateFormatter.format(dt);
+  }
+
   public static String serializeAsDate(ZonedDateTime dt) {
     if (dt == null) {
       return null;
     }
     return dateFormatter.format(dt);
+  }
+
+  public static String serializeAsDate(Instant inst) {
+    return serializeAsDate(toLocalDate(inst));
   }
 
 
@@ -174,6 +192,11 @@ public class DateTimeUtil {
     }
     return serializeAsTime(dt.toLocalDateTime());
   }
+
+  public static String serializeAsTime(Instant inst) {
+    return serializeAsTime(toLocalDateTime(inst));
+  }
+
 
   public static String serializeZonedDateTime(ZonedDateTime dt, String format) {
     return serializeZonedDateTime(dt, DateTimeFormatter.ofPattern(format));
@@ -295,6 +318,10 @@ public class DateTimeUtil {
     return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
   }
 
+  public static LocalDateTime toLocalDateTime(Instant inst) {
+    return LocalDateTime.ofInstant(inst, ZoneId.systemDefault());
+  }
+
   public static ZonedDateTime toZonedDateTime(LocalDateTime dt) {
     return ZonedDateTime.ofLocal(dt, ZoneId.systemDefault(), null);
   }
@@ -303,16 +330,23 @@ public class DateTimeUtil {
     return toZonedDateTime(toLocalDateTime(dt));
   }
 
+  public static ZonedDateTime toZonedDateTime(Instant inst) {
+    return ZonedDateTime.ofLocal(toLocalDateTime(inst), ZoneId.systemDefault(), null);
+  }
+
   public static LocalDate toLocalDate(Date date) {
     java.time.Instant dateInstant = java.time.Instant.ofEpochMilli(date.getTime());
-    return LocalDateTime.ofInstant(dateInstant, ZoneId.systemDefault()).toLocalDate();
+    return toLocalDate(dateInstant);
+  }
+
+  public static LocalDate toLocalDate(Instant inst) {
+    return inst.atZone(ZoneId.systemDefault()).toLocalDate();
   }
 
   public static LocalTime toLocalTime(Date date) {
     java.time.Instant dateInstant = java.time.Instant.ofEpochMilli(date.getTime());
     return LocalDateTime.ofInstant(dateInstant, ZoneId.systemDefault()).toLocalTime();
   }
-
 
 
   public static Date fromLocalDateTime(LocalDateTime localDateTime) {
@@ -332,9 +366,8 @@ public class DateTimeUtil {
   }
 
   private static LocalDateTime toLocalDateTime(LocalTime localTime) {
-    return localTime.atDate(LocalDate.of(0,1,1));
+    return localTime.atDate(LocalDate.of(0, 1, 1));
   }
-
 
 
   public static XMLGregorianCalendar dateToCalendar(Date date) {
@@ -427,7 +460,7 @@ public class DateTimeUtil {
   }
 
   public static Optional<Date> tryParseDate(String dateStr, String pattern) {
-    return tryParseDate(dateStr,DateTimeFormatter.ofPattern(pattern));
+    return tryParseDate(dateStr, DateTimeFormatter.ofPattern(pattern));
   }
 
   public static Optional<Date> tryParseDate(String dateStr, DateTimeFormatter formatter) {
@@ -462,8 +495,8 @@ public class DateTimeUtil {
 
   public static int compare(Date d1, Date d2, TemporalUnit unit) {
     return Comparator
-        .comparing(d -> toLocalDateTime((Date)d).truncatedTo(unit))
-        .compare(d1,d2);
+        .comparing(d -> toLocalDateTime((Date) d).truncatedTo(unit))
+        .compare(d1, d2);
   }
 
   public static TemporalUnit toTemporalUnit(java.lang.String code) {
@@ -492,7 +525,9 @@ public class DateTimeUtil {
     if (d1 == null || d2 == null) {
       return false;
     }
-    return toLocalDate(d1).atStartOfDay().equals(toLocalDate(d2).atStartOfDay());
+    LocalDate l1 = toLocalDate(d1);
+    LocalDate l2 = toLocalDate(d2);
+    return l1.getDayOfYear() == l2.getDayOfYear();
   }
 
 }

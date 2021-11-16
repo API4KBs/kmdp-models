@@ -221,7 +221,8 @@ public abstract class Explainer {
   }
 
   /**
-   * Merges the other Explanation into this
+   * Merges the other Explanation into this.
+   * <p>
    * If 'this' does not have an Explanation, simply uses the other
    * @param other
    */
@@ -251,6 +252,24 @@ public abstract class Explainer {
    */
   public KnowledgeCarrier getExplanation() {
     return explanation != null ? explanation : emptyCarrier();
+  }
+
+  /**
+   * @param klass the Class to return the Explanation object as
+   * @param <T>   the Type of the expected Explanation object
+   * @return this Explanation as a structured Object, instance of the given #klass, or null if the
+   * Explanation is not an instanceof.
+   * <p>
+   * Will unwrap the Explanation from the KnowledgeCarrier, but will not try to perform any
+   * conversion / translation.
+   * <p>
+   * Effectively equivalent to @code{this.getExplanation().as(klass).orElse(null)}
+   */
+  public <T> T getExplanationAs(Class<T> klass) {
+    if (explanation == null) {
+      return null;
+    }
+    return explanation.as(klass).orElse(null);
   }
 
   /**

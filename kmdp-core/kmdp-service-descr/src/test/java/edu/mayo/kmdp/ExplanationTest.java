@@ -1,8 +1,10 @@
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.util.Util.isEmpty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.Explainer.GENERIC_ERROR_TYPE;
@@ -24,6 +26,7 @@ import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.ServerSideException;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.zalando.problem.DefaultProblem;
+import org.zalando.problem.Problem;
 
 class ExplanationTest {
 
@@ -175,6 +178,23 @@ class ExplanationTest {
 
     String s = ans.printExplanation();
     String j = ans.printExplanation(JSON);
+    assertFalse(isEmpty(s));
+    assertFalse(isEmpty(j));
+  }
+
+  @Test
+  void testExplanationDirectCast() {
+    Answer<Void> ans = Answer.<Void>failed()
+        .withExplanationDetail(
+            newProblem()
+                .withType(URI.create("my:Issue")).build());
+
+    assertTrue(ans.isFailure());
+    Problem p = ans.getExplanationAs(Problem.class);
+    assertNotNull(p);
+
+    assertFalse(isEmpty(ans.printExplanation()));
+    assertNull(ans.getExplanationAs(String.class));
   }
 
 

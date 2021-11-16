@@ -51,7 +51,10 @@ import org.zalando.problem.Problem;
  * <p>
  * Inherits behavior from classic monads such as:
  * <p>
- * * Try - exception handling, * Writer - explanations
+ * Try - exception handling, * Writer - explanations
+ * <p>
+ * TO DO [FUTURE] - Consider moving Explainer to a member instead of a superclass,
+ * to support more sophisticated explanation strategies
  *
  * @param <T>
  */

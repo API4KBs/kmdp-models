@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.util.adapters.DateAdapter;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
@@ -112,5 +113,26 @@ class DateTimeUtilTest {
 
     assertEquals(Long.toString(millis),millStr);
   }
+
+
+  @Test
+  void testSerializeInstant() {
+    Instant now = Instant.ofEpochMilli(100000);
+
+    String localDT = DateTimeUtil.serializeAsLocalDateTime(now);
+    String zonedDT = DateTimeUtil.serializeAsDateTime(now);
+    String localD = DateTimeUtil.serializeAsDate(now);
+    String localT = DateTimeUtil.serializeAsTime(now);
+
+    System.out.println(localD);
+    System.out.println(localT);
+    System.out.println(localDT);
+    System.out.println(zonedDT);
+
+    assertTrue(localDT.contains(localD));
+    assertTrue(localDT.contains(localT));
+    assertTrue(zonedDT.contains(localDT));
+  }
+
 
 }
