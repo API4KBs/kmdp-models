@@ -68,12 +68,21 @@ public class Util {
     return Util.class.getResource(path);
   }
 
+  /**
+   * @param str a String
+   * @return true if the string is null, empty (length = 0), or blank (all whitespaces)
+   */
   public static boolean isEmpty(String str) {
-    return str == null || str.trim().length() == 0;
+    return str == null || str.isEmpty() || str.isBlank();
   }
 
+  /**
+   * @param str a String
+   * @return true if the string is not null, not empty (length > 0), and not blank (at least one non
+   * whitespace character)
+   */
   public static boolean isNotEmpty(String str) {
-    return !isEmpty(str);
+    return str != null && !str.isEmpty() && !str.isBlank();
   }
 
   public static String concat(List<String> str) {
