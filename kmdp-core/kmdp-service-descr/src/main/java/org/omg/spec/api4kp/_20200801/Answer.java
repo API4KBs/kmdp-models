@@ -616,7 +616,7 @@ public class Answer<T> extends Explainer {
   }
 
   protected Answer<T> withAddedMeta(Map<String, List<String>> additionalMeta) {
-    if (this.meta == null) {
+    if (this.meta == null || this.meta == Collections.EMPTY_MAP) {
       this.meta = new HashMap<>(additionalMeta);
     }
     if (additionalMeta != null) {
