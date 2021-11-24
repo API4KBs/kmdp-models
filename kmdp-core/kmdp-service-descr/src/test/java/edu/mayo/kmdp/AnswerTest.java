@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp;
 
@@ -147,43 +145,45 @@ class AnswerTest {
     assertEquals("fail", ans2.orElseGet(() -> "fail"));
 
     Answer<String> ans3 = Answer.of("bbb");
-    assertEquals("bbb", ans3.orElseGet(() -> { throw new RuntimeException(); }));
+    assertEquals("bbb", ans3.orElseGet(() -> {
+      throw new RuntimeException();
+    }));
   }
 
 
   @Test
   void testStreamReduce() {
-    Answer<?> ans = Answer.of(Stream.of(2,3,4,5));
+    Answer<?> ans = Answer.of(Stream.of(2, 3, 4, 5));
     assertTrue(ans.isSuccess());
 
-    Answer<Integer> ans2 = ans.reduce(Integer.class, (x,y) -> x*y);
+    Answer<Integer> ans2 = ans.reduce(Integer.class, (x, y) -> x * y);
     assertTrue(ans2.isSuccess());
 
-    assertEquals(2*3*4*5, ans2.orElse(-1));
+    assertEquals(2 * 3 * 4 * 5, ans2.orElse(-1));
   }
 
   @Test
   void testListMap() {
-    Answer<?> ans = Answer.of(Arrays.asList(2,3,4,5));
+    Answer<?> ans = Answer.of(Arrays.asList(2, 3, 4, 5));
     assertTrue(ans.isSuccess());
 
-    Answer<List<Integer>> ans2 = ans.mapList(Integer.class, x -> x*2);
+    Answer<List<Integer>> ans2 = ans.mapList(Integer.class, x -> x * 2);
     assertTrue(ans2.isSuccess());
-    assertEquals(Arrays.asList(4,6,8,10), ans2.orElse(Collections.emptyList()));
+    assertEquals(Arrays.asList(4, 6, 8, 10), ans2.orElse(Collections.emptyList()));
 
-    Answer<List<Integer>> ans3 = ans.flatList(Integer.class, x -> Answer.of(x*2));
+    Answer<List<Integer>> ans3 = ans.flatList(Integer.class, x -> Answer.of(x * 2));
     assertTrue(ans3.isSuccess());
-    assertEquals(Arrays.asList(4,6,8,10), ans3.orElse(Collections.emptyList()));
+    assertEquals(Arrays.asList(4, 6, 8, 10), ans3.orElse(Collections.emptyList()));
   }
 
   @Test
   void testForEeach() {
-    Answer<?> ans = Answer.of(Arrays.asList(2,3,4,5));
+    Answer<?> ans = Answer.of(Arrays.asList(2, 3, 4, 5));
     assertTrue(ans.isSuccess());
 
     List<Integer> set = new ArrayList<>();
     ans.forEach(Integer.class, i -> set.add(-i));
-    assertEquals(Arrays.asList(-2,-3,-4,-5), set);
+    assertEquals(Arrays.asList(-2, -3, -4, -5), set);
   }
 
   @Test
@@ -194,7 +194,7 @@ class AnswerTest {
     );
 
     Answer<List<Integer>> ans = list.stream().collect(Answer.toList());
-    assertEquals(Arrays.asList(1,2), ans.orElse(Collections.emptyList()));
+    assertEquals(Arrays.asList(1, 2), ans.orElse(Collections.emptyList()));
   }
 
   @Test
@@ -221,4 +221,41 @@ class AnswerTest {
 
   }
 
+  @Test
+  void testBiMap() {
+    Answer<Integer> a1 = Answer.of(3);
+    Answer<Double> a2 = Answer.of(2.0);
+    Answer<Double> a3 = a1.biMap(a2, (x, y) -> x * y);
+
+    assertTrue(a3.isSuccess());
+    assertEquals(6.0, a3.get());
+  }
+
+  @Test
+  void testBiMapFail1() {
+    Answer<Integer> a1 = Answer.failed();
+    Answer<Double> a2 = Answer.of(2.0);
+    Answer<Double> a3 = a1.biMap(a2, (x, y) -> x * y);
+
+    assertTrue(a3.isFailure());
+  }
+
+  @Test
+  void testBiMapFail2() {
+    Answer<Integer> a1 = Answer.of(3);
+    Answer<Double> a2 = Answer.notFound();
+    Answer<Double> a3 = a1.biMap(a2, (x, y) -> x * y);
+
+    assertTrue(a3.isNotFound());
+  }
+
+  @Test
+  void testBiMapFail3() {
+    Answer<Integer> a1 = Answer.failed();
+    Answer<Double> a2 = Answer.notFound();
+    Answer<Double> a3 = a1.biMap(a2, (x, y) -> x * y);
+
+    assertTrue(a3.isFailure());
+    assertFalse(a3.isNotFound());
+  }
 }

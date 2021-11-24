@@ -31,6 +31,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -297,6 +298,16 @@ public class Answer<T> extends Explainer {
   public <U, X> Answer<List<U>> mapList(Class<X> memberClass,
       Function<? super X, ? extends U> mapper) {
     return getHandler().mapList((Answer<List<X>>) this, mapper);
+  }
+
+  public <U, X> Answer<U> biMap(Answer<X> other, BiFunction<T, X, U> mapper) {
+    return this.flatMap(
+        t -> other.map(x -> mapper.apply(t, x)));
+  }
+
+  public <U, X> Answer<U> biFlatMap(Answer<X> other, BiFunction<T, X, Answer<U>> mapper) {
+    return this.flatMap(
+        t -> other.flatMap(x -> mapper.apply(t, x)));
   }
 
   public void ifPresent(Consumer<? super T> consumer) {
