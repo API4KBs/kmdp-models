@@ -69,6 +69,12 @@ public class Answer<T> extends Explainer {
 
   private static final Logger logger = LoggerFactory.getLogger(Answer.class);
 
+  private static final Answer<?> EMPTY =  new Answer<>().withCodedOutcome(NotFound);
+
+  public static <T> Answer<T> empty() {
+    return (Answer<T>) EMPTY;
+  }
+
   /* Constructors (lifters) */
 
   public static Answer<Void> succeed() {
@@ -369,12 +375,10 @@ public class Answer<T> extends Explainer {
 
   public Answer<T> filter(Predicate<T> filter) {
     Objects.requireNonNull(filter);
-    if (filter.test(value)) {
+    if (value != null && filter.test(value)) {
       return this;
     } else {
-      //TODO - an 'explainable' predicate would be needed, to provide meaningful information about what did not qualify
-      return failed(new NoSuchElementException(
-          "Value " + value + " did not meet criteria " /*+ filter.toString() */));
+      return empty();
     }
   }
 

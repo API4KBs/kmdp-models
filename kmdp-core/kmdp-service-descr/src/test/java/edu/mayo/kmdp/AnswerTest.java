@@ -258,4 +258,25 @@ class AnswerTest {
     assertTrue(a3.isFailure());
     assertFalse(a3.isNotFound());
   }
+
+  @Test
+  void testFilterChain() {
+    Answer<String> ans = Answer.of("abcdefg");
+
+    boolean b1 = ans.filter(s -> s.contains("a"))
+        .filter(s -> s.contains("b"))
+        .isSuccess();
+    assertTrue(b1);
+
+    boolean b2 = ans.filter(s -> s.contains("z"))
+        .filter(s -> s.contains("b"))
+        .isSuccess();
+    assertFalse(b2);
+
+    boolean b3 = ans.filter(s -> s.contains("z"))
+        .filter(s -> s.contains("w"))
+        .isSuccess();
+    assertFalse(b3);
+  }
+
 }
