@@ -149,6 +149,12 @@ public class Answer<T> extends Explainer {
         .orElseGet(() -> Answer.failed(new ServerSideException(NotFound, context, msg)));
   }
 
+  public static <X> Answer<X> ofTry(Optional<X> value) {
+    return value
+        .map(Answer::of)
+        .orElseGet(() -> Answer.failed(new ServerSideException(NotFound)));
+  }
+
   @Deprecated
   public static <X> Answer<X> of(Optional<X> value) {
     return value
