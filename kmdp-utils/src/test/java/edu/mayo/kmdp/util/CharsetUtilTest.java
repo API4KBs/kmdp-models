@@ -2,8 +2,13 @@ package edu.mayo.kmdp.util;
 
 import static edu.mayo.kmdp.util.CharsetEncodingUtil.decodeFromBase64;
 import static edu.mayo.kmdp.util.CharsetEncodingUtil.recodeToBase64;
+import static edu.mayo.kmdp.util.CharsetEncodingUtil.recodeToBinary;
+import static java.lang.Integer.toBinaryString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
 class CharsetUtilTest {
@@ -40,6 +45,27 @@ class CharsetUtilTest {
     String source = "ipsum lorem";
     String roundtrip = decodeFromBase64(recodeToBase64(source));
     assertEquals(source, roundtrip);
+  }
+
+  @Test
+  void testNBSPtoBits() {
+    String nbsp = " ";
+
+    assertEquals("|11000010|10100000|",
+        recodeToBinary(nbsp, StandardCharsets.UTF_8, "|"));
+    assertEquals("|10100000|",
+        recodeToBinary(nbsp, Charset.forName("windows-1252"), "|"));
+  }
+
+  @Test
+  void testStringToBits() {
+    String str = "a b";
+    String bitCoded = recodeToBinary(str, StandardCharsets.UTF_8, null);
+
+    assertEquals("011000010010000001100010", bitCoded);
+    assertTrue(bitCoded.contains(toBinaryString('a')));
+    assertTrue(bitCoded.contains(toBinaryString(' ')));
+    assertTrue(bitCoded.contains(toBinaryString('b')));
   }
 
 }

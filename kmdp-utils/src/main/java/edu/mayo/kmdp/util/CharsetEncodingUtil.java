@@ -118,6 +118,42 @@ public class CharsetEncodingUtil {
     return new String(Base64.getDecoder().decode(str));
   }
 
+  /**
+   * Utility method that converts a String into a String of bits, where each chunk of bits is the
+   * binary encoding of a character in the original String, according to the given Charset. The
+   * chunks will be interleaved by a separator sequence of characters (which can be empty).
+   * <p>
+   * The character order is preserved left to right. Within each 8-bit chunk, the most significant
+   * bit is on the left. For example, "abc" will become |01100001|01100010|01100011|
+   *
+   * @param src       the String to be binary - encoded
+   * @param charset   the java Charset, providing the charater to bit Encoding
+   * @param separator a separator to divide the bit sequences pertaining to each character in the
+   *                  original String. Separators are appended both at the beginning and the end of
+   *                  the resulting String
+   * @return a possibly interleaved sequence of bits, as a String of 0/1s
+   */
+  public static String recodeToBinary(String src, Charset charset, String separator) {
+    if (separator == null) {
+      separator = "";
+    }
+    if (src == null) {
+      return separator;
+    }
+
+    byte[] bytes = src.getBytes(charset);
+    StringBuilder sb = new StringBuilder(separator);
+    for (byte aByte : bytes) {
+      String s = String.format(
+              "%8s",
+              Integer.toBinaryString(aByte & 0xFF))
+          .replace(' ', '0');
+      sb.append(s).append(separator);
+    }
+
+    return sb.toString();
+  }
+
   private CharsetEncodingUtil() {
     // static functions only
   }
