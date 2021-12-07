@@ -373,11 +373,17 @@ public class Util {
     return tag.toString().replace("-", "");
   }
 
+  /**
+   * Removes non-printable characters from a String
+   *
+   * @param str the input string
+   * @return the input str, where non-printable characters have been removed
+   * @see CharsetEncodingUtil#sanitizeToASCIItext(String)
+   * @deprecated the behavior of the method is narrower than the name implies
+   */
+  @Deprecated(since = "KMDP v11", forRemoval = true)
   public static String ensureUTF8(String str) {
-    if (isEmpty(str)) {
-      return "";
-    }
-    return str.replaceAll("[^\\x20-\\x7e]", "");
+    return CharsetEncodingUtil.sanitizeToASCIItext(str);
   }
 
   public static boolean isOID(String tag) {
