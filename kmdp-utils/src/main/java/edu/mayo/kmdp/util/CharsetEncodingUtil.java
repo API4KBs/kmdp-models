@@ -91,6 +91,15 @@ public class CharsetEncodingUtil {
     return str.replaceAll(regex, "");
   }
 
+  /**
+   * Predicate that determines whether a character is a core ASCII character
+   *
+   * @param charCodePoint the index of a character in the universal character set (Unicode)
+   * @return true if the character is part of the ASCII sub-set
+   */
+  public static boolean isASCII(int charCodePoint) {
+    return (charCodePoint & 0xFFFFFF80) == 0;
+  }
 
   /**
    * Utility method that uses {@link Base64#getEncoder()} to recode a String into Base64 form

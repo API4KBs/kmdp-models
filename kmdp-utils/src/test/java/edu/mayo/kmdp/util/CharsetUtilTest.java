@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
 class CharsetUtilTest {
@@ -68,4 +69,10 @@ class CharsetUtilTest {
     assertTrue(bitCoded.contains(toBinaryString('b')));
   }
 
+  @Test
+  void testIsAsciiByCodepoint() {
+    assertTrue(IntStream.range(0,128).allMatch(CharsetEncodingUtil::isASCII));
+    // not that it matters after 128...
+    assertTrue(IntStream.range(128, 130).noneMatch(CharsetEncodingUtil::isASCII));
+  }
 }
