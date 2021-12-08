@@ -273,6 +273,24 @@ public abstract class Explainer {
   }
 
   /**
+   * Casts the current explanation as a Problem, flattening it in the process
+   *
+   * @return the Explanation as a (flat) Problem, or null if the current explanation is not a
+   * Problem
+   */
+  public Problem getExplanationAsProblem() {
+    if (explanation == null) {
+      return null;
+    } else if (explanation.getExpression() instanceof Problem) {
+      return (Problem) explanation.getExpression();
+    } else if (explanation instanceof CompositeKnowledgeCarrier) {
+      return flattenAsProblem(explanation);
+    } else {
+      return null;
+    }
+  }
+
+  /**
    * Assigns the given Explanation, replacing any existing one
    * @param explanation
    */
@@ -470,11 +488,10 @@ public abstract class Explainer {
    */
   protected Problem flattenAsProblem(KnowledgeCarrier kc) {
     if (kc instanceof CompositeKnowledgeCarrier) {
-      ComplexProblem complex = new ComplexProblem();
-      kc.components()
+      List<Problem> subProblems = kc.components()
           .map(this::flattenAsProblem)
-          .forEach(complex::add);
-      return complex;
+          .collect(Collectors.toList());
+      return new ComplexProblem(subProblems);
     } else {
       return kc.as(Problem.class)
           .orElseGet(() -> new InfoProblem(kc.asString().orElseThrow()));
@@ -498,10 +515,14 @@ public abstract class Explainer {
 
     private static final String KEY = "components";
 
-    public ComplexProblem(String title, String detail, URI instance) {
-      super(GENERIC_INFO_TYPE, title, Status.OK, detail, instance, null,
+    public ComplexProblem(URI type, String title, String detail, URI instance) {
+      super(type, title, Status.OK, detail, instance, null,
           Map.of(KEY, new ArrayList<>()));
       this.setStackTrace(Explainer.EMPTY_STACK_TRACE);
+    }
+
+    public ComplexProblem(String title, String detail, URI instance) {
+      this(GENERIC_INFO_TYPE, title, detail, instance);
     }
 
     public ComplexProblem() {
@@ -509,11 +530,17 @@ public abstract class Explainer {
     }
 
     public ComplexProblem(Collection<? extends Problem> problems) {
-      this(null, null, null);
+      this(combineType(problems), null, null, null);
       problems.forEach(this::add);
     }
 
-    public void add(Problem component) {
+    private static URI combineType(Collection<? extends Problem> problems) {
+      return problems.stream().anyMatch(p -> GENERIC_ERROR_TYPE.equals(p.getType()))
+          ? GENERIC_ERROR_TYPE
+          : GENERIC_INFO_TYPE;
+    }
+
+    private void add(Problem component) {
       List<Object> list = (List<Object>) this.getParameters().get(KEY);
       list.add(component);
     }

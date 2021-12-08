@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.Explainer.GENERIC_ERROR_TYPE;
+import static org.omg.spec.api4kp._20200801.Explainer.GENERIC_INFO_TYPE;
 import static org.omg.spec.api4kp._20200801.Explainer.newProblem;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
@@ -23,6 +24,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
+import org.omg.spec.api4kp._20200801.Explainer.ComplexProblem;
 import org.omg.spec.api4kp._20200801.ServerSideException;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.zalando.problem.DefaultProblem;
@@ -197,6 +199,22 @@ class ExplanationTest {
     assertNull(ans.getExplanationAs(String.class));
   }
 
+
+  @Test
+  void testAutoFlattenExplanation() {
+    Answer<Void> ans = Answer.<Void>succeed()
+        .withExplanationDetail(
+            newProblem()
+                .withType(GENERIC_INFO_TYPE)
+                .withTitle("Part1").build())
+        .withAddedExplanationDetail(
+            newProblem()
+                .withType(GENERIC_ERROR_TYPE)
+                .withTitle("Part2").build());
+    Problem expl = ans.getExplanationAsProblem();
+    assertTrue(expl instanceof ComplexProblem);
+    assertEquals(GENERIC_ERROR_TYPE, expl.getType());
+  }
 
   private String format(URI type, int code, String title, String msg) {
     return type
