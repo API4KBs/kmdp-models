@@ -44,7 +44,7 @@ public class CharsetEncodingUtil {
    * @return an ASCII String of printable characters
    */
   public static String sanitizeToASCIItext(String str) {
-    return sanitize(str, NON_ASCII_PRINTABLE_RANGE);
+    return sanitize(str, NON_ASCII_PRINTABLE_RANGE, "");
   }
 
   /**
@@ -54,7 +54,7 @@ public class CharsetEncodingUtil {
    * @return an ASCII compliant String
    */
   public static String sanitizeToASCII(String str) {
-    return sanitize(str, NON_ASCII_RANGE);
+    return sanitize(str, NON_ASCII_RANGE, "");
   }
 
   /**
@@ -64,7 +64,7 @@ public class CharsetEncodingUtil {
    * @return an UTF8 compliant String
    */
   public static String sanitizeToUTF8(String str) {
-    return sanitize(str, NON_UTF8_RANGE);
+    return sanitize(str, NON_UTF8_RANGE, "");
   }
 
 
@@ -77,18 +77,19 @@ public class CharsetEncodingUtil {
    * <p>
    * Work based on @{link https://stackoverflow.com/questions/8519669/how-can-non-ascii-characters-be-removed-from-a-string}
    *
-   * @param str   the String to be sanitized
-   * @param regex the Regular Expression, such that any matching character/sub-string will be
-   *              removed, replaced by the empty String
+   * @param str         the String to be sanitized
+   * @param regex       the Regular Expression, such that any matching character/sub-string will be
+   *                    removed, replaced by the empty String
+   * @param replacement the String used to replace the characters
    * @return a sanitized String
    * @see String#getBytes(Charset)
    * @see java.text.Normalizer
    */
-  public static String sanitize(String str, String regex) {
+  public static String sanitize(String str, String regex, String replacement) {
     if (isEmpty(str)) {
       return "";
     }
-    return str.replaceAll(regex, "");
+    return str.replaceAll(regex, replacement);
   }
 
   /**
