@@ -18,6 +18,7 @@ import static edu.mayo.kmdp.util.JSonUtil.writeXMLAsString;
 import static java.util.Collections.singletonList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.emptyCarrier;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.Severity.INF;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
@@ -29,10 +30,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSe
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +42,8 @@ import java.util.stream.Stream;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeresourceoutcome.KnowledgeResourceOutcome;
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
-import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Problem;
 import org.zalando.problem.ProblemBuilder;
 import org.zalando.problem.ProblemModule;
@@ -191,15 +189,43 @@ public abstract class Explainer {
         .withRepresentation(PROBLEM_MIME);
   }
 
+
   /**
-   * Utility factory method that creates a partially built ProblemBuilder
+   * Factory builder for {@link Problem} used in Explanation of operation outcomes. Outcomes are
+   * defined in terms of operations that apply to entities (e.g. knowledge bases, repositories),
+   * resulting in states with associated constraints.
+   * <p>
+   * Scope: this method should be used for structured, yet informal explanations of successful
+   * operations - use {@link ServerSideException} for failures.
    *
-   * @return
+   * @param type     the type of problem, implying the nature of the constraints applied to the
+   *                 state produced by the execution of an operation
+   * @param severity the {@link Severity} to which extent the outcome state violates the implied
+   *                 constraints
+   * @return a partially configured {@link ProblemBuilder}
+   * @see ServerSideException used for operation failures
+   * @see ComplexProblem
    */
-  public static ProblemBuilder newProblem() {
+  public static ProblemBuilder newOutcomeProblem(URI type, Severity severity) {
     return Problem.builder()
-        .withType(GENERIC_ERROR_TYPE)
-        .withStatus(Status.INTERNAL_SERVER_ERROR);
+        .withType(type)
+        .with(Severity.KEY, severity)
+        .withStatus(Status.OK);
+  }
+
+  /**
+   * Factory builder for {@link Problem}
+   *
+   * @param type
+   * @param severity
+   * @return
+   * @see Explainer#newOutcomeProblem(KnowledgeResourceOutcome, Severity)
+   */
+  public static ProblemBuilder newOutcomeProblem(KnowledgeResourceOutcome type, Severity severity) {
+    return Problem.builder()
+        .withType(type.getReferentId())
+        .with(Severity.KEY, severity)
+        .withStatus(Status.OK);
   }
 
   /**
@@ -494,7 +520,9 @@ public abstract class Explainer {
       return new ComplexProblem(subProblems);
     } else {
       return kc.as(Problem.class)
-          .orElseGet(() -> new InfoProblem(kc.asString().orElseThrow()));
+          .orElseGet(() -> newOutcomeProblem(GENERIC_INFO_TYPE, INF)
+              .withDetail(kc.asString().orElse("N/A"))
+              .build());
     }
   }
 
@@ -509,67 +537,5 @@ public abstract class Explainer {
         .collect(Collectors.joining("\n"));
   }
 
-
-  @SuppressWarnings("java:S110")
-  public static class ComplexProblem extends AbstractThrowableProblem {
-
-    private static final String KEY = "components";
-
-    public ComplexProblem(URI type, String title, String detail, URI instance) {
-      super(type, title, Status.OK, detail, instance, null,
-          Map.of(KEY, new ArrayList<>()));
-      this.setStackTrace(Explainer.EMPTY_STACK_TRACE);
-    }
-
-    public ComplexProblem(String title, String detail, URI instance) {
-      this(GENERIC_INFO_TYPE, title, detail, instance);
-    }
-
-    public ComplexProblem() {
-      this(null, null, null);
-    }
-
-    public ComplexProblem(Collection<? extends Problem> problems) {
-      this(combineType(problems), null, null, null);
-      problems.forEach(this::add);
-    }
-
-    private static URI combineType(Collection<? extends Problem> problems) {
-      return problems.stream().anyMatch(p -> GENERIC_ERROR_TYPE.equals(p.getType()))
-          ? GENERIC_ERROR_TYPE
-          : GENERIC_INFO_TYPE;
-    }
-
-    private void add(Problem component) {
-      List<Object> list = (List<Object>) this.getParameters().get(KEY);
-      list.add(component);
-    }
-  }
-
-  @SuppressWarnings("java:S110")
-  public static class InfoProblem extends AbstractThrowableProblem {
-
-    public InfoProblem(String msg) {
-      this(null, msg, null);
-    }
-
-    public InfoProblem(String title, String detail, URI instance) {
-      super(GENERIC_INFO_TYPE, title, Status.OK, detail, instance);
-      this.setStackTrace(Explainer.EMPTY_STACK_TRACE);
-    }
-  }
-
-  @SuppressWarnings("java:S110")
-  public static class IssueProblem extends AbstractThrowableProblem {
-
-    public IssueProblem(String title, ResponseCode status, String detail, URI instance) {
-      super(GENERIC_ERROR_TYPE,
-          title,
-          Status.valueOf(Integer.parseInt(status.getTag())),
-          detail,
-          instance);
-      this.setStackTrace(Explainer.EMPTY_STACK_TRACE);
-    }
-  }
 
 }

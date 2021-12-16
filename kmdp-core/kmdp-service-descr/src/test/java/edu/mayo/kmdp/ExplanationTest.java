@@ -9,7 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.Explainer.GENERIC_ERROR_TYPE;
 import static org.omg.spec.api4kp._20200801.Explainer.GENERIC_INFO_TYPE;
-import static org.omg.spec.api4kp._20200801.Explainer.newProblem;
+import static org.omg.spec.api4kp._20200801.Explainer.newOutcomeProblem;
+import static org.omg.spec.api4kp._20200801.Severity.ERR;
+import static org.omg.spec.api4kp._20200801.Severity.INF;
+import static org.omg.spec.api4kp._20200801.Severity.WRN;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeresourceoutcome.KnowledgeResourceOutcomeSeries.Conformance;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 
@@ -24,8 +28,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
-import org.omg.spec.api4kp._20200801.Explainer.ComplexProblem;
+import org.omg.spec.api4kp._20200801.ComplexProblem;
+import org.omg.spec.api4kp._20200801.Explainer;
 import org.omg.spec.api4kp._20200801.ServerSideException;
+import org.omg.spec.api4kp._20200801.Severity;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.zalando.problem.DefaultProblem;
 import org.zalando.problem.Problem;
@@ -40,8 +48,7 @@ class ExplanationTest {
   Answer<Void> ans2 = Answer.<Void>failed()
       .withFormalExplanation(AbstractCarrier.ofAst(t0));
   Answer<Void> ans3 = Answer.<Void>failed()
-      .withExplanationDetail(newProblem()
-          .withType(URI.create("my:Issue"))
+      .withExplanationDetail(Explainer.newOutcomeProblem(URI.create("my:Issue"), WRN)
           .withTitle("This is a Problem").build());
   Answer<Void> ans4 = Answer.<Void>failed()
       .withExplanationInterrupt(new IllegalStateException("Too bad"));
@@ -78,7 +85,7 @@ class ExplanationTest {
     assertTrue(ans3.getExplanation().getExpression() instanceof DefaultProblem);
 
     String xpl = ans3.printExplanation();
-    assertEquals(format(URI.create("my:Issue"), 500, null, "This is a Problem"), xpl);
+    assertEquals(format(URI.create("my:Issue"), 200, null, "This is a Problem", WRN), xpl);
 
     String jsn = ans3.printExplanation(JSON);
     assertTrue(jsn.contains("title"));
@@ -92,7 +99,9 @@ class ExplanationTest {
     assertTrue(ans4.getExplanation().getExpression() instanceof ServerSideException);
 
     String xpl = ans4.printExplanation();
-    assertEquals(format(GENERIC_ERROR_TYPE, 500, "IllegalStateException", "Too bad"), xpl);
+    assertEquals(
+        format(GENERIC_ERROR_TYPE, 500, "IllegalStateException", "Too bad", ERR),
+        xpl);
 
     String jsn = ans4.printExplanation(JSON);
     assertTrue(jsn.contains("type"));
@@ -105,7 +114,9 @@ class ExplanationTest {
     assertSame(e, ans5.getExplanation().getExpression());
 
     String xpl = ans5.printExplanation();
-    assertEquals(format(GENERIC_ERROR_TYPE, 400, "BadRequest", "BadRequest"), xpl);
+    assertEquals(
+        format(GENERIC_ERROR_TYPE, 400, "BadRequest", "BadRequest", ERR),
+        xpl);
 
     String jsn = ans5.printExplanation(JSON);
     assertTrue(jsn.contains("400"));
@@ -168,12 +179,10 @@ class ExplanationTest {
   void testNestedExplanation() {
     Answer<Void> ans = Answer.<Void>failed()
         .withExplanationDetail(
-            newProblem()
-                .withType(URI.create("my:Issue"))
+            Explainer.newOutcomeProblem(URI.create("my:Issue"), INF)
                 .withTitle("Part1").build())
         .withAddedExplanationDetail(
-            newProblem()
-                .withType(URI.create("my:Issue"))
+            Explainer.newOutcomeProblem(URI.create("my:Issue"), INF)
                 .withTitle("Part2").build());
     KnowledgeCarrier expl = ans.getExplanation();
     assertEquals(2, expl.components().count());
@@ -188,8 +197,7 @@ class ExplanationTest {
   void testExplanationDirectCast() {
     Answer<Void> ans = Answer.<Void>failed()
         .withExplanationDetail(
-            newProblem()
-                .withType(URI.create("my:Issue")).build());
+            Explainer.newOutcomeProblem(URI.create("my:Issue"), INF).build());
 
     assertTrue(ans.isFailure());
     Problem p = ans.getExplanationAs(Problem.class);
@@ -204,23 +212,43 @@ class ExplanationTest {
   void testAutoFlattenExplanation() {
     Answer<Void> ans = Answer.<Void>succeed()
         .withExplanationDetail(
-            newProblem()
-                .withType(GENERIC_INFO_TYPE)
+            Explainer.newOutcomeProblem(GENERIC_INFO_TYPE, INF)
                 .withTitle("Part1").build())
         .withAddedExplanationDetail(
-            newProblem()
-                .withType(GENERIC_ERROR_TYPE)
+            Explainer.newOutcomeProblem(GENERIC_ERROR_TYPE, ERR)
                 .withTitle("Part2").build());
     Problem expl = ans.getExplanationAsProblem();
     assertTrue(expl instanceof ComplexProblem);
     assertEquals(GENERIC_ERROR_TYPE, expl.getType());
   }
 
-  private String format(URI type, int code, String title, String msg) {
+
+  @Test
+  void testProblemMerge() {
+    ResourceIdentifier rid = SemanticIdentifier.randomId();
+    Answer<Void> ans = Answer.<Void>succeed()
+        .withExplanationDetail(
+            newOutcomeProblem(Conformance, ERR)
+                .withInstance(rid.getVersionId())
+                .withTitle("Part1").build())
+        .withAddedExplanationDetail(
+            newOutcomeProblem(Conformance, ERR)
+                .withInstance(rid.getVersionId())
+                .withTitle("Part2").build());
+    Problem expl = ans.getExplanationAsProblem();
+    assertTrue(expl instanceof ComplexProblem);
+    assertEquals(Conformance.getReferentId(), expl.getType());
+    assertEquals(ERR, expl.getParameters().get(Severity.KEY));
+    assertEquals(rid.getVersionId(), expl.getInstance());
+  }
+
+
+  private String format(URI type, int code, String title, String msg, Severity severity) {
     return type
         + "{" + code
         + (title != null ? (", " + title) : "")
         + ", " + msg
+        + (severity != null ? (", " + Severity.KEY + "=" + severity) : "")
         + "}";
   }
 
