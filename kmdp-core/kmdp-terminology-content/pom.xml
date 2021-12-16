@@ -98,6 +98,34 @@
         <executions>
 
           <execution>
+            <id>kr-states-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlSourceURLs>
+                <owlSourceURL>https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-err/</owlSourceURL>
+              </owlSourceURLs>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}LATEST${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
+              <owlNamespace>https://www.omg.org/spec/API4KP/api4kp-err/</owlNamespace>
+              <targetURI>https://www.omg.org/spec/API4KP/api4kp-ops/KnowledgeResourceOutcome</targetURI>
+              <minDepth>1</minDepth>
+
+              <skosNamespace>https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeResourceOutcome</skosNamespace>
+              <schemeName>KnowledgeResourceOutcomes</schemeName>
+              <topConceptName>KnowledgeResourceOutcome</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>KnowledgeResourceOutcomes.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+
+          <execution>
             <id>ckao-kat-skos</id>
             <phase>generate-sources</phase>
             <goals>

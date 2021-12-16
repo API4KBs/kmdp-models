@@ -64,6 +64,13 @@
     uri="/ontologies/API4KP/LATEST/informative/api4kp-ckao.rdf"
     name="https://www.omg.org/spec/API4KP/api4kp-ckao/"/>
 
+  <uri id="ERR-snapshot"
+    uri="/ontologies/API4KP/LATEST/informative/api4kp-err.rdf"
+    name="https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-err/"/>
+  <uri id="ERR"
+    uri="/ontologies/API4KP/LATEST/informative/api4kp-err.rdf"
+    name="https://www.omg.org/spec/API4KP/api4kp-err/"/>
+
   <uri id="API4KP-KMDO-snapshot"
     uri="/ontologies/API4KP/LATEST/informative/api4kp-kmdo.rdf"
     name="https://www.omg.org/spec/API4KP/SNAPSHOT/api4kp-kmdo/"/>
