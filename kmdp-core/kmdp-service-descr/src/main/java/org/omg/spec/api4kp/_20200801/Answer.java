@@ -626,10 +626,9 @@ public class Answer<T> extends Explainer {
   }
 
   protected Answer<T> withAddedMeta(Map<String, List<String>> additionalMeta) {
-    if (this.meta == null || this.meta == Collections.EMPTY_MAP) {
+    if (additionalMeta != null && (this.meta == null || this.meta == Collections.EMPTY_MAP)) {
       this.meta = new HashMap<>(additionalMeta);
-    }
-    if (additionalMeta != null) {
+    } else if (additionalMeta != null) {
       additionalMeta.forEach((k, v) -> {
         if (!this.meta.containsKey(k)) {
           this.meta.put(k, new ArrayList<>(v));
