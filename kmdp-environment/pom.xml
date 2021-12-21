@@ -31,10 +31,6 @@
       <artifactId>guava</artifactId>
     </dependency>
     <dependency>
-      <groupId>edu.stanford.protege</groupId>
-      <artifactId>org.protege.xmlcatalog</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
       <scope>provided</scope>

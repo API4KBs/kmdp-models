@@ -37,11 +37,6 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>edu.stanford.protege</groupId>
-      <artifactId>org.protege.xmlcatalog</artifactId>
-      <scope>test</scope>
-    </dependency>
 
 
   </dependencies>

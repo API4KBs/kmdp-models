@@ -37,12 +37,6 @@
       <artifactId>reflections</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>edu.stanford.protege</groupId>
-      <artifactId>org.protege.xmlcatalog</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
   </dependencies>
 
 </project>

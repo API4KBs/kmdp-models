@@ -50,12 +50,6 @@
     </dependency>
 
     <dependency>
-      <groupId>edu.stanford.protege</groupId>
-      <artifactId>org.protege.xmlcatalog</artifactId>
-    </dependency>
-
-
-    <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>terms-owl-to-skos</artifactId>
       <scope>test</scope>

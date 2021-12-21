@@ -152,6 +152,15 @@
         <scope>test</scope>
         <version>${project.version}</version>
       </dependency>
+
+      <!-- Test -->
+
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>${logback.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

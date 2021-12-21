@@ -19,38 +19,43 @@
 
   <public publicId="https://www.omg.org/spec/API4KP/20200801"
     uri="API4KP/api4kp/api4kp.xsd"/>
-  <system systemId="https://www.omg.org/spec/API4KP/20200801"
-    uri="API4KP/api4kp/api4kp.xsd"/>
   <uri name="https://www.omg.org/spec/API4KP/20200801"
     uri="API4KP/api4kp/api4kp.xsd"/>
 
   <public publicId="https://www.omg.org/spec/API4KP/20200801/identifiers"
-    uri="API4KP/api4kp/identifiers/identifiers.xsd"/>
-  <system systemId="https://www.omg.org/spec/API4KP/20200801/identifiers"
     uri="API4KP/api4kp/identifiers/identifiers.xsd"/>
   <uri name="https://www.omg.org/spec/API4KP/20200801/identifiers"
     uri="API4KP/api4kp/identifiers/identifiers.xsd"/>
 
   <public publicId="https://www.omg.org/spec/API4KP/20200801/id"
     uri="API4KP/api4kp/id/id.xsd"/>
-  <system systemId="https://www.omg.org/spec/API4KP/20200801/id"
-    uri="API4KP/api4kp/id/id.xsd"/>
   <uri name="https://www.omg.org/spec/API4KP/20200801/id"
     uri="API4KP/api4kp/id/id.xsd"/>
 
   <public publicId="https://www.omg.org/spec/API4KP/20200801/datatypes"
-    uri="API4KP/api4kp/datatypes/datatypes.xsd"/>
-  <system systemId="https://www.omg.org/spec/API4KP/20200801/datatypes"
     uri="API4KP/api4kp/datatypes/datatypes.xsd"/>
   <uri name="https://www.omg.org/spec/API4KP/20200801/datatypes"
     uri="API4KP/api4kp/datatypes/datatypes.xsd"/>
 
   <public publicId="https://www.omg.org/spec/API4KP/20200801/services"
     uri="API4KP/api4kp/services/services.xsd"/>
-  <system systemId="https://www.omg.org/spec/API4KP/20200801/services"
-    uri="API4KP/api4kp/services/services.xsd"/>
   <uri name="https://www.omg.org/spec/API4KP/20200801/services"
-    uri="API4KP/api4kp/services/services.xsd"/>
+    uri="API4KP/api4kp/services/services.xsd"/>  
+  
+  <public publicId="https://www.omg.org/spec/API4KP/20200801/services/transrepresentation"
+    uri="API4KP/api4kp/services/transrepresentation/transrepresentation.xsd"/>
+  <uri name="https://www.omg.org/spec/API4KP/20200801/services/transrepresentation"
+    uri="API4KP/api4kp/services/transrepresentation/transrepresentation.xsd"/>  
+  
+  <public publicId="https://www.omg.org/spec/API4KP/20200801/services/inference"
+    uri="API4KP/api4kp/services/inference/inference.xsd"/>
+  <uri name="https://www.omg.org/spec/API4KP/20200801/services/inference"
+    uri="API4KP/api4kp/services/inference/inference.xsd"/>
+  
+  <public publicId="https://www.omg.org/spec/API4KP/20200801/services/repository"
+    uri="API4KP/api4kp/services/repository/repository.xsd"/>
+  <uri name="https://www.omg.org/spec/API4KP/20200801/services/repository"
+    uri="API4KP/api4kp/services/repository/repository.xsd"/>
 
-
+  <system systemId="." uri=""/>
 </catalog>
