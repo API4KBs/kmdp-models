@@ -169,7 +169,6 @@ class ServiceDescrCompilationTest {
         Arrays.asList(
             new File(src.getPath() + "/xsd/terms-catalog.xml"),
             new File(src.getPath() + "/xsd/api4kp-catalog.xml")),
-        new File(src.getPath() + "/xsd"),
         true,
         false);
 

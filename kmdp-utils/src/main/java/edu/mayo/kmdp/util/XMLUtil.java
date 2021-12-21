@@ -433,10 +433,11 @@ public class XMLUtil {
       final XSLTConfig p) {
     try {
       Source stylesheetSource = new StreamSource(xslt.openStream());
+      stylesheetSource.setSystemId(xslt.toString());
       Source inputSource = new StreamSource(source);
       inputSource.setSystemId(sourceSystemID);
 
-      TransformerFactory factory = initFactory(xslt, p.getTyped(XSLTOptions.CATALOGS));
+      TransformerFactory factory = initFactory(p.getTyped(XSLTOptions.CATALOGS));
 
       var out = emptyDocument();
       var outputResult = new DOMResult(out);
@@ -498,7 +499,7 @@ public class XMLUtil {
         inputSource.setSystemId(sourceSystemId);
       }
 
-      TransformerFactory factory = initFactory(null, p.getTyped(XSLTOptions.CATALOGS));
+      TransformerFactory factory = initFactory(p.getTyped(XSLTOptions.CATALOGS));
       var transformer = factory.newTransformer(stylesheetSource);
 
       p.get(XSLTOptions.CATALOGS).ifPresent(value ->
@@ -517,11 +518,11 @@ public class XMLUtil {
   }
 
 
-  private static TransformerFactory initFactory(URL baseLocation, String catalogUrls)
+  private static TransformerFactory initFactory(String catalogUrls)
       throws TransformerConfigurationException {
     var factory = getSecureTransformerFactory();
 
-    factory.setURIResolver(new CatalogBasedURIResolver(baseLocation, catalogUrls));
+    factory.setURIResolver(new CatalogBasedURIResolver(catalogUrls));
 
     return factory;
   }
@@ -602,8 +603,7 @@ public class XMLUtil {
   /**
    * Utility that maps {@link Source} of various types to {@link InputSource}
    *
-   * @param source the resource to get
-   * From http://www.java2s.com/Tutorials/Java/XML/How_to_convert_Source_to_InputSource_using_Java.htm
+   * @param source the resource to get From http://www.java2s.com/Tutorials/Java/XML/How_to_convert_Source_to_InputSource_using_Java.htm
    */
   public static InputSource sourceToInputSource(Source source) {
     if (source instanceof SAXSource) {

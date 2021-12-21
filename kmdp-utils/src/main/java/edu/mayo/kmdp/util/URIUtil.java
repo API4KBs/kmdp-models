@@ -133,6 +133,17 @@ public class URIUtil {
     }
   }
 
+  public static URL asURL(URI uri) {
+    if (uri == null) {
+      return null;
+    }
+    try {
+      return uri.toURL();
+    } catch (MalformedURLException e) {
+      return null;
+    }
+  }
+
   public static URI asURI(URL url) {
     if (url == null) {
       return null;

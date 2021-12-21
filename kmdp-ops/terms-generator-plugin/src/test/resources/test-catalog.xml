@@ -17,12 +17,12 @@
 -->
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
-  <uri id="SKOS"
+  <public id="SKOS"
     uri="skos.rdf"
-    name="http://www.w3.org/2004/02/skos/core"/>
+    publicId="http://www.w3.org/2004/02/skos/core"/>
 
-  <uri id="DCT"
+  <public id="DCT"
     uri="dcterms.rdf"
-    name="http://purl.org/dc/terms/"/>
+    publicId="http://purl.org/dc/terms/"/>
 
 </catalog>

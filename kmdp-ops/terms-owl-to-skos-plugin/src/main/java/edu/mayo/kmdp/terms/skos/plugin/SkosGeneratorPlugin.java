@@ -25,7 +25,6 @@ import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
 import edu.mayo.kmdp.util.URIUtil;
-import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -39,13 +38,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
-import javax.xml.catalog.CatalogResolver;
 import org.apache.jena.rdf.model.Model;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
-import org.semanticweb.owlapi.io.StreamDocumentSource;
 import org.semanticweb.owlapi.model.HasOntologyID;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
@@ -68,7 +65,6 @@ import org.xml.sax.InputSource;
  * Goal
  *
  * @goal owl-to-skos
- *
  * @phase generate-sources
  * @requiresDependencyResolution compile
  */
@@ -336,7 +332,8 @@ public class SkosGeneratorPlugin extends AbstractMojo {
               : skosOutputFiles;
 
       for (int index = 0; index < numSources; index++) {
-        generateSKOS(sourceURLs.get(index),
+        generateSKOS(
+            sourceURLs.get(index),
             URIUtil.asURI(catalogs.get(index)),
             outputFiles.get(index));
       }
@@ -348,7 +345,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
 
   private void generateSKOS(String owlSourceURL, URI catalogURL, String outputFile)
       throws IOException {
-    try (InputStream is = resolve(owlSourceURL, owlSourceURL, catalogURL)) {
+    try (InputStream is = resolve(owlSourceURL, catalogURL)) {
 
       MireotConfig mfg = new MireotConfig()
           .with(MireotParameters.BASE_URI, owlNamespace)
@@ -402,15 +399,21 @@ public class SkosGeneratorPlugin extends AbstractMojo {
 
   }
 
+  private InputStream resolve(String owlSourceURL, URI catalogURL) {
+    CatalogBasedURIResolver resolver = new CatalogBasedURIResolver(
+        catalogResolver(catalogURL));
+    try {
+      return resolver.resolveEntity(owlSourceURL, owlSourceURL, owlSourceURL, null);
+    } catch (Exception tfe) {
+      logger.error(tfe.getMessage(), tfe);
+      return null;
+    }
+  }
+
   private String generateDefaultOutputFile(String owlFile) {
     return owlFile.substring(owlFile.lastIndexOf(File.separator))
         .replaceAll(".owl", "")
         .replaceAll(".rdf", "") + ".skos.rdf";
-  }
-
-  private InputStream resolve(String file, String owlSourceURL, URI catalogURL) {
-    return CatalogBasedURIResolver.resolveFilePath(file, catalogURL)
-        .orElse(SkosGeneratorPlugin.class.getResourceAsStream(owlSourceURL));
   }
 
 
@@ -450,16 +453,9 @@ public class SkosGeneratorPlugin extends AbstractMojo {
         ontologyIRI -> {
           if (!isOntologyLoaded(manager, ontologyIRI)) {
             try {
-              if (applyMappings(ontologyIRI, manager).isPresent()) {
-                OWLOntology importedOntology = manager
-                    .loadOntologyFromOntologyDocument(new StreamDocumentSource(
-                        resolve(ontologyIRI.toString(), ontologyIRI.toString(), catalogURL),
-                        ontologyIRI));
-                preloadImports(manager, importedOntology, catalogURL);
-              } else {
-                OWLOntology importedOntology = manager.loadOntology(ontologyIRI);
-                preloadImports(manager, importedOntology, catalogURL);
-              }
+              IRI resolved = applyMappings(ontologyIRI, manager).orElse(ontologyIRI);
+              OWLOntology importedOntology = manager.loadOntology(resolved);
+              preloadImports(manager, importedOntology, catalogURL);
             } catch (OWLOntologyCreationException e) {
               logger.error(e.getMessage(), e);
             }
@@ -507,21 +503,30 @@ public class SkosGeneratorPlugin extends AbstractMojo {
         .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
 
     if (catalogURL != null) {
-      CatalogResolver catalog = catalogResolver(catalogURL);
-      manager.setIRIMappers(Collections.singleton(new OWLOntologyIRIMapper() {
-        @Nullable
-        @Override
-        public IRI getDocumentIRI(IRI ontologyIRI) {
-          String iriStr = ontologyIRI.getIRIString();
-          InputSource resolved = catalog.resolveEntity(iriStr, iriStr);
-          return resolved != null && resolved.getSystemId() != null
-              ? IRI.create(resolved.getSystemId()) : null;
-        }
-      }));
+      manager.setIRIMappers(Collections.singleton(new CatalogBasedIRIMapper(catalogURL)));
     }
     return manager;
   }
 
+  private static class CatalogBasedIRIMapper implements OWLOntologyIRIMapper {
+
+    transient CatalogBasedURIResolver resolver;
+
+    public CatalogBasedIRIMapper(URI catalogURL) {
+      resolver = new CatalogBasedURIResolver(catalogResolver(catalogURL));
+    }
+
+    @Nullable
+    @Override
+    public IRI getDocumentIRI(IRI ontologyIRI) {
+      String iriStr = ontologyIRI.getIRIString();
+      InputSource resolved = resolver.resolveEntity(iriStr, iriStr);
+      return Optional.ofNullable(resolved)
+          .map(InputSource::getSystemId)
+          .map(IRI::create)
+          .orElse(null);
+    }
+  }
 }
 
 

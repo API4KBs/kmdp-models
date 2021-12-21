@@ -57,5 +57,4 @@
   <uri name="https://www.omg.org/spec/API4KP/20200801/services/repository"
     uri="API4KP/api4kp/services/repository/repository.xsd"/>
 
-  <system systemId="." uri=""/>
 </catalog>

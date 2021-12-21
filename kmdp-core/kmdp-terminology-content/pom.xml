@@ -93,6 +93,32 @@
         <executions>
 
           <execution>
+            <id>resp-codes-skos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>owl-to-skos</goal>
+            </goals>
+            <configuration>
+              <owlSourceURL>http://www.w3.org/2011/http-statusCodes</owlSourceURL>
+              <catalogURLs>
+                <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
+              </catalogURLs>
+
+              <owlNamespace>http://www.w3.org/http-statusCodes#</owlNamespace>
+              <targetURI>http://www.w3.org/2011/http#StatusCode</targetURI>
+              <entityType>INST</entityType>
+
+              <skosNamespace>https://ontology.mayo.edu/taxonomies/ws/ResponseCodes</skosNamespace>
+              <schemeName>ResponseCodes</schemeName>
+              <topConceptName>ResponseCode</topConceptName>
+
+              <skosOutputFiles>
+                <skosOutputFile>ResponseCodes.skos.rdf</skosOutputFile>
+              </skosOutputFiles>
+            </configuration>
+          </execution>
+
+          <execution>
             <id>kr-states-skos</id>
             <phase>generate-sources</phase>
             <goals>
@@ -337,7 +363,7 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlSourceURL>${ontologyDir}/lcc2.rdf</owlSourceURL>
+              <owlSourceURL>${ontologyDir}${s}lcc2.rdf</owlSourceURL>
               <catalogURLs>
                 <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
               </catalogURLs>
@@ -363,7 +389,7 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlSourceURL>${ontologyDir}/lcc.rdf</owlSourceURL>
+              <owlSourceURL>${ontologyDir}${s}lcc.rdf</owlSourceURL>
               <catalogURLs>
                 <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
               </catalogURLs>
@@ -773,7 +799,7 @@
               <goal>owl-to-skos</goal>
             </goals>
             <configuration>
-              <owlSourceURL>${ontologyDir}/skos.rdf</owlSourceURL>
+              <owlSourceURL>${ontologyDir}${s}skos.rdf</owlSourceURL>
               <catalogURLs>
                 <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
               </catalogURLs>
@@ -866,31 +892,7 @@
             </configuration>
           </execution>
 
-          <execution>
-            <id>resp-codes-skos</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>owl-to-skos</goal>
-            </goals>
-            <configuration>
-              <owlSourceURL>http://www.w3.org/2011/http-statusCodes#</owlSourceURL>
-              <catalogURLs>
-                <catalogURL>file:///${ontologyDir}${s}catalog.xml</catalogURL>
-              </catalogURLs>
 
-              <owlNamespace>http://www.w3.org/http-statusCodes#</owlNamespace>
-              <targetURI>http://www.w3.org/2011/http#StatusCode</targetURI>
-              <entityType>INST</entityType>
-
-              <skosNamespace>https://ontology.mayo.edu/taxonomies/ws/ResponseCodes</skosNamespace>
-              <schemeName>ResponseCodes</schemeName>
-              <topConceptName>ResponseCode</topConceptName>
-
-              <skosOutputFiles>
-                <skosOutputFile>ResponseCodes.skos.rdf</skosOutputFile>
-              </skosOutputFiles>
-            </configuration>
-          </execution>
 
           <execution>
             <id>ccg-skos</id>

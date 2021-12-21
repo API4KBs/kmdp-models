@@ -28,17 +28,12 @@ import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractio
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.internal.VersionedConceptGraph;
 import edu.mayo.kmdp.terms.generator.util.OntologyLoader;
-import edu.mayo.kmdp.util.CatalogBasedURIResolver;
-import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
-import edu.mayo.kmdp.util.XMLUtil;
 import java.io.File;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
@@ -52,6 +47,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
 
 /**
  * Goal
@@ -540,24 +536,20 @@ public class TermsGeneratorPlugin extends AbstractMojo {
   }
 
   private Optional<OWLOntologyIRIMapper> getSourceCatalog(String sourceCatalogPath) {
-    if (Util.isEmpty(sourceCatalogPath)) {
+    File catFile = new File(sourceCatalogPath);
+    if (!catFile.exists()) {
       return Optional.empty();
     }
-    return CatalogBasedURIResolver.resolveFilePathToURL(sourceCatalogPath)
-        .map(URIUtil::asURI)
-        .filter(Objects::nonNull)
-        .flatMap(this::getSourceCatalog);
-  }
-
-  private Optional<OWLOntologyIRIMapper> getSourceCatalog(URI cat) {
-    CatalogResolver catalog = catalogResolver(cat);
+    CatalogResolver catalog = catalogResolver(catFile.toURI());
     return Optional.of(new OWLOntologyIRIMapper() {
       @Nullable
       @Override
       public IRI getDocumentIRI(IRI ontologyIRI) {
         String iriStr = ontologyIRI.getIRIString();
-        String resolved = catalog.resolveEntity(iriStr, iriStr).getSystemId();
-        return resolved != null ? IRI.create(resolved) : null;
+        return Optional.ofNullable(catalog.resolveEntity(iriStr,iriStr))
+            .map(InputSource::getSystemId)
+            .map(IRI::create)
+            .orElse(null);
       }
     });
   }

@@ -133,7 +133,6 @@ class TerminologyGeneratorPluginTest extends AbstractPluginTest {
         genSource,
         null,
         Collections.singletonList(new File(genSource.getPath() + "/xsd/api4kp-catalog.xml")),
-        new File(genSource.getPath() + "/xsd"),
         false,
         true);
 

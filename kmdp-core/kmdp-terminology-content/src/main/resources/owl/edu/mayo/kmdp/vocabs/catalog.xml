@@ -39,7 +39,7 @@
 
   <uri id="HttpCodes"
     uri="statusCodes.rdf"
-    name="http://www.w3.org/2011/http-statusCodes#"/>
+    name="http://www.w3.org/2011/http-statusCodes"/>
 
   <uri id="LCC-LR"
     uri="LanguageRepresentation.rdf"
@@ -59,7 +59,7 @@
 
   <uri id="DOL_3"
     uri="DOL-terms.rdf"
-    name="https://www.omg.org/spec/DOL/DOL-terms"/>
+    name="https://www.omg.org/spec/DOL/DOL-terms/"/>
 
   <uri id="Spec-Metadata"
     uri="SpecificationMetadata.rdf"

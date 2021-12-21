@@ -49,7 +49,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
@@ -153,7 +152,7 @@ class JaxbGenerationTest {
       Optional<Schema> schema = XMLUtil
           .getSchemas(
               new File(tgt.getParent() + "/test/parent.xsd").toURI().toURL(),
-              getResolver(tgt.getParentFile().toURI().toURL()));
+              getResolver());
       assertTrue(schema.isPresent());
       XMLUtil.validate(x, schema.get());
 
@@ -164,9 +163,8 @@ class JaxbGenerationTest {
     }
   }
 
-  private LSResourceResolver getResolver(URL baseLoc) {
+  private LSResourceResolver getResolver() {
     return new CatalogBasedURIResolver(
-        baseLoc,
         catalogResolver(
             asURI(JaxbGenerationTest.class.getResource("/xsd/api4kp-catalog.xml"))));
   }
@@ -274,7 +272,6 @@ class JaxbGenerationTest {
         gen,
         null,
         singletonList(new File(src.getAbsolutePath() + "/xsd/api4kp-catalog.xml")),
-        src,
         false, false);
 
     showDirContent(folder, true);

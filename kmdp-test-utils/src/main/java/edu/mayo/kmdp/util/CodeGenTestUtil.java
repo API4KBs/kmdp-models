@@ -195,16 +195,16 @@ public abstract class CodeGenTestUtil {
 
   public static void applyJaxb(List<File> schemas, List<File> binds, File gen, File catalog) {
     applyJaxb(schemas, binds, gen, null, Collections.singletonList(catalog),
-        catalog.getParentFile(), false, false);
+        false, false);
   }
 
   public static void applyJaxb(List<File> schemas, List<File> binds, File gen,
       boolean withAnnotations) {
-    applyJaxb(schemas, binds, gen, null, null, null, withAnnotations, false);
+    applyJaxb(schemas, binds, gen, null, null, withAnnotations, false);
   }
 
   public static void applyJaxb(List<File> schemas, List<File> binds, File gen, File episode,
-      List<File> catalogs, File root, boolean withAnnotations, boolean withExtensions) {
+      List<File> catalogs, boolean withAnnotations, boolean withExtensions) {
     checkResourcesExist(schemas, binds, gen);
 
     Options opts = new Options();
@@ -214,7 +214,7 @@ public abstract class CodeGenTestUtil {
     registerSources(opts, schemas, binds);
 
     try {
-      checkAndRegisterCatalog(catalogs, root, opts);
+      checkAndRegisterCatalog(catalogs, opts);
 
       XJC2Mojo mojo = configureMojo(opts, episode, withAnnotations, withExtensions);
 
@@ -256,13 +256,11 @@ public abstract class CodeGenTestUtil {
     return mojo;
   }
 
-  private static void checkAndRegisterCatalog(List<File> catalogs, File catalogContext,
-      Options opts) {
+  private static void checkAndRegisterCatalog(List<File> catalogs, Options opts) {
     if (catalogs != null && !catalogs.isEmpty()) {
       try {
         URI[] uris = catalogs.stream().map(File::toURI).toArray(URI[]::new);
         opts.entityResolver = new CatalogBasedURIResolver(
-            catalogContext != null ? catalogContext.toURI().toURL() : null,
             catalogResolver(uris));
       } catch (Exception e) {
         logger.error(e.getMessage(), e);
