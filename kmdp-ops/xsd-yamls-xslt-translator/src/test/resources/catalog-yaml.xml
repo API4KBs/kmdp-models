@@ -18,9 +18,6 @@
 -->
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
-  <public publicId="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetCategory/1.0"
-    uri="xsd/edu/mayo/kmdp/terms/kao/knowledgeassetcategory/_1/KnowledgeAssetCategory.xsd"/>
-
   <system systemId="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetCategory/1.0"
     uri="xsd/edu/mayo/kmdp/terms/kao/knowledgeassetcategory/_1/KnowledgeAssetCategory.xsd"/>
 

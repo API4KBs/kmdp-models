@@ -1,28 +1,28 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.terms.generator;
 
-import static edu.mayo.kmdp.util.CodeGenTestBase.applyJaxb;
-import static edu.mayo.kmdp.util.CodeGenTestBase.deploy;
-import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
-import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
-import static edu.mayo.kmdp.util.CodeGenTestBase.initGenSourceFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.initSourceFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
+import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.applyJaxb;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.deploy;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.ensureSuccessCompile;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.getNamedClass;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.initGenSourceFolder;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.initSourceFolder;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.initTargetFolder;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.showDirContent;
+import static edu.mayo.kmdp.util.URIUtil.asURI;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -37,6 +37,7 @@ import edu.mayo.kmdp.terms.generator.config.EnumGenerationConfig.EnumGenerationP
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig;
 import edu.mayo.kmdp.terms.generator.config.SkosAbstractionConfig.SkosAbstractionParameters;
 import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
+import edu.mayo.kmdp.util.CatalogBasedURIResolver;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -48,6 +49,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,6 +68,7 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.w3c.dom.Document;
+import org.w3c.dom.ls.LSResourceResolver;
 
 class JaxbGenerationTest {
 
@@ -73,7 +76,7 @@ class JaxbGenerationTest {
   public Path tmp;
 
 
-  private final String parentXSD = "" +
+  private static final String parentXSD = "" +
       "<?xml version=\"1.0\" encoding=\"utf-8\"?> " +
       "<xs:schema id=\"Parent\" " +
       "           targetNamespace=\"http://tempuri.org/parent\" " +
@@ -95,7 +98,7 @@ class JaxbGenerationTest {
       "   " +
       "</xs:schema>";
 
-  private final String bindings = "" +
+  private static final String bindings = "" +
       "<jaxb:bindings version=\"2.1\"" +
       "               xmlns:jaxb=\"http://java.sun.com/xml/ns/jaxb\"\n" +
       "               xmlns:xjc=\"http://java.sun.com/xml/ns/jaxb/xjc\"\n" +
@@ -148,8 +151,9 @@ class JaxbGenerationTest {
       //System.out.println(x);
 
       Optional<Schema> schema = XMLUtil
-          .getSchemas(new File(tgt.getParent() + "/test/parent.xsd").toURI().toURL(),
-              XMLUtil.catalogResolver(JaxbGenerationTest.class.getResource("/xsd/api4kp-catalog.xml")));
+          .getSchemas(
+              new File(tgt.getParent() + "/test/parent.xsd").toURI().toURL(),
+              getResolver(tgt.getParentFile().toURI().toURL()));
       assertTrue(schema.isPresent());
       XMLUtil.validate(x, schema.get());
 
@@ -158,6 +162,13 @@ class JaxbGenerationTest {
       e.printStackTrace();
       fail(e.getMessage());
     }
+  }
+
+  private LSResourceResolver getResolver(URL baseLoc) {
+    return new CatalogBasedURIResolver(
+        baseLoc,
+        catalogResolver(
+            asURI(JaxbGenerationTest.class.getResource("/xsd/api4kp-catalog.xml"))));
   }
 
 
@@ -171,8 +182,9 @@ class JaxbGenerationTest {
     assertFalse(conceptGraph.getConceptSchemes().isEmpty());
 
     ConceptScheme<Term> scheme = conceptGraph.getConceptSchemes().iterator().next();
-    Map<String, Object> context = xsdGen.getContext(scheme, new EnumGenerationConfig(), conceptGraph);
-    String xsd = xsdGen.fromTemplate("concepts-xsd",context);
+    Map<String, Object> context = xsdGen.getContext(scheme, new EnumGenerationConfig(),
+        conceptGraph);
+    String xsd = xsdGen.fromTemplate("concepts-xsd", context);
 
     Optional<Document> odox = XMLUtil.loadXMLDocument(xsd.getBytes());
     assertTrue(odox.isPresent());
@@ -197,8 +209,9 @@ class JaxbGenerationTest {
     assertFalse(conceptGraph.getConceptSchemes().isEmpty());
 
     ConceptScheme<Term> scheme = conceptGraph.getConceptSchemes().iterator().next();
-    Map<String, Object> context = xsdGen.getContext(scheme, new EnumGenerationConfig(), conceptGraph);
-    String jxb = xsdGen.fromTemplate("concepts-xjb",context);
+    Map<String, Object> context = xsdGen.getContext(scheme, new EnumGenerationConfig(),
+        conceptGraph);
+    String jxb = xsdGen.fromTemplate("concepts-xjb", context);
 
     Optional<Document> jdox = XMLUtil.loadXMLDocument(jxb.getBytes());
     assertTrue(jdox.isPresent());
@@ -221,11 +234,10 @@ class JaxbGenerationTest {
             .with(EnumGenerationParams.WITH_JSON, true)
             .with(EnumGenerationParams.WITH_JSONLD, true),
         conceptGraph);
-    String java = xsdGen.fromTemplate("concepts-java",context);
+    String java = xsdGen.fromTemplate("concepts-java", context);
 
     assertTrue(java.contains("package test.generator.v20180210;"));
   }
-
 
 
   @SuppressWarnings("deprecation")
@@ -251,29 +263,32 @@ class JaxbGenerationTest {
 //		printSourceFile( new File( src.getAbsolutePath() + "/test/generator/v20180210/SCH1.xsd"), System.out );
 //		printSourceFile( new File( src.getAbsolutePath() + "/test/generator/v20180210/SCH1.java"), System.out );
 
-    showDirContent(folder,true);
+    showDirContent(folder, true);
 
     applyJaxb(singletonList(
-        new File(src.getAbsolutePath() + "/parent.xsd")),
+            new File(src.getAbsolutePath() + "/parent.xsd")),
         Arrays.asList(
             new File(src.getAbsolutePath() + "/test/generator/v20180210/SCH1.xjb"),
             new File(src.getAbsolutePath() + "/bindings.xjb")
-            ),
+        ),
         gen,
-        new File(src.getAbsolutePath() + "/xsd/api4kp-catalog.xml"));
+        null,
+        singletonList(new File(src.getAbsolutePath() + "/xsd/api4kp-catalog.xml")),
+        src,
+        false, false);
 
-    showDirContent(folder,true);
+    showDirContent(folder, true);
 
     purge(gen);
 
-    showDirContent(folder,true);
+    showDirContent(folder, true);
 
 //		printSourceFile( new File( src.getAbsolutePath() + "/org/tempuri/parent/Info.java"), System.out );
 //		printSourceFile( new File( src.getAbsolutePath() + "/org/tempuri/parent/ObjectFactory.java"), System.out );
 
     ensureSuccessCompile(src, gen, tgt);
 
-    showDirContent(folder,true);
+    showDirContent(folder, true);
 
     return tgt;
   }

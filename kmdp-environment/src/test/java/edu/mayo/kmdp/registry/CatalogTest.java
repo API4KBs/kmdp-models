@@ -22,10 +22,10 @@ import java.net.URI;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-public class CatalogTest {
+class CatalogTest {
 
   @Test
-  public void testCatalogResolution() {
+  void testCatalogResolution() {
     Optional<String> path = Registry.getCatalog(URI.create("https://www.omg.org/spec/DMN/1.2/"));
     assertTrue(path.isPresent());
     assertEquals("/xsd/dmn12-catalog.xml", path.get());

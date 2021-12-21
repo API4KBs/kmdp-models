@@ -1,22 +1,20 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.util.FileUtil.streamChildFiles;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -50,10 +48,10 @@ import org.omg.spec.api4kp._20200801.services.transrepresentation.Transrepresent
 import org.omg.spec.api4kp._20200801.services.transrepresentation.Transrepresentator;
 import org.omg.spec.api4kp._20200801.services.transrepresentation.resources.TransrepresentationOperator;
 
-public class ServiceDescrClassGenerationTest {
+class ServiceDescrClassGenerationTest {
 
   @Test
-  public void testClassExists() {
+  void testClassExists() {
     KnowledgeArtifactRepository repository = new KnowledgeArtifactRepository();
     assertNotNull(repository);
 
@@ -66,7 +64,7 @@ public class ServiceDescrClassGenerationTest {
 
 
   @Test
-  public void testSerialization() {
+  void testSerialization() {
     SyntacticRepresentation syn = new SyntacticRepresentation().withLanguage(BPMN_2_0);
 
     Transrepresentator component = new Transrepresentator()
@@ -97,7 +95,7 @@ public class ServiceDescrClassGenerationTest {
 
 
   @Test
-  public void testCodegeneration() {
+  void testCodegeneration() {
     URL url = ServiceDescrClassGenerationTest.class.getResource("/");
     //System.out.println(url);
     try {
@@ -107,7 +105,8 @@ public class ServiceDescrClassGenerationTest {
       String genPath = f.getParent() +
           ".generated-sources.xjc.".replaceAll("\\.", Matcher.quoteReplacement(File.separator));
       f = new File(genPath
-          + org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository.class.getPackage().getName()
+          + org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository.class.getPackage()
+          .getName()
           .replaceAll("\\.", Matcher.quoteReplacement(File.separator)));
       assertTrue(f.exists());
       assertTrue(f.isDirectory());
@@ -122,8 +121,10 @@ public class ServiceDescrClassGenerationTest {
 //      files.forEach(System.out::println);
 
       assertTrue(
-          files.contains(org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository.class.getName()));
-      assertFalse(files.contains(org.omg.spec.api4kp._20200801.services.transrepresentation.Transrepresentation.class.getName()));
+          files.contains(
+              org.omg.spec.api4kp._20200801.services.repository.KnowledgeArtifactRepository.class.getName()));
+      assertFalse(files.contains(
+          org.omg.spec.api4kp._20200801.services.transrepresentation.Transrepresentation.class.getName()));
 
     } catch (URISyntaxException e) {
       e.printStackTrace();
@@ -132,7 +133,7 @@ public class ServiceDescrClassGenerationTest {
   }
 
   @Test
-  public void testJobResource() {
+  void testJobResource() {
     Job job = new Job().withId(UUID.randomUUID().toString())
         .withStatus(JobStatus.STARTED)
         .withRedirectUrl(URI.create("http://te.st"));
@@ -141,9 +142,9 @@ public class ServiceDescrClassGenerationTest {
   }
 
   @Test
-  public void testTag() {
+  void testTag() {
     ResourceIdentifier id = SemanticIdentifier.newId(URI.create("http://foo.bar/kinda/123456"));
-    assertEquals("123456",id.getTag());
+    assertEquals("123456", id.getTag());
   }
 
 }

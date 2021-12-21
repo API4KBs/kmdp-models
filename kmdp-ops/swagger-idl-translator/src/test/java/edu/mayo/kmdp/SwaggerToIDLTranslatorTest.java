@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.kmdp.util.CodeGenTestBase;
+import edu.mayo.kmdp.util.CodeGenTestUtil;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import java.io.File;
@@ -120,9 +120,9 @@ public class SwaggerToIDLTranslatorTest {
 
     // CodeGenTestBase.showDirContent(root.toFile(),true);
 
-    CodeGenTestBase.ensureSuccessCompile(gen,gen,out);
+    CodeGenTestUtil.ensureSuccessCompile(gen,gen,out);
 
-    CodeGenTestBase.showDirContent(root.toFile(),true);
+    CodeGenTestUtil.showDirContent(root.toFile(),true);
   }
 
 

@@ -18,7 +18,7 @@ import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -41,7 +41,7 @@ import javax.xml.validation.Schema;
 import org.junit.jupiter.api.Test;
 
 
-public class TermTest {
+class TermDatatypeTest {
 
   @Test
   void testID() {
@@ -203,7 +203,7 @@ public class TermTest {
 
 //    System.out.println(xml);
     Optional<Schema> schema = getSchemas(
-        TermTest.class.getResource("/xsd/API4KP/api4kp/id/id.xsd"),
+        TermDatatypeTest.class.getResource("/xsd/API4KP/api4kp/id/id.xsd"),
         catalogResolver("/xsd/api4kp-catalog.xml"));
     assertTrue(schema.isPresent());
 

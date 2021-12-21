@@ -19,24 +19,17 @@ import static edu.mayo.kmdp.registry.Registry.REGISTRY_URI;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.IOException;
-import org.apache.jena.rdf.model.InfModel;
+import java.net.URISyntaxException;
+import javax.xml.catalog.CatalogFeatures;
+import javax.xml.catalog.CatalogManager;
+import javax.xml.catalog.CatalogResolver;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.reasoner.rulesys.BasicForwardRuleReasoner;
-import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
-import org.apache.jena.reasoner.rulesys.OWLMicroReasoner;
-import org.apache.jena.reasoner.rulesys.RDFSFBRuleReasoner;
-import org.apache.jena.reasoner.rulesys.RDFSFBRuleReasonerFactory;
-import org.apache.jena.reasoner.rulesys.RDFSRuleReasoner;
-import org.apache.jena.reasoner.rulesys.RDFSRuleReasonerFactory;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
 import org.apache.jena.vocabulary.XSD;
-import org.apache.xml.resolver.CatalogManager;
-import org.apache.xml.resolver.tools.CatalogResolver;
 
 public class RegistryTestBase {
 
@@ -60,22 +53,20 @@ public class RegistryTestBase {
   }
 
   static Model initRegistry(String catalogVersion, String registryUri) {
-    CatalogManager catalogManager = new CatalogManager();
-    catalogManager.setCatalogFiles(
-        Registry.class.getResource(Registry.getCatalogVersion(catalogVersion)).toString());
-    catalogManager.setUseStaticCatalog(false);
-    catalogManager.setIgnoreMissingProperties(true);
-    CatalogResolver xcat = new CatalogResolver(catalogManager);
 
     try {
-      String path = xcat.getCatalog().resolveURI(registryUri);
+      CatalogResolver xcat = CatalogManager.catalogResolver(
+          CatalogFeatures.defaults(),
+          Registry.class.getResource(Registry.getCatalogVersion(catalogVersion)).toURI());
+
+      String path = xcat.resolve(registryUri, null).getSystemId();
       assertNotNull(path);
       path = path.replace("file:","");
       Model registry = ModelFactory.createOntologyModel()
           .read(RegistryTestBase.class.getResourceAsStream(path), null);
       assertNotNull(registry);
       return registry;
-    } catch (IOException e) {
+    } catch (URISyntaxException e) {
       fail(e.getMessage());
       return null;
     }

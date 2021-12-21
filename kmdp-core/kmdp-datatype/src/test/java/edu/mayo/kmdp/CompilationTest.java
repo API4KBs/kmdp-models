@@ -15,15 +15,15 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.util.CodeGenTestBase.applyJaxb;
-import static edu.mayo.kmdp.util.CodeGenTestBase.deploy;
-import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
-import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
-import static edu.mayo.kmdp.util.CodeGenTestBase.initGenSourceFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.initSourceFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.initTargetFolder;
-import static edu.mayo.kmdp.util.CodeGenTestBase.showDirContent;
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.applyJaxb;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.deploy;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.ensureSuccessCompile;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.getNamedClass;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.initGenSourceFolder;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.initSourceFolder;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.initTargetFolder;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.showDirContent;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

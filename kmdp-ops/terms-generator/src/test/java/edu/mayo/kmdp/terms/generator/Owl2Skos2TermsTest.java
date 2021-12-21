@@ -15,9 +15,9 @@
  */
 package edu.mayo.kmdp.terms.generator;
 
-import static edu.mayo.kmdp.util.CodeGenTestBase.ensureSuccessCompile;
-import static edu.mayo.kmdp.util.CodeGenTestBase.getNamedClass;
-import static edu.mayo.kmdp.util.CodeGenTestBase.initFolder;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.ensureSuccessCompile;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.getNamedClass;
+import static edu.mayo.kmdp.util.CodeGenTestUtil.initFolder;
 import static edu.mayo.kmdp.util.Util.uuid;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

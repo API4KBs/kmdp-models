@@ -16,7 +16,7 @@
 package edu.mayo.kmdp;
 
 
-import static edu.mayo.kmdp.util.XMLUtil.catalogResolver;
+import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,7 +43,7 @@ import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 
-public class DatatypeTest {
+class DatatypeTest {
 
   @Test
   void testID() {

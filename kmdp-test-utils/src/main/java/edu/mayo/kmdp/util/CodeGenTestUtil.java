@@ -1,32 +1,32 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.util;
 
+import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.sun.tools.xjc.Options;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -43,12 +43,13 @@ import org.jvnet.mjiip.v_2.XJC2Mojo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class CodeGenTestBase {
+public abstract class CodeGenTestUtil {
 
-  protected CodeGenTestBase() {}
-  
-  private static Logger logger = LoggerFactory.getLogger(CodeGenTestBase.class);
-  
+  protected CodeGenTestUtil() {
+  }
+
+  private static final Logger logger = LoggerFactory.getLogger(CodeGenTestUtil.class);
+
   private static List<Diagnostic> doCompile(File source, File gen,
       File target) {
     List<File> list = new LinkedList<>();
@@ -77,7 +78,6 @@ public abstract class CodeGenTestBase {
 
     boolean success = true;
     for (Diagnostic diag : diagnostics) {
-      System.err.println(diag);
       if (logger.isWarnEnabled()) {
         logger.warn(String.format("%s : %s", diag.getKind(), diag));
       }
@@ -90,7 +90,7 @@ public abstract class CodeGenTestBase {
 
 
   public static void showDirContent(File folder) {
-    showDirContent(folder,false);
+    showDirContent(folder, true);
   }
 
   public static void showDirContent(File folder, boolean enablePrintout) {
@@ -99,7 +99,7 @@ public abstract class CodeGenTestBase {
 
   public static void showDirContent(File file, int i, boolean enablePrintout) {
     if (enablePrintout) {
-      String msg = String.format("%s : %s",tab(i),file.getName());
+      String msg = String.format("%s : %s", tab(i), file.getName());
       logger.info(msg);
 
       if (file.isDirectory()) {
@@ -118,7 +118,7 @@ public abstract class CodeGenTestBase {
   }
 
   private static void explore(File dir, List<File> files) {
-    for (File f : Util.ensureArray(dir.listFiles(),File.class)) {
+    for (File f : Util.ensureArray(dir.listFiles(), File.class)) {
       if (f.getName().endsWith(".java")) {
         files.add(f);
       }
@@ -138,14 +138,15 @@ public abstract class CodeGenTestBase {
 
       return Class.forName(name, true, urlKL);
     } catch (Exception e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       fail(e.getMessage());
     }
     return Object.class;
   }
 
-  public static String deployResource(String resourcePath, File targetFolder, String targetFileName) {
-    return deployResource(resourcePath, targetFolder, targetFileName, CodeGenTestBase::read);
+  public static String deployResource(String resourcePath, File targetFolder,
+      String targetFileName) {
+    return deployResource(resourcePath, targetFolder, targetFileName, CodeGenTestUtil::read);
   }
 
   public static byte[] read(InputStream inputStream) {
@@ -161,7 +162,7 @@ public abstract class CodeGenTestBase {
 
   public static String deployResource(String resourcePath, File targetFolder, String targetFileName,
       Function<InputStream, byte[]> mapper) {
-    return deployResource(CodeGenTestBase.class.getResourceAsStream(resourcePath), targetFolder,
+    return deployResource(CodeGenTestUtil.class.getResourceAsStream(resourcePath), targetFolder,
         targetFileName, mapper);
   }
 
@@ -170,7 +171,7 @@ public abstract class CodeGenTestBase {
     assertTrue(targetFolder.exists());
     assertTrue(targetFolder.isDirectory());
     File out = new File(targetFolder.getAbsolutePath() + File.separator + targetFileName);
-    FileUtil.write(mapper.apply(is),out);
+    FileUtil.write(mapper.apply(is), out);
     return out.getAbsolutePath();
   }
 
@@ -183,7 +184,7 @@ public abstract class CodeGenTestBase {
         out.println(new String(buf));
       }
     } catch (Exception e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       fail(e.getMessage());
     }
   }
@@ -193,16 +194,17 @@ public abstract class CodeGenTestBase {
   }
 
   public static void applyJaxb(List<File> schemas, List<File> binds, File gen, File catalog) {
-    applyJaxb(schemas, binds, gen, null, catalog, false, false);
+    applyJaxb(schemas, binds, gen, null, Collections.singletonList(catalog),
+        catalog.getParentFile(), false, false);
   }
 
   public static void applyJaxb(List<File> schemas, List<File> binds, File gen,
       boolean withAnnotations) {
-    applyJaxb(schemas, binds, gen, null, null, withAnnotations, false);
+    applyJaxb(schemas, binds, gen, null, null, null, withAnnotations, false);
   }
 
   public static void applyJaxb(List<File> schemas, List<File> binds, File gen, File episode,
-      File catalog, boolean withAnnotations, boolean withExtensions) {
+      List<File> catalogs, File root, boolean withAnnotations, boolean withExtensions) {
     checkResourcesExist(schemas, binds, gen);
 
     Options opts = new Options();
@@ -211,15 +213,16 @@ public abstract class CodeGenTestBase {
 
     registerSources(opts, schemas, binds);
 
-    checkAndRegisterCatalog(catalog, opts);
-
-    XJC2Mojo mojo = configureMojo(opts, episode, withAnnotations, withExtensions);
-
     try {
+      checkAndRegisterCatalog(catalogs, root, opts);
+
+      XJC2Mojo mojo = configureMojo(opts, episode, withAnnotations, withExtensions);
+
       int n = mojo.getArgs().size();
       opts.parseArguments(mojo.getArgs().toArray(new String[n]));
       mojo.doExecute(opts);
     } catch (Exception e) {
+      e.printStackTrace();
       logger.error(e.getMessage(), e);
     }
   }
@@ -253,15 +256,16 @@ public abstract class CodeGenTestBase {
     return mojo;
   }
 
-  private static void checkAndRegisterCatalog(File catalog, Options opts) {
-    if (catalog != null) {
-      if (!catalog.exists()) {
-        fail("Catalog File Not Found : " + catalog);
-      }
+  private static void checkAndRegisterCatalog(List<File> catalogs, File catalogContext,
+      Options opts) {
+    if (catalogs != null && !catalogs.isEmpty()) {
       try {
-        opts.entityResolver = XMLUtil.catalogResolver(catalog.toURI().toURL());
-      } catch (IOException e) {
-        logger.error(e.getMessage(),e);
+        URI[] uris = catalogs.stream().map(File::toURI).toArray(URI[]::new);
+        opts.entityResolver = new CatalogBasedURIResolver(
+            catalogContext != null ? catalogContext.toURI().toURL() : null,
+            catalogResolver(uris));
+      } catch (Exception e) {
+        logger.error(e.getMessage(), e);
         fail(e.getMessage());
       }
     }
@@ -307,7 +311,7 @@ public abstract class CodeGenTestBase {
   }
 
   public static void deploy(File root, String path) {
-    URL def = CodeGenTestBase.class.getResource(path);
+    URL def = CodeGenTestUtil.class.getResource(path);
     assertTrue(FileUtil.copyTo(def, FileUtil.relativePathToFile(root.getAbsolutePath(), path)));
   }
 
@@ -317,21 +321,22 @@ public abstract class CodeGenTestBase {
   }
 
   public static File initSourceFolder(File folder) {
-    return initFolder(folder,"test");
+    return initFolder(folder, "test");
   }
+
   public static File initTargetFolder(File folder) {
-    return initFolder(folder,"out");
+    return initFolder(folder, "out");
   }
 
   public static File initGenSourceFolder(File folder) {
-    return initFolder(folder,"gen");
+    return initFolder(folder, "gen");
   }
 
   public static File initFolder(File folder, String subFolder) {
-    if ( ! folder.exists()) {
+    if (!folder.exists()) {
       return null;
     }
-    File f = new File(folder,subFolder);
+    File f = new File(folder, subFolder);
     return f.exists() || f.mkdirs() ? f : null;
   }
 

@@ -15,25 +15,25 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.util.XPathUtil;
-import edu.mayo.kmdp.util.XSLTSplitter;
-import edu.mayo.kmdp.xslt.XSLTConfig;
-import edu.mayo.kmdp.xslt.XSLTConfig.XSLTOptions;
-import org.junit.jupiter.api.Test;
-import org.w3c.dom.Document;
-
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class XSLTTest {
+import edu.mayo.kmdp.util.XPathUtil;
+import edu.mayo.kmdp.util.XSLTSplitter;
+import edu.mayo.kmdp.xslt.XSLTConfig;
+import edu.mayo.kmdp.xslt.XSLTConfig.XSLTOptions;
+import java.net.URL;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
+
+class XSLTTest {
 
   @Test
-  public void testXSLT() {
+  void testXSLT() {
     String source = "/test.xmi";
 
     Map<String, Document> xsd = new XMIXSDTranslator()
@@ -44,13 +44,10 @@ public class XSLTTest {
     assertFalse(xsd.isEmpty());
 
     assertEquals(1, xsd.size());
-    //assertTrue( xsd.containsKey( "Foo/root/root.xsd" ) );
-
-    //xsd.forEach((k, v) -> XMLUtil.streamXMLDocument(v, System.out));
   }
 
   @Test
-  public void testMultiXSLT() {
+  void testMultiXSLT() {
     XPathUtil xp = new XPathUtil();
     String source = "/complex/main.uml.xmi.xml";
 
@@ -85,7 +82,7 @@ public class XSLTTest {
 
 
   @Test
-  public void testSchemaAdapter() {
+  void testSchemaAdapter() {
     XPathUtil xp = new XPathUtil();
     String source = "/complex/withResource.xmi.xml";
 
@@ -95,32 +92,25 @@ public class XSLTTest {
                 .with(XSLTOptions.OUTPUT_RESOLVER, XSLTSplitter.class.getName()));
 
     assertFalse(xsd.isEmpty());
-//    xsd.forEach((k, v) -> {
-//      System.out.println(k);
-//      XMLUtil.streamXMLDocument(v, System.out);
-//    });
 
     assertEquals(1, xsd.size());
 
     Document dox1 = xsd.get("Test/ids/ids.xsd");
     assertNotNull(xp.xNode(dox1, "//xsd:complexType[@name='Pointer']"));
 
+    URL resource = XSLTTest.class.getResource(source);
+    assertNotNull(resource);
     Map<String, Document> xsd2 = new XMIXSDTranslator()
-        .doTranslate(XSLTTest.class.getResource(source),
+        .doTranslate(resource,
             "/edu/mayo/kmdp/xmi-to-xsd-ws.xsl",
             new XSLTConfig().with(XSLTOptions.OUTPUT_RESOLVER, XSLTSplitter.class.getName()));
 
     assertFalse(xsd2.isEmpty());
-//    xsd2.forEach((k, v) -> {
-//      System.out.println(k);
-//      XMLUtil.streamXMLDocument(v, System.out);
-//    });
 
     assertEquals(1, xsd2.size());
 
     Document dox2 = xsd2.get("Test/ids/ids.openapi.xsd");
     assertNull(xp.xNode(dox2, "/xsd:schema/xsd:complexType[@name='Pointer']"));
-//		assertNotNull( xNode( dox2, "//xsd:complexType[@name='Pointer']" ) );
 
   }
 }
