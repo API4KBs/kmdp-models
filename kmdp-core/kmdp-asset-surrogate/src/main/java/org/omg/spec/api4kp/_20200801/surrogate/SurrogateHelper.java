@@ -15,6 +15,7 @@
  */
 package org.omg.spec.api4kp._20200801.surrogate;
 
+import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
@@ -75,7 +76,7 @@ public class SurrogateHelper {
   public static Optional<Schema> getSchema() {
     return XMLUtil.getSchemas(
         SurrogateHelper.class.getResource("/xsd/API4KP/surrogate/surrogate.xsd"),
-        XMLUtil.catalogResolver("/xsd/km-surrogate-catalog.xml", "/xsd/terms-catalog.xml"));
+        catalogResolver("/xsd/km-surrogate-catalog.xml", "/xsd/terms-catalog.xml"));
   }
 
 

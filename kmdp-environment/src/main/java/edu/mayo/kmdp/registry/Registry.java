@@ -1,11 +1,11 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -27,13 +27,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import javax.xml.catalog.CatalogFeatures;
+import javax.xml.catalog.CatalogManager;
+import javax.xml.catalog.CatalogResolver;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.reasoner.ReasonerRegistry;
-import org.apache.xml.resolver.CatalogManager;
-import org.apache.xml.resolver.tools.CatalogResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
 
 public class Registry {
 
@@ -79,18 +81,15 @@ public class Registry {
   }
 
   static {
-    CatalogManager catalogManager = new CatalogManager();
-    catalogManager.setCatalogFiles(
-        Registry.class.getResource(getCatalogRef()).toString());
-    catalogManager.setUseStaticCatalog(false);
-    catalogManager.setIgnoreMissingProperties(true);
-    xcat = new CatalogResolver(catalogManager);
-
-    String xmlPrefixesQry = RegistryUtil.read("/xmlNSprefixes.sparql");
-    String xmlSchemasQry = RegistryUtil.read("/xmlSchemas.sparql");
 
     try {
-      String path = xcat.getCatalog().resolveURI(REGISTRY_URI);
+      xcat = CatalogManager.catalogResolver(
+          CatalogFeatures.defaults(),
+          Registry.class.getResource(getCatalogRef()).toURI());
+
+      String xmlPrefixesQry = RegistryUtil.read("/xmlNSprefixes.sparql");
+      String xmlSchemasQry = RegistryUtil.read("/xmlSchemas.sparql");
+      String path = xcat.resolve(REGISTRY_URI, null).getSystemId();
 
       Model registryGraph = ModelFactory.createDefaultModel()
           .read(openStream(path), null);
@@ -102,7 +101,7 @@ public class Registry {
       RegistryUtil.askQuery(xmlSchemasQry, registryGraph).forEach(
           m -> languagSchemas.put(m.get("L"), m.get("NS"))
       );
-    } catch (IOException e) {
+    } catch (IOException | URISyntaxException e) {
       logger.error(e.getMessage(), e);
     }
 
@@ -113,7 +112,7 @@ public class Registry {
   }
 
   public static String getCatalogVersion(String version) {
-    return String.format("/%s/meta-catalog.xml",version);
+    return String.format("/%s/meta-catalog.xml", version);
   }
 
   private static InputStream openStream(String path) throws IOException {
@@ -173,16 +172,12 @@ public class Registry {
   }
 
   public static Optional<String> getCatalog(URI lang) {
-    try {
-      return Optional.ofNullable(xcat.getCatalog()
-          .resolvePublic(lang.toString(), lang.toString()))
-          .map(URI::create)
-          .map(URI::getPath)
-          .map(path -> "/xsd" + path);
-    } catch (IOException e) {
-      logger.error(e.getMessage(), e);
-      return Optional.empty();
-    }
+    return Optional.ofNullable(
+            xcat.resolveEntity(lang.toString(), lang.toString()))
+        .map(InputSource::getSystemId)
+        .map(URI::create)
+        .map(URI::getPath)
+        .map(path -> "/xsd" + path);
   }
 
   public static Optional<String> getValidationSchema(URI lang) {

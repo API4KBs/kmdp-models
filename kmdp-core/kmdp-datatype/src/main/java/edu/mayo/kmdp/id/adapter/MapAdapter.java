@@ -72,7 +72,7 @@ public class MapAdapter extends XmlAdapter<Map, Map> {
     if (k instanceof QName) {
       return (QName) k;
     }
-    return URIUtil.asUri(k.toString())
+    return URIUtil.asURI(k.toString())
         .flatMap(URIUtil::toQName)
         .orElse(new QName(k.toString()));
   }

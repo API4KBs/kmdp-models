@@ -29,19 +29,6 @@
     <uml-included-packages>*</uml-included-packages>
   </properties>
 
-
-  <dependencies>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>xmi-xsd-xslt-translator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>xsd-yamls-xslt-translator</artifactId>
-    </dependency>
-  </dependencies>
-
-
   <build>
     <pluginManagement>
       <plugins>

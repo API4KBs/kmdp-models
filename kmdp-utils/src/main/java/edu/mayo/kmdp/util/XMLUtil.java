@@ -13,13 +13,13 @@
  */
 package edu.mayo.kmdp.util;
 
+import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
 import static edu.mayo.kmdp.util.URIUtil.parseQName;
 import static edu.mayo.kmdp.util.Util.isEmpty;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import static javax.xml.XMLConstants.XML_NS_URI;
 
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.util.schemas.CatalogResourceResolver;
 import edu.mayo.kmdp.xslt.XSLTConfig;
 import edu.mayo.kmdp.xslt.XSLTConfig.XSLTOptions;
 import java.io.ByteArrayInputStream;
@@ -37,10 +37,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.XMLConstants;
+import javax.xml.catalog.CatalogResolver;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,6 +52,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -58,8 +60,6 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import net.sf.saxon.lib.FeatureKeys;
 import net.sf.saxon.lib.StandardErrorListener;
-import org.apache.xml.resolver.CatalogManager;
-import org.apache.xml.resolver.tools.CatalogResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -68,6 +68,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ls.LSResourceResolver;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
@@ -95,12 +97,12 @@ public class XMLUtil {
   }
 
   /**
-   * Opens a stream from a URL known to point to an XML document
-   * Ensures that http-based URLs are resolved using the correct request headers.
-   *
-   * The JDK default implementation may set the Accept header to text/html:
-   * if the server supports content negotiation, it may provide an HTML stream derived
-   * from the XML instead of the XML data itself
+   * Opens a stream from a URL known to point to an XML document Ensures that http-based URLs are
+   * resolved using the correct request headers.
+   * <p>
+   * The JDK default implementation may set the Accept header to text/html: if the server supports
+   * content negotiation, it may provide an HTML stream derived from the XML instead of the XML data
+   * itself
    *
    * @param source the URL pointing to an XML document
    * @return an Inpustream with the XML document content
@@ -319,7 +321,9 @@ public class XMLUtil {
             .map(Registry::getCatalog)
             .flatMap(StreamUtil::trimStream)
             .map(XMLUtil.class::getResource)
-            .toArray(URL[]::new));
+            .map(URIUtil::asURI)
+            .filter(Objects::nonNull)
+            .toArray(URI[]::new));
 
     try {
       Optional<String> schemaBaseUrl = Registry.getValidationSchema(langs[0]);
@@ -327,7 +331,7 @@ public class XMLUtil {
         throw new IllegalStateException(
             "Defensive Programming: Unable to locate schema for language " + langs[0]);
       }
-      String mainSchema = cat.getCatalog().resolveURI(schemaBaseUrl.get());
+      String mainSchema = cat.resolve(schemaBaseUrl.get(), "").getSystemId();
       var url = new URL(mainSchema);
       return getSchemas(url, cat);
     } catch (IOException e) {
@@ -336,28 +340,17 @@ public class XMLUtil {
     }
   }
 
-  public static CatalogResolver catalogResolver(URL... catalogs) {
-    var manager = new CatalogManager();
-    manager.setUseStaticCatalog(false);
-    manager.setIgnoreMissingProperties(true);
-    manager.setCatalogFiles(
-        Arrays.stream(catalogs)
-            .map(URL::toString)
-            .collect(Collectors.joining(";")));
-    return new CatalogResolver(manager);
-  }
-
-  public static CatalogResolver catalogResolver(String... catalogRelativePaths) {
-    return catalogResolver(
-        Arrays.stream(catalogRelativePaths)
-            .map(XMLUtil::asFileURL)
-            .toArray(URL[]::new));
-  }
-
-  public static Optional<Schema> getSchemas(final URL mainSchemaURL,
+  public static Optional<Schema> getSchemas(
+      final URL mainSchemaURL,
       final CatalogResolver catalogResolver) {
+    return getSchemas(mainSchemaURL, new CatalogBasedURIResolver(catalogResolver));
+  }
+
+  public static Optional<Schema> getSchemas(
+      final URL mainSchemaURL,
+      final LSResourceResolver catalogResolver) {
     var sFactory = getSchemaFactory();
-    sFactory.setResourceResolver(new CatalogResourceResolver(catalogResolver));
+    sFactory.setResourceResolver(catalogResolver);
 
     return Optional.ofNullable(mainSchemaURL)
         .map(s -> {
@@ -443,7 +436,7 @@ public class XMLUtil {
       Source inputSource = new StreamSource(source);
       inputSource.setSystemId(sourceSystemID);
 
-      TransformerFactory factory = initFactory(xslt.toString(), p.getTyped(XSLTOptions.CATALOGS));
+      TransformerFactory factory = initFactory(xslt, p.getTyped(XSLTOptions.CATALOGS));
 
       var out = emptyDocument();
       var outputResult = new DOMResult(out);
@@ -524,15 +517,11 @@ public class XMLUtil {
   }
 
 
-  private static TransformerFactory initFactory(String loc, String catalog)
+  private static TransformerFactory initFactory(URL baseLocation, String catalogUrls)
       throws TransformerConfigurationException {
     var factory = getSecureTransformerFactory();
 
-    if (catalog != null) {
-      factory.setURIResolver(new CatalogBasedURIResolver(catalog.split(",")).withLoc(loc));
-    } else {
-      factory.setURIResolver(new RelativeFileURIResolver().withLoc(loc));
-    }
+    factory.setURIResolver(new CatalogBasedURIResolver(baseLocation, catalogUrls));
 
     return factory;
   }
@@ -610,4 +599,50 @@ public class XMLUtil {
   }
 
 
+  /**
+   * Utility that maps {@link Source} of various types to {@link InputSource}
+   *
+   * @param source the resource to get
+   * From http://www.java2s.com/Tutorials/Java/XML/How_to_convert_Source_to_InputSource_using_Java.htm
+   */
+  public static InputSource sourceToInputSource(Source source) {
+    if (source instanceof SAXSource) {
+      return ((SAXSource) source).getInputSource();
+    } else if (source instanceof DOMSource) {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      Node node = ((DOMSource) source).getNode();
+      if (node instanceof Document) {
+        node = ((Document) node).getDocumentElement();
+      }
+      Element domElement = (Element) node;
+      elementToStream(domElement, baos);
+      InputSource isource = new InputSource(source.getSystemId());
+      isource.setByteStream(new ByteArrayInputStream(baos.toByteArray()));
+      return isource;
+    } else if (source instanceof StreamSource) {
+      StreamSource ss = (StreamSource) source;
+      InputSource isource = new InputSource(ss.getSystemId());
+      isource.setByteStream(ss.getInputStream());
+      isource.setCharacterStream(ss.getReader());
+      isource.setPublicId(ss.getPublicId());
+      return isource;
+    } else {
+      return getInputSourceFromURI(source.getSystemId());
+    }
+  }
+
+  public static InputSource getInputSourceFromURI(String uri) {
+    return new InputSource(uri);
+  }
+
+  public static void elementToStream(Element element, OutputStream out) {
+    try {
+      DOMSource source = new DOMSource(element);
+      StreamResult result = new StreamResult(out);
+      Transformer transformer = getSecureTransformer();
+      transformer.transform(source, result);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+    }
+  }
 }

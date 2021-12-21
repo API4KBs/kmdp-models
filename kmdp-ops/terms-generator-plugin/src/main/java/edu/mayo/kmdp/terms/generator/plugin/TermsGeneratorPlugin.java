@@ -1,17 +1,19 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 package edu.mayo.kmdp.terms.generator.plugin;
+
+import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
 
 import edu.mayo.kmdp.terms.generator.CatalogGenerator;
 import edu.mayo.kmdp.terms.generator.CatalogGenerator.CatalogEntry;
@@ -27,21 +29,23 @@ import edu.mayo.kmdp.terms.generator.internal.ConceptGraph;
 import edu.mayo.kmdp.terms.generator.internal.VersionedConceptGraph;
 import edu.mayo.kmdp.terms.generator.util.OntologyLoader;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
+import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
+import edu.mayo.kmdp.util.XMLUtil;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import javax.xml.catalog.CatalogResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.protege.xmlcatalog.CatalogUtilities;
-import org.protege.xmlcatalog.owlapi.XMLCatalogIRIMapper;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -441,7 +445,7 @@ public class TermsGeneratorPlugin extends AbstractMojo {
     VersionedConceptGraph graph = null;
     for (int j = 0; j < sources.size(); j++) {
       try {
-        OWLOntology ontology = readSource(sources.get(j),sourceCatalogPaths.get(j));
+        OWLOntology ontology = readSource(sources.get(j), sourceCatalogPaths.get(j));
         ConceptGraph g = analyze(ontology);
         if (graph == null) {
           graph = new VersionedConceptGraph(g);
@@ -449,7 +453,7 @@ public class TermsGeneratorPlugin extends AbstractMojo {
           graph.merge(g);
         }
       } catch (OWLOntologyCreationException e) {
-        logger.error(e.getMessage(),e);
+        logger.error(e.getMessage(), e);
         return Collections.emptyList();
       }
     }
@@ -540,16 +544,22 @@ public class TermsGeneratorPlugin extends AbstractMojo {
       return Optional.empty();
     }
     return CatalogBasedURIResolver.resolveFilePathToURL(sourceCatalogPath)
+        .map(URIUtil::asURI)
+        .filter(Objects::nonNull)
         .flatMap(this::getSourceCatalog);
   }
 
-  private Optional<OWLOntologyIRIMapper> getSourceCatalog(URL cat) {
-    try {
-      return Optional.of(new XMLCatalogIRIMapper(CatalogUtilities.parseDocument(cat)));
-    } catch (IOException e) {
-      logger.error(e.getMessage(), e);
-    }
-    return Optional.empty();
+  private Optional<OWLOntologyIRIMapper> getSourceCatalog(URI cat) {
+    CatalogResolver catalog = catalogResolver(cat);
+    return Optional.of(new OWLOntologyIRIMapper() {
+      @Nullable
+      @Override
+      public IRI getDocumentIRI(IRI ontologyIRI) {
+        String iriStr = ontologyIRI.getIRIString();
+        String resolved = catalog.resolveEntity(iriStr, iriStr).getSystemId();
+        return resolved != null ? IRI.create(resolved) : null;
+      }
+    });
   }
 
   private void registerOutputDir() {

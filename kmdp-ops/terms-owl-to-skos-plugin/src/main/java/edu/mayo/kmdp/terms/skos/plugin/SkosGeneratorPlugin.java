@@ -1,17 +1,19 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 package edu.mayo.kmdp.terms.skos.plugin;
+
+import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
 
 import edu.mayo.kmdp.terms.mireot.EntityTypes;
 import edu.mayo.kmdp.terms.mireot.MireotConfig;
@@ -22,6 +24,8 @@ import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConfig.OWLtoSKOSTxParams;
 import edu.mayo.kmdp.terms.skosifier.Owl2SkosConverter;
 import edu.mayo.kmdp.util.CatalogBasedURIResolver;
+import edu.mayo.kmdp.util.URIUtil;
+import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,12 +38,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import javax.xml.catalog.CatalogResolver;
 import org.apache.jena.rdf.model.Model;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.protege.xmlcatalog.CatalogUtilities;
-import org.protege.xmlcatalog.XMLCatalog;
-import org.protege.xmlcatalog.owlapi.XMLCatalogIRIMapper;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
 import org.semanticweb.owlapi.io.StreamDocumentSource;
@@ -58,6 +61,7 @@ import org.semanticweb.owlapi.util.OWLOntologyImportsClosureSetProvider;
 import org.semanticweb.owlapi.util.OWLOntologyMerger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
 
 
 /**
@@ -314,25 +318,26 @@ public class SkosGeneratorPlugin extends AbstractMojo {
       int numSources = sourceURLs.size();
 
       List<URL> catalogs = (catalogURLs == null || catalogURLs.isEmpty())
-          ? Collections.nCopies(numSources,null)
+          ? Collections.nCopies(numSources, null)
           : catalogURLs;
       if (catalogs.size() != numSources) {
         if (catalogs.size() != 1) {
           logger.warn("Mismatch between the number of provided catalogs and the number "
               + "of source URLs");
         }
-        catalogs = Collections.nCopies(numSources,catalogs.get(0));
+        catalogs = Collections.nCopies(numSources, catalogs.get(0));
       }
 
       List<String> outputFiles =
           (skosOutputFiles == null
               || skosOutputFiles.isEmpty() || skosOutputFiles.size() != numSources)
-          ? sourceURLs.stream().map(this::generateDefaultOutputFile).collect(Collectors.toList())
-          : skosOutputFiles;
+              ? sourceURLs.stream().map(this::generateDefaultOutputFile)
+              .collect(Collectors.toList())
+              : skosOutputFiles;
 
       for (int index = 0; index < numSources; index++) {
         generateSKOS(sourceURLs.get(index),
-            catalogs.get(index),
+            URIUtil.asURI(catalogs.get(index)),
             outputFiles.get(index));
       }
     } catch (IOException e) {
@@ -341,7 +346,7 @@ public class SkosGeneratorPlugin extends AbstractMojo {
 
   }
 
-  private void generateSKOS(String owlSourceURL, URL catalogURL, String outputFile)
+  private void generateSKOS(String owlSourceURL, URI catalogURL, String outputFile)
       throws IOException {
     try (InputStream is = resolve(owlSourceURL, owlSourceURL, catalogURL)) {
 
@@ -403,13 +408,13 @@ public class SkosGeneratorPlugin extends AbstractMojo {
         .replaceAll(".rdf", "") + ".skos.rdf";
   }
 
-  private InputStream resolve(String file, String owlSourceURL, URL catalogURL) {
+  private InputStream resolve(String file, String owlSourceURL, URI catalogURL) {
     return CatalogBasedURIResolver.resolveFilePath(file, catalogURL)
         .orElse(SkosGeneratorPlugin.class.getResourceAsStream(owlSourceURL));
   }
 
 
-  public InputStream ensureFormat(InputStream is, OWLDocumentFormat fmt, URL catalogURL) {
+  public InputStream ensureFormat(InputStream is, OWLDocumentFormat fmt, URI catalogURL) {
     try {
       OWLOntologyManager manager = getManager(catalogURL);
 
@@ -440,10 +445,10 @@ public class SkosGeneratorPlugin extends AbstractMojo {
   }
 
   private void preloadImports(final OWLOntologyManager manager, final OWLOntology onto,
-      URL catalogURL) {
+      URI catalogURL) {
     onto.directImportsDocuments().forEach(
         ontologyIRI -> {
-          if (!isOntologyLoaded(manager,ontologyIRI)) {
+          if (!isOntologyLoaded(manager, ontologyIRI)) {
             try {
               if (applyMappings(ontologyIRI, manager).isPresent()) {
                 OWLOntology importedOntology = manager
@@ -473,8 +478,8 @@ public class SkosGeneratorPlugin extends AbstractMojo {
   }
 
   private boolean matches(OWLOntologyID id, IRI ontologyIRI) {
-    return id.getOntologyIRI().map(oiri -> matchesIgnoreScheme(oiri,ontologyIRI)).orElse(false)
-        || id.getVersionIRI().map(viri -> matchesIgnoreScheme(viri,ontologyIRI)).orElse(false);
+    return id.getOntologyIRI().map(oiri -> matchesIgnoreScheme(oiri, ontologyIRI)).orElse(false)
+        || id.getVersionIRI().map(viri -> matchesIgnoreScheme(viri, ontologyIRI)).orElse(false);
   }
 
   private boolean matchesIgnoreScheme(IRI tgtIri, IRI ontologyIRI) {
@@ -496,14 +501,23 @@ public class SkosGeneratorPlugin extends AbstractMojo {
     return Optional.empty();
   }
 
-  private static OWLOntologyManager getManager(URL catalogURL) throws IOException {
+  private static OWLOntologyManager getManager(URI catalogURL) {
     OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
     manager.setOntologyConfigurator(new OntologyConfigurator()
         .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
 
     if (catalogURL != null) {
-      XMLCatalog catalog = CatalogUtilities.parseDocument(catalogURL);
-      manager.setIRIMappers(Collections.singleton(new XMLCatalogIRIMapper(catalog)));
+      CatalogResolver catalog = catalogResolver(catalogURL);
+      manager.setIRIMappers(Collections.singleton(new OWLOntologyIRIMapper() {
+        @Nullable
+        @Override
+        public IRI getDocumentIRI(IRI ontologyIRI) {
+          String iriStr = ontologyIRI.getIRIString();
+          InputSource resolved = catalog.resolveEntity(iriStr, iriStr);
+          return resolved != null && resolved.getSystemId() != null
+              ? IRI.create(resolved.getSystemId()) : null;
+        }
+      }));
     }
     return manager;
   }

@@ -27,8 +27,9 @@ import java.util.stream.Stream;
 
 public class StreamUtil {
 
-  private StreamUtil() {}
-
+  private StreamUtil() {
+    // functions only
+  }
 
   public static <T> Stream<T> trimStream(Optional<T> opt) {
     return opt.stream();
@@ -43,11 +44,13 @@ public class StreamUtil {
         .map(mapper)
         .collect(Collectors.toSet());
   }
+
   public static <T,X> List<X> mapToList(Collection<T> source, Function<T,X> mapper) {
     return source.stream()
         .map(mapper)
         .collect(Collectors.toList());
   }
+
   public static <T,X> List<X> flatMapToList(Collection<T> source, Function<T,Optional<X>> mapper) {
     return source.stream()
         .map(mapper)

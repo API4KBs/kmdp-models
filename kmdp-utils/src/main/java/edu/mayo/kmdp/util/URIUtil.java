@@ -66,7 +66,7 @@ public class URIUtil {
   }
 
 
-  public static Optional<URI> asUri(String str) {
+  public static Optional<URI> asURI(String str) {
     if (Util.isEmpty(str)) {
       return Optional.empty();
     }
@@ -133,8 +133,19 @@ public class URIUtil {
     }
   }
 
+  public static URI asURI(URL url) {
+    if (url == null) {
+      return null;
+    }
+    try {
+      return url.toURI();
+    } catch (URISyntaxException e) {
+      return null;
+    }
+  }
+
   public static boolean isUri(String id) {
-    return asUri(id).isPresent();
+    return asURI(id).isPresent();
   }
 
   public static URI detectNamespace(URI uri) {
@@ -143,7 +154,7 @@ public class URIUtil {
     } else {
       String str = uri.toString();
       str = str.substring(0, str.lastIndexOf('/'));
-      return asUri(str)
+      return asURI(str)
           .orElseThrow(UnsupportedOperationException::new);
     }
   }
