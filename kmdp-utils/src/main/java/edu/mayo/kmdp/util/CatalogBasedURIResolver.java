@@ -148,6 +148,16 @@ public class CatalogBasedURIResolver
         : null);
   }
 
+  /**
+   * Constructor. Creates and wraps a {@link CatalogResolver} using the provided URIs as Catalog
+   * sources
+   *
+   * @param catalogURIs the URIs used to build a {@link CatalogManager}
+   */
+  public CatalogBasedURIResolver(URI... catalogURIs) {
+    this(catalogResolver(catalogURIs));
+  }
+
 
   /*
       XML import/include/document() URI Resolver Interface
