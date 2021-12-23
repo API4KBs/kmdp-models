@@ -1,5 +1,7 @@
 package org.omg.spec.api4kp._20200801;
 
+import org.zalando.problem.Problem;
+
 /**
  * Severity is used to assess whether, and to what degree, the State of an Entity violates one or
  * more Constraints.
@@ -51,4 +53,19 @@ public enum Severity {
    */
   public static final String KEY = "api4kp:" + Severity.class.getSimpleName();
 
+  /**
+   * Determines the {@link Severity} of a {@link Problem}
+   *
+   * @param p the Problem
+   * @return the Severity of the Problem, or UNK if unable to determine
+   */
+  public static Severity severityOf(Problem p) {
+    if (p == null) {
+      return UNK;
+    }
+    Object val = p.getParameters().get(KEY);
+    return val instanceof Severity
+        ? (Severity) val
+        : UNK;
+  }
 }

@@ -81,6 +81,18 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
   }
 
   /**
+   * Compares a Term to the identifier of either a referent or a concept, to check whether the term
+   * denotes the entity, or evokes the concept.
+   *
+   * @param entityId URI of a referent and/or concept
+   * @return true if this Term evokes or denotes that entity
+   */
+  default boolean refersTo(URI entityId) {
+    return entityId != null
+        && (entityId.equals(getDenotes()) || entityId.equals(getEvokes()));
+  }
+
+  /**
    * Compares two Terms based on the ID of the concept they evoke (Used to compare alternative
    * expressions)
    *
