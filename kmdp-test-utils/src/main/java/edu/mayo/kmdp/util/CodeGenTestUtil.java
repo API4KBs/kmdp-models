@@ -90,7 +90,7 @@ public abstract class CodeGenTestUtil {
 
 
   public static void showDirContent(File folder) {
-    showDirContent(folder, true);
+    showDirContent(folder, false);
   }
 
   public static void showDirContent(File folder, boolean enablePrintout) {
