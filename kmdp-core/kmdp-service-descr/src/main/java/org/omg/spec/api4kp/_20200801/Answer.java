@@ -54,8 +54,8 @@ import org.zalando.problem.Problem;
  * <p>
  * Try - exception handling, * Writer - explanations
  * <p>
- * TO DO [FUTURE] - Consider moving Explainer to a member instead of a superclass,
- * to support more sophisticated explanation strategies
+ * TO DO [FUTURE] - Consider moving Explainer to a member instead of a superclass, to support more
+ * sophisticated explanation strategies
  *
  * @param <T>
  */
@@ -69,7 +69,7 @@ public class Answer<T> extends Explainer {
 
   private static final Logger logger = LoggerFactory.getLogger(Answer.class);
 
-  private static final Answer<?> EMPTY =  new Answer<>().withCodedOutcome(NotFound);
+  private static final Answer<?> EMPTY = new Answer<>().withCodedOutcome(NotFound);
 
   public static <T> Answer<T> empty() {
     return (Answer<T>) EMPTY;
@@ -463,6 +463,17 @@ public class Answer<T> extends Explainer {
         .findAny();
   }
 
+  /**
+   * Applies an Answer-returning function mapper to a collection of inputs, returning the {@link
+   * Answer} provided by any one of the applications, fails otherwise
+   *
+   * @param delegates the inputs
+   * @param mapper    the {@link Function}
+   * @param <X>       The input type
+   * @param <Y>       The output type
+   * @return delegates.stream.map(mapper).findAny.else(failed)
+   * @see #anyDo(Collection, Function, Supplier)
+   */
   public static <X, Y> Answer<Y> anyDo(Collection<X> delegates, Function<X, Answer<Y>> mapper) {
     return anyDo(
         delegates,
@@ -470,23 +481,51 @@ public class Answer<T> extends Explainer {
         () -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
   }
 
+  /**
+   * Applies an Answer-returning function mapper to a collection of inputs returning the {@link
+   * Answer} provided by any one of the applications or, if none {@link #isSuccess()}, relies on a
+   * default {@link Supplier}.
+   * <p>
+   * FUTURE: this method could benefit from parallelStream(), but runtime issues may arise in
+   * combinations of certain versions of spring-boot, JAXB, Tomcat and JDK. See issues reported for
+   * <a href="https://github.com/spring-projects/spring-boot/issues/19427">Spring-Boot</a> and
+   * <a href="https://stackoverflow.com/questions/55452778/parallelstream-causing-classnotfoundexception-with-jaxb-api">JAXB</a>
+   *
+   * @param delegates the inputs
+   * @param mapper    the {@link Function}
+   * @param fallback  the {@link Supplier}
+   * @param <X>       The input type
+   * @param <Y>       The output type
+   * @return delegates.stream.map(mapper).findAny.else(fallback)
+   */
+  @SuppressWarnings("java:S3864")
   public static <X, Y> Answer<Y> anyDo(Collection<X> delegates, Function<X, Answer<Y>> mapper,
       Supplier<Answer<Y>> fallback) {
-    List<ServerSideException> fails = new ArrayList<>();
+    Set<Answer<? super Y>> fails = new HashSet<>();
     return delegates.stream()
         .map(x -> {
           try {
             return mapper.apply(x);
           } catch (Exception e) {
-            fails.add(new ServerSideException(e));
             return Answer.<Y>failed(e);
           }
         })
+        .peek(a -> a.ifFailed(fails::add))
         .filter(Answer::isSuccess)
         .findAny()
-        .orElseGet(() -> fallback.get().withExplanationDetail(new ComplexProblem(fails)));
+        .orElseGet(() -> compensate(fallback, fails));
   }
 
+  /**
+   * Applies an Answer-returning function mapper to a collection of inputs, returning the {@link
+   * Answer} provided by the first successful application, fails otherwise
+   *
+   * @param delegates the inputs
+   * @param mapper    the {@link Function}
+   * @param <X>       The input type
+   * @param <Y>       The output type
+   * @return delegates.stream.map(mapper).findfirst.else(failed)
+   */
   public static <X, Y> Answer<Y> firstDo(Collection<X> delegates, Function<X, Answer<Y>> mapper) {
     return firstDo(
         delegates,
@@ -494,8 +533,22 @@ public class Answer<T> extends Explainer {
         () -> failed(new UnsupportedOperationException("Unable to find suitable mapper")));
   }
 
+  /**
+   * Applies an Answer-returning function mapper to a collection of inputs, returning the {@link
+   * Answer} provided by the first successful application or, if none {@link #isSuccess()}, relies
+   * on a default {@link Supplier}.
+   *
+   * @param delegates the inputs
+   * @param mapper    the {@link Function}
+   * @param fallback  the {@link Supplier}
+   * @param <X>       The input type
+   * @param <Y>       The output type
+   * @return delegates.stream.map(mapper).findFirst.else(fallback)
+   */
+  @SuppressWarnings("java:S3864")
   public static <X, Y> Answer<Y> firstDo(Collection<X> delegates, Function<X, Answer<Y>> mapper,
       Supplier<Answer<Y>> fallback) {
+    List<Answer<? super Y>> fails = new ArrayList<>();
     return delegates.stream()
         .map(x -> {
           try {
@@ -504,9 +557,29 @@ public class Answer<T> extends Explainer {
             return Answer.<Y>failed(e);
           }
         })
+        .peek(a -> a.ifFailed(fails::add))
         .filter(Answer::isSuccess)
         .findFirst()
-        .orElseGet(fallback);
+        .orElseGet(() -> compensate(fallback, fails));
+  }
+
+  /**
+   * Compensation helper method that builds an Answer using a fallback Supplier, and the failures to
+   * be compensated. The former builds the result, while the latter provide additional explanation.
+   *
+   * @param fallback The Supplier of the compensation Answer.
+   * @param fails The failures
+   * @param <Y> The output type
+   * @return The Answer provided by the fallback {@link Supplier}
+   */
+  private static <Y> Answer<Y> compensate(Supplier<Answer<Y>> fallback,
+      Collection<Answer<? super Y>> fails) {
+    Answer<Y> handler = fallback.get();
+    fails.stream()
+        .map(Explainer::getExplanation)
+        .filter(Objects::nonNull)
+        .forEach(handler::withAddedExplanation);
+    return handler;
   }
 
   public static <X, T> Answer<T> delegateTo(Optional<X> delegate,

@@ -279,4 +279,50 @@ class AnswerTest {
     assertFalse(b3);
   }
 
+  @Test
+  void testAnyDo() {
+    String msg = "A did it";
+    Answer<String> ans = Answer.anyDo(
+        Arrays.asList("a", "b"),
+        x -> {
+          if ("a".equals(x)) {
+            return Answer.of("a").withAddedExplanationMessage(msg);
+          } else {
+            return Answer.failed();
+          }
+        },
+        () -> Answer.of("x")
+    );
+    boolean b = ans.isSuccess();
+    String str = ans.get();
+    String expl = ans.printExplanation();
+
+    assertTrue(b);
+    assertEquals("a", str);
+    assertEquals(msg, expl);
+    assertEquals(1, ans.getExplanation().components().count());
+  }
+
+  @Test
+  void testNoneDo() {
+    Answer<String> ans = Answer.anyDo(
+        Arrays.asList("a", "b"),
+        x -> {
+          Answer<String> f = Answer.failed();
+          f.withExplanationMessage("Unable to do " + x);
+          return f;
+        },
+        () -> Answer.of("x").withExplanation("Compensation!")
+    );
+    boolean b = ans.isSuccess();
+    String str = ans.get();
+    String expl = ans.printExplanation();
+
+    assertTrue(b);
+    assertEquals("x", str);
+
+    assertTrue(ans.getExplanation().componentList().size() >= 1);
+    System.out.println(expl);
+  }
+
 }

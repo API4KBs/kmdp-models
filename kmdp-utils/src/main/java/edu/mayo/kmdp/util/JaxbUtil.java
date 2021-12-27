@@ -126,7 +126,7 @@ public class JaxbUtil {
       final Object root,
       final Schema schema,
       JaxbConfig p) {
-    Marshaller marshaller = null;
+    Marshaller marshaller;
     try {
       marshaller = getXMLMarshaller(ctx,
           root instanceof JAXBElement ? ((JAXBElement<?>) root).getDeclaredType() : root.getClass(),
