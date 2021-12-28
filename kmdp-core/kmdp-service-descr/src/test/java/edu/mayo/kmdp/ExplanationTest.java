@@ -13,7 +13,7 @@ import static org.omg.spec.api4kp._20200801.Explainer.newOutcomeProblem;
 import static org.omg.spec.api4kp._20200801.Severity.ERR;
 import static org.omg.spec.api4kp._20200801.Severity.INF;
 import static org.omg.spec.api4kp._20200801.Severity.WRN;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeresourceoutcome.KnowledgeResourceOutcomeSeries.Conformance;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeresourceoutcome.KnowledgeResourceOutcomeSeries.Syntactic_Profile_Conformance;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 
@@ -226,18 +226,18 @@ class ExplanationTest {
   @Test
   void testProblemMerge() {
     ResourceIdentifier rid = SemanticIdentifier.randomId();
-    Answer<Void> ans = Answer.<Void>succeed()
+    Answer<Void> ans = Answer.succeed()
         .withExplanationDetail(
-            newOutcomeProblem(Conformance, ERR)
+            newOutcomeProblem(Syntactic_Profile_Conformance, ERR)
                 .withInstance(rid.getVersionId())
                 .withTitle("Part1").build())
         .withAddedExplanationDetail(
-            newOutcomeProblem(Conformance, ERR)
+            newOutcomeProblem(Syntactic_Profile_Conformance, ERR)
                 .withInstance(rid.getVersionId())
                 .withTitle("Part2").build());
     Problem expl = ans.getExplanationAsProblem();
     assertTrue(expl instanceof ComplexProblem);
-    assertEquals(Conformance.getReferentId(), expl.getType());
+    assertEquals(Syntactic_Profile_Conformance.getReferentId(), expl.getType());
     assertEquals(ERR, expl.getParameters().get(Severity.KEY));
     assertEquals(rid.getVersionId(), expl.getInstance());
   }

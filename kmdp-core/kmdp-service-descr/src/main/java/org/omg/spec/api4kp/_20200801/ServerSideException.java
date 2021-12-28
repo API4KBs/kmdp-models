@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;
 
@@ -105,6 +106,15 @@ public class ServerSideException extends AbstractThrowableProblem {
       final String detail,
       final URI instance) {
     this(type, title, status, detail, instance, null, null);
+  }
+
+  public ServerSideException(
+      final Term type,
+      final String title,
+      final ResponseCode status,
+      final String detail,
+      final URI instance) {
+    this(type.getReferentId(), title, status, detail, instance, null, null);
   }
 
   public ServerSideException(Throwable t) {
