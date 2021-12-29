@@ -842,6 +842,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         : VERSION_LATEST.hashCode();
 
     return new KeyIdentifier() {
+
       @Override
       public UUID getUuid() {
         return id;
@@ -850,6 +851,26 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
       @Override
       public int getVersionHash() {
         return vid;
+      }
+
+      @Override
+      public String getVersionTag() {
+        return SemanticIdentifier.this.getVersionTag();
+      }
+
+      @Override
+      public int compareTo(KeyIdentifier other) {
+        int byId = this.getUuid().compareTo(other.getUuid());
+        if (byId != 0) {
+          return byId;
+        }
+
+        Version v1 = VersionIdentifier.semVerOf(this.getVersionTag());
+        Version v2 = VersionIdentifier.semVerOf(other.getVersionTag());
+        if (v1 == null) {
+          return v2 == null ? 0 : -1;
+        }
+        return v1.compareTo(v2);
       }
 
       public boolean equals(Object other) {
@@ -875,7 +896,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
       }
 
       public String toString() {
-        return id + " # " + vid;
+        return id + " # " + getVersionTag();
       }
     };
   }

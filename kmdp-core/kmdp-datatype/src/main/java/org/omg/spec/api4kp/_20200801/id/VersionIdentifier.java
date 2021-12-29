@@ -26,8 +26,8 @@ public interface VersionIdentifier extends Identifier {
     if (versionTag.matches("(\\d+)\\.(\\d+)")) {
       int idx = versionTag.indexOf('.');
       return Version.forIntegers(
-          Integer.parseInt(versionTag.substring(0, idx)),
-          Integer.parseInt(versionTag.substring(idx + 1)))
+              Integer.parseInt(versionTag.substring(0, idx)),
+              Integer.parseInt(versionTag.substring(idx + 1)))
           .toString();
     }
     int dashIdx = versionTag.indexOf('-');
@@ -37,17 +37,35 @@ public interface VersionIdentifier extends Identifier {
     return IdentifierConstants.VERSION_ZERO + "-" + versionTag;
   }
 
+  static Version semVerOf(String versionTag) {
+    if (versionTag == null) {
+      return null;
+    }
+    try {
+      return Version.valueOf(versionTag);
+    } catch (UnexpectedCharacterException ue) {
+      try {
+        return Version.valueOf(toSemVer(versionTag));
+      } catch (Exception e) {
+        return null;
+      }
+    }
+  }
+
+  static Version semVerOf(VersionIdentifier vid) {
+    if (vid == null) {
+      return null;
+    }
+    return semVerOf(vid.getVersionTag());
+  }
+
   URI getVersionId();
 
   String getVersionTag();
 
   @JsonIgnore
   default Version getSemanticVersionTag() {
-    try {
-      return Version.valueOf(getVersionTag());
-    } catch (UnexpectedCharacterException ue) {
-      return Version.valueOf(toSemVer(getVersionTag()));
-    }
+    return semVerOf(this);
   }
 
   /**
@@ -63,6 +81,7 @@ public interface VersionIdentifier extends Identifier {
 
   /**
    * Assuming a versionTag is provided, detects the format
+   *
    * @param versionTag
    * @return
    */
