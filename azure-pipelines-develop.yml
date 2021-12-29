@@ -115,7 +115,6 @@ steps:
   displayName: 'Maven Deploy to Artifacts'
   inputs:
     targetType: 'inline'
-    failOnStderr: true
     script: |
       mvn deploy "-DaltDeploymentRepository=$env:DEPLOY_REPO::default::$env:DEPLOY_REPO_PATH" -ntp
   env:
