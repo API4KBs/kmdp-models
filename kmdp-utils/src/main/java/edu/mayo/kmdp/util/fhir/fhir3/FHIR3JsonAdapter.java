@@ -40,7 +40,7 @@ import org.hl7.fhir.instance.model.api.IBase;
 public class FHIR3JsonAdapter extends
     AbstractFHIRJsonAdapter<DomainResource, Resource, Parameters, Type> {
 
-  private static IParser jsonParser = FhirContext.forDstu3().newJsonParser();
+  private static final FhirContext fhirContext = FhirContext.forDstu3();
   protected static FHIR3JsonAdapter instance = new FHIR3JsonAdapter();
 
   private FHIR3JsonAdapter() {
@@ -63,7 +63,7 @@ public class FHIR3JsonAdapter extends
 
   @Override
   protected IParser getParser() {
-    return jsonParser;
+    return fhirContext.newJsonParser();
   }
 
 

@@ -17,23 +17,22 @@ package edu.mayo.kmdp.util.fhir.fhir2;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.dstu2.resource.BaseResource;
-import ca.uhn.fhir.parser.IParser;
 import edu.mayo.kmdp.util.fhir.AbstractFHIRXmlAdapter;
 import java.io.InputStreamReader;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 public class FHIR2XmlAdapter extends AbstractFHIRXmlAdapter<BaseResource> {
 
-  private static IParser xmlParser = FhirContext.forDstu2().newXmlParser();
+  private static final FhirContext fhirContext = FhirContext.forDstu2();
 
   @Override
   protected IBaseResource parseResource(InputStreamReader inputStreamReader) {
-    return xmlParser.parseResource(inputStreamReader);
+    return fhirContext.newXmlParser().parseResource(inputStreamReader);
   }
 
   @Override
   protected String encodeResource(BaseResource v) {
-    return xmlParser.encodeResourceToString(v);
+    return fhirContext.newXmlParser().encodeResourceToString(v);
   }
 
 }

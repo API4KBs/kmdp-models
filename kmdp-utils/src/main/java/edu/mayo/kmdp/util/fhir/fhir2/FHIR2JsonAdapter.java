@@ -39,7 +39,7 @@ import org.hl7.fhir.instance.model.api.IBase;
 public class FHIR2JsonAdapter extends
     AbstractFHIRJsonAdapter<BaseResource, IResource, Parameters, IDatatype> {
 
-  private static IParser jsonParser = FhirContext.forDstu2().newJsonParser();
+  private static FhirContext fhirContext = FhirContext.forDstu2();
   protected static FHIR2JsonAdapter instance = new FHIR2JsonAdapter();
 
   private FHIR2JsonAdapter() {
@@ -61,7 +61,7 @@ public class FHIR2JsonAdapter extends
 
   @Override
   protected IParser getParser() {
-    return jsonParser;
+    return fhirContext.newJsonParser();
   }
 
   public static class FHIRSerializer extends JsonSerializer<BaseElement> {
