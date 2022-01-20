@@ -16,19 +16,24 @@
 package edu.mayo.kmdp.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.slf4j.LoggerFactory;
+import java.util.zip.ZipOutputStream;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ZipUtil {
 
   private static Logger logger = LoggerFactory.getLogger(ZipUtil.class);
 
-  private ZipUtil() {}
+  private ZipUtil() {
+  }
 
   public static Optional<byte[]> readZipEntry(String id, InputStream stream) {
     Optional<InputStream> entryStream = getZipEntry(id, stream);
@@ -44,7 +49,7 @@ public class ZipUtil {
         }
         return Optional.of(out.toByteArray());
       } catch (Exception e) {
-        logger.error(e.getMessage(),e);
+        logger.error(e.getMessage(), e);
         return Optional.empty();
       }
     });
@@ -62,7 +67,7 @@ public class ZipUtil {
       }
       return Optional.empty();
     } catch (Exception e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
     }
   }
@@ -78,8 +83,93 @@ public class ZipUtil {
       }
       return Optional.empty();
     } catch (Exception e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       return Optional.empty();
+    }
+  }
+
+
+  /**
+   * Zips the data from a source InputStream, adding the zipped binary to a Zip Archive under the
+   * given entryName, and streams the result into the provided OutputStream
+   *
+   * @param entryName the name of the entry in a new Zip archive holding the compressed inputstream
+   * @param source    the binary data to be zipped
+   * @param target    the OutputStream where the Zipped archive will be streamed
+   * @return true if success
+   */
+  public static boolean zip(
+      String entryName, InputStream source, OutputStream target) {
+    try {
+      ZipOutputStream zos = new ZipOutputStream(target);
+      addToZip(entryName, source, zos);
+      zos.close();
+      return true;
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      return false;
+    }
+  }
+
+  /**
+   * Zips the data from a source {@link ByteArrayOutputStream}, adding the zipped binary to a Zip
+   * Archive under the given entryName, and streams the result into a target OutputStream
+   *
+   * @param entryName the name of the entry in a new Zip archive holding the compressed inputstream
+   * @param source    the binary data to be zipped
+   * @param target    the OutputStream where the Zipped archive will be streamed
+   * @return true if success
+   */
+  public static boolean zip(
+      String entryName, ByteArrayOutputStream source, OutputStream target) {
+    try {
+      return zip(entryName, Util.pipeStreams(source), target);
+    } catch (IOException e) {
+      logger.error(e.getMessage(), e);
+      return false;
+    }
+  }
+
+  /**
+   * Zips the data from a number of named source InputStreams, adding the zipped binary to a Zip
+   * Archive, and streams the result into the provided OutputStream
+   *
+   * @param target the OutputStream where the Zipped archive will be streamed
+   * @return true if all entries have been successfully zipped and added
+   */
+  public static boolean zip(
+      Map<String, InputStream> entries, OutputStream target) {
+    try {
+      ZipOutputStream zos = new ZipOutputStream(target);
+      boolean success = entries.entrySet().stream()
+          .map(e -> addToZip(e.getKey(), e.getValue(), zos))
+          .reduce(true, Boolean::logicalAnd);
+      zos.close();
+      return success;
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      return false;
+    }
+  }
+
+  /**
+   * Adds a named entry to a {@link ZipOutputStream}
+   *
+   * @param entryName the name of the entry
+   * @param source    the InputStream providing the data to be zipped
+   * @param zos       the {@link ZipOutputStream} to add an entry to
+   * @return true if success
+   */
+  private static boolean addToZip(String entryName, InputStream source, ZipOutputStream zos) {
+    try {
+      zos.putNextEntry(new ZipEntry(entryName));
+      byte[] bytes = source.readAllBytes();
+      zos.write(bytes, 0, bytes.length);
+      zos.closeEntry();
+      return true;
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      return false;
     }
   }
 

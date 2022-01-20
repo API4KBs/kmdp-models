@@ -22,6 +22,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -496,5 +498,25 @@ public class Util {
     } catch (IOException ignore) {
       // do nothing
     }
+  }
+
+  /**
+   * Copies a {@link ByteArrayOutputStream} into an {@link InputStream}
+   * for chaining purposes. Uses PipedStreams for efficiency
+   * https://stackoverflow.com/questions/5778658/how-to-convert-outputstream-to-inputstream
+   * @param original
+   * @return
+   * @throws IOException
+   */
+  public static InputStream pipeStreams(ByteArrayOutputStream original) throws IOException {
+    PipedInputStream in = new PipedInputStream();
+    new Thread(() -> {
+      try(PipedOutputStream out = new PipedOutputStream(in)) {
+        original.writeTo(out);
+      } catch (IOException e) {
+        logger.error(e.getMessage(), e);
+      }
+    }).start();
+    return in;
   }
 }

@@ -747,6 +747,10 @@ public class Answer<T> extends Explainer {
     this.value = value;
   }
 
+  public boolean has(Class<?> klass) {
+    return klass != null && klass.isInstance(value);
+  }
+
   protected Map<String, List<String>> getMeta() {
     return meta;
   }
