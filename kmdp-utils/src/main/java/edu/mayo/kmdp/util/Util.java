@@ -508,10 +508,13 @@ public class Util {
    * @return
    * @throws IOException
    */
+  @SuppressWarnings("java:S2095")
   public static InputStream pipeStreams(ByteArrayOutputStream original) throws IOException {
+    // Ensure both pipes are created and connected to each other
     PipedInputStream in = new PipedInputStream();
+    PipedOutputStream out = new PipedOutputStream(in);
     new Thread(() -> {
-      try(PipedOutputStream out = new PipedOutputStream(in)) {
+      try (out) {
         original.writeTo(out);
       } catch (IOException e) {
         logger.error(e.getMessage(), e);
