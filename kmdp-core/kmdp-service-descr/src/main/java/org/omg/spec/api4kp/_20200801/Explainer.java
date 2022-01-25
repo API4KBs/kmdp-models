@@ -15,6 +15,7 @@ package org.omg.spec.api4kp._20200801;
 
 import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
 import static edu.mayo.kmdp.util.JSonUtil.writeXMLAsString;
+import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.InternalServerError;
 import static java.util.Collections.singletonList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.emptyCarrier;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
@@ -30,6 +31,8 @@ import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSe
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +51,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.ProblemBuilder;
 import org.zalando.problem.ProblemModule;
 import org.zalando.problem.Status;
+import org.zalando.problem.StatusType;
 
 /**
  * Specialization of the Writer monad that handles 'explanations' in the context of
@@ -244,6 +248,27 @@ public abstract class Explainer {
     } else {
       return ofProblem(new ServerSideException(cause));
     }
+  }
+
+  /**
+   * Adapter for HTTP Status Codes
+   * @param status
+   * @return
+   */
+  public static StatusType mapStatusCode(ResponseCode status) {
+    return Status.valueOf(Integer.parseInt(status.getTag()));
+  }
+
+  /**
+   * Adapter for HTTP Status Codes
+   * @param status
+   * @return
+   */
+  public static ResponseCode mapStatusCode(StatusType status) {
+    return Optional.ofNullable(status)
+        .map(StatusType::getStatusCode)
+        .flatMap(ss -> ResponseCodeSeries.resolve(Integer.toString(ss)))
+        .orElse(InternalServerError);
   }
 
   /**

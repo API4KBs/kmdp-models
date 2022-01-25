@@ -5,10 +5,12 @@ import edu.mayo.kmdp.util.StreamUtil;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
@@ -49,8 +51,7 @@ public class ComplexProblem extends AbstractThrowableProblem {
             COMPONENTS_KEY, new ArrayList<>(),
             Severity.KEY, severity));
     this.setStackTrace(Explainer.EMPTY_STACK_TRACE);
-    List<Problem> parts = (List<Problem>) this.getParameters()
-        .get(COMPONENTS_KEY);
+    List<Problem> parts = (List<Problem>) this.getParameters().get(COMPONENTS_KEY);
     problems.forEach(p -> add(p, parts, this.getType(), this.getInstance()));
   }
 
@@ -65,6 +66,44 @@ public class ComplexProblem extends AbstractThrowableProblem {
   public ComplexProblem(Collection<? extends Problem> problems) {
     this(combineInstance(problems), combineStatus(problems), combineSeverity(problems), problems);
   }
+
+  /**
+   * If p is a ComplexProblem, returns its components, otherwise returns p itself.
+   *
+   * @param p the problem
+   * @return the problem's components
+   */
+  public static List<Problem> componentsOf(Problem p) {
+    if (p instanceof ComplexProblem) {
+      return ((ComplexProblem) p).getComponentProblems();
+    } else {
+      return Collections.singletonList(p);
+    }
+  }
+
+  /**
+   * Accessor
+   * <p>
+   * Returns the components of this ComplexProblem, wrapped in an unmodifiable List.
+   *
+   * @return the components of this ComplexProblem
+   */
+  public List<Problem> getComponentProblems() {
+    if (getParameters() == null) {
+      return Collections.emptyList();
+    }
+    Object comps = this.getParameters().get(COMPONENTS_KEY);
+    if (comps instanceof List) {
+      List<?> l = (List<?>) comps;
+      return l.stream()
+          .filter(Problem.class::isInstance)
+          .map(Problem.class::cast)
+          .collect(Collectors.toUnmodifiableList());
+    } else {
+      return Collections.emptyList();
+    }
+  }
+
 
   /**
    * Clones a component problem and adds it to the complex as a part. Cloning preserves the original

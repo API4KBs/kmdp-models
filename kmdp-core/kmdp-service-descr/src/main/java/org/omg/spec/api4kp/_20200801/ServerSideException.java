@@ -16,6 +16,7 @@ package org.omg.spec.api4kp._20200801;
 import static org.omg.spec.api4kp._20200801.Explainer.EMPTY_STACK_TRACE;
 import static org.omg.spec.api4kp._20200801.Explainer.GENERIC_ERROR_TYPE;
 import static org.omg.spec.api4kp._20200801.Explainer.GENERIC_INFO_TYPE;
+import static org.omg.spec.api4kp._20200801.Explainer.mapStatusCode;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
@@ -29,7 +30,6 @@ import java.util.Map;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.zalando.problem.AbstractThrowableProblem;
-import org.zalando.problem.Status;
 
 /**
  * Self-explanatory processing Exception, i.e. Exception that implements {@link
@@ -86,7 +86,7 @@ public class ServerSideException extends AbstractThrowableProblem {
       final Map<String, List<String>> headers) {
     super(type,
         title,
-        Status.valueOf(Integer.parseInt(status.getTag())),
+        mapStatusCode(status),
         detail,
         instance,
         null,

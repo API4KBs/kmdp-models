@@ -124,6 +124,14 @@ public class Answer<T> extends Explainer {
         .withExplanationInterrupt(t);
   }
 
+  public static <X> Answer<X> failedWithDetail(Problem p) {
+    return new Answer<X>()
+        .withCodedOutcome(mapStatusCode(p.getStatus()))
+        .withMeta(new HashMap<>())
+        .withValue(null)
+        .withExplanationDetail(p);
+  }
+
   public static <X> Answer<X> failed(Answer<?> nested) {
     return new Answer<X>()
         .withCodedOutcome(nested.getCodedOutcome())
@@ -143,10 +151,16 @@ public class Answer<T> extends Explainer {
     return Answer.of(Optional.ofNullable(value));
   }
 
+  @Deprecated
   public static <X> Answer<X> ofTry(Optional<X> value, ResourceIdentifier context, String msg) {
+    return ofTry(value, context, () -> msg);
+  }
+
+  public static <X> Answer<X> ofTry(
+      Optional<X> value, ResourceIdentifier context, Supplier<String> msg) {
     return value
         .map(Answer::of)
-        .orElseGet(() -> Answer.failed(new ServerSideException(NotFound, context, msg)));
+        .orElseGet(() -> Answer.failed(new ServerSideException(NotFound, context, msg.get())));
   }
 
   public static <X> Answer<X> ofTry(Optional<X> value) {

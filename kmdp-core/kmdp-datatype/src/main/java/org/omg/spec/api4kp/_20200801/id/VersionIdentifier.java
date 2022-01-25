@@ -59,6 +59,42 @@ public interface VersionIdentifier extends Identifier {
     return semVerOf(vid.getVersionTag());
   }
 
+  /**
+   * Predicate
+   * @param vid
+   * @return true if vid denotes an anonymous SNAPSHOT
+   */
+  static boolean isSnapshot(VersionIdentifier vid) {
+    return vid != null && isSnapshot(vid.getVersionTag());
+  }
+
+  /**
+   * Predicate
+   * @param versionTag
+   * @return true if versionTag denotes an anonymous SNAPSHOT
+   */
+  static boolean isSnapshot(String versionTag) {
+    return versionTag != null && versionTag.endsWith(IdentifierConstants.SNAPSHOT);
+  }
+
+  /**
+   * Predicate
+   * @param vid
+   * @return true if vid denotes a stable, non-SNAPSHOT version
+   */
+  static boolean isStable(VersionIdentifier vid) {
+    return !isSnapshot(vid);
+  }
+
+  /**
+   * Predicate
+   * @param versionTag
+   * @return true if versionTag denotes a stable, non-SNAPSHOT version
+   */
+  static boolean isStable(String versionTag) {
+    return !isSnapshot(versionTag);
+  }
+
   URI getVersionId();
 
   String getVersionTag();
