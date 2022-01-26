@@ -17,16 +17,17 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * An <code>InputStream</code> that contains zipped data and its length. Other
- * <code>InputStream</code>s are not able to reliably provide length info without reading from the
+ * A decorating <code>InputStream</code> that is able to reliably provide the length of the stream.
+ * Other
+ * <code>InputStream</code>s are not able to reliably provide length without reading from the
  * stream which is problematic because reading is a one-time operation.
  */
-public class ZippedInputStream extends InputStream {
+public class LengthProvidingInputStream extends InputStream {
 
   protected long length;
   protected InputStream inputStream;
 
-  public ZippedInputStream(InputStream inputStream, long length) {
+  public LengthProvidingInputStream(InputStream inputStream, long length) {
     this.inputStream = inputStream;
     this.length = length;
   }

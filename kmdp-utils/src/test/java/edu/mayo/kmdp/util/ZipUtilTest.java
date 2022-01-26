@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +34,7 @@ class ZipUtilTest {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     outputStream.write(DATA.getBytes());
 
-    ZippedInputStream zippedInputStream = ZipUtil.zip(outputStream, ENTRY_NAME);
+    LengthProvidingInputStream zippedInputStream = ZipUtil.zip(outputStream, ENTRY_NAME);
 
     assertEquals(137, zippedInputStream.getLength());
 

@@ -174,7 +174,7 @@ public class ZipUtil {
     }
   }
 
-  public static ZippedInputStream zip(ByteArrayOutputStream data, String filenameInternal)
+  public static LengthProvidingInputStream zip(ByteArrayOutputStream data, String filenameInternal)
       throws IOException {
 
     InputStream dataInputStream = Util.pipeStreams(data);
@@ -187,7 +187,7 @@ public class ZipUtil {
     byte[] zippedBytes = zippedDataOutputStream.toByteArray();
     InputStream zippedInputStream = new ByteArrayInputStream(zippedBytes);
 
-    return new ZippedInputStream(zippedInputStream, zippedBytes.length);
+    return new LengthProvidingInputStream(zippedInputStream, zippedBytes.length);
 
   }
 
