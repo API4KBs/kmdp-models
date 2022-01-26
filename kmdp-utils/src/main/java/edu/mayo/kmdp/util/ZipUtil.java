@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -173,5 +174,21 @@ public class ZipUtil {
     }
   }
 
+  public static ZippedInputStream zip(ByteArrayOutputStream data, String filenameInternal)
+      throws IOException {
+
+    InputStream dataInputStream = Util.pipeStreams(data);
+
+    ByteArrayOutputStream zippedDataOutputStream = new ByteArrayOutputStream();
+    ZipUtil.zip(filenameInternal, dataInputStream, zippedDataOutputStream);
+
+    // Convert the zipped data into an InputStream so that it can be read downstream
+    // Util.pipeStreams could not be used a second time as the length of the stream is then unknown
+    byte[] zippedBytes = zippedDataOutputStream.toByteArray();
+    InputStream zippedInputStream = new ByteArrayInputStream(zippedBytes);
+
+    return new ZippedInputStream(zippedInputStream, zippedBytes.length);
+
+  }
 
 }
