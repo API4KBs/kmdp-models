@@ -1,16 +1,18 @@
 package edu.mayo.kmdp.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class ZipUtilTest {
 
-  public static String DATA = "Hello World";
   public static String ENTRY_NAME = "entry";
+  public static String DATA = "{'test': 'yes'}";
 
   @Test
   void testZipRoundTrip() throws IOException {
@@ -29,18 +31,18 @@ class ZipUtilTest {
   }
 
   @Test
-  void testZipToZippedInputStream() throws IOException {
+  void testZipAndReturnInputStream() throws IOException {
 
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    outputStream.write(DATA.getBytes());
+    String outputFilename = "zipped-file";
+    String entry = outputFilename + ".json";
 
-    LengthProvidingInputStream zippedInputStream = ZipUtil.zip(outputStream, ENTRY_NAME);
+    ByteArrayOutputStream byteArrayOutputStream = JSonUtil.writeJson(DATA).get();
 
-    assertEquals(137, zippedInputStream.getLength());
+    InputStream zippedData = ZipUtil.zip(entry, byteArrayOutputStream);
 
-    String unzippedEntry = ZipUtil.readZipEntry(ENTRY_NAME, zippedInputStream)
+    String unzippedEntry = ZipUtil.readZipEntry(entry, zippedData)
         .map(String::new).orElseGet(Assertions::fail);
-    assertEquals(DATA, unzippedEntry);
+    assertTrue(unzippedEntry.contains(DATA));
 
   }
 

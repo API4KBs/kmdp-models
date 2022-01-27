@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp.util;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -113,6 +112,32 @@ public class ZipUtil {
   }
 
   /**
+   * Zip the incoming <code>ByteArrayOutputStream</code> and return an <code>InputStream</code>
+   * that can be ready by the caller.
+   */
+  public static InputStream zip(
+      String entryName, ByteArrayOutputStream source) throws IOException {
+    return zip(entryName, Util.pipeStreams(source));
+  }
+
+  /**
+   * Zip the incoming <code>InputStream</code> and return an <code>InputStream</code>
+   * that can be ready by the caller.
+   */
+  public static InputStream zip(
+      String entryName, InputStream source) throws IOException {
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+    zip(entryName, source, out);
+
+    InputStream result = Util.pipeStreams(out);
+
+    return result;
+
+  }
+
+  /**
    * Zips the data from a source {@link ByteArrayOutputStream}, adding the zipped binary to a Zip
    * Archive under the given entryName, and streams the result into a target OutputStream
    *
@@ -172,23 +197,6 @@ public class ZipUtil {
       logger.error(e.getMessage(), e);
       return false;
     }
-  }
-
-  public static LengthProvidingInputStream zip(ByteArrayOutputStream data, String filenameInternal)
-      throws IOException {
-
-    InputStream dataInputStream = Util.pipeStreams(data);
-
-    ByteArrayOutputStream zippedDataOutputStream = new ByteArrayOutputStream();
-    ZipUtil.zip(filenameInternal, dataInputStream, zippedDataOutputStream);
-
-    // Convert the zipped data into an InputStream so that it can be read downstream
-    // Util.pipeStreams could not be used a second time as the length of the stream is then unknown
-    byte[] zippedBytes = zippedDataOutputStream.toByteArray();
-    InputStream zippedInputStream = new ByteArrayInputStream(zippedBytes);
-
-    return new LengthProvidingInputStream(zippedInputStream, zippedBytes.length);
-
   }
 
 }
