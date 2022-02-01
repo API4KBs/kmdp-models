@@ -164,6 +164,17 @@ public class CharsetEncodingUtil {
     return sb.toString();
   }
 
+  /**
+   * Removes characters which are invalid or generally problematic in a file name, based on the
+   * regex [:\\/*?|<>%",$]
+   *
+   * @param name the original name
+   * @return name, where any special character has been replaced by '_'
+   */
+  public static String sanitizeFileName(String name) {
+    return name.replaceAll("[:\\\\/*?|<>%\",$]", "_");
+  }
+
   private CharsetEncodingUtil() {
     // static functions only
   }

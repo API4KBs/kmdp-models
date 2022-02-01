@@ -437,6 +437,14 @@ public class Answer<T> extends Explainer {
     }
   }
 
+  public <X extends Throwable> T orElseThrowSelf(Function<Answer<T>,X> exceptionSupplier) throws X {
+    if (value != null) {
+      return value;
+    } else {
+      throw exceptionSupplier.apply(this);
+    }
+  }
+
   public <X extends Throwable> T orElseThrow() throws X {
     if (value != null) {
       return value;

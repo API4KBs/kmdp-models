@@ -165,13 +165,10 @@ public class ZipUtil {
    */
   public static boolean zip(
       Map<String, InputStream> entries, OutputStream target) {
-    try {
-      ZipOutputStream zos = new ZipOutputStream(target);
-      boolean success = entries.entrySet().stream()
+    try (ZipOutputStream zos = new ZipOutputStream(target)) {
+      return entries.entrySet().stream()
           .map(e -> addToZip(e.getKey(), e.getValue(), zos))
           .reduce(true, Boolean::logicalAnd);
-      zos.close();
-      return success;
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       return false;
@@ -197,6 +194,21 @@ public class ZipUtil {
       logger.error(e.getMessage(), e);
       return false;
     }
+  }
+
+
+  /**
+   * Constructs a ZIP archive from a set of candidate entries
+   *
+   * @param archiveEntries a Map of entries, where the key is the entry name, and the value is an
+   *                       {@link InputStream} providing the entry data
+   * @return an InputStream with the Zipped archive content
+   */
+  public static InputStream zipToInputStream(
+      Map<String, InputStream> archiveEntries) throws IOException {
+    ByteArrayOutputStream target = new ByteArrayOutputStream();
+    ZipUtil.zip(archiveEntries, target);
+    return Util.pipeStreams(target);
   }
 
 }

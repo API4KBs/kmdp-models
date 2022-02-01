@@ -3,9 +3,11 @@ package edu.mayo.kmdp.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -44,6 +46,17 @@ class ZipUtilTest {
         .map(String::new).orElseGet(Assertions::fail);
     assertTrue(unzippedEntry.contains(DATA));
 
+  }
+
+  @Test
+  void testMultipleEntries() {
+    Map<String,InputStream> entries = Map.of(
+        "a.txt", new ByteArrayInputStream("AAA".getBytes()),
+        "b.txt", new ByteArrayInputStream("BBB".getBytes())
+    );
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    assertTrue(ZipUtil.zip(entries, baos));
   }
 
 }

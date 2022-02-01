@@ -238,14 +238,37 @@ public interface AbstractCarrier {
     }
   }
 
+  /**
+   * @return a Stream with the Components of this, if a {@link CompositeKnowledgeCarrier}, otherwise
+   * a Stream of this as a {@link KnowledgeCarrier}
+   */
   default Stream<KnowledgeCarrier> components() {
     if (this instanceof CompositeKnowledgeCarrier) {
       return ((CompositeKnowledgeCarrier) this).getComponent().stream();
     } else {
-      return Stream.of((KnowledgeCarrier)this);
+      return Stream.of((KnowledgeCarrier) this);
     }
   }
 
+  /**
+   * @return a Stream with the Components and the Structure of this, if a {@link
+   * CompositeKnowledgeCarrier}, otherwise a Stream of this as a {@link KnowledgeCarrier}
+   */
+  default Stream<KnowledgeCarrier> structuredComponents() {
+    if (this instanceof CompositeKnowledgeCarrier) {
+      CompositeKnowledgeCarrier ckc = (CompositeKnowledgeCarrier) this;
+      return Stream.concat(
+          Stream.ofNullable(ckc.getStruct()),
+          ckc.components());
+    } else {
+      return Stream.of((KnowledgeCarrier) this);
+    }
+  }
+
+  /**
+   * @return the Components of this, collected into a List
+   * @see #components()
+   */
   default List<KnowledgeCarrier> componentList() {
     return components().collect(Collectors.toList());
   }
