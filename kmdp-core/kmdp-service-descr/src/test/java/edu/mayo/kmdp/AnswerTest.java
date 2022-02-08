@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
@@ -323,6 +324,32 @@ class AnswerTest {
 
     assertTrue(ans.getExplanation().componentList().size() >= 1);
     System.out.println(expl);
+  }
+
+  @Test
+  void testReduces() {
+    Stream<Function<Integer, Answer<Integer>>> mappers = Stream.of(
+        x -> {
+          System.out.println("Call A");
+          return Answer.of(x * 2)
+              .withExplanation("Did A");
+        },
+        y -> {
+          System.out.println("Call B");
+          return Answer.of(y + 4)
+              .withExplanation("Did B");
+        }
+    );
+
+    Answer<Integer> fin = mappers
+        .reduce(
+            Answer.of(3),
+            (ans, valid) -> ans.flatMap(valid::apply),
+            Answer::merge);
+
+    assertEquals(10, fin.get());
+    assertTrue(fin.printExplanation().contains("Did B"));
+    assertTrue(fin.printExplanation().contains("Did A"));
   }
 
 }
