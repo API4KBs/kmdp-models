@@ -23,6 +23,9 @@ import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -242,6 +245,20 @@ class ExplanationTest {
     assertEquals(rid.getVersionId(), expl.getInstance());
   }
 
+  @Test
+  void testPackExplanation() {
+    URI uri = URI.create("my:Issue");
+    Answer<Void> ans = Answer.<Void>failed()
+        .withExplanationDetail(
+            Explainer.newOutcomeProblem(uri, INF).build());
+
+    Map<String, List<String>> mockHeaders = new HashMap<>();
+    Explainer.packExplanationIntoHeaders(ans, mockHeaders);
+
+    Answer<Void> rec = Answer.of(ans.getOutcomeType(), null, mockHeaders);
+    assertNotNull(rec.getExplanation());
+    assertEquals(uri, rec.getExplanationAsProblem().getType());
+  }
 
   private String format(URI type, int code, String title, String msg, Severity severity) {
     return type

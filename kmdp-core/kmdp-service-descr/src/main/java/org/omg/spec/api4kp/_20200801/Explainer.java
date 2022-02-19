@@ -28,13 +28,13 @@ import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSe
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Serialized_Knowledge_Expression;
 
+import edu.mayo.kmdp.util.CharsetEncodingUtil;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,11 +42,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeresourceoutcome.KnowledgeResourceOutcome;
 import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormat;
+import org.zalando.problem.DefaultProblem;
 import org.zalando.problem.Problem;
 import org.zalando.problem.ProblemBuilder;
 import org.zalando.problem.ProblemModule;
@@ -94,8 +96,10 @@ public abstract class Explainer {
   // TODO add model/problem to the ontology
   private static final SyntacticRepresentation PROBLEM_MIME = rep(HTML, JSON);
 
-  protected static final ProblemModule pm =
+  protected static final ProblemModule PM_W_STACK =
       new ProblemModule().withStackTraces();
+  protected static final ProblemModule PM =
+      new ProblemModule();
 
   protected KnowledgeCarrier explanation;
 
@@ -109,26 +113,36 @@ public abstract class Explainer {
    */
   public static Optional<KnowledgeCarrier> extractExplanationFromHeaders(
       Map<String, List<String>> meta) {
-    List<String> links = Optional.ofNullable(meta.get(EXPL_LINK_HEADER))
-        .orElseGet(Collections::emptyList);
-
-    if (links.size() != 1) {
+    if (meta.containsKey(EXPL_HEADER)) {
+      // explanation embedded
+      return Optional.of(meta.get(EXPL_HEADER))
+          .flatMap(l -> l.stream().findFirst())
+          .map(CharsetEncodingUtil::decodeFromBase64)
+          .filter(Util::isNotEmpty)
+          .flatMap(expl -> JSonUtil.parseJson(expl, PM, DefaultProblem.class).stream()
+              .flatMap(StreamUtil.filterAs(Problem.class))
+              .map(Explainer::ofProblem)
+              .findFirst()
+              .or(() -> Optional.of(ofNaturalLanguageRep(expl))));
+    } else if (meta.containsKey(EXPL_LINK_HEADER)) {
+      // explanation by callback link
+      Optional<String> link = Optional.of(meta.get(EXPL_LINK_HEADER))
+          .flatMap(l -> l.stream().findFirst());
+      if (link.isEmpty()) {
+        return Optional.empty();
+      }
+      Matcher matcher = REGEXP_PATTERN.matcher(link.get());
+      if (!matcher.matches() || !EXPL_KEY.equals(matcher.group(2))) {
+        return Optional.empty();
+      }
+      return Optional.ofNullable(matcher.group(1))
+          .map(ref ->
+              new KnowledgeCarrier()
+                  .withAssetId(SemanticIdentifier.randomId())
+                  .withHref(URI.create(ref)));
+    } else {
       return Optional.empty();
     }
-    Matcher matcher = REGEXP_PATTERN.matcher(links.get(0));
-    if (!matcher.matches() || !EXPL_KEY.equals(matcher.group(2))) {
-      return Optional.empty();
-    }
-
-    String explKey = matcher.group(1);
-    return Optional.ofNullable(meta.get(explKey))
-        .map(xpls -> xpls.get(0))
-        .filter(Util::isNotEmpty)
-        .flatMap(expl -> JSonUtil.parseJson(expl, pm).stream()
-            .flatMap(StreamUtil.filterAs(Problem.class))
-            .map(Explainer::ofProblem)
-            .findFirst()
-            .or(() -> Optional.of(ofNaturalLanguageRep(expl))));
   }
 
   /**
@@ -153,9 +167,9 @@ public abstract class Explainer {
       return;
     }
     if (expl.getExpression() != null) {
-      String msg = expl.getLevel().sameAs(Abstract_Knowledge_Expression)
-          ? ans.printExplanation(JSON)
-          : ans.printExplanation(TXT);
+      SerializationFormat fmt = expl.getLevel().sameAs(Abstract_Knowledge_Expression)
+          ? JSON : TXT;
+      String msg = ans.encodeExplanation(fmt, false);
       meta.put(Explainer.EXPL_HEADER, singletonList(msg));
     } else if (expl.getHref() != null) {
       meta.put(Explainer.EXPL_LINK_HEADER,
@@ -486,6 +500,15 @@ public abstract class Explainer {
    * @return
    */
   public String printExplanation(SerializationFormat fmt) {
+    return printExplanation(fmt, true);
+  }
+
+  /**
+   * Serializes the existing explanation using a known format (TXT, JSON, future XML)
+   *
+   * @return
+   */
+  public String printExplanation(SerializationFormat fmt, boolean withStackTraces) {
     boolean isXML = XML_1_1.sameAs(fmt);
     boolean isJson = JSON.sameAs(fmt);
     boolean isTxt = TXT.sameAs(fmt)
@@ -501,15 +524,26 @@ public abstract class Explainer {
           .orElse("");
     } else if (isJson) {
       return kce.map(KnowledgeCarrier::getExpression)
-          .flatMap(x -> writeJsonAsString(x, pm))
+          .flatMap(x -> writeJsonAsString(x, withStackTraces ? PM_W_STACK : PM))
           .orElse("");
     } else if (isXML) {
       return kce.map(KnowledgeCarrier::getExpression)
-          .flatMap(x -> writeXMLAsString(x, pm))
+          .flatMap(x -> writeXMLAsString(x, withStackTraces ? PM_W_STACK : PM))
           .orElse("");
     } else {
       throw new UnsupportedOperationException();
     }
+  }
+
+  /**
+   * returns {@link #printExplanation(SerializationFormat)}, Base64-encoded
+   *
+   * @param fmt             the format
+   * @param withStackTraces include stack traces
+   * @return a Base64-encoded, serialized Explanation
+   */
+  public String encodeExplanation(SerializationFormat fmt, boolean withStackTraces) {
+    return CharsetEncodingUtil.recodeToBase64(this.printExplanation(fmt, withStackTraces));
   }
 
   /**
