@@ -27,7 +27,7 @@
       <artifactId>kmdp-utils</artifactId>
     </dependency>
     <dependency>
-      <artifactId>API4KP</artifactId>
+      <artifactId>api4kp</artifactId>
       <groupId>org.omg.spec</groupId>
     </dependency>
     <dependency>

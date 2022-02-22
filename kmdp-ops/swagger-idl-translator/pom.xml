@@ -94,7 +94,7 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>org.omg.spec</groupId>
-                  <artifactId>API4KP</artifactId>
+                  <artifactId>api4kp</artifactId>
                   <version>${project.version}</version>
 
                   <type>jar</type>

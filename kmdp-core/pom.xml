@@ -94,7 +94,7 @@
                 <artifactItems>
                   <artifactItem>
 
-                    <artifactId>API4KP</artifactId>
+                    <artifactId>api4kp</artifactId>
                     <groupId>org.omg.spec</groupId>
                     <version>${api4kp.version}</version>
 

@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
       <groupId>org.omg.spec</groupId>
-      <artifactId>API4KP</artifactId>
+      <artifactId>api4kp</artifactId>
     </dependency>
 
     <dependency>
@@ -978,7 +978,7 @@
         <dependencies>
           <dependency>
             <groupId>org.omg.spec</groupId>
-            <artifactId>API4KP</artifactId>
+            <artifactId>api4kp</artifactId>
             <version>${api4kp.version}</version>
           </dependency>
         </dependencies>
