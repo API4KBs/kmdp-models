@@ -30,10 +30,7 @@ class TestBuilder implements Builder {
 
   @Override
   public Builder header(String key, String value) {
-
-    String valueEscaped = StringEscapeUtils.escapeHtml4(value);
-    headers.put(key, valueEscaped);
-
+    headers.put(key, value);
     return this;
   }
 

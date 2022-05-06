@@ -174,7 +174,7 @@ public class FunctionAppHelper {
     answer.listMeta().forEach(h ->
         answer.getMetas(h)
             .forEach(v ->
-                builder.header(h, v)));
+                builder.header(h, StringEscapeUtils.escapeHtml4(v))));
 
     return builder.build();
   }
