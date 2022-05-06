@@ -17,6 +17,8 @@ import java.util.UUID;
 import org.apache.commons.text.StringEscapeUtils;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.ServerSideException;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 
 /**
  * Helper methods to bridge the API4KP / Azure Fn'App layers
@@ -174,11 +176,19 @@ public class FunctionAppHelper {
     answer.listMeta().forEach(h ->
         answer.getMetas(h)
             .forEach(v ->
-                builder.header(h, StringEscapeUtils.escapeHtml4(v))));
+                builder.header(h, sanitize(v))));
 
     return builder.build();
   }
 
+  protected static String sanitize(String value) {
+
+    PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+    String sanitizedValue = policy.sanitize(value);
+
+    return sanitizedValue;
+
+  }
 
   /**
    * Validates and parses an input parameter, assuming that value is a String serialization of an

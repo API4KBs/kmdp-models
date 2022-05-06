@@ -14,7 +14,6 @@
 
   <name>KMDP :: ReST-WS :: Utilities</name>
 
-
   <dependencies>
 
     <dependency>
@@ -91,12 +90,17 @@
       <scope>test</scope>
     </dependency>
 
-
     <dependency>
       <groupId>com.microsoft.azure.functions</groupId>
       <artifactId>azure-functions-java-library</artifactId>
       <version>${azure.functions.java.library.version}</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+      <artifactId>owasp-java-html-sanitizer</artifactId>
+      <version>20211018.2</version>
     </dependency>
 
   </dependencies>
