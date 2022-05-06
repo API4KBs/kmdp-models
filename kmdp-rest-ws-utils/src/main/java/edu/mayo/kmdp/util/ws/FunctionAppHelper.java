@@ -183,7 +183,7 @@ public class FunctionAppHelper {
 
   protected static String sanitize(String value) {
 
-    PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+    PolicyFactory policy = Sanitizers.FORMATTING;
     String sanitizedValue = policy.sanitize(value);
 
     return sanitizedValue;
