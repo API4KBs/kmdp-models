@@ -14,6 +14,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.apache.commons.text.StringEscapeUtils;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.ServerSideException;
 
