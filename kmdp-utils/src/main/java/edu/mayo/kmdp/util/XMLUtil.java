@@ -572,19 +572,25 @@ public class XMLUtil {
 
   private static TransformerFactory getSecureTransformerFactory()
       throws TransformerConfigurationException {
-    var factory = TransformerFactory.newInstance();
-    factory.setFeature("http://javax.xml.XMLConstants/feature/secure-processing", true);
-    factory.setFeature(FeatureKeys.ALLOW_EXTERNAL_FUNCTIONS, true);
-    return factory;
+    TransformerFactory tf = TransformerFactory.newInstance();
+    tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD,"");
+    tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET,"");
+    tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    tf.setFeature(FeatureKeys.ALLOW_EXTERNAL_FUNCTIONS, true);
+    return tf;
   }
 
   public static DocumentBuilderFactory getSecureDocumentBuilderFactory()
       throws ParserConfigurationException {
-    var factory = DocumentBuilderFactory.newInstance();
-    factory.setFeature("http://javax.xml.XMLConstants/feature/secure-processing", true);
-    factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-    factory.setNamespaceAware(true);
-    return factory;
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    dbf.setFeature("http://xml.org/sax/features/external-general-entities", true);
+    dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", true);
+    dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+    dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    dbf.setNamespaceAware(true);
+    dbf.setXIncludeAware(false);
+    dbf.setExpandEntityReferences(false);
+    return dbf;
   }
 
   public static Optional<Validator> getSecureValidator(Schema schema) {
