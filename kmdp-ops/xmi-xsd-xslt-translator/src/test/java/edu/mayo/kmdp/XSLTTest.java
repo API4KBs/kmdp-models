@@ -64,16 +64,16 @@ class XSLTTest {
 
     assertEquals(2, xsd.size());
 
-    assertTrue(xsd.containsKey("Root/core/sub/sub.xsd"));
-    assertTrue(xsd.containsKey("Root/core/core.xsd"));
+    assertTrue(xsd.containsKey("file:Root/core/sub/sub.xsd"));
+    assertTrue(xsd.containsKey("file:Root/core/core.xsd"));
 
-    Document dox1 = xsd.get("Root/core/sub/sub.xsd");
+    Document dox1 = xsd.get("file:Root/core/sub/sub.xsd");
     assertNotNull(xp.xNode(dox1, "//xsd:complexType[@name='SomeExtendedType']"));
     assertNotNull(xp.xNode(dox1,
         "//xsd:complexType[@name='SomeExtendedType']//xsd:extension[@base='tns:Surrogate']"));
     assertEquals(1, xp.xList(dox1, "//xsd:import").getLength());
 
-    Document dox = xsd.get("Root/core/core.xsd");
+    Document dox = xsd.get("file:Root/core/core.xsd");
     assertNotNull(xp.xNode(dox, "//xsd:complexType[@name='RootTop']"));
     assertNotNull(xp.xNode(dox, "//xsd:element[@type='tns:URIIdentifier']"));
     assertEquals(1, xp.xList(dox, "//xsd:import").getLength());
@@ -95,7 +95,7 @@ class XSLTTest {
 
     assertEquals(1, xsd.size());
 
-    Document dox1 = xsd.get("Test/ids/ids.xsd");
+    Document dox1 = xsd.get("file:Test/ids/ids.xsd");
     assertNotNull(xp.xNode(dox1, "//xsd:complexType[@name='Pointer']"));
 
     URL resource = XSLTTest.class.getResource(source);
@@ -109,7 +109,7 @@ class XSLTTest {
 
     assertEquals(1, xsd2.size());
 
-    Document dox2 = xsd2.get("Test/ids/ids.openapi.xsd");
+    Document dox2 = xsd2.get("file:Test/ids/ids.openapi.xsd");
     assertNull(xp.xNode(dox2, "/xsd:schema/xsd:complexType[@name='Pointer']"));
 
   }

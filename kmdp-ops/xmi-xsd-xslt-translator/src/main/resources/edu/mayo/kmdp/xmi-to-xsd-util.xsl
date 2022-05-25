@@ -343,7 +343,7 @@
   <xsl:function name="xmi2xsd:isTypeLocal" as="xs:boolean">
     <xsl:param name="typedElement" as="node()"/>
     <xsl:param name="typeId" as="xs:string"/>
-    <xsl:value-of
+    <xsl:sequence
       select="
                 exists( root($typedElement)//packagedElement[
                 (@xmi:type = 'uml:DataType' or @xmi:type = 'uml:Class' or @xmi:type = 'uml:Enumeration')
@@ -372,7 +372,7 @@
         <xsl:value-of select="concat('file:/',replace($folderName,'\\','/'))"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$folderName"/>
+        <xsl:value-of select="concat('file:',$folderName)"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
