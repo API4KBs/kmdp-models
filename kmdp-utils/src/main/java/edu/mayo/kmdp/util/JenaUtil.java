@@ -119,7 +119,7 @@ public abstract class JenaUtil {
           }
         });
       } else {
-        logger.error("WARNING :: empty query ");
+        logger.debug("No result for Query {}", selectQuery);
       }
       return answers;
     }
