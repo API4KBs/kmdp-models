@@ -133,6 +133,7 @@ public class JenaUtil {
   public static Optional<String> detectOntologyIRI(Model source, String baseURIHint) {
     String baseURI;
     Set<String> uris = source.listStatements(null, RDF.type, OWL.Ontology)
+        .filterDrop(s -> source.contains(null, OWL2.imports, s.getSubject()))
         .mapWith(s -> s.getSubject().toString())
         .toSet();
 
