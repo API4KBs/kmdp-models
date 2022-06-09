@@ -9,6 +9,7 @@
      xmlns:skos="http://www.w3.org/2004/02/skos/core#">
     <owl:Ontology rdf:about="http://ontology.mayo.edu/ontologies/clinicalinquiryontology/">
         <owl:versionIRI rdf:resource="http://ontology.mayo.edu/ontologies/SNAPSHOT/clinicalinquiryontology/"/>
+        <rdfs:label>Ontology of Interrogatives</rdfs:label>
         <rdfs:comment>The domain of interest of this ontology is clinical information processing. The members serve to narrow the focus of information that reflects clinial situations. 
 
 This ontology is informed by the Aristotelian framework of categories of inquiry

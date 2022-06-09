@@ -14,7 +14,7 @@
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
     <owl:Ontology rdf:about="http://ontology.mayo.edu/ontologies/decisionmodels/">
         <owl:versionIRI rdf:resource="http://ontology.mayo.edu/ontologies/20210401/decisionmodels/"/>
-        <rdfs:comment>Ontology of Types of Decision Models</rdfs:comment>
+        <rdfs:label>Ontology of Types of Decision Models</rdfs:label>
     </owl:Ontology>
 
 

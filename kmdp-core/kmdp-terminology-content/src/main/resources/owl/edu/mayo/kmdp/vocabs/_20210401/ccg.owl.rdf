@@ -13,7 +13,7 @@
     <owl:Ontology rdf:about="http://ontology.mayo.edu/ontologies/CCG/">
         <owl:versionIRI rdf:resource="http://ontology.mayo.edu/ontologies/20210401/CCG/"/>
         <owl:imports rdf:resource="https://www.omg.org/spec/API4KP/20210401/api4kp-ckao/"/>
-        <rdfs:comment>Clinical Concept Glossary Ontology</rdfs:comment>
+        <rdfs:label>Clinical Concept Glossary Ontology</rdfs:label>
     </owl:Ontology>
     
 
