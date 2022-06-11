@@ -8,7 +8,6 @@ import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpRequestMessage;
 import com.microsoft.azure.functions.HttpResponseMessage;
 import com.microsoft.azure.functions.HttpStatus;
-import edu.mayo.kmdp.util.CharsetEncodingUtil;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
@@ -17,8 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.ServerSideException;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
+import org.owasp.encoder.Encode;
 
 /**
  * Helper methods to bridge the API4KP / Azure Fn'App layers
@@ -176,19 +174,11 @@ public class FunctionAppHelper {
     answer.listMeta().forEach(h ->
         answer.getMetas(h)
             .forEach(v ->
-                builder.header(CharsetEncodingUtil.sanitizeToASCIItext(h), sanitizeHeaderValue(v))));
+                builder.header(Encode.forHtml(h), Encode.forHtml(v))));
 
     return builder.build();
   }
 
-  protected static String sanitizeHeaderValue(String headerValue) {
-
-    PolicyFactory policy = Sanitizers.FORMATTING;
-    String sanitizedHeaderValue = policy.sanitize(headerValue);
-
-    return sanitizedHeaderValue;
-
-  }
 
   /**
    * Validates and parses an input parameter, assuming that value is a String serialization of an

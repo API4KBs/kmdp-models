@@ -28,6 +28,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.omg.spec.api4kp._20200801.Answer;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -182,7 +183,9 @@ public class ResponseHelper {
 
   private static MultiValueMap<String, String> mapHeaders(Answer<?> ans) {
     HttpHeaders headers = new HttpHeaders();
-    ans.listMeta().forEach(h -> headers.addAll(h, ans.getMetas(h)));
+    ans.listMeta().forEach(h -> headers.addAll(
+        Encode.forHtml(h),
+        ans.getMetas(h).stream().map(Encode::forHtml).collect(Collectors.toList())));
     packExplanationIntoHeaders(ans, headers);
     return headers;
   }
