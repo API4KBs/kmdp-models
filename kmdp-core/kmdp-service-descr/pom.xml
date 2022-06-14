@@ -98,7 +98,6 @@
     <dependency>
       <artifactId>Saxon-HE</artifactId>
       <groupId>net.sf.saxon</groupId>
-      <scope>test</scope>
     </dependency>
 
   </dependencies>
