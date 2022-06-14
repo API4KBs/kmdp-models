@@ -259,14 +259,16 @@ public class JaxbUtil {
       final Class<T> type,
       final String input) {
 
-    return unmarshall(context, type, new ByteArrayInputStream(input.getBytes()));
+    return XMLUtil.loadXMLDocument(input)
+        .flatMap(dox -> unmarshall(context, type, dox));
   }
 
   public static <T> Optional<T> unmarshall(final Class<?> factory,
       final Class<T> type,
       final String input) {
 
-    return unmarshall(factory, type, new ByteArrayInputStream(input.getBytes()));
+    return XMLUtil.loadXMLDocument(input)
+        .flatMap(dox -> unmarshall(factory, type, dox));
   }
 
   public static <T> Optional<T> unmarshall(final Class<?> factory,

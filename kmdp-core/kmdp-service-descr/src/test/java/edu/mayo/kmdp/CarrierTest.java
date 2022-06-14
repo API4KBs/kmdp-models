@@ -21,7 +21,7 @@ import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 
-public class CarrierTest {
+class CarrierTest {
 
   @Test
   void testCarrierAs() {
@@ -48,31 +48,31 @@ public class CarrierTest {
   @Test
   void testDoxCarrierAsString() {
     KnowledgeCarrier kc = AbstractCarrier.of(XMLUtil.emptyDocument());
-    assertEquals("",kc.asString().orElse("FAILED"));
+    assertEquals("", kc.asString().orElse("FAILED"));
   }
 
   @Test
   void testJxCarrierAsString() {
     KnowledgeCarrier kc = AbstractCarrier.of(JsonNodeFactory.instance.textNode("foo"));
-    assertEquals("\"foo\"",kc.asString().orElse("FAILED"));
+    assertEquals("\"foo\"", kc.asString().orElse("FAILED"));
   }
 
   @Test
   void testExprCarrierAsString() {
     KnowledgeCarrier kc = AbstractCarrier.of("bar");
-    assertEquals("bar",kc.asString().orElse("FAILED"));
+    assertEquals("bar", kc.asString().orElse("FAILED"));
   }
 
   @Test
   void testExprCarrierAsStringBytes() {
     KnowledgeCarrier kc = AbstractCarrier.of("bar".getBytes());
-    assertEquals("bar",kc.asString().orElse("FAILED"));
+    assertEquals("bar", kc.asString().orElse("FAILED"));
   }
 
 
   @Test
   void testSetOrientedAggregateCarrrier() {
-    SyntacticRepresentation rep = rep(HTML,TXT, Charset.defaultCharset());
+    SyntacticRepresentation rep = rep(HTML, TXT, Charset.defaultCharset());
     CompositeKnowledgeCarrier ckc = ofUniformAggregate(
         Arrays.asList("a", "b", "c"),
         rep,

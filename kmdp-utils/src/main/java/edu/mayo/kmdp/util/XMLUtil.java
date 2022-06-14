@@ -572,7 +572,7 @@ public class XMLUtil {
 
   private static TransformerFactory getSecureTransformerFactory()
       throws TransformerConfigurationException {
-    TransformerFactory tf = TransformerFactory.newInstance();
+    TransformerFactory tf = TransformerFactory.newDefaultInstance();
     tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD,"");
     tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET,"");
     tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -582,9 +582,9 @@ public class XMLUtil {
 
   public static DocumentBuilderFactory getSecureDocumentBuilderFactory()
       throws ParserConfigurationException {
-    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    dbf.setFeature("http://xml.org/sax/features/external-general-entities", true);
-    dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", true);
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+    dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+    dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
     dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
     dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     dbf.setNamespaceAware(true);

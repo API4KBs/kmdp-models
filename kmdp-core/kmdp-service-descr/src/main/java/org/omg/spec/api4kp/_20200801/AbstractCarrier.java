@@ -542,8 +542,12 @@ public interface AbstractCarrier {
       return Optional.of(new String((byte[]) this.getExpression()));
     }
     if (this.getExpression() instanceof Document) {
+      var dox = (Document) getExpression();
+      if (dox.getDocumentElement() == null) {
+        return Optional.of("");
+      }
       var baos = new ByteArrayOutputStream();
-      XMLUtil.streamXMLNode((Document) this.getExpression(), baos);
+      XMLUtil.streamXMLNode(dox, baos);
       return Optional.of(baos.toString());
     }
     if (this.getExpression() instanceof JsonNode) {
