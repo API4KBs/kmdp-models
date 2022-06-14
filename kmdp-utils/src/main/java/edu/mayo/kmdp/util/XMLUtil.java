@@ -572,7 +572,7 @@ public class XMLUtil {
 
   private static TransformerFactory getSecureTransformerFactory()
       throws TransformerConfigurationException {
-    TransformerFactory tf = TransformerFactory.newDefaultInstance();
+    TransformerFactory tf = TransformerFactory.newInstance();
     tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD,"");
     tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET,"");
     tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
