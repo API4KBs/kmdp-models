@@ -55,7 +55,7 @@ public class XPathUtil {
     }
   };
 
-  private XPath defaultXPath;
+  private final XPath defaultXPath;
 
   public XPathUtil() {
     XPathFactory factory = XPathFactory.newInstance();
@@ -107,6 +107,10 @@ public class XPathUtil {
 
   public NodeList xList(Document dox, String xpathExpression) {
     return (NodeList) evaluateXPath(defaultXPath, dox, xpathExpression, XPathConstants.NODESET);
+  }
+
+  public NodeList xList(Node currentNode, String xpathExpression) {
+    return (NodeList) evaluateXPath(defaultXPath, currentNode, xpathExpression, XPathConstants.NODESET);
   }
 
   public String xString(XPath xpath, Document dox, String xpathExpression) {
