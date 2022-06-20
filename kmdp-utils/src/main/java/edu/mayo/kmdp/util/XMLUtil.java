@@ -573,8 +573,8 @@ public class XMLUtil {
   private static TransformerFactory getSecureTransformerFactory()
       throws TransformerConfigurationException {
     TransformerFactory tf = TransformerFactory.newInstance();
-    tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD,"");
-    tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET,"");
+    tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
     tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     tf.setFeature(FeatureKeys.ALLOW_EXTERNAL_FUNCTIONS, true);
     return tf;
@@ -609,7 +609,8 @@ public class XMLUtil {
   /**
    * Utility that maps {@link Source} of various types to {@link InputSource}
    *
-   * @param source the resource to get From http://www.java2s.com/Tutorials/Java/XML/How_to_convert_Source_to_InputSource_using_Java.htm
+   * @param source the resource to get From
+   *               http://www.java2s.com/Tutorials/Java/XML/How_to_convert_Source_to_InputSource_using_Java.htm
    */
   public static InputSource sourceToInputSource(Source source) {
     if (source instanceof SAXSource) {
@@ -649,6 +650,40 @@ public class XMLUtil {
       transformer.transform(source, result);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
+    }
+  }
+
+
+  /**
+   * Renames all the nodes with URI sourceNs to namespace URI targetNs.
+   * <p>
+   * Processes the XML tree from Node rootNode, included. Renames the nodes in place, mutating the
+   * original tree. Only nodes in the sourceNs namespace will be affected.
+   *
+   * @param dox      the XML Document whose nodes will be renamed
+   * @param rootNode the root node to apply the migration to. If null, will use
+   *                 dox.getDocumentElement() instead
+   * @param sourceNs the source namespace
+   * @param targetNs the target namespace
+   */
+  public static void migrateNamespace(Document dox, Node rootNode, String sourceNs,
+      String targetNs) {
+    if (dox == null) {
+      return;
+    }
+    Node root = rootNode != null ? rootNode : dox.getDocumentElement();
+    if (sourceNs.equals(root.getNamespaceURI())) {
+      dox.renameNode(root, targetNs, root.getLocalName());
+    }
+    var children = root.getChildNodes();
+    for (int j = 0; j < children.getLength(); j++) {
+      migrateNamespace(dox, children.item(j), sourceNs, targetNs);
+    }
+    var attrs = root.getAttributes();
+    if (attrs != null) {
+      for (int j = 0; j < attrs.getLength(); j++) {
+        migrateNamespace(dox, attrs.item(j), sourceNs, targetNs);
+      }
     }
   }
 }
