@@ -16,6 +16,9 @@ import java.util.regex.Matcher;
 public interface VersionIdentifier extends Identifier {
 
   static String toSemVer(String versionTag) {
+    if (versionTag == null) {
+      return null;
+    }
     Matcher matcher = IdentifierConstants.SEMVER_FULL.matcher(versionTag);
     if (matcher.matches()) {
       return versionTag;
