@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.terms.util;
 
 import static edu.mayo.kmdp.util.NameUtils.strip;
+import static edu.mayo.kmdp.util.URIUtil.normalizeURIString;
 
 import edu.mayo.kmdp.terms.mireot.EntityTypes;
 import java.net.URI;
@@ -133,7 +134,7 @@ public class JenaUtil {
   public static Optional<String> detectOntologyIRI(Model source, String baseURIHint) {
     String baseURI;
     Set<String> uris = source.listStatements(null, RDF.type, OWL.Ontology)
-        .filterDrop(s -> source.contains(null, OWL2.imports, s.getSubject()))
+        .filterDrop(s -> isImported(s.getSubject(), source))
         .mapWith(s -> s.getSubject().toString())
         .toSet();
 
@@ -147,6 +148,26 @@ public class JenaUtil {
       baseURI = uris.isEmpty() ? null : uris.iterator().next();
     }
     return Optional.ofNullable(baseURI);
+  }
+
+  /**
+   * Matches a Resource of rdf:type owl:Ontology to the current Ontology's imports, to exclude
+   * that Resource from being the primary Ontology
+   *
+   * Handles imperfect scenarios (e.g. SKOS) where the URI used in the import is not the same
+   * as the base URI of the Ontology. Does not handle 'meta-ontologies' where owl individuals of
+   * type owl Ontology are otherwise predicated on.
+   *
+   * @param ontology the Ontology to be tested
+   * @param source the Ontology Model which either is, or imports,
+   * @return true if 'ontology' is imported by the source Model's primary ontology
+   */
+  private static boolean isImported(Resource ontology, Model source) {
+    String ontoId = normalizeURIString(URI.create(ontology.getURI()));
+    return source.listStatements(null, OWL2.imports, (RDFNode) null)
+            .mapWith(s -> s.getResource().getURI())
+        .filterKeep(o -> ontoId.equals(normalizeURIString(URI.create(o))))
+        .hasNext();
   }
 
 
