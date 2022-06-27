@@ -17,7 +17,13 @@ package edu.mayo.kmdp.comparator;
 
 import java.util.Comparator;
 
-
+/**
+ * A Contrastor generalizes the notion of {@link Comparator} for Collections that do not support a
+ * total order. That is, collections where two elements may not be comparable at all. Also supports
+ * the distinction between identity and equality.
+ *
+ * @param <T> the Type of the underlying Collection
+ */
 public abstract class Contrastor<T> implements Comparator<T> {
 
   public enum Comparison {
@@ -47,7 +53,9 @@ public abstract class Contrastor<T> implements Comparator<T> {
 
   }
 
-  protected Contrastor() {}
+  protected Contrastor() {
+    // nothing to do
+  }
 
   public Comparison contrast(T first, T second) {
     if (first == null || second == null) {
@@ -82,11 +90,15 @@ public abstract class Contrastor<T> implements Comparator<T> {
   public abstract boolean comparable(T first, T second);
 
   public static boolean isBroaderOrEqual(Comparison c) {
-    return c == Comparison.BROADER || c == Comparison.EQUAL || c == Comparison.EQUIVALENT || c == Comparison.IDENTICAL;
+    return c == Comparison.BROADER || c == Comparison.EQUAL
+        || c == Comparison.EQUIVALENT || c == Comparison.IDENTICAL;
   }
+
   public static boolean isNarrowerOrEqual(Comparison c) {
-    return c == Comparison.NARROWER || c == Comparison.EQUAL || c == Comparison.EQUIVALENT || c == Comparison.IDENTICAL;
+    return c == Comparison.NARROWER || c == Comparison.EQUAL
+        || c == Comparison.EQUIVALENT || c == Comparison.IDENTICAL;
   }
+
   public static boolean isEqual(Comparison c) {
     return c == Comparison.EQUAL || c == Comparison.EQUIVALENT || c == Comparison.IDENTICAL;
   }

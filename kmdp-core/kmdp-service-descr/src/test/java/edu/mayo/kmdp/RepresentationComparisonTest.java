@@ -16,8 +16,10 @@
 package edu.mayo.kmdp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.contrastors.LexiconContrastor.theLexiconContrastor;
 import static org.omg.spec.api4kp._20200801.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
@@ -31,7 +33,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder;
-import org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries;
 
 class RepresentationComparisonTest {
 
@@ -87,6 +88,38 @@ class RepresentationComparisonTest {
         .orElseGet(Assertions::fail);
 
     assertTrue(theRepContrastor.isNarrowerOrEqual(r1,r2));
+  }
+
+  @Test
+  void lexiconContrast() {
+    SyntacticRepresentation r1 = ModelMIMECoder.decode("model/owl2")
+        .orElseGet(Assertions::fail);
+    SyntacticRepresentation r2 = ModelMIMECoder.decode("model/owl2;lex={skos}")
+        .orElseGet(Assertions::fail);
+    SyntacticRepresentation r3 = ModelMIMECoder.decode("model/owl2")
+        .orElseGet(Assertions::fail);
+    SyntacticRepresentation r4 = ModelMIMECoder.decode("model/owl2;lex={sct}")
+        .orElseGet(Assertions::fail);
+    SyntacticRepresentation r5 = ModelMIMECoder.decode("model/owl2;lex={sct;skos}")
+        .orElseGet(Assertions::fail);
+
+    assertSame(Comparison.BROADER,
+        theLexiconContrastor.contrast(r1.getLexicon(), r2.getLexicon()));
+    assertSame(Comparison.BROADER,
+        theLexiconContrastor.contrast(r2.getLexicon(), r5.getLexicon()));
+
+    assertSame(Comparison.NARROWER,
+        theLexiconContrastor.contrast(r2.getLexicon(), r1.getLexicon()));
+    assertSame(Comparison.NARROWER,
+        theLexiconContrastor.contrast(r5.getLexicon(), r4.getLexicon()));
+
+    assertSame(Comparison.EQUAL,
+        theLexiconContrastor.contrast(r1.getLexicon(), r3.getLexicon()));
+    assertSame(Comparison.IDENTICAL,
+        theLexiconContrastor.contrast(r1.getLexicon(), r1.getLexicon()));
+
+    assertSame(Comparison.INCOMPARABLE,
+        theLexiconContrastor.contrast(r2.getLexicon(), r4.getLexicon()));
   }
 
 }
