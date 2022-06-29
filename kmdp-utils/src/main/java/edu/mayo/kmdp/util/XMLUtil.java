@@ -583,9 +583,11 @@ public class XMLUtil {
   public static DocumentBuilderFactory getSecureDocumentBuilderFactory()
       throws ParserConfigurationException {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+    dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
     dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
     dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-    dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+    dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
     dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     dbf.setNamespaceAware(true);
     dbf.setXIncludeAware(false);

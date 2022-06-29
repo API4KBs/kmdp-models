@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE customer
+  [
+    <!ENTITY name SYSTEM "/Users/m212350/dev/kmdp-impl/kmdp-utils/pom.xml">
+    ]
+  >
+<customer>
+  <age>5</age>
+  <name>&name;</name>
+</customer>

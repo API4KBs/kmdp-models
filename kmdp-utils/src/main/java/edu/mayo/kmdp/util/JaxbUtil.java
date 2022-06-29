@@ -32,7 +32,16 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +63,7 @@ public class JaxbUtil {
   }
 
   public static Marshaller getXMLMarshaller(Collection<Class<?>> ctx, Class<?> root, Schema schema,
-      JaxbConfig p) throws JAXBException {
+      JaxbConfig jaxbConfig) throws JAXBException {
     List<Class<?>> ctxs = new LinkedList<>(ctx);
     ctxs.add(root);
 
@@ -63,7 +72,7 @@ public class JaxbUtil {
     if (schema != null) {
       marshaller.setSchema(schema);
     }
-    p.consumeTyped((k, v) -> {
+    jaxbConfig.consumeTyped((k, v) -> {
       try {
         if (k.startsWith("com") || k.startsWith("sun") || k.startsWith("jaxb")) {
           marshaller.setProperty(k, v);
@@ -79,9 +88,26 @@ public class JaxbUtil {
   public static Unmarshaller getXMLUnmarshaller(Class<?>... context)
       throws JAXBException {
     JAXBContext jaxbContext = JAXBContext.newInstance(context);
+
     return jaxbContext.createUnmarshaller();
   }
 
+  /**
+   * https://stackoverflow.com/questions/12977299/prevent-xxe-attack-with-jaxb
+   *
+   * An Xml eXternal Entity (XXE) attack can be prevented by unmarshalling from an
+   * XMLStreamReader that has the IS_SUPPORTING_EXTERNAL_ENTITIES and/or
+   * XMLInputFactory.SUPPORT_DTD properties set to false.
+   */
+  public static XMLInputFactory getXXESafeXMLInputFactory() {
+
+    XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
+    xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+    xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+
+    return xmlInputFactory;
+
+  }
 
   public static <T> Optional<ByteArrayOutputStream> marshall(final Collection<Class<?>> ctx,
       final T root,
@@ -199,7 +225,13 @@ public class JaxbUtil {
     Unmarshaller unmarshaller = null;
     try {
       unmarshaller = getXMLUnmarshaller(ctx);
+
       for (int j = 0; j < sources.getLength(); j++) {
+
+        XMLInputFactory xmlInputFactory = getXXESafeXMLInputFactory();
+        InputStream inputStream = nodeToInputStream(sources.item(j));
+        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream);
+
         Object o = unmarshaller.unmarshal(sources.item(j));
         if (o instanceof JAXBElement) {
           o = ((JAXBElement<?>) o).getValue();
@@ -211,6 +243,13 @@ public class JaxbUtil {
       return set;
     } catch (JAXBException e) {
       logger.error(e.getMessage(), e);
+      return Collections.emptyList();
+    }
+    catch (XMLStreamException e) {
+      logger.error("XMLStreamException: ", e);
+      return Collections.emptyList();
+    } catch (TransformerException e) {
+      logger.error("TransformerException: ", e);
       return Collections.emptyList();
     }
   }
@@ -281,9 +320,16 @@ public class JaxbUtil {
       final Class<T> type,
       final Document dox) {
     Unmarshaller unmarshaller;
+
     try {
       unmarshaller = getXMLUnmarshaller(context.toArray(new Class[context.size()]));
-      Object root = unmarshaller.unmarshal(new DOMSource(dox));
+
+      XMLInputFactory xmlInputFactory = getXXESafeXMLInputFactory();
+      InputStream inputStream = nodeToInputStream(dox);
+      XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream);
+
+      Object root = unmarshaller.unmarshal(xmlStreamReader);
+
       if (root instanceof JAXBElement) {
         root = ((JAXBElement<?>) root).getValue();
       }
@@ -295,6 +341,14 @@ public class JaxbUtil {
                 .getName());
       }
     } catch (JAXBException e) {
+      logger.error("JAXBException: ", e);
+      return Optional.empty();
+    }
+    catch (XMLStreamException e) {
+      logger.error("XMLStreamException: ", e);
+      return Optional.empty();
+    } catch (TransformerException e) {
+      logger.error("TransformerException: ", e);
       return Optional.empty();
     }
   }
@@ -327,6 +381,20 @@ public class JaxbUtil {
         .flatMap(XMLUtil::loadXMLDocument)
         .map(Document::getDocumentElement)
         .orElseThrow(IllegalStateException::new);
+  }
+  
+  /*
+   * Convert a w3c dom node to an InputStream.
+   *
+   * https://stackoverflow.com/questions/865039/how-to-create-an-inputstream-from-a-document-or-node
+   */
+  private static InputStream nodeToInputStream(Node node) throws TransformerException {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    Result outputTarget = new StreamResult(outputStream);
+    Transformer t = TransformerFactory.newInstance().newTransformer();
+    t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+    t.transform(new DOMSource(node), outputTarget);
+    return new ByteArrayInputStream(outputStream.toByteArray());
   }
 
 }
