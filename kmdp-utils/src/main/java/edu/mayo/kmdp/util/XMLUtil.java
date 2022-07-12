@@ -699,7 +699,8 @@ public class XMLUtil {
       migrateNamespace(dox, children.item(j), sourceNs, targetNs);
     }
     var attrs = root.getAttributes();
-    if (attrs.getLength() > 0) {
+    // keep the null check - the API is annotated as @NotNull, but the implementation returns null
+    if (attrs != null && attrs.getLength() > 0) {
       for (int j = 0; j < attrs.getLength(); j++) {
         migrateNamespace(dox, attrs.item(j), sourceNs, targetNs);
       }
