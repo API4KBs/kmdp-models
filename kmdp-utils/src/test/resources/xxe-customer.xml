@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE customer
   [
-    <!ENTITY name SYSTEM "/Users/m212350/dev/kmdp-impl/kmdp-utils/pom.xml">
+    <!ENTITY name SYSTEM "file:/foo.txt">
     ]
   >
 <customer>

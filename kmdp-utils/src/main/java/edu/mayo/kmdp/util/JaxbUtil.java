@@ -33,15 +33,6 @@ import javax.xml.bind.PropertyException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,10 +85,10 @@ public class JaxbUtil {
 
   /**
    * https://stackoverflow.com/questions/12977299/prevent-xxe-attack-with-jaxb
-   *
-   * An Xml eXternal Entity (XXE) attack can be prevented by unmarshalling from an
-   * XMLStreamReader that has the IS_SUPPORTING_EXTERNAL_ENTITIES and/or
-   * XMLInputFactory.SUPPORT_DTD properties set to false.
+   * <p>
+   * An Xml eXternal Entity (XXE) attack can be prevented by unmarshalling from an XMLStreamReader
+   * that has the IS_SUPPORTING_EXTERNAL_ENTITIES and/or XMLInputFactory.SUPPORT_DTD properties set
+   * to false.
    */
   public static XMLInputFactory getXXESafeXMLInputFactory() {
 
@@ -222,16 +213,11 @@ public class JaxbUtil {
       final Class<T> type,
       final NodeList sources) {
     Collection<T> set = new HashSet<>(sources.getLength());
-    Unmarshaller unmarshaller = null;
+    Unmarshaller unmarshaller;
     try {
       unmarshaller = getXMLUnmarshaller(ctx);
 
       for (int j = 0; j < sources.getLength(); j++) {
-
-        XMLInputFactory xmlInputFactory = getXXESafeXMLInputFactory();
-        InputStream inputStream = nodeToInputStream(sources.item(j));
-        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream);
-
         Object o = unmarshaller.unmarshal(sources.item(j));
         if (o instanceof JAXBElement) {
           o = ((JAXBElement<?>) o).getValue();
@@ -243,13 +229,6 @@ public class JaxbUtil {
       return set;
     } catch (JAXBException e) {
       logger.error(e.getMessage(), e);
-      return Collections.emptyList();
-    }
-    catch (XMLStreamException e) {
-      logger.error("XMLStreamException: ", e);
-      return Collections.emptyList();
-    } catch (TransformerException e) {
-      logger.error("TransformerException: ", e);
       return Collections.emptyList();
     }
   }
@@ -322,13 +301,9 @@ public class JaxbUtil {
     Unmarshaller unmarshaller;
 
     try {
-      unmarshaller = getXMLUnmarshaller(context.toArray(new Class[context.size()]));
+      unmarshaller = getXMLUnmarshaller(context.toArray(new Class[0]));
 
-      XMLInputFactory xmlInputFactory = getXXESafeXMLInputFactory();
-      InputStream inputStream = nodeToInputStream(dox);
-      XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream);
-
-      Object root = unmarshaller.unmarshal(xmlStreamReader);
+      Object root = unmarshaller.unmarshal(dox);
 
       if (root instanceof JAXBElement) {
         root = ((JAXBElement<?>) root).getValue();
@@ -344,13 +319,6 @@ public class JaxbUtil {
       logger.error("JAXBException: ", e);
       return Optional.empty();
     }
-    catch (XMLStreamException e) {
-      logger.error("XMLStreamException: ", e);
-      return Optional.empty();
-    } catch (TransformerException e) {
-      logger.error("TransformerException: ", e);
-      return Optional.empty();
-    }
   }
 
 
@@ -359,10 +327,10 @@ public class JaxbUtil {
       final Function<T, JAXBElement<? super T>> mapper,
       Schema schema) {
     return JaxbUtil.marshall(Collections.singleton(ctx.getClass()),
-        root,
-        mapper,
-        schema,
-        defaultProperties())
+            root,
+            mapper,
+            schema,
+            defaultProperties())
         .map(ByteArrayOutputStream::toByteArray)
         .map(ByteArrayInputStream::new)
         .flatMap(XMLUtil::loadXMLDocument)
@@ -373,28 +341,14 @@ public class JaxbUtil {
   public static <T> Element toElement(T root,
       Schema schema) {
     return JaxbUtil.marshall(Collections.singleton(root.getClass()),
-        root,
-        schema,
-        defaultProperties())
+            root,
+            schema,
+            defaultProperties())
         .map(ByteArrayOutputStream::toByteArray)
         .map(ByteArrayInputStream::new)
         .flatMap(XMLUtil::loadXMLDocument)
         .map(Document::getDocumentElement)
         .orElseThrow(IllegalStateException::new);
-  }
-  
-  /*
-   * Convert a w3c dom node to an InputStream.
-   *
-   * https://stackoverflow.com/questions/865039/how-to-create-an-inputstream-from-a-document-or-node
-   */
-  private static InputStream nodeToInputStream(Node node) throws TransformerException {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    Result outputTarget = new StreamResult(outputStream);
-    Transformer t = TransformerFactory.newInstance().newTransformer();
-    t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-    t.transform(new DOMSource(node), outputTarget);
-    return new ByteArrayInputStream(outputStream.toByteArray());
   }
 
 }

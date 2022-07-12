@@ -644,6 +644,9 @@ public class XMLUtil {
     return new InputSource(uri);
   }
 
+  /*
+   * Serializes a w3c DOM (element) node into an OutputStream.
+   */
   public static void elementToStream(Element element, OutputStream out) {
     try {
       DOMSource source = new DOMSource(element);
@@ -653,6 +656,20 @@ public class XMLUtil {
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     }
+  }
+
+  /*
+   * Convert a w3c DOM node to an InputStream.
+   *
+   * Serializes the Node to an output stream, then pipes it back into an inputstream
+   *
+   */
+  public static InputStream elementToInputStream(Element element)
+      throws IOException {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    elementToStream(element, outputStream);
+
+    return Util.pipeStreams(outputStream);
   }
 
 
@@ -682,10 +699,11 @@ public class XMLUtil {
       migrateNamespace(dox, children.item(j), sourceNs, targetNs);
     }
     var attrs = root.getAttributes();
-    if (attrs != null) {
+    if (attrs.getLength() > 0) {
       for (int j = 0; j < attrs.getLength(); j++) {
         migrateNamespace(dox, attrs.item(j), sourceNs, targetNs);
       }
     }
   }
+
 }
