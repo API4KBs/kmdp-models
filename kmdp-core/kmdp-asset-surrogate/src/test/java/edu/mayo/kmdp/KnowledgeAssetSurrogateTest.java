@@ -13,10 +13,13 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomArtifactId;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
@@ -25,6 +28,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.derivationreltype.Derivatio
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.KNART_1_3;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
 
 import edu.mayo.kmdp.util.JaxbUtil;
@@ -38,6 +42,7 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 import javax.xml.validation.Schema;
 import org.javers.core.diff.Diff;
 import org.junit.jupiter.api.Test;
@@ -52,6 +57,7 @@ import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.Link;
 import org.omg.spec.api4kp._20200801.surrogate.ObjectFactory;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateDiffer;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
@@ -205,5 +211,24 @@ public class KnowledgeAssetSurrogateTest {
             .asConceptIdentifier()));
 
     assertNotNull(asset.getApplicableIn());
+  }
+
+  @Test
+  void testDefaultSurrogateIdGeneration() {
+    var assetId = newId(
+        MAYO_ASSETS_BASE_URI_URI,
+        UUID.randomUUID(),
+        VERSION_ZERO);
+
+    var surrogateId1 = SurrogateBuilder.newSurrogate(assetId)
+        .get().getSurrogate().get(0).getArtifactId();
+
+    // this is how KARS builds it
+    var surrogateId2 = SurrogateBuilder.defaultSurrogateId(
+        MAYO_ARTIFACTS_BASE_URI_URI,
+        assetId,
+        Knowledge_Asset_Surrogate_2_0);
+
+    assertEquals(surrogateId1.getVersionId(), surrogateId2.getVersionId());
   }
 }

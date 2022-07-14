@@ -35,6 +35,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Inquiry_Specification;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Service_Specification;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Value_Set;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.RDF_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
@@ -57,6 +58,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.UUID;
+import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
@@ -74,15 +76,9 @@ import org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatu
 
 public class SurrogateBuilder {
 
-  private KnowledgeAsset surrogate;
-
-  private URI assetNamespace;
-
-  private URI artifactNamespace;
+  private final KnowledgeAsset surrogate;
 
   protected SurrogateBuilder(ResourceIdentifier assetId, boolean root) {
-    this.assetNamespace = assetId.getNamespaceUri();
-    this.artifactNamespace = mapAssetToArtifactNamespace(assetNamespace);
     this.surrogate = newInstance(root)
         .withAssetId(assetId);
   }
@@ -108,21 +104,44 @@ public class SurrogateBuilder {
 
   public static SurrogateBuilder newSurrogate(ResourceIdentifier assetId, boolean root) {
     return new SurrogateBuilder(assetId, root)
-        .withCanonicalSurrogate(assetId);
+        .withCanonicalSurrogate();
   }
 
-  private SurrogateBuilder withCanonicalSurrogate(ResourceIdentifier assetId) {
-    get()
-        .withSurrogate(
-            new KnowledgeArtifact()
-                .withArtifactId(artifactId(
-                    artifactNamespace,
-                    defaultSurrogateUUID(assetId, Knowledge_Asset_Surrogate_2_0),
-                    "1.0.0"
-                ))
-                .withLocalization(English)
-                .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0)));
-    return this;
+  public static KnowledgeArtifact addCanonicalSurrogateMetadata(
+      KnowledgeAsset original,
+      KnowledgeRepresentationLanguage surrogateLanguage,
+      SerializationFormat surrogateFormat) {
+    var assetId = original.getAssetId();
+
+    var surrogateDescr = new KnowledgeArtifact()
+        .withArtifactId(artifactId(
+            mapAssetToArtifactNamespace(assetId.getNamespaceUri()),
+            defaultSurrogateUUID(assetId, surrogateLanguage),
+            VERSION_ZERO
+        ))
+        .withLocalization(English)
+        .withRepresentation(
+            rep(surrogateLanguage, surrogateFormat, Charset.defaultCharset(), Encodings.DEFAULT));
+
+    original.withSurrogate(surrogateDescr);
+
+    return surrogateDescr;
+  }
+
+  /**
+   * Builds a predictable Carrier Artifact UUID for a specific version of an asset. Uses a
+   * combination of the Asset version ID and the language used to express the Carrier (consequence:
+   * any 'vertical' lifting/lowering of the Carrier does not impact its identity)
+   *
+   * @param assetId
+   * @param lang
+   * @return
+   */
+  public static UUID defaultCarrierUUID(ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang) {
+    String key = assetId.getVersionId().toString();
+    key += IdentifierConstants.CARRIERS + lang.getUuid();
+    return UUID.nameUUIDFromBytes(key.getBytes());
   }
 
 
@@ -287,21 +306,11 @@ public class SurrogateBuilder {
     return withInlinedFhirPath(expr, FHIR_STU3);
   }
 
-  public SurrogateBuilder withInlinedFhirPath(String expr,
-      KnowledgeRepresentationLanguage schemaLanguage) {
-    if (get().getCarriers().isEmpty()) {
-      get().withCarriers(new KnowledgeArtifact()
-          .withArtifactId(
-              artifactId(
-                  artifactNamespace,
-                  expr != null ? uuid(expr) : UUID.randomUUID(),
-                  VERSION_LATEST))
-          .withRepresentation(
-              rep(FHIRPath_STU1, TXT, Charset.defaultCharset())
-                  .withSubLanguage(rep(schemaLanguage).withRole(Schema_Language)))
-          .withInlinedExpression(expr));
-    }
-    return this;
+  public static ResourceIdentifier defaultSurrogateId(
+      URI baseArtifactNamespace,
+      ResourceIdentifier assetId,
+      KnowledgeRepresentationLanguage lang) {
+    return artifactId(baseArtifactNamespace, defaultSurrogateUUID(assetId, lang), VERSION_ZERO);
   }
 
 
@@ -397,20 +406,28 @@ public class SurrogateBuilder {
     return UUID.nameUUIDFromBytes(key.getBytes());
   }
 
-
   /**
-   * Builds a predictable Carrier Artifact UUID for a specific version of an asset.
-   * Uses a combination of the Asset version ID and the language used to express the Carrier
-   * (consequence: any 'vertical' lifting/lowering of the Carrier does not impact its identity)
-   * @param assetId
-   * @param lang
-   * @return
+   * Updates the version of 'self' as a Surrogate, incrementing the MINOR version number
+   * <p>
+   * Retrieves the KnowledgeAsset.surrogates['self'], and increments the artifactId version number
+   * <p>
+   * Used in conjunction with incremental changes to the Surrogate object itself.
+   *
+   * @param surr The surrogate to update
    */
-  public static UUID defaultCarrierUUID(ResourceIdentifier assetId,
-      KnowledgeRepresentationLanguage lang) {
-    String key = assetId.getVersionId().toString();
-    key += IdentifierConstants.CARRIERS + lang.getUuid();
-    return UUID.nameUUIDFromBytes(key.getBytes());
+  public static ResourceIdentifier updateSurrogateVersion(KnowledgeAsset surr) {
+    KnowledgeArtifact self = getCanonicalSurrogateId(surr)
+        .flatMap(sid -> getComputableSurrogateMetadata(sid.getUuid(), sid.getVersionTag(), surr))
+        .orElseThrow();
+
+    ResourceIdentifier oldSurrogateId = self.getArtifactId();
+    ResourceIdentifier newSurrogateId = newId(
+        oldSurrogateId.getNamespaceUri(),
+        oldSurrogateId.getUuid(),
+        oldSurrogateId.getSemanticVersionTag().incrementMinorVersion().toString());
+    self.setArtifactId(newSurrogateId);
+
+    return newSurrogateId;
   }
 
   public static ResourceIdentifier assetId(URI baseNamespace, UUID assetId) {
@@ -471,11 +488,9 @@ public class SurrogateBuilder {
     return artifactId(baseArtifactNamespace, defaultCarrierUUID(assetId, lang), versionTag);
   }
 
-  public static ResourceIdentifier defaultSurrogateId(
-      URI baseArtifactNamespace,
-      ResourceIdentifier assetId,
-      KnowledgeRepresentationLanguage lang) {
-    return artifactId(baseArtifactNamespace, defaultCarrierUUID(assetId, lang), VERSION_ZERO);
+  private SurrogateBuilder withCanonicalSurrogate() {
+    addCanonicalSurrogateMetadata(get(), Knowledge_Asset_Surrogate_2_0, JSON);
+    return this;
   }
 
   public static ResourceIdentifier defaultSurrogateId(
@@ -525,26 +540,20 @@ public class SurrogateBuilder {
     return SemanticIdentifier.newId(baseNamespace, UUID.randomUUID(), VERSION_ZERO);
   }
 
-  /**
-   * Updates the version of 'self' as a Surrogate, incrementing the MINOR version number
-   *
-   * Retrieves the KnowledgeAsset.surrogates['self'], and increments the artifactId version number
-   *
-   * Used in conjunction with incremental changes to the Surrogate object itself.
-   * @param surr The surrogate to update
-   */
-  public static ResourceIdentifier updateSurrogateVersion(KnowledgeAsset surr) {
-    KnowledgeArtifact self = getCanonicalSurrogateId(surr)
-        .flatMap(sid -> getComputableSurrogateMetadata(sid.getUuid(), sid.getVersionTag(), surr))
-        .orElseThrow();
-
-    ResourceIdentifier oldSurrogateId = self.getArtifactId();
-    ResourceIdentifier newSurrogateId = newId(
-        oldSurrogateId.getNamespaceUri(),
-        oldSurrogateId.getUuid(),
-        oldSurrogateId.getSemanticVersionTag().incrementMinorVersion().toString());
-    self.setArtifactId(newSurrogateId);
-
-    return newSurrogateId;
+  public SurrogateBuilder withInlinedFhirPath(String expr,
+      KnowledgeRepresentationLanguage schemaLanguage) {
+    if (get().getCarriers().isEmpty()) {
+      get().withCarriers(new KnowledgeArtifact()
+          .withArtifactId(
+              artifactId(
+                  mapAssetToArtifactNamespace(get().getAssetId().getNamespaceUri()),
+                  expr != null ? uuid(expr) : UUID.randomUUID(),
+                  VERSION_LATEST))
+          .withRepresentation(
+              rep(FHIRPath_STU1, TXT, Charset.defaultCharset())
+                  .withSubLanguage(rep(schemaLanguage).withRole(Schema_Language)))
+          .withInlinedExpression(expr));
+    }
+    return this;
   }
 }
