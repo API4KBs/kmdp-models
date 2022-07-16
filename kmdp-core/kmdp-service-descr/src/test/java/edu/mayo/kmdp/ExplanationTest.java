@@ -1,6 +1,7 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.util.Util.isEmpty;
+import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.Conflict;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -258,6 +260,28 @@ class ExplanationTest {
     Answer<Void> rec = Answer.of(ans.getOutcomeType(), null, mockHeaders);
     assertNotNull(rec.getExplanation());
     assertEquals(uri, rec.getExplanationAsProblem().getType());
+  }
+
+  @Test
+  void testServerSideExpl() {
+    var msg = "All failed";
+    // error
+    ServerSideException sse =
+        new ServerSideException(Conflict, Collections.emptyMap(), msg);
+    // caught
+    Answer<Void> ans = Answer.failed(sse);
+    // sent via web (header)
+    Map<String, List<String>> meta = new HashMap<>();
+    Explainer.packExplanationIntoHeaders(ans,meta);
+
+    // rethrown client side
+    ServerSideException clise =
+        new ServerSideException(Conflict, meta, "");
+    // handled
+    Answer<Void> cli = Answer.failedOnServer(clise);
+
+    assertNotNull(cli.getExplanation());
+    assertTrue(cli.printExplanation().contains(msg));
   }
 
   private String format(URI type, int code, String title, String msg, Severity severity) {

@@ -37,6 +37,7 @@ import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -292,9 +293,11 @@ public abstract class Explainer {
    * @param other
    */
   protected void mergeExplanation(KnowledgeCarrier other) {
-    if (explanation == null) {
+    if (explanation == null || explanation.components()
+        .map(KnowledgeCarrier::getExpression).filter(Objects::nonNull).findAny().isEmpty()) {
       this.explanation = other;
-    } else if (other != null) {
+    } else if (other != null && other.components()
+        .map(KnowledgeCarrier::getExpression).anyMatch(Objects::nonNull)) {
       this.explanation = mergeInto(this.explanation, other);
     }
   }

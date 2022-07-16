@@ -86,10 +86,16 @@ public class Answer<T> extends Explainer {
   }
 
   public static <X> Answer<X> failedOnServer(ServerSideException t) {
-    return new Answer<X>()
+    var ans = new Answer<X>()
         .withCodedOutcome(t.getCode())
-        .withValue(null)
-        .withExplanationInterrupt(t);
+        .withValue(null);
+    var xpl = Explainer.extractExplanationFromHeaders(t.getHeaders());
+    if (xpl.isPresent()) {
+      ans.withFormalExplanation(xpl.get());
+    } else {
+      ans.withExplanationInterrupt(t);
+    }
+    return ans;
   }
 
   public static <X> Answer<X> notFound() {
@@ -461,9 +467,9 @@ public class Answer<T> extends Explainer {
 
   public static <T> Answer<T> merge(Answer<T> a1, Answer<T> a2, BinaryOperator<T> valueMerger) {
     return Answer.of(valueMerger.apply(a1.value, a2.value))
-        .withCodedOutcome(ResponseCodeSeries.resolveTag("" +
+        .withCodedOutcome(ResponseCodeSeries.resolveTag(Integer.toString(
                 Math.max(Integer.parseInt(a1.getCodedOutcome().getTag()),
-                    Integer.parseInt(a2.getCodedOutcome().getTag())))
+                    Integer.parseInt(a2.getCodedOutcome().getTag()))))
             .orElse(ResponseCodeSeries.InternalServerError))
         .withMeta(a1.getMeta())
         .withAddedMeta(a2.getMeta())
