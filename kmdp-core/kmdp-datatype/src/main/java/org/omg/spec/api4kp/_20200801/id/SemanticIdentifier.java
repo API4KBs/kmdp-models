@@ -154,7 +154,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   static ResourceIdentifier newVersionId(URI seriesUri, String versionTag) {
     if (seriesUri.getFragment() == null) {
       return newVersionId(
-          URI.create(seriesUri.toString() + versionSeparator(seriesUri) + versionTag));
+          URI.create(seriesUri + versionSeparator(seriesUri) + versionTag));
     } else {
       String versionedURI = URIUtil.normalizeURIString(seriesUri) + versionSeparator(seriesUri) + versionTag + "#" + seriesUri.getFragment();
       return newVersionId( URI.create(versionedURI), VERSIONS_FRAG_RX, 2, 3);
@@ -169,7 +169,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   static Optional<ResourceIdentifier> tryNewVersionId(URI seriesUri, String versionTag) {
     if (seriesUri.getFragment() == null) {
       return tryNewVersionId(
-          URI.create(seriesUri.toString() + versionSeparator(seriesUri) + versionTag));
+          URI.create(seriesUri + versionSeparator(seriesUri) + versionTag));
     } else {
       String versionedURI = URIUtil.normalizeURIString(seriesUri) + versionSeparator(seriesUri) + versionTag + "#" + seriesUri.getFragment();
       return tryNewVersionId( URI.create(versionedURI), VERSIONS_FRAG_RX, 2, 3);
@@ -213,7 +213,6 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
         default:
       }
     }
-    logger.warn("Unable to detect version information from URI : {}", versionUri);
     return newId(versionUri);
   }
 
