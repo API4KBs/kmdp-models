@@ -33,7 +33,7 @@ import org.springframework.web.client.RestTemplate;
 public class JsonRestWSUtils {
 
   public enum WithFHIR {
-    DSTU2, DSTU2HL7, STU3, NONE;
+    DSTU2, DSTU2HL7, STU3, R4, NONE;
   }
 
   public static MappingJackson2HttpMessageConverter jacksonFHIRAdapter() {
@@ -50,7 +50,7 @@ public class JsonRestWSUtils {
 
   private static ObjectMapper configure(ObjectMapper objectMapper, WithFHIR fhir) {
     objectMapper = JSonUtil.configureMapper(objectMapper);
-
+    System.out.println("Your configuring something with " +  fhir);
     try {
       // The dependencies that provide the Jackson Modules are *provided* only as needed.
       // The use of the reflective constructors avoids the need to have ALL of them at runtime.
@@ -68,6 +68,11 @@ public class JsonRestWSUtils {
         case STU3:
           objectMapper.registerModule(
               (Module) Class.forName("edu.mayo.kmdp.util.fhir.fhir3.FHIR3JacksonModule")
+                  .getConstructor().newInstance());
+          break;
+        case R4:
+          objectMapper.registerModule(
+              (Module) Class.forName("edu.mayo.kmdp.util.fhir.fhir4.FHIR4JacksonModule")
                   .getConstructor().newInstance());
           break;
         case NONE:
@@ -119,6 +124,9 @@ public class JsonRestWSUtils {
       protected JavaType getJavaType(Type type, Class<?> contextClass) {
         if (type instanceof Class<?> && Map.class.isAssignableFrom((Class<?>) type)) {
           switch (fhir) {
+            case R4:
+              return TypeFactory.defaultInstance()
+                  .constructMapType((Class<? extends Map<String,?>>) type, String.class, Base.class);
             case STU3:
               return TypeFactory.defaultInstance()
                   .constructMapType((Class<? extends Map<String,?>>) type, String.class, Base.class);
