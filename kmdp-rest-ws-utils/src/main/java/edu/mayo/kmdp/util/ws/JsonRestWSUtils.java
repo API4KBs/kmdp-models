@@ -126,7 +126,8 @@ public class JsonRestWSUtils {
           switch (fhir) {
             case R4:
               return TypeFactory.defaultInstance()
-                  .constructMapType((Class<? extends Map<String,?>>) type, String.class, Base.class);
+                  .constructMapType((Class<? extends Map<String,?>>) type, String.class,
+                      org.hl7.fhir.r4.model.Base.class);
             case STU3:
               return TypeFactory.defaultInstance()
                   .constructMapType((Class<? extends Map<String,?>>) type, String.class, Base.class);

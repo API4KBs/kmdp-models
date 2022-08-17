@@ -51,6 +51,11 @@
       <artifactId>hapi-fhir-structures-dstu3</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>ca.uhn.hapi.fhir</groupId>
+      <artifactId>hapi-fhir-structures-r4</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework</groupId>
