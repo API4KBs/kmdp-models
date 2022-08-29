@@ -50,7 +50,6 @@ public class JsonRestWSUtils {
 
   private static ObjectMapper configure(ObjectMapper objectMapper, WithFHIR fhir) {
     objectMapper = JSonUtil.configureMapper(objectMapper);
-    System.out.println("Your configuring something with " +  fhir);
     try {
       // The dependencies that provide the Jackson Modules are *provided* only as needed.
       // The use of the reflective constructors avoids the need to have ALL of them at runtime.

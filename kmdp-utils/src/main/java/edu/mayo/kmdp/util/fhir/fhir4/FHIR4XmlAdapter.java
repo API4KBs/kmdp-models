@@ -23,7 +23,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 
 public class FHIR4XmlAdapter extends AbstractFHIRXmlAdapter<Resource> {
 
-  private static final FhirContext fhirContext = FhirContext.forDstu3();
+  private static final FhirContext fhirContext = FhirContext.forR4();
 
   @Override
   protected IBaseResource parseResource(InputStreamReader inputStreamReader) {
