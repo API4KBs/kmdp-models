@@ -1,6 +1,9 @@
 package edu.mayo.kmdp.util.ws;
 
 import static edu.mayo.kmdp.util.CharsetEncodingUtil.recodeToBase64;
+import static edu.mayo.kmdp.util.Util.isEmpty;
+import static edu.mayo.kmdp.util.Util.isNotEmpty;
+import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.BadRequest;
 import static org.omg.spec.api4kp._20200801.Explainer.EXPL_HEADER;
 import static org.omg.spec.api4kp._20200801.Explainer.GENERIC_ERROR_TYPE;
 
@@ -9,7 +12,7 @@ import com.microsoft.azure.functions.HttpRequestMessage;
 import com.microsoft.azure.functions.HttpResponseMessage;
 import com.microsoft.azure.functions.HttpStatus;
 import edu.mayo.kmdp.util.JSonUtil;
-import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
@@ -201,31 +204,36 @@ public class FunctionAppHelper {
       String defaultValue,
       boolean required,
       String requestId) {
+
+    String validatedValue;
     try {
-      if (value == null) {
-        return null;
-      }
-
-      var validatedValue = validateRaw(argName, value, defaultValue, required);
-
-      // TODO add more specialized constructors here if needed...
-      if (UUID.class.equals(argType)) {
-        return argType.cast(UUID.fromString(validatedValue));
-      }
-      try {
-        return argType.getConstructor(String.class).newInstance(validatedValue);
-      } catch (NoSuchMethodException nsme) {
-        return JSonUtil.parseJson(validatedValue, argType)
-            .orElseThrow(() -> new IllegalArgumentException("Unable to parse " + validatedValue));
-      }
+      validatedValue = validateRaw(argName, value, defaultValue, required);
     } catch (Exception e) {
-      throw new ServerSideException(
-          GENERIC_ERROR_TYPE,
-          e.getClass().getSimpleName(),
-          ResponseCodeSeries.BadRequest,
-          e.getMessage(),
-          URI.create("urn:" + requestId));
+      throw wrapException(BadRequest, e, requestId);
     }
+    if (validatedValue == null) {
+      return null;
+    }
+
+    // TODO add more specialized constructors here if needed...
+    if (UUID.class.equals(argType)) {
+      try {
+        return argType.cast(UUID.fromString(validatedValue));
+      } catch (Exception e) {
+        throw wrapException(BadRequest, e, requestId);
+      }
+    }
+
+    try {
+      return argType.getConstructor(String.class).newInstance(validatedValue);
+    } catch (Exception e) {
+      return JSonUtil.parseJson(validatedValue, argType)
+          .orElseThrow(() -> wrapException(
+              BadRequest,
+              new IllegalArgumentException("Unable to parse " + value),
+              requestId));
+    }
+
   }
 
   /**
@@ -244,16 +252,12 @@ public class FunctionAppHelper {
       String value,
       String defaultValue,
       boolean required) {
-    if (required && value == null) {
-      if (defaultValue != null) {
-        var message = String.format("Required parameter '%s' not present", argName);
-        throw new IllegalArgumentException(message);
-      } else {
-        return defaultValue;
-      }
-    } else {
-      return value;
+    var hasClientValue = isNotEmpty(value);
+    if (required && !hasClientValue && isEmpty(defaultValue)) {
+      var message = String.format("Required parameter '%s' not present", argName);
+      throw new IllegalArgumentException(message);
     }
+    return hasClientValue ? value : defaultValue;
   }
 
   /**
@@ -269,5 +273,21 @@ public class FunctionAppHelper {
             + " with details : " + e.getMessage());
   }
 
+
+  /**
+   * Wraps a generic Exception into a {@link org.zalando.problem.Problem} enabled Exception
+   *
+   * @param e         the {@link Exception} to be wrapped
+   * @param requestId the Id of the request contextual to the exception being thrown
+   * @return a {@link ServerSideException}
+   */
+  public static RuntimeException wrapException(ResponseCode code, Exception e, String requestId) {
+    return new ServerSideException(
+        GENERIC_ERROR_TYPE,
+        e.getClass().getSimpleName(),
+        code,
+        e.getMessage(),
+        URI.create("urn:" + requestId));
+  }
 
 }
