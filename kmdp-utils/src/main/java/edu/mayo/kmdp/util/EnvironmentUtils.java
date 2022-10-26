@@ -29,7 +29,7 @@ public class EnvironmentUtils {
    * @return an Optional value for the key
    */
   public static Optional<String> getProperty(String key) {
-    return Optional.of(System.getenv(key));
+    return Optional.ofNullable(System.getenv(key));
   }
 
   /**
