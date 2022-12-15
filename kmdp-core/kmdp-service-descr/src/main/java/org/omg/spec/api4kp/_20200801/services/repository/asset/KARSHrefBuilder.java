@@ -46,7 +46,7 @@ public class KARSHrefBuilder {
     this.cfg = cfg;
   }
 
-  protected String getHost() {
+  public String getHost() {
     return "http:/";
   }
 
