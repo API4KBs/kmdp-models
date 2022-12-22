@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import javax.annotation.Nonnull;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -64,7 +65,7 @@ public class PointerHTMLAdapter implements HttpMessageConverter<List<Pointer>> {
       throws IOException, HttpMessageNotWritableException {
     var pointerDescrs = pointer.stream()
         .sorted(Comparator.comparing(this::resolveType)
-            .thenComparing(Pointer::getName))
+            .thenComparing(this::resolveName))
         .toArray();
     var html = ReflectionToStringBuilder.toString(
         pointerDescrs, new PointerTableStyle(getTranslator()));
@@ -100,11 +101,16 @@ public class PointerHTMLAdapter implements HttpMessageConverter<List<Pointer>> {
   }
 
 
-  private String resolveType(Pointer item) {
+  protected String resolveType(Pointer item) {
     return KnowledgeAssetTypeSeries.resolveRef(item.getType())
         .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveRef(item.getType()))
         .map(Term::getPrefLabel)
         .orElse(item.getType().toString());
+  }
+
+  protected String resolveName(Pointer ptr) {
+    return Optional.ofNullable(ptr.getName())
+        .orElse("(no name)");
   }
 
 
