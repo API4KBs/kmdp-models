@@ -1,5 +1,7 @@
 package edu.mayo.kmdp.util.ws;
 
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SNAPSHOT;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -93,9 +95,14 @@ public class PointerHTMLAdapter implements HttpMessageConverter<List<Pointer>> {
       }
     });
 
+    translator.put("Date", (item, buffer) -> buffer.append(
+        item.getVersionTag().contains(SNAPSHOT)
+            ? item.getEstablishedOn() : ""));
+
     translator.put("Label", (item, buffer) -> buffer.append(item.getName()));
 
     translator.put("Type", (item, buffer) -> buffer.append(resolveType(item)));
+
 
     return translator;
   }
