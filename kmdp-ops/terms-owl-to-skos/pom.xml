@@ -5,7 +5,7 @@
   <parent>
     <artifactId>kmdp-ops</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
-    <version>11.2.7-SNAPSHOT</version>
+    <version>11.2.7</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
