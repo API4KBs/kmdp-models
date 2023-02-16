@@ -5,11 +5,11 @@
   <parent>
     <groupId>edu.mayo.kmdp</groupId>
     <artifactId>kmdp-bom</artifactId>
-    <version>11.2.8-SNAPSHOT</version>
+    <version>11.2.8</version>
   </parent>
 
   <artifactId>kmdp-impl</artifactId>
-  <version>11.2.8-SNAPSHOT</version>
+  <version>11.2.8</version>
 
   <packaging>pom</packaging>
 
