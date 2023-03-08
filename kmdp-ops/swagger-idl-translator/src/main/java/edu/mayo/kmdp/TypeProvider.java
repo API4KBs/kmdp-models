@@ -1,6 +1,5 @@
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.idl.IDLNameUtil.applyFieldNameMappings;
 import static edu.mayo.kmdp.idl.IDLNameUtil.applyTypeNameMappings;
 
 import edu.mayo.kmdp.idl.IDLNameUtil;
@@ -24,7 +23,6 @@ import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.PathParameter;
 import io.swagger.models.parameters.QueryParameter;
 import io.swagger.models.properties.ArrayProperty;
-import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.models.properties.StringProperty;
@@ -243,6 +241,7 @@ class TypeProvider {
       case "string":
       case "number":
       case "boolean":
+      case "object":
       case "uuid":
         return true;
       default:
@@ -259,6 +258,10 @@ class TypeProvider {
         break;
       case "uuid":
         mapped = "string";
+        break;
+      case "object":
+        mapped = "any";
+        break;
       default:
     }
     return mapped;
