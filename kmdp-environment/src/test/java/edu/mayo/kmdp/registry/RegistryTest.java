@@ -29,7 +29,7 @@ public class RegistryTest {
   @Test
   public void testKnownXMLNamespaces() {
     assertFalse(Registry.listPrefixes().stream().anyMatch(p -> p.length() == 0));
-    assertEquals(55, Registry.listPrefixes().size());
+    assertEquals(57, Registry.listPrefixes().size());
   }
 
   @Test
@@ -51,6 +51,7 @@ public class RegistryTest {
     assertEquals("http://www.w3.org/2001/XMLSchema", getNS("xsd"));
     assertEquals("http://kmdp.mayo.edu/metadata/surrogate", getNS("surr-v1"));
     assertEquals("https://www.omg.org/spec/API4KP/20200801/surrogate", getNS("surr"));
+    assertEquals("https://www.omg.org/spec/MVF/20220702/MODEL", getNS("mvf"));
   }
 
   @Test
