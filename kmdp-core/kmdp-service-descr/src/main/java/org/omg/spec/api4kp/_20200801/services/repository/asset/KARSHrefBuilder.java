@@ -134,6 +134,17 @@ public class KARSHrefBuilder {
     }
   }
 
+  public URL getAssetDefaultContent(UUID assetId, String assetVersion) {
+    try {
+      return URI.create(String
+          .format("%s/cat/assets/%s/versions/%s/carrier/content",
+              getHost(), assetId, assetVersion)).toURL();
+    } catch (MalformedURLException e) {
+      logger.error(e.getMessage(), e);
+      return null;
+    }
+  }
+
   public URL getAssetCarrierVersionHref(UUID assetId, String assetVersion, UUID carrierId,
       String carrierVersion) {
     try {
