@@ -69,10 +69,23 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     return getTyped(param, (Class<T>) param.getOption().getType());
   }
 
+  public <T> void setTyped(O param, T value) {
+    this.put(asKey(param), value);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> Optional<T> tryGetTyped(O param) {
+    return Optional.ofNullable(getTyped(param));
+  }
+
+  public <T> Optional<T> tryGetTyped(O param, Class<T> type) {
+    return Optional.ofNullable(getTyped(param, type));
+  }
+
   @SuppressWarnings("unchecked")
   public <T> T getTyped(O param, Class<T> type) {
     try {
-      String s = get(param).orElse(null);
+      String s = get(param).orElse(param.getDefaultValue());
       if (s == null) {
         return null;
       } else if (type.equals(Class.class)) {
