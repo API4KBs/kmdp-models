@@ -155,9 +155,12 @@ public abstract class ConfigProperties<P extends ConfigProperties<P, O>,
     return (P) this;
   }
 
-  public Map<String,Object> toMap() {
+  public Map<String, Object> toMap() {
     return Arrays.stream(properties())
-        .collect(Collectors.toMap(Object::toString,
-            prop -> getTyped(prop,String.class)));
+        .filter(p -> tryGetTyped(p, p.getType()).isPresent())
+        .collect(Collectors.toMap(
+            prop -> prop.getName(),
+            prop -> getTyped(prop, prop.getType())
+        ));
   }
 }
