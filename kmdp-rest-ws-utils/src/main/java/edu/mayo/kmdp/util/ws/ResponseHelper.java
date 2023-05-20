@@ -17,6 +17,7 @@ import static org.omg.spec.api4kp._20200801.Explainer.packExplanationIntoHeaders
 
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCode;
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
@@ -180,6 +181,23 @@ public class ResponseHelper {
         mapCode(ans.getOutcomeType())
     );
   }
+
+  public static <T> Answer<T> asAnswer(ResponseEntity<T> response) {
+    if (response == null) {
+      return Answer.<T>failed().withAddedExplanationMessage("Null response");
+    }
+    return Answer.of(
+        mapStatus(response.getStatusCode()),
+        response.getBody(),
+        response.getHeaders());
+  }
+
+  public static ResponseCode mapStatus(HttpStatus statusCode) {
+    return ResponseCodeSeries.resolveTag(Integer.toString(statusCode.value()))
+        .orElseThrow(() ->
+            new IllegalArgumentException("Unexpected status code " + statusCode.value()));
+  }
+
 
   private static MultiValueMap<String, String> mapHeaders(Answer<?> ans) {
     HttpHeaders headers = new HttpHeaders();
