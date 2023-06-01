@@ -39,9 +39,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+@Disabled("Need redo for OAS3, or remove")
 public class SwaggerToIDLTranslatorTest {
 
   @TempDir
