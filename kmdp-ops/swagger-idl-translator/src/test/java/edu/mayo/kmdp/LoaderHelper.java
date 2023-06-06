@@ -11,11 +11,11 @@ import java.util.List;
 
 public class LoaderHelper {
 
-  public final static String karSource = "/openapi/v2/org/omg/spec/api4kp/5.0.0/knowledgeArtifactRepository.oas.yaml";
-  public final static String kasSource = "/openapi/v2/org/omg/spec/api4kp/5.0.0/knowledgeAssetRepository.oas.yaml";
-  public final static String langSource = "/openapi/v2/org/omg/spec/api4kp/5.0.0/knowledgeTransrepresentation.oas.yaml";
-  public final static String kbconstrSource = "/openapi/v2/org/omg/spec/api4kp/5.0.0/knowledgeBase.oas.yaml";
-  public final static String inferSource = "/openapi/v2/org/omg/spec/api4kp/5.0.0/inference.oas.yaml";
+  public final static String karSource = "/openapi/v3/org/omg/spec/api4kp/5.0.0/knowledgeArtifactRepository.oas.yaml";
+  public final static String kasSource = "/openapi/v3/org/omg/spec/api4kp/5.0.0/knowledgeAssetRepository.oas.yaml";
+  public final static String langSource = "/openapi/v3/org/omg/spec/api4kp/5.0.0/knowledgeTransrepresentation.oas.yaml";
+  public final static String kbconstrSource = "/openapi/v3/org/omg/spec/api4kp/5.0.0/knowledgeBase.oas.yaml";
+  public final static String inferSource = "/openapi/v3/org/omg/spec/api4kp/5.0.0/inference.oas.yaml";
 
   public final static String idSource = "/yaml/API4KP/api4kp/id/id.yaml";
   public final static String dataTypeSource = "/yaml/API4KP/api4kp/datatypes/datatypes.yaml";
