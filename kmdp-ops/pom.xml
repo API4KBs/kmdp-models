@@ -15,7 +15,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>swagger-idl-translator</module>
+    <!--module>swagger-idl-translator</module-->
     <module>xmi-xsd-xslt-translator</module>
     <module>xsd-yamls-xslt-translator</module>
     <module>terms-generator</module>
