@@ -61,7 +61,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class JenaUtil {
-  
+
   private static Logger logger = LoggerFactory.getLogger(JenaUtil.class);
 
   static {
@@ -91,6 +91,7 @@ public abstract class JenaUtil {
       while (results.hasNext()) {
         QuerySolution sol = results.next();
         answers.add(results.getResultVars().stream()
+            .filter(sol::contains)
             .collect(Collectors.toMap(Function.identity(), k -> mapper.apply(sol.get(k)))));
       }
       return answers;
