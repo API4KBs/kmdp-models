@@ -24,6 +24,7 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.toResourceId;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
@@ -161,7 +162,7 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
   static Term newTerm(UUID uuid) {
     SemanticIdentifier.checkUUID(uuid);
     // compose required resourceId from uuid
-    URI resourceId = toResourceId(uuid);
+    URI resourceId = toResourceId(uuid.toString(), Registry.UUID_URN_URI);
     return new ConceptIdentifier()
         // generate required tag from uuid
         // set required fields
@@ -205,7 +206,7 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
 
   static Term newTerm(String tag) {
     checkTag(tag);
-    URI resourceId = toResourceId(tag);
+    URI resourceId = toResourceId(tag, Registry.UUID_URN_URI);
     return new ConceptIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)
@@ -253,7 +254,7 @@ public interface Term extends Identifiable, ScopedIdentifier, UniversalIdentifie
 
   static Term newTerm(String tag, String versionTag) {
     checkTag(tag);
-    URI resourceId = toResourceId(tag);
+    URI resourceId = toResourceId(tag, Registry.UUID_URN_URI);
     return new ConceptIdentifier()
         .withTag(tag)
         .withResourceId(resourceId)

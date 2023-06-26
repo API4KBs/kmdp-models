@@ -1,6 +1,8 @@
 package org.omg.spec.api4kp._20200801.id;
 
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
+
+import static edu.mayo.kmdp.registry.Registry.DID_URN;
+import static edu.mayo.kmdp.registry.Registry.DID_URN_URI;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.SEMVER_FULL;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -148,7 +150,7 @@ public interface VersionIdentifier extends Identifier {
    */
   @JsonIgnore
   default String getVersionSeparator(String id) {
-    return id.startsWith(BASE_UUID_URN)
+    return id.startsWith(DID_URN)
         ? ":"
         : "/versions/";
   }

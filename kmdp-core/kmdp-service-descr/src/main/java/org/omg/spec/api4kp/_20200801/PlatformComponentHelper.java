@@ -15,7 +15,7 @@
  */
 package org.omg.spec.api4kp._20200801;
 
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
+import static edu.mayo.kmdp.registry.Registry.UUID_URN_URI;
 import static edu.mayo.kmdp.util.Util.isEmpty;
 import static edu.mayo.kmdp.util.Util.isNotEmpty;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO;
@@ -23,6 +23,7 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 
 import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Option;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.net.URL;
@@ -52,9 +53,9 @@ public class PlatformComponentHelper {
     String baseNS = isNotEmpty(baseNamespace) ? baseNamespace : base;
     return Optional.of(new org.omg.spec.api4kp._20200801.services.repository.resources.KnowledgeArtifactRepository()
         .withInstanceId(
-            newId(BASE_UUID_URN_URI, UUID.randomUUID(), VERSION_ZERO))
+            newId(UUID_URN_URI, UUID.randomUUID(), VERSION_ZERO))
         .withId(newId(URI.create(baseNS + "/repos/" + identifier)))
-        .withAlias(newId(BASE_UUID_URN_URI, identifier, VERSION_ZERO))
+        .withAlias(newId(UUID_URN_URI, identifier, VERSION_ZERO))
         .withName(name)
         .withHref(URI.create(base + "/repos/" + identifier)));
   }

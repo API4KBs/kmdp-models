@@ -1,11 +1,11 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -13,8 +13,6 @@
  */
 package edu.mayo.kmdp.id.helper;
 
-
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.DateTimeUtil;
@@ -52,7 +50,7 @@ public class DatatypeHelper {
   }
 
   public static SemanticIdentifier ns(final String nsUri, String label, String version) {
-    return SemanticIdentifier.newId(URI.create(nsUri),version);
+    return SemanticIdentifier.newId(URI.create(nsUri), version);
   }
 
   private static URI ensureResolved(String termUri) {
@@ -75,7 +73,7 @@ public class DatatypeHelper {
    * @return the string used to separate the id from the version tag for this kind of id
    */
   public static String getVersionSeparator(String id) {
-    return id.startsWith(BASE_UUID_URN)
+    return Registry.isGlobalIdentifier(id)
         ? ":"
         : "/versions/";
   }
@@ -101,13 +99,9 @@ public class DatatypeHelper {
     }
     String idStr = versionedIdentifier.toString();
 
-    if (idStr.startsWith(BASE_UUID_URN)) {
-      int start = BASE_UUID_URN.length();
+    if (Registry.isGlobalIdentifier(versionedIdentifier)) {
       int end = idStr.lastIndexOf(':');
-      // need at least two ":"
-      if (end > start) {
-        return idStr.substring(end + 1);
-      }
+      return idStr.substring(end + 1);
     }
 
     VersionIdentifier vid = toVersionIdentifier(idStr);
@@ -125,8 +119,8 @@ public class DatatypeHelper {
 
     String idStr = identifier.toString();
     // 'urn:uuid:' identifiers
-    if (idStr.startsWith(BASE_UUID_URN)) {
-      int start = BASE_UUID_URN.length();
+    if (Registry.isGlobalIdentifier(identifier)) {
+      int start = idStr.indexOf(':');
       int end = idStr.lastIndexOf(':');
       // handle urn:uuid:tag vs urn:uuid:tag:version
       return end >= start
@@ -167,14 +161,14 @@ public class DatatypeHelper {
       if (index >= 0) {
         tag = tag.substring(index + 1);
       } else {
-        if (tag.startsWith(BASE_UUID_URN)) {
+        if (Registry.isGlobalIdentifier(tag)) {
           // TODO FIXME
           version = versionOf(uri);
           tag = tagOf(uri);
         }
       }
     }
-    return SemanticIdentifier.newId(tag,version);
+    return SemanticIdentifier.newId(tag, version);
   }
 
 
@@ -185,7 +179,6 @@ public class DatatypeHelper {
   public static UUID seedUUID(String seed) {
     return UUID.nameUUIDFromBytes(seed.getBytes());
   }
-
 
 
   public static <T extends Term, X> Optional<T> resolveTerm(final X val, T[] values,
@@ -223,7 +216,7 @@ public class DatatypeHelper {
 
     String qualifiedNs = URIUtil.normalizeURI(trm.getResourceId()).toString();
 
-    if (ns.startsWith("urn:uuid:")) {
+    if (Registry.isGlobalIdentifier(ns)) {
       return Optional.of(
           String.format("%s | %s |",
               trm.getResourceId().toString(),
@@ -249,7 +242,7 @@ public class DatatypeHelper {
     return getDefaultVersionId(
         resourceId,
         versionTag,
-        "urn".equals(resourceId.getScheme())
+        Registry.isGlobalIdentifier(resourceId)
             ? VersionPatterns.URN_STYLE
             : VersionPatterns.KMDP_STYLE);
   }

@@ -1,11 +1,11 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -14,10 +14,11 @@
 package org.omg.spec.api4kp._20200801.id;
 
 
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
+import static edu.mayo.kmdp.registry.Registry.DID_URN;
+import static edu.mayo.kmdp.registry.Registry.DID_URN_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
+import static edu.mayo.kmdp.registry.Registry.REGISTRY_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,6 +31,7 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newNamespaceId
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 
 import com.github.zafarkhaja.semver.Version;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Date;
@@ -56,7 +58,8 @@ public class DatatypeTest {
     URI expectedId = URI.create(MAYO_ASSETS_BASE_URI + uuid);
     URI versionId = URI.create(
         MAYO_ASSETS_BASE_URI + uuid + VERSIONS + Version.valueOf("1.0.0"));
-    ResourceIdentifier id = newId(MAYO_ASSETS_BASE_URI_URI, uuid, Version.valueOf("1.0.0"), "testing");
+    ResourceIdentifier id = newId(MAYO_ASSETS_BASE_URI_URI, uuid, Version.valueOf("1.0.0"),
+        "testing");
 
     assertNotNull(id);
     assertEquals("testing", id.getName());
@@ -87,8 +90,8 @@ public class DatatypeTest {
     UUID uuid = UUID.randomUUID();
     Version version = Version.valueOf("1.0.0");
     String name = "Testing";
-    URI expectedId = URI.create(BASE_UUID_URN + uuid);
-    URI versionId = URI.create(BASE_UUID_URN + uuid + ":" + version.toString());
+    URI expectedId = URI.create(DID_URN + uuid);
+    URI versionId = URI.create(DID_URN + uuid + ":" + version.toString());
     ResourceIdentifier id = newId(uuid, version, name);
 
     assertNotNull(id);
@@ -108,8 +111,8 @@ public class DatatypeTest {
     UUID uuid = UUID.randomUUID();
     String version = "1.0.0";
     String name = "Testing";
-    URI expectedId = URI.create(BASE_UUID_URN + uuid);
-    URI versionId = URI.create(BASE_UUID_URN + uuid + ":" + version);
+    URI expectedId = URI.create(DID_URN + uuid);
+    URI versionId = URI.create(DID_URN + uuid + ":" + version);
     ResourceIdentifier id = newId(uuid, version, name);
 
     assertNotNull(id);
@@ -129,8 +132,8 @@ public class DatatypeTest {
   void testResourceIdentifierTagVersion() {
     String tag = "1.6.4.3";
     Version version = Version.valueOf("1.0.0");
-    URI expectedResourceId = URI.create(BASE_UUID_URN + tag);
-    URI expectedVersionId = URI.create(BASE_UUID_URN + tag + ":" + version.toString());
+    URI expectedResourceId = URI.create(DID_URN + tag);
+    URI expectedVersionId = URI.create(DID_URN + tag + ":" + version.toString());
     ResourceIdentifier rid = (ResourceIdentifier) newId(tag, version);
     assertNotNull(rid);
     assertEquals(tag, rid.getTag());
@@ -142,7 +145,7 @@ public class DatatypeTest {
   @Test
   void testResourceIdentifierUUID() {
     UUID uid = UUID.randomUUID();
-    URI expectedResourceId = URI.create(BASE_UUID_URN + uid.toString());
+    URI expectedResourceId = URI.create(DID_URN + uid.toString());
     ResourceIdentifier rid = newId(uid);
     assertNotNull(rid);
     // uuid, resourceId and tag are required on ResourceIdentifier; confirm all are there
@@ -179,10 +182,10 @@ public class DatatypeTest {
     Version version = Version.valueOf("5.0.1");
     String name = "TestResource";
     // TODO: confirm: tag is used if provided, else uuid
-    URI expectedId = URI.create(BASE_UUID_URN + tag);
-    URI versionId = URI.create(BASE_UUID_URN + tag + ":" + version.toString());
+    URI expectedId = URI.create(DID_URN + tag);
+    URI versionId = URI.create(DID_URN + tag + ":" + version.toString());
 
-    ResourceIdentifier rid = newId(BASE_UUID_URN_URI, tag, uuid, version, name);
+    ResourceIdentifier rid = newId(DID_URN_URI, tag, uuid, version, name);
     assertNotNull(rid);
     // uuid, resourceId and tag are required on ResourceIdentifier; confirm all are there
     assertEquals(expectedId, rid.getResourceId());
@@ -220,7 +223,7 @@ public class DatatypeTest {
   @Test
   void testResourceIdentifierTag() {
     String tag = "1.6.4.3";
-    URI expectedResourceId = URI.create(BASE_UUID_URN + tag);
+    URI expectedResourceId = URI.create(DID_URN + tag);
     ResourceIdentifier rid = newId(tag);
     assertNotNull(rid);
     // uuid, resourceId and tag are required on ResourceIdentifier; confirm all are there
@@ -234,9 +237,9 @@ public class DatatypeTest {
     UUID uuid = UUID.randomUUID();
     Version version = Version.valueOf("5.1.6");
     String name = "TestURN";
-    URI expectedResourceId = URI.create(BASE_UUID_URN + uuid);
-    URI expectedVersionId = URI.create(BASE_UUID_URN + uuid + ":" + version.toString());
-    ResourceIdentifier id = newId(BASE_UUID_URN_URI, uuid, version, name);
+    URI expectedResourceId = URI.create(DID_URN + uuid);
+    URI expectedVersionId = URI.create(DID_URN + uuid + ":" + version.toString());
+    ResourceIdentifier id = newId(DID_URN_URI, uuid, version, name);
 
     assertNotNull(id);
     assertEquals(name, id.getName());
@@ -294,12 +297,12 @@ public class DatatypeTest {
   @Test
   void testQNameID_URN() {
     String tag = "1.3.6.1";
-    String expectedQname = BASE_UUID_URN + ":" + tag;
-    ScopedIdentifier qid = newId(BASE_UUID_URN_URI, tag);
-    assertEquals(BASE_UUID_URN_URI, qid.getNamespaceUri());
+    String expectedQname = DID_URN + ":" + tag;
+    ScopedIdentifier qid = newId(DID_URN_URI, tag);
+    assertEquals(DID_URN_URI, qid.getNamespaceUri());
     assertEquals("1.3.6.1", qid.getTag());
     assertEquals("_1.3.6.1", qid.getQName().getLocalPart());
-    assertEquals(BASE_UUID_URN, qid.getQName().getNamespaceURI());
+    assertEquals(DID_URN, qid.getQName().getNamespaceURI());
     assertNotNull(qid.getUuid());
     assertNotNull(qid.getResourceId());
   }
@@ -332,7 +335,7 @@ public class DatatypeTest {
   @Test
   void testPointer() {
     UUID uuid = UUID.randomUUID();
-    URI expectedResourceId = URI.create("http://foo.bar/baz/"+uuid.toString());
+    URI expectedResourceId = URI.create("http://foo.bar/baz/" + uuid.toString());
     Pointer pid = newIdAsPointer(URI.create("http://foo.bar/baz/"),
         uuid.toString(), "Resource Description", "1.3.4",
         URI.create("https://internal/locator/"));
@@ -349,7 +352,7 @@ public class DatatypeTest {
   @Test
   void testPointerTagOnly() {
     UUID uuid = UUID.randomUUID();
-    URI expectedResourceId = URI.create(BASE_UUID_URN+uuid.toString());
+    URI expectedResourceId = URI.create(DID_URN + uuid.toString());
     Pointer pid = newIdAsPointer(uuid.toString());
     assertNotNull(pid);
     assertEquals(expectedResourceId, pid.getResourceId());
@@ -507,13 +510,13 @@ public class DatatypeTest {
   @Test
   void testVersionedUriWithUUIDandVersion() {
     UUID uuid = UUID.nameUUIDFromBytes("mock".getBytes());
-    URI uri = URI.create("urn:uuid:" + uuid + ":0");
+    URI uri = URI.create(DID_URN + uuid + ":0");
     ResourceIdentifier rid = newVersionId(uri);
 
     assertEquals(uuid, rid.getUuid());
     assertEquals(uuid.toString(), rid.getTag());
     assertEquals("0", rid.getVersionTag());
-    assertEquals(BASE_UUID_URN_URI, rid.getNamespaceUri());
+    assertEquals(DID_URN_URI, rid.getNamespaceUri());
   }
 
   @Test
@@ -533,7 +536,7 @@ public class DatatypeTest {
     URI uri = URI.create("http://foo.bar/blah/20200301/example");
     ResourceIdentifier rid =
         newVersionId(uri,
-            Pattern.compile("(.*)/(\\d+)/(\\w+)"),2,3);
+            Pattern.compile("(.*)/(\\d+)/(\\w+)"), 2, 3);
 
     assertEquals("20200301", rid.getVersionTag());
     assertEquals("example", rid.getTag());
@@ -558,9 +561,9 @@ public class DatatypeTest {
   void testURIwithVersionURI() {
     URI uri = URI.create("http://foo.bar/x");
     URI vuri = URI.create("http://foo.bar/x/2020");
-    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri,vuri);
-    assertEquals(uri,rid.getResourceId());
-    assertEquals(vuri,rid.getVersionId());
+    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri, vuri);
+    assertEquals(uri, rid.getResourceId());
+    assertEquals(vuri, rid.getVersionId());
 
     assertEquals("x", rid.getTag());
     assertEquals("2020", rid.getVersionTag());
@@ -571,9 +574,9 @@ public class DatatypeTest {
   void testURIwithVersionURI2() {
     URI uri = URI.create("http://foo.bar/x");
     URI vuri = URI.create("http://foo.bar/2020/x");
-    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri,vuri);
-    assertEquals(uri,rid.getResourceId());
-    assertEquals(vuri,rid.getVersionId());
+    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri, vuri);
+    assertEquals(uri, rid.getResourceId());
+    assertEquals(vuri, rid.getVersionId());
 
     assertEquals("x", rid.getTag());
     assertEquals("2020", rid.getVersionTag());
@@ -582,16 +585,16 @@ public class DatatypeTest {
   @Test
   void testVersionIdWithFragments() {
     URI uri = URI.create("http://foo.bar#x");
-    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri,"CURRENT");
+    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri, "CURRENT");
     assertEquals("http://foo.bar/versions/CURRENT#x", rid.getVersionId().toString());
     assertEquals(uri, rid.getResourceId());
   }
 
   @Test
   void testVersionIdWithURN() {
-    URI uri = URI.create("urn:uuid:x");
-    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri,"CURRENT");
-    assertEquals("urn:uuid:x:CURRENT", rid.getVersionId().toString());
+    URI uri = URI.create(DID_URN + "x");
+    ResourceIdentifier rid = SemanticIdentifier.newVersionId(uri, "CURRENT");
+    assertEquals(DID_URN + "x:CURRENT", rid.getVersionId().toString());
     assertEquals(uri, rid.getResourceId());
   }
 

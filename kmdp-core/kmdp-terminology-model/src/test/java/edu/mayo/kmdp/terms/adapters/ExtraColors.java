@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.terms.adapters;
 
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.terms.adapters.IColors.IColorsVersion;
 import java.net.URI;
 import java.util.Collections;
@@ -47,7 +48,7 @@ public enum ExtraColors implements IColorsVersion,
   ExtraColors(String code) {
     UUID uuid = UUID.nameUUIDFromBytes(code.getBytes());
     trm = new TermImpl(
-        URI.create("urn:uuid:" + uuid).toString(),
+        URI.create(Registry.UUID_URN + uuid).toString(),
         uuid.toString(),
         "0.0.1",
         code,

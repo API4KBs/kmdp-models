@@ -1,5 +1,6 @@
 package org.omg.spec.api4kp._20200801.id;
 
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Date;
@@ -36,7 +37,7 @@ public final class IdentifierConstants {
   public static final Date SNOMED_DATE = DateTimeUtil.parseDate(SNOMED_VERSION, "YYYYmmDD");
 
   public static String versionSeparator(URI forURI) {
-    if (forURI == null || ! forURI.toString().startsWith("urn")) {
+    if (!Registry.isGlobalIdentifier(forURI)) {
       return VERSIONS;
     } else {
       return ":";

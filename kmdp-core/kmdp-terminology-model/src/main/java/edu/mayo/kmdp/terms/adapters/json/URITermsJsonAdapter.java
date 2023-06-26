@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import edu.mayo.kmdp.registry.Registry;
 import org.omg.spec.api4kp._20200801.series.Series;
-import org.omg.spec.api4kp._20200801.series.Versionable;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.URIUtil;
@@ -118,7 +118,7 @@ public interface URITermsJsonAdapter {
     protected Optional<String> extractIdentifier(URI uri) {
       String fragment = uri.getFragment();
       if (Util.isEmpty(fragment)) {
-        if ("urn".equals(uri.getScheme())) {
+        if (Registry.isGlobalIdentifier(uri)) {
           fragment = uri.toString();
           fragment = fragment.substring(fragment.lastIndexOf(':') + 1);
         } else {

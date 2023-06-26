@@ -277,7 +277,7 @@ class VocabularyTest {
     assertFalse(KnowledgeAssetRoleSeries.resolveUUID(UUID.randomUUID()).isPresent());
     assertFalse(KnowledgeAssetRoleSeries.resolve(UUID.randomUUID().toString()).isPresent());
     assertFalse(KnowledgeAssetRoleSeries.resolveTag(UUID.randomUUID().toString()).isPresent());
-    assertFalse(KnowledgeAssetRoleSeries.resolveId("urn:uuid:" + UUID.randomUUID().toString()).isPresent());
+    assertFalse(KnowledgeAssetRoleSeries.resolveId(Registry.UUID_URN + UUID.randomUUID().toString()).isPresent());
   }
 
 

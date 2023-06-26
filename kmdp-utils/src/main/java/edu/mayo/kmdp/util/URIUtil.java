@@ -47,7 +47,7 @@ public class URIUtil {
   public static URI fromNamespacedFragment(String fragment, URI uri) {
     Objects.requireNonNull(uri);
     try {
-      if ("urn".equals(uri.getScheme())) {
+      if (Registry.isGlobalIdentifier(uri)) {
         return uri;
       }
       return new URI(uri.getScheme(),

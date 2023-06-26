@@ -18,6 +18,7 @@ package edu.mayo.kmdp.terms.util;
 import static edu.mayo.kmdp.util.NameUtils.strip;
 import static edu.mayo.kmdp.util.URIUtil.normalizeURIString;
 
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.terms.mireot.EntityTypes;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -229,7 +230,7 @@ public class JenaUtil {
   }
 
   public static String applyVersionToURI(String baseURI, String versionFragment, int pos) {
-    String sep = baseURI.startsWith("urn") ? ":" : "/";
+    String sep = Registry.isGlobalIdentifier(baseURI) ? ":" : "/";
     return applyVersionToURI(baseURI, versionFragment, pos, sep);
   }
 

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.terms.adapters.json.GenericURITermsJsonAdapter;
 import edu.mayo.kmdp.util.JSonUtil;
 import java.net.URI;
@@ -26,7 +27,8 @@ public class JsonAdaptersTest {
     assertTrue(json.isPresent());
 
     assertTrue(json.get().trim()
-        .contains("\"col2\" : \"urn:uuid:ac01483d-7b42-34aa-b3aa-9d50fde3982a | grn |\""));
+        .contains("\"col2\" : " +
+           "\"" +  Registry.UUID_URN + "ac01483d-7b42-34aa-b3aa-9d50fde3982a | grn |\""));
 
     Bean b2 = json
         .flatMap(s -> JSonUtil.parseJson(s,Bean.class))

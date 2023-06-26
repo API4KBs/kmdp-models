@@ -47,21 +47,44 @@ public class Registry {
   public static final URI MAYO_ASSETS_BASE_URI_URI = URI.create(MAYO_ASSETS_BASE_URI);
   public static final String MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/artifacts/";
   public static final URI MAYO_ARTIFACTS_BASE_URI_URI = URI.create(MAYO_ARTIFACTS_BASE_URI);
-  public static final String BASE_UUID_URN = "urn:uuid:";
-  public static final URI BASE_UUID_URN_URI = URI.create(BASE_UUID_URN);
+
+  public static final String URN = "urn:";
+  public static final String UUID_URN = "urn:uuid:";
+  public static final URI UUID_URN_URI = URI.create(UUID_URN);
+  public static final String DID_URN = "did:mcid:";
+  public static final URI DID_URN_URI = URI.create(DID_URN);
 
   public static final String KNOWLEDGE_ASSET_URI = "https://www.omg.org/spec/API4KP/api4kp/KnowledgeAsset";
 
+  public static final List<String> ID_SCHEMES = List.of("urn", "did");
+  public static final List<String> HTTP_SCHEMES = List.of("http", "https");
+
   private static CatalogResolver xcat;
 
-  private static Logger logger = LoggerFactory.getLogger(Registry.class);
+  private static final Logger logger = LoggerFactory.getLogger(Registry.class);
 
-  private static Map<String, String> prefixToNamespaceMap = new HashMap<>();
-  private static Map<String, String> namespaceToPrefixMap = new HashMap<>();
-  private static Map<String, String> languagSchemas = new HashMap<>();
+  private static final Map<String, String> prefixToNamespaceMap = new HashMap<>();
+  private static final Map<String, String> namespaceToPrefixMap = new HashMap<>();
+  private static final Map<String, String> languagSchemas = new HashMap<>();
 
   protected Registry() {
 
+  }
+
+  public static boolean isGlobalIdentifier(String uri) {
+    return uri != null && ID_SCHEMES.stream().anyMatch(uri::startsWith);
+  }
+
+  public static boolean isGlobalIdentifier(URI uri) {
+    return uri != null && ID_SCHEMES.stream().anyMatch(x -> uri.getScheme().equals(x));
+  }
+
+  public static boolean isHttpIdentifier(String uri) {
+    return uri != null && HTTP_SCHEMES.stream().anyMatch(uri::startsWith);
+  }
+
+  public static boolean isHttpIdentifier(URI uri) {
+    return uri != null && HTTP_SCHEMES.stream().anyMatch(x -> uri.getScheme().equals(x));
   }
 
   public static URI mapAssetToArtifactNamespace(URI assetNS) {
@@ -70,14 +93,14 @@ public class Registry {
         || MAYO_ASSETS_BASE_URI.equals(assetNS.toString())) {
       return MAYO_ARTIFACTS_BASE_URI_URI;
     }
-    return BASE_UUID_URN_URI;
+    return Registry.DID_URN_URI;
   }
 
   public static String mapAssetToArtifactNamespace(String assetNS) {
     if (assetNS != null && assetNS.equals(MAYO_ASSETS_BASE_URI)) {
       return MAYO_ARTIFACTS_BASE_URI;
     }
-    return BASE_UUID_URN;
+    return Registry.DID_URN;
   }
 
   static {

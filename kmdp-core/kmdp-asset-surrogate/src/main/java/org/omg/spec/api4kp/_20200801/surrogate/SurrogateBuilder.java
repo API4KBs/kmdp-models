@@ -13,7 +13,8 @@
  */
 package org.omg.spec.api4kp._20200801.surrogate;
 
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
+import static edu.mayo.kmdp.registry.Registry.DID_URN_URI;
+import static edu.mayo.kmdp.registry.Registry.REGISTRY_URI;
 import static edu.mayo.kmdp.registry.Registry.mapAssetToArtifactNamespace;
 import static edu.mayo.kmdp.util.Util.ensureUUID;
 import static edu.mayo.kmdp.util.Util.uuid;
@@ -53,6 +54,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.languagerole.KnowledgeRepre
 import static org.omg.spec.api4kp._20200801.taxonomy.lexicon.LexiconSeries.SKOS;
 import static org.omg.spec.api4kp._20200801.taxonomy.structuralreltype.StructuralPartTypeSeries.Has_Structuring_Component;
 
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -95,7 +97,7 @@ public class SurrogateBuilder {
 
   public static SurrogateBuilder newSurrogate(UUID id) {
     return newSurrogate(
-        assetId(BASE_UUID_URN_URI, id, VERSION_ZERO));
+        assetId(DID_URN_URI, id, VERSION_ZERO));
   }
 
   public static SurrogateBuilder newSurrogate(ResourceIdentifier assetId) {
@@ -446,7 +448,7 @@ public class SurrogateBuilder {
   }
 
   public static ResourceIdentifier randomAssetId() {
-    return assetId(BASE_UUID_URN_URI, UUID.randomUUID(), VERSION_ZERO);
+    return assetId(DID_URN_URI, UUID.randomUUID(), VERSION_ZERO);
   }
 
   public static ResourceIdentifier randomAssetId(URI baseNamespace) {
@@ -533,7 +535,7 @@ public class SurrogateBuilder {
   }
 
   public static ResourceIdentifier randomArtifactId() {
-    return artifactId(BASE_UUID_URN_URI, UUID.randomUUID(), VERSION_ZERO);
+    return artifactId(DID_URN_URI, UUID.randomUUID(), VERSION_ZERO);
   }
 
   public static ResourceIdentifier randomArtifactId(URI baseNamespace) {

@@ -14,10 +14,11 @@
 package org.omg.spec.api4kp._20200801.id;
 
 
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
+
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
+import static edu.mayo.kmdp.registry.Registry.UUID_URN;
+import static edu.mayo.kmdp.registry.Registry.UUID_URN_URI;
 import static edu.mayo.kmdp.util.CatalogBasedURIResolver.catalogResolver;
 import static edu.mayo.kmdp.util.XMLUtil.getSchemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,8 +58,8 @@ class TermDatatypeTest {
   void testConceptIdentifierTagVersion() {
     String tag = "1.6.4.3";
     Version version = Version.valueOf("1.0.0");
-    URI expectedResourceId = URI.create(BASE_UUID_URN + tag);
-    URI expectedVersionId = URI.create(BASE_UUID_URN + tag + ":" + version.toString());
+    URI expectedResourceId = URI.create(UUID_URN + tag);
+    URI expectedVersionId = URI.create(UUID_URN + tag + ":" + version.toString());
     ConceptIdentifier cid = newTerm(tag, version).asConceptIdentifier();
     assertNotNull(cid);
     assertEquals(tag, cid.getTag());
@@ -70,7 +71,7 @@ class TermDatatypeTest {
   @Test
   void testConceptIdentifierUUID() {
     UUID uid = UUID.randomUUID();
-    URI expectedResourceId = URI.create(BASE_UUID_URN + uid.toString());
+    URI expectedResourceId = URI.create(UUID_URN + uid.toString());
     ConceptIdentifier cid = newTerm(uid).asConceptIdentifier();
     assertNotNull(cid);
     // uuid, resourceId and tag are required on ConceptIdentifier; confirm all are there
@@ -107,7 +108,7 @@ class TermDatatypeTest {
   @Test
   void testConceptIdentifierTag() {
     String tag = "1.6.4.3";
-    URI expectedResourceId = URI.create(BASE_UUID_URN + tag);
+    URI expectedResourceId = URI.create(UUID_URN + tag);
     ConceptIdentifier cid = (ConceptIdentifier) newTerm(tag);
     assertNotNull(cid);
     // uuid, resourceId and tag are required on ConceptIdentifier; confirm all are there
@@ -153,13 +154,13 @@ class TermDatatypeTest {
   @Test
   void testQNameID_URN() {
     String tag = "1.3.6.1";
-    String expectedQname = "{" + BASE_UUID_URN + "}_" + tag;
-    ScopedIdentifier qid = newTerm(BASE_UUID_URN_URI, tag);
-    assertEquals(BASE_UUID_URN_URI, qid.getNamespaceUri());
+    String expectedQname = "{" + UUID_URN + "}_" + tag;
+    ScopedIdentifier qid = newTerm(UUID_URN_URI, tag);
+    assertEquals(UUID_URN_URI, qid.getNamespaceUri());
     assertEquals("1.3.6.1", qid.getTag());
     assertEquals("_1.3.6.1", qid.getQName().getLocalPart());
     assertEquals(expectedQname, qid.getQName().toString());
-    assertEquals(BASE_UUID_URN, qid.getQName().getNamespaceURI());
+    assertEquals(UUID_URN, qid.getQName().getNamespaceURI());
     assertNotNull(qid.getUuid());
     assertNotNull(qid.getResourceId());
   }

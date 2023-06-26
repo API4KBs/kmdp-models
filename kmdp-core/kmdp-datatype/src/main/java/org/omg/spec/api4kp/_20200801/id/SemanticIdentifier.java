@@ -1,8 +1,8 @@
 package org.omg.spec.api4kp._20200801.id;
 
 import static edu.mayo.kmdp.id.helper.DatatypeHelper.getDefaultVersionId;
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
+import static edu.mayo.kmdp.registry.Registry.DID_URN;
+import static edu.mayo.kmdp.registry.Registry.DID_URN_URI;
 import static java.util.Arrays.copyOfRange;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS_FRAG_RX;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSIONS_RX;
@@ -13,6 +13,7 @@ import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.versionSepara
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zafarkhaja.semver.Version;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.URIUtil;
@@ -56,7 +57,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     String uriStr = uri.toString();
     String tag = URIUtil.detectLocalName(uri);
     URI nsUri = URI.create(uriStr.substring(0, uriStr.lastIndexOf(tag) - 1));
-    if (!"urn".equals(nsUri.getScheme()) && nsUri.getAuthority() == null) {
+    if (!Registry.isGlobalIdentifier(nsUri) && nsUri.getAuthority() == null) {
       throw new IllegalArgumentException("Unable to split the URI into a namespace and a tag, "
           + "consider using newNamespaceId instead? " + nsUri);
     }
@@ -122,7 +123,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     String tag = segments[n-2];
     URI base = n > 2
         ? URI.create(String.join(":", copyOfRange(segments, 0, n - 2)))
-        : BASE_UUID_URN_URI;
+        : DID_URN_URI;
     return newId(base, tag, versionTag);
   }
 
@@ -192,14 +193,14 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    */
   static ResourceIdentifier newVersionId(URI versionUri, Pattern versionPattern,
       int versionGroupIdx, int tagGroupIdx) {
-    if ("urn".equals(versionUri.getScheme())) {
+    if (Registry.isGlobalIdentifier(versionUri)) {
       // assume pattern urn:uuid:tag:version
       String str = versionUri.toString();
       StringTokenizer tok = new StringTokenizer(str, ":");
       if (tok.countTokens() >= 4) {
         int idx = str.lastIndexOf(':');
-        return newId(BASE_UUID_URN_URI,
-            str.substring(BASE_UUID_URN.length(), idx),
+        return newId(DID_URN_URI,
+            str.substring(DID_URN.length(), idx),
             str.substring(idx+1));
       }
     }
@@ -218,7 +219,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
 
   static Optional<ResourceIdentifier> tryNewVersionId(URI versionUri, Pattern versionPattern,
       int versionGroupIdx, int tagGroupIdx) {
-    if ("urn".equals(versionUri.getScheme())) {
+    if (Registry.isGlobalIdentifier(versionUri)) {
       StringTokenizer tok = new StringTokenizer(versionUri.toString(), ":");
       if (tok.countTokens() < 4) {
         return Optional.empty();
@@ -273,7 +274,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     String uriStr = seriesUri.toString();
     String tag = URIUtil.detectLocalName(seriesUri);
     URI nsUri = URI.create(uriStr.substring(0, uriStr.lastIndexOf(tag)));
-    if (!"urn".equals(nsUri.getScheme()) && nsUri.getAuthority() == null) {
+    if (!Registry.isGlobalIdentifier(nsUri) && nsUri.getAuthority() == null) {
       throw new IllegalArgumentException("Unable to split the URI into a namespace and a tag, "
           + "consider using newNamespaceId instead? " + nsUri);
     }
@@ -382,11 +383,11 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   static ResourceIdentifier newId(UUID tag, Version version) {
-    return newId(BASE_UUID_URN_URI, tag.toString(), version.toString());
+    return newId(DID_URN_URI, tag.toString(), version.toString());
   }
 
   static ResourceIdentifier newId(UUID tag, String version) {
-    return newId(BASE_UUID_URN_URI, tag.toString(), version);
+    return newId(DID_URN_URI, tag.toString(), version);
   }
 
   static ResourceIdentifier newId(URI namespace, String tag, Version versionTag) {
@@ -547,6 +548,20 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
+   * Generate resourceIdentifier for tag Will default to URN will generate uuid from resourceId
+   *
+   * @return ResourceIdentifier with required values set
+   */
+  static ResourceIdentifier newName(String tag) {
+    return new ResourceIdentifier()
+        .withTag(tag)
+        .withResourceId(URI.create(Registry.URN + tag))
+        .withEstablishedOn(DateTimeUtil.today())
+        // generate required UUID from resourceId
+        .withUuid(Util.uuid(tag));
+  }
+
+  /**
    * Create a ResourceIdentifier from the parts given. ResourceId will be composed of default URN
    * URI and tag UUID will be generated from resourceId
    *
@@ -595,7 +610,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return Pointer with required resourceId, tag and UUID set
    */
   static Pointer newIdAsPointer(UUID tag, String versionTag) {
-    URI resourceId = toResourceId(tag.toString(), BASE_UUID_URN_URI);
+    URI resourceId = toResourceId(tag.toString(), DID_URN_URI);
     return new org.omg.spec.api4kp._20200801.id.resources.Pointer()
         .withNamespaceUri(resourceId)
         .withTag(tag.toString())
@@ -735,7 +750,7 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   static ResourceIdentifier randomId() {
-    return newId(BASE_UUID_URN_URI, UUID.randomUUID(), IdentifierConstants.VERSION_LATEST);
+    return newId(DID_URN_URI, UUID.randomUUID(), IdentifierConstants.VERSION_LATEST);
   }
 
   /**
@@ -926,15 +941,15 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
    * @return ResourceId
    */
   static URI toResourceId(String tag, UUID uuid) {
-    return toResourceId(tag, BASE_UUID_URN_URI, uuid);
+    return toResourceId(tag, DID_URN_URI, uuid);
   }
 
   static URI toResourceId(String tag) {
-    return toResourceId(tag, BASE_UUID_URN_URI, null);
+    return toResourceId(tag, DID_URN_URI, null);
   }
 
   static URI toResourceId(UUID uuid) {
-    return toResourceId(null, BASE_UUID_URN_URI, uuid);
+    return toResourceId(null, DID_URN_URI, uuid);
   }
 
   /**

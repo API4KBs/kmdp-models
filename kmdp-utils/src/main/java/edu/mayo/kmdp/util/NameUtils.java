@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.util;
 
+import edu.mayo.kmdp.registry.Registry;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -230,7 +231,7 @@ public final class NameUtils {
 
     StringBuilder packageName = new StringBuilder();
     String authority = uri.getAuthority();
-    if (authority == null && "urn".equals(uri.getScheme())) {
+    if (authority == null && Registry.isGlobalIdentifier(uri)) {
       authority = uri.getSchemeSpecificPart();
     }
 
@@ -254,7 +255,7 @@ public final class NameUtils {
   }
 
   private static void processAuthority(String scheme, String authority, StringBuilder packageName) {
-    if ("urn".equals(scheme)) {
+    if (Registry.isGlobalIdentifier(scheme)) {
       authority = processURNAuthority(authority,packageName);
     }
 
@@ -735,7 +736,7 @@ public final class NameUtils {
       int idx = uri.lastIndexOf('/');
       if (idx > 0) {
         return uri.substring(uri.lastIndexOf('/') + 1);
-      } else if (uri.startsWith("urn")) {
+      } else if (Registry.isGlobalIdentifier(uri)) {
         return uri.substring(uri.lastIndexOf(':') + 1);
       } else {
         return uri.substring(uri.lastIndexOf('/') + 1);
