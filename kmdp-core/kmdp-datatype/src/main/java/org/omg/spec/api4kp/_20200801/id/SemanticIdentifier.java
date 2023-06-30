@@ -74,6 +74,19 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
   }
 
   /**
+   * Create ResourceIdentifier for the URI provided. Will generate tag and resourceId as required
+   * values.
+   *
+   * @return ResourceIdentifier
+   */
+  static UUID newIdAsUUID(String uriStr) {
+    String tag = URIUtil.detectLocalName(uriStr);
+    return Util.isUUID(tag)
+        ? UUID.fromString(tag)
+        : Util.uuid(tag);
+  }
+
+  /**
    * Create ResourceIdentifier for the URI provided, which is expected to be a Namespace URI
    *
    * @param uri A Namespace URI

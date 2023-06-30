@@ -179,9 +179,11 @@ public class URIUtil {
     }
   }
 
-  private static String detectLocalName(String str) {
+  public static String detectLocalName(String str) {
     String local = str;
-    if (str.indexOf('/') >= 0) {
+    if (str.indexOf('#') >= 0) {
+      local = str.substring(str.lastIndexOf('#') + 1);
+    } else if (str.indexOf('/') >= 0) {
       local = str.substring(str.lastIndexOf('/') + 1);
     } else if (str.indexOf(':') >= 0) {
       local = str.substring(str.lastIndexOf(':') + 1);
