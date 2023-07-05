@@ -830,14 +830,21 @@ public interface SemanticIdentifier extends VersionIdentifier, ScopedIdentifier,
     if (this instanceof Pointer) {
       return (Pointer) this;
     }
-    return new Pointer()
+    var ptr = new Pointer()
         .withNamespaceUri(getNamespaceUri())
         .withTag(getTag())
         .withVersionTag(getVersionTag())
+        .withVersionId(getVersionId())
         .withResourceId(getResourceId())
         .withUuid(getUuid())
         .withEstablishedOn(getEstablishedOn())
         .withName(getName());
+    if (this instanceof Pointer) {
+      Pointer thisPtr = (Pointer) this;
+      ptr.withHref(thisPtr.getHref());
+      ptr.withMimeType(thisPtr.getMimeType());
+    }
+    return ptr;
   }
 
   default Pointer toPointer(URI locator) {
