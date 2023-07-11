@@ -35,9 +35,12 @@ public class KARSHrefBuilder {
     ASSET,
     ASSET_VERSION,
     ASSET_CARRIER,
+    DEFAULT_CARRIER,
+    DEFAULT_CONTENT,
     ASSET_CARRIER_VERSION,
     ASSET_SURROGATE,
-    ASSET_SURROGATE_VERSION
+    ASSET_SURROGATE_VERSION,
+    CANONICAL_SURROGATE
   }
 
   protected final Properties cfg;
@@ -75,6 +78,10 @@ public class KARSHrefBuilder {
         case ASSET_CARRIER:
           return getAssetCarrierHref(assetId.getUuid(), assetId.getVersionTag(),
               artifactId.getUuid()).toURI();
+        case DEFAULT_CARRIER:
+          return getAssetDefaultCarrier(assetId.getUuid(), assetId.getVersionTag()).toURI();
+        case DEFAULT_CONTENT:
+          return getAssetDefaultContent(assetId.getUuid(), assetId.getVersionTag()).toURI();
         case ASSET_CARRIER_VERSION:
           return getAssetCarrierVersionHref(assetId.getUuid(), assetId.getVersionTag(),
               artifactId.getUuid(), artifactId.getVersionTag()).toURI();
@@ -84,6 +91,8 @@ public class KARSHrefBuilder {
         case ASSET_SURROGATE_VERSION:
           return getSurrogateVersionRef(assetId.getUuid(), assetId.getVersionTag(),
               artifactId.getUuid(), artifactId.getVersionTag()).toURI();
+        case CANONICAL_SURROGATE:
+          return getCanonicalSurrogateRef(assetId.getUuid(), assetId.getVersionTag()).toURI();
         default:
           throw new UnsupportedOperationException("TODO: add Href for " + hrefType.name());
       }
@@ -144,6 +153,16 @@ public class KARSHrefBuilder {
       return null;
     }
   }
+  public URL getAssetDefaultCarrier(UUID assetId, String assetVersion) {
+    try {
+      return URI.create(String
+          .format("%s/cat/assets/%s/versions/%s/carrier",
+              getHost(), assetId, assetVersion)).toURL();
+    } catch (MalformedURLException e) {
+      logger.error(e.getMessage(), e);
+      return null;
+    }
+  }
 
   public URL getAssetCarrierVersionHref(UUID assetId, String assetVersion, UUID carrierId,
       String carrierVersion) {
@@ -151,6 +170,17 @@ public class KARSHrefBuilder {
       return URI.create(String
           .format("%s/cat/assets/%s/versions/%s/carriers/%s/versions/%s", getHost(), assetId,
               assetVersion, carrierId, carrierVersion)).toURL();
+    } catch (MalformedURLException e) {
+      logger.error(e.getMessage(), e);
+      return null;
+    }
+  }
+
+  public URL getCanonicalSurrogateRef(UUID assetId, String versionTag) {
+    try {
+      return URI.create(String
+          .format("%s/cat/assets/%s/versions/%s/surrogate",
+              getHost(), assetId, versionTag)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
       return null;

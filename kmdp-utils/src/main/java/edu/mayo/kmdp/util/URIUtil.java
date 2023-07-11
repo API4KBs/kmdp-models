@@ -208,7 +208,7 @@ public class URIUtil {
     }
     try {
       return isDereferencingURL(uri.toURL());
-    } catch (MalformedURLException e) {
+    } catch (Exception e) {
       return false;
     }
   }
@@ -234,7 +234,7 @@ public class URIUtil {
           return code == HTTP_OK;
         }
       }
-    } catch (IOException ioe) {
+    } catch (Exception e) {
       // ignore
     }
     return false;
