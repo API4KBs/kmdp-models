@@ -352,4 +352,16 @@ class AnswerTest {
     assertTrue(fin.printExplanation().contains("Did A"));
   }
 
+  @Test
+  void testCarryMeta() {
+    var ans = Answer.of(ResponseCodeSeries.OK, "foo", Map.of("a", List.of("b","c")));
+    var ans2 = ans.flatMap(x ->
+        Answer.of(ResponseCodeSeries.OK, "bar", Map.of("j", List.of("k"))));
+
+    var a = ans2.getMetas("a");
+    var j = ans2.getMetas("j");
+    assertEquals(List.of("b","c"), a);
+    assertEquals(List.of("k"), j);
+  }
+
 }

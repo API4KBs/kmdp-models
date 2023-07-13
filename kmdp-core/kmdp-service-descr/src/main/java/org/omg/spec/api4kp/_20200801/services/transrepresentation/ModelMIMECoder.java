@@ -20,8 +20,11 @@ import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.FHIR_STU3;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.XHTML;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
 
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
@@ -250,7 +253,33 @@ public class ModelMIMECoder {
     }
     return MIMETypeSeries.resolve(mimeCode)
         .flatMap(ModelMIMECoder::mapKnownMimes)
+        .or(() -> mapUnofficialMimes(mimeCode))
         .orElse(mimeCode);
+  }
+
+  /**
+   * More MIME code that are not included in the {@link MIMETypeSeries} ontology, but are of use
+   *
+   * Note: this will be refactored into a MIME service
+   */
+  private static Optional<String> mapUnofficialMimes(String mimeCode) {
+    if (mimeCode == null) {
+      return Optional.empty();
+    }
+    String mappedMime = null;
+    switch (mimeCode) {
+      case "text/turtle":
+        mappedMime = ModelMIMECoder.encode(rep(OWL_2, Turtle, TXT));
+        break;
+      case "fhir+json":
+        mappedMime = ModelMIMECoder.encode(rep(FHIR_STU3, JSON));
+        break;
+      case "fhir+xml":
+        mappedMime = ModelMIMECoder.encode(rep(FHIR_STU3, XML_1_1));
+        break;
+      default:
+    }
+    return Optional.of(mappedMime);
   }
 
   /**
