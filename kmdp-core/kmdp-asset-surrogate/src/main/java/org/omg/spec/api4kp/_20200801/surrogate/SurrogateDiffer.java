@@ -66,7 +66,7 @@ public class SurrogateDiffer extends AbstractDiffer<KnowledgeAsset> {
         .registerEntity(
             new EntityDefinition(KnowledgeArtifact.class,
                 "artifactId",
-                singletonList("lifecycle")))
+                List.of("lifecycle", "locator")))
         .registerValue(
             ResourceIdentifier.class,
             (a, b) -> a.asKey().equals(b.asKey()),

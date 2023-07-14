@@ -13,14 +13,20 @@
  */
 package org.omg.spec.api4kp._20200801.services.repository.asset;
 
+import static org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder.encode;
+
 import edu.mayo.kmdp.util.Util;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.UUID;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,11 +43,13 @@ public class KARSHrefBuilder {
     ASSET_CARRIER,
     DEFAULT_CARRIER,
     DEFAULT_CONTENT,
+    EPHEMERAL_CARRIER,
     ASSET_CARRIER_VERSION,
     ASSET_CARRIER_VERSION_CONTENT,
     ASSET_SURROGATE,
     ASSET_SURROGATE_VERSION,
     ASSET_SURROGATE_VERSION_CONTENT,
+    EPHEMERAL_SURROGATE,
     CANONICAL_SURROGATE
   }
 
@@ -107,6 +115,7 @@ public class KARSHrefBuilder {
   public URI getContentHref(
       ResourceIdentifier assetId,
       ResourceIdentifier artifactId,
+      SyntacticRepresentation rep,
       HrefType hrefType) {
     try {
       switch (hrefType) {
@@ -116,6 +125,12 @@ public class KARSHrefBuilder {
         case ASSET_SURROGATE_VERSION_CONTENT:
           return getAssetSurrogateVersionContentHref(assetId.getUuid(), assetId.getVersionTag(),
               artifactId.getUuid(), artifactId.getVersionTag()).toURI();
+        case EPHEMERAL_CARRIER:
+          return getAssetEphemeralCarrier(assetId.getUuid(), assetId.getVersionTag(), rep)
+              .toURI();
+        case EPHEMERAL_SURROGATE:
+          return getAssetEphemeralSurrogate(assetId.getUuid(), assetId.getVersionTag(), rep)
+              .toURI();
         default:
           throw new UnsupportedOperationException("TODO: add Href for " + hrefType.name());
       }
@@ -258,4 +273,31 @@ public class KARSHrefBuilder {
     }
   }
 
+  public URL getAssetEphemeralCarrier(
+      UUID assetId, String assetVersion, SyntacticRepresentation rep) {
+    try {
+      return URI.create(String
+          .format("%s/cat/assets/%s/versions/%s/carrier/content?qAccept=%s",
+              getHost(), assetId, assetVersion, codeRep(rep))).toURL();
+    } catch (MalformedURLException e) {
+      logger.error(e.getMessage(), e);
+      return null;
+    }
+  }
+
+  public URL getAssetEphemeralSurrogate(
+      UUID assetId, String assetVersion, SyntacticRepresentation rep) {
+    try {
+      return URI.create(String
+          .format("%s/cat/assets/%s/versions/%s/surrogate/content?qAccept=%s",
+              getHost(), assetId, assetVersion, codeRep(rep))).toURL();
+    } catch (MalformedURLException e) {
+      logger.error(e.getMessage(), e);
+      return null;
+    }
+  }
+
+  private String codeRep(SyntacticRepresentation rep) {
+    return URLEncoder.encode(ModelMIMECoder.encode(rep), StandardCharsets.UTF_8);
+  }
 }
