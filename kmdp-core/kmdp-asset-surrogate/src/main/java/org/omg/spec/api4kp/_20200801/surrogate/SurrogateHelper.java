@@ -464,7 +464,7 @@ public class SurrogateHelper {
     return surrogate.getLinks().stream()
         .flatMap(StreamUtil.filterAs(Component.class))
         .filter(comp -> comp.getRel().sameTermAs(Has_Structural_Component))
-        .filter(comp -> role == null || comp.getRol().sameTermAs(role))
+        .filter(comp -> role == null || role.sameTermAs(comp.getRol()))
         .map(Component::getHref);
   }
 
