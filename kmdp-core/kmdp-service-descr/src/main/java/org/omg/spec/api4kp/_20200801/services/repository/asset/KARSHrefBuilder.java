@@ -13,8 +13,6 @@
  */
 package org.omg.spec.api4kp._20200801.services.repository.asset;
 
-import static org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder.encode;
-
 import edu.mayo.kmdp.util.Util;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -59,8 +57,18 @@ public class KARSHrefBuilder {
     this.cfg = cfg;
   }
 
-  public String getHost() {
+  public String getBaseUrl() {
     return "http:/";
+  }
+
+  public String getHost() {
+    var uri = URI.create(getBaseUrl());
+    try {
+      return new URI(uri.getScheme(), null, uri.getHost(), uri.getPort(), null, null, null)
+          .toString();
+    } catch (URISyntaxException e) {
+      return getBaseUrl();
+    }
   }
 
   public String getCurrentURL() {
@@ -153,7 +161,7 @@ public class KARSHrefBuilder {
 
   public URL getAssetHref(UUID id) {
     try {
-      return URI.create(String.format("%s/cat/assets/%s", getHost(), id)).toURL();
+      return URI.create(String.format("%s/cat/assets/%s", getBaseUrl(), id)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
       return null;
@@ -162,7 +170,7 @@ public class KARSHrefBuilder {
 
   public URL getAssetVersionHref(UUID id, String version) {
     try {
-      return URI.create(String.format("%s/cat/assets/%s/versions/%s", getHost(), id, version))
+      return URI.create(String.format("%s/cat/assets/%s/versions/%s", getBaseUrl(), id, version))
           .toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
@@ -173,7 +181,7 @@ public class KARSHrefBuilder {
   public URL getAssetCarrierHref(UUID assetId, String assetVersion, UUID carrierId) {
     try {
       return URI.create(String
-          .format("%s/cat/assets/%s/versions/%s/carriers/%s", getHost(), assetId,
+          .format("%s/cat/assets/%s/versions/%s/carriers/%s", getBaseUrl(), assetId,
               assetVersion, carrierId)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
@@ -185,7 +193,7 @@ public class KARSHrefBuilder {
     try {
       return URI.create(String
           .format("%s/cat/assets/%s/versions/%s/carrier/content",
-              getHost(), assetId, assetVersion)).toURL();
+              getBaseUrl(), assetId, assetVersion)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
       return null;
@@ -195,7 +203,7 @@ public class KARSHrefBuilder {
     try {
       return URI.create(String
           .format("%s/cat/assets/%s/versions/%s/carrier",
-              getHost(), assetId, assetVersion)).toURL();
+              getBaseUrl(), assetId, assetVersion)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
       return null;
@@ -206,7 +214,7 @@ public class KARSHrefBuilder {
       String carrierVersion) {
     try {
       return URI.create(String
-          .format("%s/cat/assets/%s/versions/%s/carriers/%s/versions/%s", getHost(), assetId,
+          .format("%s/cat/assets/%s/versions/%s/carriers/%s/versions/%s", getBaseUrl(), assetId,
               assetVersion, carrierId, carrierVersion)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
@@ -218,7 +226,7 @@ public class KARSHrefBuilder {
       String carrierVersion) {
     try {
       return URI.create(String
-          .format("%s/cat/assets/%s/versions/%s/carriers/%s/versions/%s/content", getHost(), assetId,
+          .format("%s/cat/assets/%s/versions/%s/carriers/%s/versions/%s/content", getBaseUrl(), assetId,
               assetVersion, carrierId, carrierVersion)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
@@ -231,7 +239,7 @@ public class KARSHrefBuilder {
     try {
       return URI.create(String
           .format("%s/cat/assets/%s/versions/%s/surrogate",
-              getHost(), assetId, versionTag)).toURL();
+              getBaseUrl(), assetId, versionTag)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
       return null;
@@ -241,7 +249,7 @@ public class KARSHrefBuilder {
   public URL getSurrogateRef(UUID assetId, String versionTag, UUID surrogateId) {
     try {
       return URI.create(String
-          .format("%s/cat/assets/%s/versions/%s/surrogate/%s", getHost(), assetId,
+          .format("%s/cat/assets/%s/versions/%s/surrogate/%s", getBaseUrl(), assetId,
               versionTag, surrogateId)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
@@ -253,7 +261,7 @@ public class KARSHrefBuilder {
       String surrogateVersionTag) {
     try {
       return URI.create(String
-          .format("%s/cat/assets/%s/versions/%s/surrogate/%s/versions/%s", getHost(), assetId,
+          .format("%s/cat/assets/%s/versions/%s/surrogate/%s/versions/%s", getBaseUrl(), assetId,
               versionTag, surrogateId, surrogateVersionTag)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
@@ -265,7 +273,7 @@ public class KARSHrefBuilder {
       String surrogateVersionTag) {
     try {
       return URI.create(String
-          .format("%s/cat/assets/%s/versions/%s/surrogate/%s/versions/%s", getHost(), assetId,
+          .format("%s/cat/assets/%s/versions/%s/surrogate/%s/versions/%s", getBaseUrl(), assetId,
               assetVersion, surrogateId, surrogateVersionTag)).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
@@ -278,7 +286,7 @@ public class KARSHrefBuilder {
     try {
       return URI.create(String
           .format("%s/cat/assets/%s/versions/%s/carrier/content?qAccept=%s",
-              getHost(), assetId, assetVersion, codeRep(rep))).toURL();
+              getBaseUrl(), assetId, assetVersion, codeRep(rep))).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
       return null;
@@ -290,7 +298,7 @@ public class KARSHrefBuilder {
     try {
       return URI.create(String
           .format("%s/cat/assets/%s/versions/%s/surrogate/content?qAccept=%s",
-              getHost(), assetId, assetVersion, codeRep(rep))).toURL();
+              getBaseUrl(), assetId, assetVersion, codeRep(rep))).toURL();
     } catch (MalformedURLException e) {
       logger.error(e.getMessage(), e);
       return null;
